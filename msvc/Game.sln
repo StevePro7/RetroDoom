@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game.vcxproj", "{63EBE55D-973D-460A-B009-3E0BAE9C8196}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D307F009-3EC2-45DF-98F6-C2DB0C02FF18} = {D307F009-3EC2-45DF-98F6-C2DB0C02FF18}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "midiproc", "..\midiproc\midiproc.vcxproj", "{D307F009-3EC2-45DF-98F6-C2DB0C02FF18}"
 EndProject
