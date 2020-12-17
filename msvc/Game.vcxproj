@@ -172,6 +172,7 @@
     <ClCompile Include="..\src\z_zone.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\inc\doomdata.h" />
     <ClInclude Include="..\inc\doomdef.h" />
     <ClInclude Include="..\inc\doomretro.h" />
     <ClInclude Include="..\inc\doomstat.h" />
@@ -194,8 +195,11 @@
     <ClInclude Include="..\inc\m_misc.h" />
     <ClInclude Include="..\inc\m_random.h" />
     <ClInclude Include="..\inc\p_mobj.h" />
+    <ClInclude Include="..\inc\p_mobj2.h" />
+    <ClInclude Include="..\inc\r_defs.h" />
     <ClInclude Include="..\inc\sprites.h" />
     <ClInclude Include="..\inc\states.h" />
+    <ClInclude Include="..\inc\tables.h" />
     <ClInclude Include="..\inc\version.h" />
     <ClInclude Include="..\inc\w_file.h" />
     <ClInclude Include="..\inc\w_wad.h" />
