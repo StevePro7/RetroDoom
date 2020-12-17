@@ -183,12 +183,14 @@
     <ClInclude Include="..\inc\d_main2.h" />
     <ClInclude Include="..\inc\d_strings.h" />
     <ClInclude Include="..\inc\d_think.h" />
+    <ClInclude Include="..\inc\d_ticcmd.h" />
     <ClInclude Include="..\inc\info.h" />
     <ClInclude Include="..\inc\i_swap.h" />
     <ClInclude Include="..\inc\i_system.h" />
     <ClInclude Include="..\inc\i_timer.h" />
     <ClInclude Include="..\inc\logger.h" />
     <ClInclude Include="..\inc\m_argv.h" />
+    <ClInclude Include="..\inc\m_fixed.h" />
     <ClInclude Include="..\inc\m_misc.h" />
     <ClInclude Include="..\inc\m_random.h" />
     <ClInclude Include="..\inc\p_mobj.h" />
