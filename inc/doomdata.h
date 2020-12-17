@@ -1,37 +1,37 @@
 /*
 ========================================================================
 
-D O O M  R e t r o
-The classic, refined DOOM source port. For Windows PC.
+                           D O O M  R e t r o
+         The classic, refined DOOM source port. For Windows PC.
 
 ========================================================================
 
-Copyright © 1993-2012 by id Software LLC, a ZeniMax Media company.
-Copyright © 2013-2020 by Brad Harding.
+  Copyright Â© 1993-2012 by id Software LLC, a ZeniMax Media company.
+  Copyright Â© 2013-2020 by Brad Harding.
 
-DOOM Retro is a fork of Chocolate DOOM. For a list of credits, see
-<https://github.com/bradharding/doomretro/wiki/CREDITS>.
+  DOOM Retro is a fork of Chocolate DOOM. For a list of credits, see
+  <https://github.com/bradharding/doomretro/wiki/CREDITS>.
 
-This file is a part of DOOM Retro.
+  This file is a part of DOOM Retro.
 
-DOOM Retro is free software: you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation, either version 3 of the License, or (at your
-option) any later version.
+  DOOM Retro is free software: you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation, either version 3 of the License, or (at your
+  option) any later version.
 
-DOOM Retro is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details.
+  DOOM Retro is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with DOOM Retro. If not, see <https://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with DOOM Retro. If not, see <https://www.gnu.org/licenses/>.
 
-DOOM is a registered trademark of id Software LLC, a ZeniMax Media
-company, in the US and/or other countries, and is used without
-permission. All other trademarks are the property of their respective
-holders. DOOM Retro is in no way affiliated with nor endorsed by
-id Software.
+  DOOM is a registered trademark of id Software LLC, a ZeniMax Media
+  company, in the US and/or other countries, and is used without
+  permission. All other trademarks are the property of their respective
+  holders. DOOM Retro is in no way affiliated with nor endorsed by
+  id Software.
 
 ========================================================================
 */
@@ -52,17 +52,17 @@ id Software.
 // to provide a complete scene geometry description.
 enum
 {
-	ML_LABEL,       // A separator, name, ExMx or MAPxx
-	ML_THINGS,      // Monsters, items...
-	ML_LINEDEFS,    // LineDefs, from editing
-	ML_SIDEDEFS,    // SideDefs, from editing
-	ML_VERTEXES,    // Vertexes, edited and BSP splits generated
-	ML_SEGS,        // LineSegs, from LineDefs split by BSP
-	ML_SSECTORS,    // SubSectors, list of LineSegs
-	ML_NODES,       // BSP nodes
-	ML_SECTORS,     // Sectors, from editing
-	ML_REJECT,      // LUT, sector-sector visibility
-	ML_BLOCKMAP     // LUT, motion clipping, walls/grid element
+    ML_LABEL,       // A separator, name, ExMx or MAPxx
+    ML_THINGS,      // Monsters, items...
+    ML_LINEDEFS,    // LineDefs, from editing
+    ML_SIDEDEFS,    // SideDefs, from editing
+    ML_VERTEXES,    // Vertexes, edited and BSP splits generated
+    ML_SEGS,        // LineSegs, from LineDefs split by BSP
+    ML_SSECTORS,    // SubSectors, list of LineSegs
+    ML_NODES,       // BSP nodes
+    ML_SECTORS,     // Sectors, from editing
+    ML_REJECT,      // LUT, sector-sector visibility
+    ML_BLOCKMAP     // LUT, motion clipping, walls/grid element
 };
 
 #if defined(_MSC_VER) || defined(__GNUC__)
@@ -72,37 +72,37 @@ enum
 // A single Vertex.
 typedef struct
 {
-	short           x, y;
+    short           x, y;
 } PACKEDATTR mapvertex_t;
 
 // A SideDef, defining the visual appearance of a wall,
 // by setting textures and offsets.
 typedef struct
 {
-	short           textureoffset;
-	short           rowoffset;
-	char            toptexture[ 8 ];
-	char            bottomtexture[ 8 ];
-	char            midtexture[ 8 ];
+    short           textureoffset;
+    short           rowoffset;
+    char            toptexture[8];
+    char            bottomtexture[8];
+    char            midtexture[8];
 
-	// Front sector, towards viewer.
-	short           sector;
+    // Front sector, towards viewer.
+    short           sector;
 } PACKEDATTR mapsidedef_t;
 
 // A LineDef, as used for editing, and as input
 // to the BSP builder.
 typedef struct
 {
-	unsigned short  v1;
-	unsigned short  v2;
-	unsigned short  flags;
-	short           special;
-	short           tag;
+    unsigned short  v1;
+    unsigned short  v2;
+    unsigned short  flags;
+    short           special;
+    short           tag;
 
-	// proff 07/23/2006 - support more than 32768 sidedefs
-	// use the unsigned value and special case the -1
-	// sidenum[1] will be -1 (NO_INDEX) if one sided
-	unsigned short  sidenum[ 2 ];
+    // proff 07/23/2006 - support more than 32768 sidedefs
+    // use the unsigned value and special case the -1
+    // sidenum[1] will be -1 (NO_INDEX) if one sided
+    unsigned short  sidenum[2];
 } PACKEDATTR maplinedef_t;
 
 #define NO_INDEX    ((unsigned short)-1)
@@ -164,63 +164,63 @@ typedef struct
 // Sector definition, from editing.
 typedef struct
 {
-	short           floorheight;
-	short           ceilingheight;
-	char            floorpic[ 8 ];
-	char            ceilingpic[ 8 ];
-	short           lightlevel;
-	short           special;
-	short           tag;
+    short           floorheight;
+    short           ceilingheight;
+    char            floorpic[8];
+    char            ceilingpic[8];
+    short           lightlevel;
+    short           special;
+    short           tag;
 } PACKEDATTR mapsector_t;
 
 // SubSector, as generated by BSP.
 typedef struct
 {
-	unsigned short  numsegs;
+    unsigned short  numsegs;
 
-	// Index of first one, segs are stored sequentially.
-	unsigned short  firstseg;
+    // Index of first one, segs are stored sequentially.
+    unsigned short  firstseg;
 } PACKEDATTR mapsubsector_t;
 
 typedef struct
 {
-	unsigned short  numsegs;
-	int             firstseg;
+    unsigned short  numsegs;
+    int             firstseg;
 } PACKEDATTR mapsubsector_v4_t;
 
 typedef struct
 {
-	unsigned int    numsegs;
+    unsigned int    numsegs;
 } PACKEDATTR mapsubsector_znod_t;
 
 // LineSeg, generated by splitting LineDefs
 // using partition lines selected by BSP builder.
 typedef struct
 {
-	unsigned short  v1;
-	unsigned short  v2;
-	short           angle;
-	unsigned short  linedef;
-	short           side;
-	short           offset;
+    unsigned short  v1;
+    unsigned short  v2;
+    short           angle;
+    unsigned short  linedef;
+    short           side;
+    short           offset;
 } PACKEDATTR mapseg_t;
 
 typedef struct
 {
-	int             v1;
-	int             v2;
-	unsigned short  angle;
-	unsigned short  linedef;
-	short           side;
-	unsigned short  offset;
+    int             v1;
+    int             v2;
+    unsigned short  angle;
+    unsigned short  linedef;
+    short           side;
+    unsigned short  offset;
 } PACKEDATTR mapseg_v4_t;
 
 typedef struct
 {
-	unsigned int    v1;
-	unsigned int    v2;
-	unsigned short  linedef;
-	unsigned char   side;
+    unsigned int    v1;
+    unsigned int    v2;
+    unsigned short  linedef;
+    unsigned char   side;
 } PACKEDATTR mapseg_znod_t;
 
 // BSP node structure.
@@ -230,43 +230,43 @@ typedef struct
 
 typedef struct
 {
-	// Partition line from (x,y) to x+dx,y+dy)
-	short           x, y;
-	short           dx, dy;
+    // Partition line from (x,y) to x+dx,y+dy)
+    short           x, y;
+    short           dx, dy;
 
-	// Bounding box for each child,
-	// clip against view frustum.
-	short           bbox[ 2 ][ 4 ];
+    // Bounding box for each child,
+    // clip against view frustum.
+    short           bbox[2][4];
 
-	// If NF_SUBSECTOR its a subsector,
-	// else it's a node of another subtree.
-	unsigned short  children[ 2 ];
+    // If NF_SUBSECTOR its a subsector,
+    // else it's a node of another subtree.
+    unsigned short  children[2];
 } PACKEDATTR mapnode_t;
 
 typedef struct
 {
-	short           x, y;
-	short           dx, dy;
-	short           bbox[ 2 ][ 4 ];
-	int             children[ 2 ];
+    short           x, y;
+    short           dx, dy;
+    short           bbox[2][4];
+    int             children[2];
 } PACKEDATTR mapnode_v4_t;
 
 typedef struct
 {
-	short           x, y;
-	short           dx, dy;
-	short           bbox[ 2 ][ 4 ];
-	int             children[ 2 ];
+    short           x, y;
+    short           dx, dy;
+    short           bbox[2][4];
+    int             children[2];
 } PACKEDATTR mapnode_znod_t;
 
 // Thing definition, position, orientation and type,
 // plus skill/visibility flags and attributes.
 typedef struct
 {
-	short           x, y;
-	short           angle;
-	short           type;
-	short           options;
+    short           x, y;
+    short           angle;
+    short           type;
+    short           options;
 } PACKEDATTR mapthing_t;
 
 #if defined(_MSC_VER) || defined(__GNUC__)
