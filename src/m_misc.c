@@ -99,7 +99,7 @@
 void M_MakeDirectory(const char *path)
 {
 #if defined(_WIN32)
-    mkdir(path);
+    _mkdir(path);
 #else
     mkdir(path, 0755);
 #endif
@@ -507,7 +507,7 @@ char *M_StringReplace(char *haystack, char *needle, char *replacement)
 // Safe version of strdup() that checks the string was successfully allocated.
 char *M_StringDuplicate(const char *orig)
 {
-    char    *result = strdup(orig);
+    char    *result = _strdup(orig);
 
     if (!result)
         I_Error("Failed to duplicate string %s.", stringize(orig));

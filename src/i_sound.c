@@ -44,6 +44,8 @@
 #include "s_sound.h"
 #include "version.h"
 #include "w_wad.h"
+//#include <stdio.h>
+#include <string.h>
 
 typedef struct allocated_sound_s allocated_sound_t;
 
