@@ -4,11 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game.vcxproj", "{63EBE55D-973D-460A-B009-3E0BAE9C8196}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D307F009-3EC2-45DF-98F6-C2DB0C02FF18} = {D307F009-3EC2-45DF-98F6-C2DB0C02FF18}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "midiproc", "..\midiproc\midiproc.vcxproj", "{D307F009-3EC2-45DF-98F6-C2DB0C02FF18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,10 +15,6 @@ Global
 		{63EBE55D-973D-460A-B009-3E0BAE9C8196}.Debug|x86.Build.0 = Debug|Win32
 		{63EBE55D-973D-460A-B009-3E0BAE9C8196}.Release|x86.ActiveCfg = Release|Win32
 		{63EBE55D-973D-460A-B009-3E0BAE9C8196}.Release|x86.Build.0 = Release|Win32
-		{D307F009-3EC2-45DF-98F6-C2DB0C02FF18}.Debug|x86.ActiveCfg = Debug|Win32
-		{D307F009-3EC2-45DF-98F6-C2DB0C02FF18}.Debug|x86.Build.0 = Debug|Win32
-		{D307F009-3EC2-45DF-98F6-C2DB0C02FF18}.Release|x86.ActiveCfg = Release|Win32
-		{D307F009-3EC2-45DF-98F6-C2DB0C02FF18}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
