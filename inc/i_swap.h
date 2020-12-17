@@ -1,0 +1,17 @@
+
+#if !defined(__I_SWAP_H__)
+#define __I_SWAP_H__
+
+//#include "SDL_endian.h"
+
+// Endianness handling.
+// WAD files are stored little endian.
+
+// Just use SDL's endianness swapping functions.
+
+// These are deliberately cast to signed values; this is the behavior
+// of the macros in the original source and some code relies on it.
+#define SHORT(x)    (x)	//((signed short)SDL_SwapLE16(x))
+#define LONG(x)     (x)	//((signed int)SDL_SwapLE32(x))
+
+#endif
