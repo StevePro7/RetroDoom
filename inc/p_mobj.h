@@ -1,10 +1,14 @@
 #if !defined(__P_MOBJ_H__)
 #define __P_MOBJ_H__
 
-#include "doomdata.h"
-#include "info.h"
-#include "states.h"
+// stevepro
+#include "d_think.h"
 #include "tables.h"
+
+//#include "doomdata.h"
+//#include "info.h"
+//#include "states.h"
+//#include "tables.h"
 
 #define REDBLOOD            184
 #define GREENBLOOD          123
@@ -420,15 +424,15 @@ typedef struct mobj_s
 
 typedef struct bloodsplat_s
 {
-    fixed_t             x, y;
-    struct bloodsplat_s *snext;
-    struct bloodsplat_s **sprev;
-    int                 patch;
-    fixed_t             width;
-    struct sector_s     *sector;
-    dboolean            flip;
-    int                 blood;
-    void                (*colfunc)(void);
+	fixed_t             x, y;
+	struct bloodsplat_s *snext;
+	struct bloodsplat_s **sprev;
+	int                 patch;
+	fixed_t             width;
+	struct sector_s     *sector;
+	dboolean            flip;
+	int                 blood;
+	void( *colfunc )( void );
 } bloodsplat_t;
 
 extern int  prevthingx, prevthingy;

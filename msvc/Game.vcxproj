@@ -30,16 +30,22 @@
     <ClCompile Include="..\src\d_main.c" />
     <ClCompile Include="..\src\d_think.c" />
     <ClCompile Include="..\src\d_ticcmd.c" />
+    <ClCompile Include="..\src\info.c" />
     <ClCompile Include="..\src\i_swap.c" />
     <ClCompile Include="..\src\i_timer.c" />
     <ClCompile Include="..\src\m_argv.c" />
     <ClCompile Include="..\src\m_fixed.c" />
+    <ClCompile Include="..\src\m_misc.c" />
     <ClCompile Include="..\src\m_random.c" />
+    <ClCompile Include="..\src\p_mobj.c" />
+    <ClCompile Include="..\src\p_pspr.c" />
     <ClCompile Include="..\src\sounds.c" />
     <ClCompile Include="..\src\sprites.c" />
+    <ClCompile Include="..\src\states.c" />
     <ClCompile Include="..\src\tables.c" />
     <ClCompile Include="..\src\version.c" />
     <ClCompile Include="..\src\v_data.c" />
+    <ClCompile Include="src\d_player.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc" />
@@ -53,15 +59,21 @@
     <ClInclude Include="..\inc\d_deh.h" />
     <ClInclude Include="..\inc\d_englsh.h" />
     <ClInclude Include="..\inc\d_main.h" />
+    <ClInclude Include="..\inc\d_player.h" />
     <ClInclude Include="..\inc\d_think.h" />
     <ClInclude Include="..\inc\d_ticcmd.h" />
+    <ClInclude Include="..\inc\info.h" />
     <ClInclude Include="..\inc\i_swap.h" />
     <ClInclude Include="..\inc\i_timer.h" />
     <ClInclude Include="..\inc\m_argv.h" />
     <ClInclude Include="..\inc\m_fixed.h" />
+    <ClInclude Include="..\inc\m_misc.h" />
     <ClInclude Include="..\inc\m_random.h" />
+    <ClInclude Include="..\inc\p_mobj.h" />
+    <ClInclude Include="..\inc\p_pspr.h" />
     <ClInclude Include="..\inc\sounds.h" />
     <ClInclude Include="..\inc\sprites.h" />
+    <ClInclude Include="..\inc\states.h" />
     <ClInclude Include="..\inc\tables.h" />
     <ClInclude Include="..\inc\version.h" />
     <ClInclude Include="..\inc\v_data.h" />
