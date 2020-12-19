@@ -3,14 +3,16 @@
 
 #include <inttypes.h>
 #include <limits.h>
-
+#include <stdbool.h>
 typedef uint8_t byte;
 
-typedef enum
-{
-    false,
-    true
-} dboolean;
+//stevepro
+#define dboolean bool
+//typedef enum
+//{
+//	false,
+//	true
+//} dboolean;
 
 #if defined(_WIN32)
 #define DIR_SEPARATOR   '\\'

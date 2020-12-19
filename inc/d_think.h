@@ -1,6 +1,8 @@
 #if !defined(__D_THINK_H__)
 #define __D_THINK_H__
 
+#include "doomtype.h"
+
 //
 // Experimental stuff.
 // To compile this as "ANSI C with classes"

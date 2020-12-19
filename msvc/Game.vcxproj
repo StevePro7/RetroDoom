@@ -20,13 +20,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\doomretro.c" />
+    <ClCompile Include="..\src\doomtype.c" />
+    <ClCompile Include="..\src\d_englsh.c" />
     <ClCompile Include="..\src\d_main.c" />
+    <ClCompile Include="..\src\d_think.c" />
+    <ClCompile Include="..\src\d_ticcmd.c" />
+    <ClCompile Include="..\src\m_fixed.c" />
+    <ClCompile Include="..\src\m_random.c" />
+    <ClCompile Include="..\src\tables.c" />
+    <ClCompile Include="..\src\version.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\inc\doomtype.h" />
+    <ClInclude Include="..\inc\d_englsh.h" />
     <ClInclude Include="..\inc\d_main.h" />
+    <ClInclude Include="..\inc\d_think.h" />
+    <ClInclude Include="..\inc\d_ticcmd.h" />
+    <ClInclude Include="..\inc\m_fixed.h" />
+    <ClInclude Include="..\inc\m_random.h" />
+    <ClInclude Include="..\inc\tables.h" />
+    <ClInclude Include="..\inc\version.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{63EBE55D-973D-460A-B009-3E0BAE9C8196}</ProjectGuid>
