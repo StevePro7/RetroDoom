@@ -3,7 +3,8 @@
 
 #include <stdio.h>
 
-#include "m_controls.h"
+//stevepro
+//#include "m_controls.h"
 
 #if defined(_WIN32)
 #define strcasecmp  _stricmp
