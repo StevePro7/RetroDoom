@@ -79,7 +79,10 @@ enum
 //
 typedef struct player_s
 {
-    mobj_t          *mo;
+	// stevepro
+    //mobj_t          *mo;
+	struct mobj_s *mo;
+
     playerstate_t   playerstate;
     ticcmd_t        cmd;
 
@@ -151,7 +154,9 @@ typedef struct player_s
     int             bonuscount;
 
     // Who did damage (NULL for floors/ceilings).
-    mobj_t          *attacker;
+	//stevepro
+    //mobj_t          *attacker;
+	struct mobj_s     *attacker;
 
     // So gun flashes light up areas.
     int             extralight;
