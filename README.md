@@ -1,4 +1,14 @@
 # RetroDoom
+19/12/2020
+remove all the code but get linker error so switch to Console app
+Project properties | Linker | System | Console
+will have to "eventually" switch back to Windows
+
+Weird - sometimes when reference dboolean and #include "doomtype.h"
+still get squiggle under true but when F12 and navigate they go away
+
+
+
 Test repository remake of Retro Doom source code
 
 Original source code can be found here:

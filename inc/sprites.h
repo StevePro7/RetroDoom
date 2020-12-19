@@ -1,6 +1,8 @@
 #if !defined(__SPRITES_H__)
 #define __SPRITES_H__
 
+#include "doomtype.h"
+
 typedef enum
 {
     // Sprites 0 to 137

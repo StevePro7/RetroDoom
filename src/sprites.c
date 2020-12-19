@@ -1,4 +1,3 @@
-#include "r_defs.h"
 #include "sprites.h"
 
 char *sprnames[] =

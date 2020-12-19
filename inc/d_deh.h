@@ -467,6 +467,6 @@ extern char     **mapnamesn[];
 
 extern int      dehcount;
 
-void ProcessDehFile(char *filename, int lumpnum, dboolean automatic);
+//void ProcessDehFile(char *filename, int lumpnum, dboolean automatic);
 
 #endif

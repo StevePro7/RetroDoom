@@ -24,6 +24,8 @@
     <ClCompile Include="..\src\doomkeys.c" />
     <ClCompile Include="..\src\doomretro.c" />
     <ClCompile Include="..\src\doomtype.c" />
+    <ClCompile Include="..\src\dstrings.c" />
+    <ClCompile Include="..\src\d_deh.c" />
     <ClCompile Include="..\src\d_englsh.c" />
     <ClCompile Include="..\src\d_main.c" />
     <ClCompile Include="..\src\d_think.c" />
@@ -34,6 +36,7 @@
     <ClCompile Include="..\src\m_fixed.c" />
     <ClCompile Include="..\src\m_random.c" />
     <ClCompile Include="..\src\sounds.c" />
+    <ClCompile Include="..\src\sprites.c" />
     <ClCompile Include="..\src\tables.c" />
     <ClCompile Include="..\src\version.c" />
     <ClCompile Include="..\src\v_data.c" />
@@ -46,6 +49,8 @@
     <ClInclude Include="..\inc\doomdef.h" />
     <ClInclude Include="..\inc\doomkeys.h" />
     <ClInclude Include="..\inc\doomtype.h" />
+    <ClInclude Include="..\inc\dstrings.h" />
+    <ClInclude Include="..\inc\d_deh.h" />
     <ClInclude Include="..\inc\d_englsh.h" />
     <ClInclude Include="..\inc\d_main.h" />
     <ClInclude Include="..\inc\d_think.h" />
@@ -56,6 +61,7 @@
     <ClInclude Include="..\inc\m_fixed.h" />
     <ClInclude Include="..\inc\m_random.h" />
     <ClInclude Include="..\inc\sounds.h" />
+    <ClInclude Include="..\inc\sprites.h" />
     <ClInclude Include="..\inc\tables.h" />
     <ClInclude Include="..\inc\version.h" />
     <ClInclude Include="..\inc\v_data.h" />

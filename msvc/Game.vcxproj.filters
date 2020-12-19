@@ -69,6 +69,15 @@
     <ClCompile Include="..\src\sounds.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\sprites.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\dstrings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\d_deh.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -125,6 +134,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\sounds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\sprites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\dstrings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\d_deh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
