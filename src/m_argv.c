@@ -1,8 +1,8 @@
-//#include "m_misc.h"
-//
-//int     myargc;
-//char    **myargv;
-//
+#include "m_argv.h"
+
+int     myargc;
+char    **myargv;
+
 ////
 //// M_CheckParm
 //// Checks for the given parameter

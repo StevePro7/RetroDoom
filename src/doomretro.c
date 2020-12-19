@@ -5,16 +5,20 @@
 #include "SDL_syswm.h"
 #endif
 
+// stevepro
+#include "a_game.h"
 #include "d_main.h"
-
+#include "doomtype.h"
+#include "m_argv.h"
+#include "version.h"
 
 int main(int argc, char **argv)
 {
-//    myargc = argc;
-//    myargv = argv;
+    myargc = argc;
+    myargv = argv;
 
-//#if defined(_WIN32)
-//    hInstanceMutex = CreateMutex(NULL, true, PACKAGE_MUTEX);
+#if defined(_WIN32)
+    hInstanceMutex = CreateMutex(NULL, true, PACKAGE_MUTEX);
 //
 //    if (GetLastError() == ERROR_ALREADY_EXISTS)
 //    {
@@ -33,8 +37,8 @@ int main(int argc, char **argv)
 //    I_AccessibilityShortcutKeys(false);
 //
 //    I_SetProcessDPIAware();
-//#endif
-//
+#endif
+
     D_DoomMain();
 
     return 0;
