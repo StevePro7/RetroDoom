@@ -1,3 +1,4 @@
+#include "p_pspr.h"
 //#include "doomstat.h"
 //#include "g_game.h"
 //#include "hu_stuff.h"

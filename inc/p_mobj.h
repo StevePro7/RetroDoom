@@ -2,10 +2,17 @@
 #define __P_MOBJ_H__
 
 // stevepro
+#include "d_player.h"
 #include "d_think.h"
+#include "doomdata.h"
+#include "doomtype.h"
+#include "m_fixed.h"
+#include "info.h"
+#include "sprites.h"
+#include "states.h"
 #include "tables.h"
 
-//#include "doomdata.h"
+
 //#include "info.h"
 //#include "states.h"
 //#include "tables.h"
