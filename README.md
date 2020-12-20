@@ -1,4 +1,16 @@
 # RetroDoom
+20/12/2020
+
+a_game.c
+WndProc
+for functions that are called here follow the example from VCPP
+declare the function as extern in a_game.h before CALLBACK
+
+define the function in the C file but do not #include to "avoid"
+cyclical dependency
+e.g.
+MouseShouldBeGrabbed()
+
 19/12/2020
 remove all the code but get linker error so switch to Console app
 Project properties | Linker | System | Console

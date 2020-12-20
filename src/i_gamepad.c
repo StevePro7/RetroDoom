@@ -36,6 +36,12 @@
 //int                         idlevibrationstrength;
 //int                         restorevibrationstrength;
 //
+
+// stevepro
+void I_InitGamepad( void )
+{
+}
+
 //void I_InitGamepad(void)
 //{
 //    if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC) < 0)
@@ -76,6 +82,11 @@
 //    }
 //}
 //
+
+// stevepro
+void I_ShutdownGamepad( void )
+{
+}
 //void I_ShutdownGamepad(void)
 //{
 //    if (!gamecontroller)

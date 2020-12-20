@@ -176,6 +176,13 @@
 //
 //void ST_DoRefresh(void);
 //
+
+// stevepro
+dboolean MouseShouldBeGrabbed( void )
+{
+	return false;
+}
+
 //dboolean MouseShouldBeGrabbed(void)
 //{
 //    // if the window doesn't have focus, never grab it
@@ -812,6 +819,11 @@
 //}
 //
 //#if defined(_WIN32)
+
+// stevepro
+void I_WindowResizeBlit( void )
+{
+}
 //void I_WindowResizeBlit(void)
 //{
 //    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
@@ -1866,6 +1878,12 @@
 //    forceconsoleblurredraw = true;
 //}
 //
+
+// stevepro
+void I_ToggleFullscreen( void )
+{
+}
+
 //void I_ToggleFullscreen(void)
 //{
 //    if (SDL_SetWindowFullscreen(window,
