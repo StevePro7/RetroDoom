@@ -857,4 +857,16 @@
 #define MF3_MISSILEMORE                 0x00000004
 
 
+// r_defs.h
+// Silhouette, needed for clipping Segs (mainly)
+// and sprites representing things.
+#define SIL_NONE    0
+#define SIL_BOTTOM  1
+#define SIL_TOP     2
+#define SIL_BOTH    3
+
+#define MAXDRAWSEGS 1280
+#define MAXOPENINGS 16384
+
+
 #endif
