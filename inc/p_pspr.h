@@ -2,6 +2,7 @@
 #define __P_PSPR_H__
 
 // stevepro
+#include "doomenum.h"
 #include "doomtype.h"
 #include "m_fixed.h"
 #include "states.h"
@@ -31,12 +32,12 @@
 // drawn directly on the view screen,
 // coordinates are given for a 320*200 view screen.
 //
-enum
-{
-    ps_weapon,
-    ps_flash,
-    NUMPSPRITES
-};
+//enum
+//{
+//    ps_weapon,
+//    ps_flash,
+//    NUMPSPRITES
+//};
 
 typedef struct
 {
