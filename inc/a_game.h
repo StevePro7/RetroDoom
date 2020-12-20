@@ -7,6 +7,13 @@
 #endif
 
 extern HANDLE       hInstanceMutex;
+
+extern WNDPROC      oldProc;
 extern HICON        icon;
+
+extern int windowborderwidth;
+extern int windowborderheight;
+
+//LRESULT CALLBACK WndProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam );
 
 #endif

@@ -105,6 +105,9 @@
     <ClCompile Include="..\src\a_game.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\i_video.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -197,6 +200,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\a_game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\i_video.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
