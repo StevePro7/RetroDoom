@@ -1,7 +1,10 @@
 #if !defined(__M_CONFIG_H__)
 #define __M_CONFIG_H__
 
+#include "doomkeys.h"
 #include "doomtype.h"
+#include "i_gamepad.h"
+#include "version.h"
 
 extern dboolean     alwaysrun;
 extern int          am_allmapcdwallcolor;
@@ -750,6 +753,12 @@ enum
 #define MOUSESCREENSHOT_DEFAULT                 -1
 #define MOUSESTRAFE_DEFAULT                     -1
 #define MOUSEUSE_DEFAULT                        -1
+
+// stevepro
+#define MAX_MOUSE_BUTTONS   8
+#define MOUSE_WHEELUP       MAX_MOUSE_BUTTONS
+#define MOUSE_WHEELDOWN     (MAX_MOUSE_BUTTONS + 1)
+// stevepro
 
 typedef enum
 {

@@ -1,6 +1,9 @@
-#include "i_gamepad.h"
+#include "m_controls.h"
 #include "m_config.h"
-#include "p_local.h"
+#include "doomkeys.h"
+#include "version.h"
+//#include "i_gamepad.h"
+//#include "p_local.h"
 
 int keyboardalwaysrun = KEYALWAYSRUN_DEFAULT;
 int keyboardautomap = KEYAUTOMAP_DEFAULT;

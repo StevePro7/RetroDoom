@@ -1,8 +1,6 @@
 #if !defined(__M_CONTROLS_H__)
 #define __M_CONTROLS_H__
 
-#include "doomkeys.h"
-
 extern int  keyboardalwaysrun;
 extern int  keyboardautomap;
 extern int  keyboardautomapclearmark;
