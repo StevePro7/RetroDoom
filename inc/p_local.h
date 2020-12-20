@@ -1,5 +1,5 @@
-//#if !defined(__P_LOCAL_H__)
-//#define __P_LOCAL_H__
+#if !defined(__P_LOCAL_H__)
+#define __P_LOCAL_H__
 //
 //#include "doomdef.h"
 //#include "d_main.h"
@@ -278,4 +278,4 @@
 ////
 //#include "p_spec.h"
 //
-//#endif
+#endif

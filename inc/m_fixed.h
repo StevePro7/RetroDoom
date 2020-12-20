@@ -1,6 +1,7 @@
 #if !defined(__M_FIXED_H__)
 #define __M_FIXED_H__
 
+#include "doomdef.h"
 #include "doomtype.h"
 
 #undef ABS
@@ -8,15 +9,15 @@
 #undef MAX
 #undef SWAP
 
-//
-// Fixed point, 32bit as 16.16.
-//
-#define FRACBITS        16
-#define FRACUNIT        65536
-#define FIXED2DOUBLE(a) ((a) / (double)FRACUNIT)
-#define FIXED_MIN       INT32_MIN
-#define FIXED_MAX       INT32_MAX
-#define SWAP(a, b)      (((a) ^= (b)), ((b) ^= (a)), ((a) ^= (b)))
+////
+//// Fixed point, 32bit as 16.16.
+////
+//#define FRACBITS        16
+//#define FRACUNIT        65536
+//#define FIXED2DOUBLE(a) ((a) / (double)FRACUNIT)
+//#define FIXED_MIN       INT32_MIN
+//#define FIXED_MAX       INT32_MAX
+//#define SWAP(a, b)      (((a) ^= (b)), ((b) ^= (a)), ((a) ^= (b)))
 
 typedef int32_t fixed_t;
 

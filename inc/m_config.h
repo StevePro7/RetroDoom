@@ -6,6 +6,7 @@
 #include "doomkeys.h"
 #include "doomtype.h"
 #include "i_gamepad.h"
+#include "i_video.h"
 #include "version.h"
 
 extern dboolean     alwaysrun;
@@ -326,9 +327,9 @@ extern dboolean     weaponrecoil;
 //#define armor_default                           0
 //#define armor_max                               INT_MAX
 //
-//#define armortype_min                           armortype_none
-//#define armortype_default                       armortype_none
-//#define armortype_max                           armortype_blue
+#define armortype_min                           armortype_none
+#define armortype_default                       armortype_none
+#define armortype_max                           armortype_blue
 //
 //#define autoaim_default                         true
 //
@@ -352,9 +353,9 @@ extern dboolean     weaponrecoil;
 //
 //#define con_obituaries_default                  true
 //
-//#define crosshair_min                           crosshair_none
-//#define crosshair_default                       crosshair_none
-//#define crosshair_max                           crosshair_dot
+#define crosshair_min                           crosshair_none
+#define crosshair_default                       crosshair_none
+#define crosshair_max                           crosshair_dot
 //
 //#define crosshaircolor_min                      0
 //#define crosshaircolor_default                  4
@@ -456,9 +457,9 @@ extern dboolean     weaponrecoil;
 //#define r_berserkintensity_default              2
 //#define r_berserkintensity_max                  8
 //
-//#define r_blood_min                             r_blood_none
-//#define r_blood_default                         r_blood_all
-//#define r_blood_max                             r_blood_nofuzz
+#define r_blood_min                             r_blood_none
+#define r_blood_default                         r_blood_all
+#define r_blood_max                             r_blood_nofuzz
 //
 //#define r_bloodsplats_max_min                   0
 //#define r_bloodsplats_max_default               65536
@@ -490,7 +491,7 @@ extern dboolean     weaponrecoil;
 //
 //#define r_corpses_smearblood_default            true
 //
-//#define r_detail_default                        r_detail_high
+#define r_detail_default                        r_detail_high
 //
 //#define r_diskicon_default                      false
 //
@@ -506,9 +507,9 @@ extern dboolean     weaponrecoil;
 //#define r_fov_default                           90
 //#define r_fov_max                               135
 //
-//#define r_gamma_min                             gammalevels[0]
-//#define r_gamma_default                         0.90f
-//#define r_gamma_max                             gammalevels[GAMMALEVELS - 1]
+#define r_gamma_min                             gammalevels[0]					// doomvars
+#define r_gamma_default                         0.90f
+#define r_gamma_max                             gammalevels[GAMMALEVELS - 1]		// doomvars
 //
 //#define r_graduallighting_default               true
 //
@@ -552,7 +553,7 @@ extern dboolean     weaponrecoil;
 //
 //#define r_skycolor_none                         -1
 //#define r_skycolor_min                          0
-//#define r_skycolor_default                      r_skycolor_none
+#define r_skycolor_default                      r_skycolor_none
 //#define r_skycolor_max                          255
 //
 //#define r_supersampling_default                 true
@@ -597,9 +598,9 @@ extern dboolean     weaponrecoil;
 //#define turbo_default                           100
 //#define turbo_max                               400
 //
-//#define units_default                           units_imperial
-//
-//#define version_default                         PACKAGE_VERSIONSTRING
+#define units_default                           units_imperial
+
+#define version_default                         PACKAGE_VERSIONSTRING
 //
 //#define vid_borderlesswindow_default            true
 //
@@ -646,9 +647,9 @@ extern dboolean     weaponrecoil;
 //
 //#define vid_showfps_default                     false
 //
-//#define vid_vsync_min                           vid_vsync_adaptive
-//#define vid_vsync_default                       vid_vsync_on
-//#define vid_vsync_max                           vid_vsync_on
+#define vid_vsync_min                           vid_vsync_adaptive
+#define vid_vsync_default                       vid_vsync_on
+#define vid_vsync_max                           vid_vsync_on
 //
 //#define vid_widescreen_default                  false
 //
@@ -674,88 +675,88 @@ extern dboolean     weaponrecoil;
 //
 //#define weaponrecoil_default                    false
 //
-//#define GAMEPADALWAYSRUN_DEFAULT                0
-//#define GAMEPADAUTOMAP_DEFAULT                  GAMEPAD_BACK
-//#define GAMEPADAUTOMAPCLEARMARK_DEFAULT         0
-//#define GAMEPADAUTOMAPFOLLOWMODE_DEFAULT        0
-//#define GAMEPADAUTOMAPGRID_DEFAULT              0
-//#define GAMEPADAUTOMAPMARK_DEFAULT              0
-//#define GAMEPADAUTOMAPMAXZOOM_DEFAULT           0
-//#define GAMEPADAUTOMAPROTATEMODE_DEFAULT        0
-//#define GAMEPADAUTOMAPZOOMIN_DEFAULT            GAMEPAD_RIGHT_SHOULDER
-//#define GAMEPADAUTOMAPZOOMOUT_DEFAULT           GAMEPAD_LEFT_SHOULDER
-//#define GAMEPADBACK_DEFAULT                     0
-//#define GAMEPADFIRE_DEFAULT                     GAMEPAD_RIGHT_TRIGGER
-//#define GAMEPADFORWARD_DEFAULT                  0
-//#define GAMEPADJUMP_DEFAULT                     0
-//#define GAMEPADLEFT_DEFAULT                     0
-//#define GAMEPADMENU_DEFAULT                     GAMEPAD_START
-//#define GAMEPADMOUSELOOK_DEFAULT                0
-//#define GAMEPADNEXTWEAPON_DEFAULT               GAMEPAD_B
-//#define GAMEPADPREVWEAPON_DEFAULT               GAMEPAD_Y
-//#define GAMEPADRIGHT_DEFAULT                    0
-//#define GAMEPADRUN_DEFAULT                      GAMEPAD_LEFT_TRIGGER
-//#define GAMEPADSTRAFE_DEFAULT                   0
-//#define GAMEPADSTRAFELEFT_DEFAULT               0
-//#define GAMEPADSTRAFERIGHT_DEFAULT              0
-//#define GAMEPADUSE_DEFAULT                      GAMEPAD_A
-//#define GAMEPADUSE2_DEFAULT                     GAMEPAD_RIGHT_THUMB
-//#define GAMEPADWEAPON_DEFAULT                   0
-//
-//#define KEYALWAYSRUN_DEFAULT                    KEY_CAPSLOCK
-//#define KEYAUTOMAP_DEFAULT                      KEY_TAB
-//#define KEYAUTOMAPCLEARMARK_DEFAULT             'c'
-//#define KEYAUTOMAPFOLLOWMODE_DEFAULT            'f'
-//#define KEYAUTOMAPGRID_DEFAULT                  'g'
-//#define KEYAUTOMAPMARK_DEFAULT                  'm'
-//#define KEYAUTOMAPMAXZOOM_DEFAULT               '0'
-//#define KEYAUTOMAPROTATEMODE_DEFAULT            'r'
-//#define KEYAUTOMAPZOOMIN_DEFAULT                KEY_EQUALS
-//#define KEYAUTOMAPZOOMOUT_DEFAULT               KEY_MINUS
-//#define KEYCONSOLE_DEFAULT                      '`'
-//#define KEYDOWN_DEFAULT                         KEY_DOWNARROW
-//#define KEYDOWN2_DEFAULT                        's'
-//#define KEYFIRE_DEFAULT                         KEY_CTRL
-//#define KEYJUMP_DEFAULT                         0
-//#define KEYLEFT_DEFAULT                         KEY_LEFTARROW
-//#define KEYMOUSELOOK_DEFAULT                    0
-//#define KEYNEXTWEAPON_DEFAULT                   0
-//#define KEYPREVWEAPON_DEFAULT                   0
-//#define KEYRIGHT_DEFAULT                        KEY_RIGHTARROW
-//#define KEYRUN_DEFAULT                          KEY_SHIFT
-//#if defined(_WIN32)
-//#define KEYSCREENSHOT_DEFAULT                   KEY_PRINTSCREEN
-//#else
-//#define KEYSCREENSHOT_DEFAULT                   0
-//#endif
-//#define KEYSTRAFE_DEFAULT                       KEY_ALT
-//#define KEYSTRAFELEFT_DEFAULT                   ','
-//#define KEYSTRAFELEFT2_DEFAULT                  'a'
-//#define KEYSTRAFERIGHT_DEFAULT                  '.'
-//#define KEYSTRAFERIGHT2_DEFAULT                 'd'
-//#define KEYUP_DEFAULT                           KEY_UPARROW
-//#define KEYUP2_DEFAULT                          'w'
-//#define KEYUSE_DEFAULT                          ' '
-//#define KEYUSE2_DEFAULT                         'e'
-//#define KEYWEAPON1_DEFAULT                      '1'
-//#define KEYWEAPON2_DEFAULT                      '2'
-//#define KEYWEAPON3_DEFAULT                      '3'
-//#define KEYWEAPON4_DEFAULT                      '4'
-//#define KEYWEAPON5_DEFAULT                      '5'
-//#define KEYWEAPON6_DEFAULT                      '6'
-//#define KEYWEAPON7_DEFAULT                      '7'
-//
-//#define MOUSEFIRE_DEFAULT                       0
-//#define MOUSEFORWARD_DEFAULT                    -1
-//#define MOUSEJUMP_DEFAULT                       -1
-//#define MOUSEMOUSELOOK_DEFAULT                  -1
-//#define MOUSENEXTWEAPON_DEFAULT                 MOUSE_WHEELDOWN
-//#define MOUSEPREVWEAPON_DEFAULT                 MOUSE_WHEELUP
-//#define MOUSERUN_DEFAULT                        -1
-//#define MOUSESCREENSHOT_DEFAULT                 -1
-//#define MOUSESTRAFE_DEFAULT                     -1
-//#define MOUSEUSE_DEFAULT                        -1
-//
+#define GAMEPADALWAYSRUN_DEFAULT                0
+#define GAMEPADAUTOMAP_DEFAULT                  GAMEPAD_BACK
+#define GAMEPADAUTOMAPCLEARMARK_DEFAULT         0
+#define GAMEPADAUTOMAPFOLLOWMODE_DEFAULT        0
+#define GAMEPADAUTOMAPGRID_DEFAULT              0
+#define GAMEPADAUTOMAPMARK_DEFAULT              0
+#define GAMEPADAUTOMAPMAXZOOM_DEFAULT           0
+#define GAMEPADAUTOMAPROTATEMODE_DEFAULT        0
+#define GAMEPADAUTOMAPZOOMIN_DEFAULT            GAMEPAD_RIGHT_SHOULDER
+#define GAMEPADAUTOMAPZOOMOUT_DEFAULT           GAMEPAD_LEFT_SHOULDER
+#define GAMEPADBACK_DEFAULT                     0
+#define GAMEPADFIRE_DEFAULT                     GAMEPAD_RIGHT_TRIGGER
+#define GAMEPADFORWARD_DEFAULT                  0
+#define GAMEPADJUMP_DEFAULT                     0
+#define GAMEPADLEFT_DEFAULT                     0
+#define GAMEPADMENU_DEFAULT                     GAMEPAD_START
+#define GAMEPADMOUSELOOK_DEFAULT                0
+#define GAMEPADNEXTWEAPON_DEFAULT               GAMEPAD_B
+#define GAMEPADPREVWEAPON_DEFAULT               GAMEPAD_Y
+#define GAMEPADRIGHT_DEFAULT                    0
+#define GAMEPADRUN_DEFAULT                      GAMEPAD_LEFT_TRIGGER
+#define GAMEPADSTRAFE_DEFAULT                   0
+#define GAMEPADSTRAFELEFT_DEFAULT               0
+#define GAMEPADSTRAFERIGHT_DEFAULT              0
+#define GAMEPADUSE_DEFAULT                      GAMEPAD_A
+#define GAMEPADUSE2_DEFAULT                     GAMEPAD_RIGHT_THUMB
+#define GAMEPADWEAPON_DEFAULT                   0
+
+#define KEYALWAYSRUN_DEFAULT                    KEY_CAPSLOCK
+#define KEYAUTOMAP_DEFAULT                      KEY_TAB
+#define KEYAUTOMAPCLEARMARK_DEFAULT             'c'
+#define KEYAUTOMAPFOLLOWMODE_DEFAULT            'f'
+#define KEYAUTOMAPGRID_DEFAULT                  'g'
+#define KEYAUTOMAPMARK_DEFAULT                  'm'
+#define KEYAUTOMAPMAXZOOM_DEFAULT               '0'
+#define KEYAUTOMAPROTATEMODE_DEFAULT            'r'
+#define KEYAUTOMAPZOOMIN_DEFAULT                KEY_EQUALS
+#define KEYAUTOMAPZOOMOUT_DEFAULT               KEY_MINUS
+#define KEYCONSOLE_DEFAULT                      '`'
+#define KEYDOWN_DEFAULT                         KEY_DOWNARROW
+#define KEYDOWN2_DEFAULT                        's'
+#define KEYFIRE_DEFAULT                         KEY_CTRL
+#define KEYJUMP_DEFAULT                         0
+#define KEYLEFT_DEFAULT                         KEY_LEFTARROW
+#define KEYMOUSELOOK_DEFAULT                    0
+#define KEYNEXTWEAPON_DEFAULT                   0
+#define KEYPREVWEAPON_DEFAULT                   0
+#define KEYRIGHT_DEFAULT                        KEY_RIGHTARROW
+#define KEYRUN_DEFAULT                          KEY_SHIFT
+#if defined(_WIN32)
+#define KEYSCREENSHOT_DEFAULT                   KEY_PRINTSCREEN
+#else
+#define KEYSCREENSHOT_DEFAULT                   0
+#endif
+#define KEYSTRAFE_DEFAULT                       KEY_ALT
+#define KEYSTRAFELEFT_DEFAULT                   ','
+#define KEYSTRAFELEFT2_DEFAULT                  'a'
+#define KEYSTRAFERIGHT_DEFAULT                  '.'
+#define KEYSTRAFERIGHT2_DEFAULT                 'd'
+#define KEYUP_DEFAULT                           KEY_UPARROW
+#define KEYUP2_DEFAULT                          'w'
+#define KEYUSE_DEFAULT                          ' '
+#define KEYUSE2_DEFAULT                         'e'
+#define KEYWEAPON1_DEFAULT                      '1'
+#define KEYWEAPON2_DEFAULT                      '2'
+#define KEYWEAPON3_DEFAULT                      '3'
+#define KEYWEAPON4_DEFAULT                      '4'
+#define KEYWEAPON5_DEFAULT                      '5'
+#define KEYWEAPON6_DEFAULT                      '6'
+#define KEYWEAPON7_DEFAULT                      '7'
+
+#define MOUSEFIRE_DEFAULT                       0
+#define MOUSEFORWARD_DEFAULT                    -1
+#define MOUSEJUMP_DEFAULT                       -1
+#define MOUSEMOUSELOOK_DEFAULT                  -1
+#define MOUSENEXTWEAPON_DEFAULT                 MOUSE_WHEELDOWN
+#define MOUSEPREVWEAPON_DEFAULT                 MOUSE_WHEELUP
+#define MOUSERUN_DEFAULT                        -1
+#define MOUSESCREENSHOT_DEFAULT                 -1
+#define MOUSESTRAFE_DEFAULT                     -1
+#define MOUSEUSE_DEFAULT                        -1
+
 //// stevepro
 //#define MAX_MOUSE_BUTTONS   8
 //#define MOUSE_WHEELUP       MAX_MOUSE_BUTTONS

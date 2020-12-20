@@ -1,4 +1,5 @@
 #include "m_controls.h"
+#include "doomdef.h"
 #include "m_config.h"
 #include "doomkeys.h"
 #include "version.h"
