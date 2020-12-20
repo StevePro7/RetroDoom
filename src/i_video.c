@@ -1,5 +1,7 @@
 #include "i_video.h"
 #include "a_game.h"
+#include "doomkeys.h"
+#include "m_controls.h"
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -167,7 +169,7 @@
 //HANDLE              CapFPSEvent;
 //#endif
 //
-//static dboolean     capslock;
+static dboolean     capslock;
 //
 //evtype_t            lasteventtype = ev_none;
 //
@@ -338,49 +340,49 @@ dboolean MouseShouldBeGrabbed( void )
 //    if (mapwindow)
 //        I_DestroyExternalAutomap();
 //}
-//
-//void I_ShutdownGraphics(void)
-//{
-//    SDL_QuitSubSystem(SDL_INIT_VIDEO);
-//}
-//
-//#if defined(_WIN32)
-//static void ToggleCapsLockState(void)
-//{
-//    keybd_event(VK_CAPITAL, 0x45, 0, (uintptr_t)0);
-//    keybd_event(VK_CAPITAL, 0x45, KEYEVENTF_KEYUP, (uintptr_t)0);
-//}
-//#elif defined(X11)
-//static void SetCapsLockState(dboolean enabled)
-//{
-//    Display *dpy = XOpenDisplay(0);
-//
-//    XkbLockModifiers(dpy, XkbUseCoreKbd, 2, enabled * 2);
-//    XFlush(dpy);
-//    XCloseDisplay(dpy);
-//}
-//#endif
-//
-//dboolean GetCapsLockState(void)
-//{
-//#if defined(_WIN32)
-//    return (GetKeyState(VK_CAPITAL) & 0xFFFF);
-//#else
-//    return (SDL_GetModState() & KMOD_CAPS);
-//#endif
-//}
-//
-//void I_ShutdownKeyboard(void)
-//{
-//#if defined(_WIN32)
-//    if (keyboardalwaysrun == KEY_CAPSLOCK && !capslock && GetCapsLockState())
-//        ToggleCapsLockState();
-//#elif defined(X11)
-//    if (keyboardalwaysrun == KEY_CAPSLOCK)
-//        SetCapsLockState(false);
-//#endif
-//}
-//
+
+void I_ShutdownGraphics( void )
+{
+	SDL_QuitSubSystem( SDL_INIT_VIDEO );
+}
+
+#if defined(_WIN32)
+static void ToggleCapsLockState( void )
+{
+	keybd_event( VK_CAPITAL, 0x45, 0, ( uintptr_t ) 0 );
+	keybd_event( VK_CAPITAL, 0x45, KEYEVENTF_KEYUP, ( uintptr_t ) 0 );
+}
+#elif defined(X11)
+static void SetCapsLockState( dboolean enabled )
+{
+	Display *dpy = XOpenDisplay( 0 );
+
+	XkbLockModifiers( dpy, XkbUseCoreKbd, 2, enabled * 2 );
+	XFlush( dpy );
+	XCloseDisplay( dpy );
+}
+#endif
+
+dboolean GetCapsLockState( void )
+{
+#if defined(_WIN32)
+	return ( GetKeyState( VK_CAPITAL ) & 0xFFFF );
+#else
+	return ( SDL_GetModState() & KMOD_CAPS );
+#endif
+}
+
+void I_ShutdownKeyboard( void )
+{
+#if defined(_WIN32)
+	if( keyboardalwaysrun == KEY_CAPSLOCK && !capslock && GetCapsLockState() )
+		ToggleCapsLockState();
+#elif defined(X11)
+	if( keyboardalwaysrun == KEY_CAPSLOCK )
+		SetCapsLockState( false );
+#endif
+}
+
 //static int AccelerateMouse(int value)
 //{
 //    return (value > 10 ? value * 2 - 10 : (value < -10 ? value * 2 + 10 : value));

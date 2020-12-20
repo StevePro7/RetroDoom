@@ -4,11 +4,13 @@
 #include "doomvars.h"
 #include "i_music.h"
 #include "i_sound.h"
+#include "i_video.h"
 ////#include "c_console.h"
 ////#include "d_main.h"
 ////#include "i_gamepad.h"
 ////#include "i_timer.h"
-////#include "m_config.h"
+//#include "m_config.h"
+//#include "m_controls.h"
 #include "m_misc.h"
 ////#include "s_sound.h"
 #include "version.h"
@@ -259,14 +261,14 @@ void I_Error(const char *error, ...)
 
 //    M_SaveCVARs();
 //
-//    I_ShutdownGraphics();
+    I_ShutdownGraphics();
 //    I_ShutdownKeyboard();
 //    I_ShutdownGamepad();
 //    I_ShutdownTimer();
 //
-//#if defined(_WIN32)
-//    I_ShutdownWindows32();
-//#endif
+#if defined(_WIN32)
+	I_ShutdownWindows32();
+#endif
 
 	va_start( argptr, error );
 	vfprintf( stderr, error, argptr );

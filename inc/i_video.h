@@ -12,15 +12,15 @@
 
 //dboolean MouseShouldBeGrabbed(void);
 //void I_InitKeyboard(void);
-//void I_ShutdownKeyboard(void);
-//dboolean GetCapsLockState(void);
+void I_ShutdownKeyboard(void);
+dboolean GetCapsLockState(void);
 //
 //// Called by D_DoomMain,
 //// determines the hardware configuration
 //// and sets up the video mode
 //void I_InitGraphics(void);
 //void I_RestartGraphics(void);
-//void I_ShutdownGraphics(void);
+void I_ShutdownGraphics(void);
 //void I_CapFPS(int cap);
 //
 //void GetWindowPosition(void);
