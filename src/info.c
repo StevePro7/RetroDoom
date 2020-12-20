@@ -1,6 +1,8 @@
 #include "info.h"
+#include "doomdef.h"
 #include "doomenum.h"
 #include "doomtype.h"
+#include "m_fixed.h"
 ////#include "r_defs.h"
 //#include "sounds.h"
 //
@@ -49,52 +51,52 @@
     /* plural3              */ ""        \
 },
 
-//mobjinfo_t mobjinfo[] =
-//{
-//    // Player (MT_PLAYER)
-//    {
-//        /* doomednum            */ -1,
-//        /* spawnstate           */ S_PLAY,
-//        /* spawnhealth          */ 100,
-//        /* gibhealth            */ -100,
-//        /* seestate             */ S_PLAY_RUN1,
-//        /* seesound             */ sfx_none,
-//        /* reactiontime         */ 0,
-//        /* attacksound          */ sfx_none,
-//        /* painstate            */ S_PLAY_PAIN,
-//        /* painchance           */ 255,
-//        /* painsound            */ sfx_plpain,
-//        /* meleestate           */ S_NULL,
-//        /* missilestate         */ S_PLAY_ATK1,
-//        /* deathstate           */ S_PLAY_DIE1,
-//        /* xdeathstate          */ S_PLAY_XDIE1,
-//        /* deathsound           */ sfx_pldeth,
-//        /* droppeditem          */ MT_NULL,
-//        /* meleethreshold       */ 0,
-//        /* maxattackrange       */ 0,
-//        /* minmissilechance     */ 200,
-//        /* speed                */ 0,
-//        /* radius               */ 16 * FRACUNIT,
-//        /* pickupradius         */ 16 * FRACUNIT,
-//        /* height               */ 56 * FRACUNIT,
-//        /* projectilepassheight */ 0,
-//        /* mass                 */ 100,
-//        /* damage               */ 0,
-//        /* activesound          */ sfx_none,
-//        /* flags                */ (MF_SOLID | MF_SHOOTABLE | MF_DROPOFF | MF_PICKUP | MF_FRIEND),
-//        /* flags2               */ (MF2_CASTSHADOW | MF2_PASSMOBJ | MF2_CRUSHABLE | MF2_NOLIQUIDBOB | MF2_FOOTCLIP),
-//        /* raisestate           */ S_NULL,
-//        /* frames               */ 0,
-//        /* fullbright           */ false,
-//        /* blood                */ MT_BLOOD,
-//        /* shadowoffset         */ 0,
-//        /* name1                */ "player",
-//        /* plural1              */ "",
-//        /* name2                */ "",
-//        /* plural2              */ "",
-//        /* name3                */ "",
-//        /* plural3              */ ""
-//    },
+mobjinfo_t mobjinfo[] =
+{
+    // Player (MT_PLAYER)
+    {
+        /* doomednum            */ -1,
+        /* spawnstate           */ S_PLAY,
+        /* spawnhealth          */ 100,
+        /* gibhealth            */ -100,
+        /* seestate             */ S_PLAY_RUN1,
+        /* seesound             */ sfx_none,
+        /* reactiontime         */ 0,
+        /* attacksound          */ sfx_none,
+        /* painstate            */ S_PLAY_PAIN,
+        /* painchance           */ 255,
+        /* painsound            */ sfx_plpain,
+        /* meleestate           */ S_NULL,
+        /* missilestate         */ S_PLAY_ATK1,
+        /* deathstate           */ S_PLAY_DIE1,
+        /* xdeathstate          */ S_PLAY_XDIE1,
+        /* deathsound           */ sfx_pldeth,
+        /* droppeditem          */ MT_NULL,
+        /* meleethreshold       */ 0,
+        /* maxattackrange       */ 0,
+        /* minmissilechance     */ 200,
+        /* speed                */ 0,
+        /* radius               */ 16 * FRACUNIT,
+        /* pickupradius         */ 16 * FRACUNIT,
+        /* height               */ 56 * FRACUNIT,
+        /* projectilepassheight */ 0,
+        /* mass                 */ 100,
+        /* damage               */ 0,
+        /* activesound          */ sfx_none,
+        /* flags                */ (MF_SOLID | MF_SHOOTABLE | MF_DROPOFF | MF_PICKUP | MF_FRIEND),
+        /* flags2               */ (MF2_CASTSHADOW | MF2_PASSMOBJ | MF2_CRUSHABLE | MF2_NOLIQUIDBOB | MF2_FOOTCLIP),
+        /* raisestate           */ S_NULL,
+        /* frames               */ 0,
+        /* fullbright           */ false,
+        /* blood                */ MT_BLOOD,
+        /* shadowoffset         */ 0,
+        /* name1                */ "player",
+        /* plural1              */ "",
+        /* name2                */ "",
+        /* plural2              */ "",
+        /* name3                */ "",
+        /* plural3              */ ""
+    },
 //
 //    // Zombieman (MT_POSSESSED)
 //    {
@@ -6901,4 +6903,4 @@
 //    EMPTYMOBJ // MT_EXTRA97
 //    EMPTYMOBJ // MT_EXTRA98
 //    EMPTYMOBJ // MT_EXTRA99
-//};
+};

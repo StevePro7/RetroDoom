@@ -742,5 +742,119 @@
 // stevepro
 
 
+// p_mobj.h
+#define REDBLOOD            184
+#define GREENBLOOD          123
+#define BLUEBLOOD           204
+#define FUZZYBLOOD          -1
+
+// For torque simulation:
+#define OVERDRIVE           6
+#define MAXGEAR             (OVERDRIVE + 16)
+
+// Whether an object is "sentient" or not. Used for environmental influences.
+#define sentient(mobj)      (mobj->health > 0 && mobj->info->seestate)
+
+#define CORPSEBLOODSPLATS   512
+
+// Apply additive translucency
+#define MF2_TRANSLUCENT                 0x00000001
+
+// Apply additive translucency on red only
+#define MF2_TRANSLUCENT_REDONLY         0x00000002
+
+// Apply additive translucency on green only
+#define MF2_TRANSLUCENT_GREENONLY       0x00000004
+
+// Apply additive translucency on blue only
+#define MF2_TRANSLUCENT_BLUEONLY        0x00000008
+
+// Apply 33% alpha translucency
+#define MF2_TRANSLUCENT_33              0x00000010
+
+// Apply 50% alpha translucency
+#define MF2_TRANSLUCENT_50              0x00000020
+
+// Apply additive translucency on all red to white
+#define MF2_TRANSLUCENT_REDWHITEONLY    0x00000040
+
+// Convert all red to green, then apply 33% alpha translucency
+#define MF2_TRANSLUCENT_REDTOGREEN_33   0x00000080
+
+// Convert all red to blue, then apply 33% alpha translucency
+#define MF2_TRANSLUCENT_REDTOBLUE_33    0x00000100
+
+// Apply 33% alpha translucency on all blue
+#define MF2_TRANSLUCENT_BLUE_25         0x00000200
+
+// Convert all red to green
+#define MF2_REDTOGREEN                  0x00000400
+// Convert all green to red
+#define MF2_GREENTORED                  0x00000800
+// Convert all red to blue
+#define MF2_REDTOBLUE                   0x00001000
+
+// Object bobs up and down
+#define MF2_FLOATBOB                    0x00002000
+
+// Mirrored horizontally
+#define MF2_MIRRORED                    0x00004000
+
+#define MF2_FALLING                     0x00008000
+
+// Object is resting on top of another object
+#define MF2_ONMOBJ                      0x00010000
+
+// Object is allowed to pass over/under other objects
+#define MF2_PASSMOBJ                    0x00020000
+
+// Object is a corpse and being resurrected
+#define MF2_RESURRECTING                0x00040000
+
+// Object's feet will be clipped in liquid
+#define MF2_FOOTCLIP                    0x00080000
+
+// Object won't bob in liquid
+#define MF2_NOLIQUIDBOB                 0x00100000
+
+// Object's feet are now being clipped
+#define MF2_FEETARECLIPPED              0x00200000
+
+// Object casts a shadow
+#define MF2_CASTSHADOW                  0x00400000
+
+// Object is blood
+#define MF2_BLOOD                       0x00800000
+
+// Object's thing triangle is not displayed in automap
+#define MF2_DONTMAP                     0x01000000
+
+// Object has smoke trail
+#define MF2_SMOKETRAIL                  0x02000000
+
+// Object can be crushed into blood splats by moving sectors
+#define MF2_CRUSHABLE                   0x04000000
+
+// All objects are being killed
+#define MF2_MASSACRE                    0x08000000
+
+// Object is a map decoration
+#define MF2_DECORATION                  0x10000000
+
+// Object is a missile from a monster
+#define MF2_MONSTERMISSILE              0x40000000
+
+// Object is a boss monster
+#define MF2_BOSS                        0x80000000
+
+// Object is armed (for MF_TOUCHY objects)
+#define MF3_ARMED                       0x00000001
+
+// Object was spawned by played using spawn CCMD
+#define MF3_SPAWNEDBYPLAYER             0x00000002
+
+// Object has higher attack probability
+#define MF3_MISSILEMORE                 0x00000004
+
 
 #endif
