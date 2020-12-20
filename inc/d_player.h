@@ -4,7 +4,8 @@
 //stevepro
 #include "d_player.h"
 #include "d_ticcmd.h"
-#include "doomdef.h"
+//#include "doomdef.h"
+#include "doomenum.h"
 #include "doomtype.h"
 #include "info.h"
 #include "m_fixed.h"

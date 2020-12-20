@@ -22,6 +22,7 @@
     <ClCompile Include="..\src\a_game.c" />
     <ClCompile Include="..\src\doomdata.c" />
     <ClCompile Include="..\src\doomdef.c" />
+    <ClCompile Include="..\src\doomenum.c" />
     <ClCompile Include="..\src\doomkeys.c" />
     <ClCompile Include="..\src\doomretro.c" />
     <ClCompile Include="..\src\doomtype.c" />
@@ -61,6 +62,7 @@
     <ClInclude Include="..\inc\a_game.h" />
     <ClInclude Include="..\inc\doomdata.h" />
     <ClInclude Include="..\inc\doomdef.h" />
+    <ClInclude Include="..\inc\doomenum.h" />
     <ClInclude Include="..\inc\doomkeys.h" />
     <ClInclude Include="..\inc\doomtype.h" />
     <ClInclude Include="..\inc\dstrings.h" />
