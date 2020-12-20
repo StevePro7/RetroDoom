@@ -29,51 +29,51 @@
 // as commands per game tic.
 //#include "d_ticcmd.h"
 
-typedef enum
-{
-    armortype_none,
-    armortype_green,
-    armortype_blue
-} armortype_t;
+//typedef enum
+//{
+//    armortype_none,
+//    armortype_green,
+//    armortype_blue
+//} armortype_t;
 
 //
 // Player states.
 //
-typedef enum
-{
-    // Playing or camping.
-    PST_LIVE,
-
-    // Dead on the ground, view follows killer.
-    PST_DEAD,
-
-    // Ready to restart/respawn???
-    PST_REBORN
-} playerstate_t;
+//typedef enum
+//{
+//    // Playing or camping.
+//    PST_LIVE,
+//
+//    // Dead on the ground, view follows killer.
+//    PST_DEAD,
+//
+//    // Ready to restart/respawn???
+//    PST_REBORN
+//} playerstate_t;
 
 //
 // Player internal flags, for cheats and debug.
 //
-enum
-{
-    // No clipping, walk through barriers.
-    CF_NOCLIP        = 1,
-
-    // No damage, no health loss.
-    CF_GODMODE       = 2,
-
-    CF_NOTARGET      = 4,
-
-    CF_MYPOS         = 8,
-
-    CF_ALLMAP        = 16,
-
-    CF_ALLMAP_THINGS = 32,
-
-    CF_CHOPPERS      = 64,
-
-    CF_BUDDHA        = 128
-};
+//enum
+//{
+//    // No clipping, walk through barriers.
+//    CF_NOCLIP        = 1,
+//
+//    // No damage, no health loss.
+//    CF_GODMODE       = 2,
+//
+//    CF_NOTARGET      = 4,
+//
+//    CF_MYPOS         = 8,
+//
+//    CF_ALLMAP        = 16,
+//
+//    CF_ALLMAP_THINGS = 32,
+//
+//    CF_CHOPPERS      = 64,
+//
+//    CF_BUDDHA        = 128
+//};
 
 //
 // Extended player object info: player_t

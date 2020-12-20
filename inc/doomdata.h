@@ -3,6 +3,7 @@
 
 // Some global defines, that configure the game.
 #include "doomdef.h"
+#include "doomenum.h"
 
 //
 // Map level types.
@@ -10,22 +11,22 @@
 // used in the lumps of the WAD files.
 //
 
-// Lump order in a map WAD: each map needs a couple of lumps
-// to provide a complete scene geometry description.
-enum
-{
-    ML_LABEL,       // A separator, name, ExMx or MAPxx
-    ML_THINGS,      // Monsters, items...
-    ML_LINEDEFS,    // LineDefs, from editing
-    ML_SIDEDEFS,    // SideDefs, from editing
-    ML_VERTEXES,    // Vertexes, edited and BSP splits generated
-    ML_SEGS,        // LineSegs, from LineDefs split by BSP
-    ML_SSECTORS,    // SubSectors, list of LineSegs
-    ML_NODES,       // BSP nodes
-    ML_SECTORS,     // Sectors, from editing
-    ML_REJECT,      // LUT, sector-sector visibility
-    ML_BLOCKMAP     // LUT, motion clipping, walls/grid element
-};
+//// Lump order in a map WAD: each map needs a couple of lumps
+//// to provide a complete scene geometry description.
+//enum
+//{
+//    ML_LABEL,       // A separator, name, ExMx or MAPxx
+//    ML_THINGS,      // Monsters, items...
+//    ML_LINEDEFS,    // LineDefs, from editing
+//    ML_SIDEDEFS,    // SideDefs, from editing
+//    ML_VERTEXES,    // Vertexes, edited and BSP splits generated
+//    ML_SEGS,        // LineSegs, from LineDefs split by BSP
+//    ML_SSECTORS,    // SubSectors, list of LineSegs
+//    ML_NODES,       // BSP nodes
+//    ML_SECTORS,     // Sectors, from editing
+//    ML_REJECT,      // LUT, sector-sector visibility
+//    ML_BLOCKMAP     // LUT, motion clipping, walls/grid element
+//};
 
 #if defined(_MSC_VER) || defined(__GNUC__)
 #pragma pack(push, 1)

@@ -2,7 +2,7 @@
 #define __DSTRINGS_H__
 
 // All important printed strings.
-#include "d_englsh.h"
+//#include "d_englsh.h"
 
 // Misc. other strings.
 #define SAVEGAMENAME        "doomsav"
