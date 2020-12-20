@@ -4,6 +4,11 @@
 //#include "m_fixed.h"
 //#include "m_misc.h"
 
+#include "SDL.h"
+#include "SDL_gamecontroller.h"
+#include "SDL_haptic.h"
+#include "SDL_joystick.h"
+
 //dboolean                    gp_analog = gp_analog_default;
 //float                       gp_deadzone_left = gp_deadzone_left_default;
 //float                       gp_deadzone_right = gp_deadzone_right_default;
@@ -15,27 +20,27 @@
 //int                         gp_vibrate_barrels = gp_vibrate_barrels_default;
 //int                         gp_vibrate_damage = gp_vibrate_damage_default;
 //int                         gp_vibrate_weapons = gp_vibrate_weapons_default;
-//
-//static SDL_Joystick         *joystick;
-//static SDL_GameController   *gamecontroller;
-//static SDL_Haptic           *haptic;
-//
-//int                         gamepadbuttons = 0;
-//short                       gamepadthumbLX = 0;
-//short                       gamepadthumbLY = 0;
-//short                       gamepadthumbRX = 0;
-//short                       gamepadthumbRY = 0;
-//float                       gamepadhorizontalsensitivity;
-//float                       gamepadverticalsensitivity;
-//short                       gamepadleftdeadzone;
-//short                       gamepadrightdeadzone;
-//
-//int                         barrelvibrationtics = 0;
-//int                         damagevibrationtics = 0;
-//int                         weaponvibrationtics = 0;
-//int                         idlevibrationstrength;
-//int                         restorevibrationstrength;
-//
+
+static SDL_Joystick         *joystick;
+static SDL_GameController   *gamecontroller;
+static SDL_Haptic           *haptic;
+
+int                         gamepadbuttons = 0;
+short                       gamepadthumbLX = 0;
+short                       gamepadthumbLY = 0;
+short                       gamepadthumbRX = 0;
+short                       gamepadthumbRY = 0;
+float                       gamepadhorizontalsensitivity;
+float                       gamepadverticalsensitivity;
+short                       gamepadleftdeadzone;
+short                       gamepadrightdeadzone;
+
+int                         barrelvibrationtics = 0;
+int                         damagevibrationtics = 0;
+int                         weaponvibrationtics = 0;
+int                         idlevibrationstrength;
+int                         restorevibrationstrength;
+
 
 // stevepro
 void I_InitGamepad( void )
@@ -84,32 +89,32 @@ void I_InitGamepad( void )
 //
 
 // stevepro
+//void I_ShutdownGamepad( void )
+//{
+//}
 void I_ShutdownGamepad( void )
 {
+	if( !gamecontroller )
+		return;
+
+	if( haptic )
+	{
+		SDL_HapticClose( haptic );
+		haptic = NULL;
+		barrelvibrationtics = 0;
+		damagevibrationtics = 0;
+		weaponvibrationtics = 0;
+	}
+
+	SDL_GameControllerClose( gamecontroller );
+	gamecontroller = NULL;
+
+	SDL_JoystickClose( joystick );
+	joystick = NULL;
+
+	SDL_QuitSubSystem( SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC );
 }
-//void I_ShutdownGamepad(void)
-//{
-//    if (!gamecontroller)
-//        return;
-//
-//    if (haptic)
-//    {
-//        SDL_HapticClose(haptic);
-//        haptic = NULL;
-//        barrelvibrationtics = 0;
-//        damagevibrationtics = 0;
-//        weaponvibrationtics = 0;
-//    }
-//
-//    SDL_GameControllerClose(gamecontroller);
-//    gamecontroller = NULL;
-//
-//    SDL_JoystickClose(joystick);
-//    joystick = NULL;
-//
-//    SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC);
-//}
-//
+
 //void I_GamepadVibration(int strength)
 //{
 //    static int  currentstrength;

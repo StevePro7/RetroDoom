@@ -52,7 +52,7 @@ extern short    gamepadleftdeadzone;
 extern short    gamepadrightdeadzone;
 
 //void I_InitGamepad(void);
-//void I_ShutdownGamepad(void);
+void I_ShutdownGamepad(void);
 //void I_GamepadVibration(int strength);
 //void I_UpdateGamepadVibration(void);
 //void I_StopGamepadVibration(void);
