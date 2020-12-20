@@ -1,6 +1,7 @@
 #include "i_video.h"
 #include "a_game.h"
 #include "doomkeys.h"
+#include "doomkeys.h"
 #include "m_controls.h"
 
 #if defined(_WIN32)
@@ -55,7 +56,7 @@
 // CVARs
 //dboolean            alwaysrun = alwaysrun_default;
 //dboolean            m_acceleration = m_acceleration_default;
-//int                 r_color = r_color_default;
+int                 r_color = r_color_default;
 //float               r_gamma = r_gamma_default;
 //dboolean            vid_borderlesswindow = vid_borderlesswindow_default;
 //int                 vid_capfps = vid_capfps_default;
@@ -1080,7 +1081,7 @@ void I_WindowResizeBlit( void )
 //    if (vid_pillarboxes)
 //        SDL_SetRenderDrawColor(renderer, colors[0].r, colors[0].g, colors[0].b, SDL_ALPHA_OPAQUE);
 //}
-//
+
 //static void I_RestoreFocus(void)
 //{
 //#if defined(_WIN32)
