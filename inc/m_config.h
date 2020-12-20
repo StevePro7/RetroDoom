@@ -1,6 +1,8 @@
 #if !defined(__M_CONFIG_H__)
 #define __M_CONFIG_H__
 
+#include "doomtype.h"
+
 extern dboolean     alwaysrun;
 extern int          am_allmapcdwallcolor;
 extern int          am_allmapfdwallcolor;
@@ -801,7 +803,7 @@ typedef struct
 
 extern valuealias_t     valuealiases[];
 
-void M_LoadCVARs(char *filename);
-void M_SaveCVARs(void);
+//void M_LoadCVARs(char *filename);
+//void M_SaveCVARs(void);
 
 #endif

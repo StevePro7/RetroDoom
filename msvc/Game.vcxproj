@@ -37,6 +37,7 @@
     <ClCompile Include="..\src\i_timer.c" />
     <ClCompile Include="..\src\i_video.c" />
     <ClCompile Include="..\src\m_argv.c" />
+    <ClCompile Include="..\src\m_config.c" />
     <ClCompile Include="..\src\m_fixed.c" />
     <ClCompile Include="..\src\m_misc.c" />
     <ClCompile Include="..\src\m_random.c" />
@@ -73,6 +74,7 @@
     <ClInclude Include="..\inc\i_timer.h" />
     <ClInclude Include="..\inc\i_video.h" />
     <ClInclude Include="..\inc\m_argv.h" />
+    <ClInclude Include="..\inc\m_config.h" />
     <ClInclude Include="..\inc\m_fixed.h" />
     <ClInclude Include="..\inc\m_misc.h" />
     <ClInclude Include="..\inc\m_random.h" />
