@@ -29,6 +29,13 @@
 #define PC  "PC"
 #endif
 
+// stevepro
+static void My_S_Shutdown()
+{
+	I_ShutdownSound();
+	I_ShutdownMusic();
+}
+
 static void I_ShutdownWindows32()
 {
 	DestroyIcon( icon );
@@ -191,48 +198,48 @@ static void I_ShutdownWindows32()
 //    C_Output("There %s %i core%s and %sGB of RAM on this " PC ".", (cores > 1 ? "are" : "is"), cores, (cores > 1 ? "s" : ""), RAM);
 //    free(RAM);
 //}
-//
-////
-//// I_Quit
-////
-//#if defined(_WIN32)
-//void I_ShutdownWindows32(void);
-//#endif
-//
-//void I_Quit(dboolean shutdown)
-//{
-//    if (shutdown)
-//    {
-//        D_FadeScreenToBlack();
-//
-//        S_Shutdown();
-//
-//        if (returntowidescreen)
-//            vid_widescreen = true;
-//
-//        M_SaveCVARs();
-//
-//        I_ShutdownGraphics();
-//        I_ShutdownKeyboard();
-//        I_ShutdownGamepad();
-//        I_ShutdownTimer();
-//    }
-//
-//#if defined(_WIN32)
-//    I_ShutdownWindows32();
-//#endif
-//
-//    exit(0);
-//}
-//
-////
-// I_Error
 
-static void My_S_Shutdown()
+//
+// I_Quit
+//
+#if defined(_WIN32)
+void I_ShutdownWindows32(void);
+#endif
+
+void I_Quit(dboolean shutdown)
 {
-	I_ShutdownSound();
-	I_ShutdownMusic();
+    if (shutdown)
+    {
+		// steveproTODO
+        //D_FadeScreenToBlack();
+
+		//S_Shutdown();
+		// stevepro
+		My_S_Shutdown();
+
+        if (returntowidescreen)
+            vid_widescreen = true;
+
+		// steveproTODO save CVARs
+		//    M_SaveCVARs();
+
+        I_ShutdownGraphics();
+        I_ShutdownKeyboard();
+        I_ShutdownGamepad();
+        I_ShutdownTimer();
+    }
+
+#if defined(_WIN32)
+    I_ShutdownWindows32();
+#endif
+
+    exit(0);
 }
+
+//
+// I_Error
+//
+
 
 void I_Error(const char *error, ...)
 {
@@ -261,7 +268,7 @@ void I_Error(const char *error, ...)
 
 	// steveproTODO save CVARs
 //    M_SaveCVARs();
-//
+
     I_ShutdownGraphics();
     I_ShutdownKeyboard();
     I_ShutdownGamepad();
