@@ -2,7 +2,11 @@
 
 #include "d_englsh.h"
 #include "d_think.h"
+#include "doomtype.h"
 #include "dstrings.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
 
 //#include <ctype.h>
 //#include "c_console.h"
@@ -19,72 +23,72 @@
 //// killough 10/98: new functions, to allow processing DEH files in-memory
 //// (e.g. from wads)
 //
-//typedef struct
-//{
-//    byte    *inp;
-//    byte    *lump;
-//    long    size;
-//    FILE    *f;
-//} DEHFILE;
+typedef struct
+{
+	byte    *inp;
+	byte    *lump;
+	long    size;
+	FILE    *f;
+} DEHFILE;
 //
-//static dboolean addtocount;
-//static int      linecount;
-//
-//int             dehcount;
-//dboolean        dehacked;
-//
-//// killough 10/98: emulate IO whether input really comes from a file or not
-//
-//// haleyjd: got rid of macros for MSVC
-//static char *dehfgets(char *buf, int n, DEHFILE *fp)
-//{
-//    if (!fp->lump)                              // If this is a real file, return regular fgets
-//    {
-//        linecount++;
-//        return fgets(buf, n, fp->f);
-//    }
-//
-//    if (!n || fp->size <= 0 || !*fp->inp)       // If no more characters
-//        return NULL;
-//
-//    if (n == 1)
-//    {
-//        fp->size--;
-//        *buf = *fp->inp++;
-//    }
-//    else
-//    {                                           // copy buffer
-//        char    *p = buf;
-//
-//        while (n > 1 && *fp->inp && fp->size && (n--, fp->size--, *p++ = *fp->inp++) != '\n');
-//
-//        *p = 0;
-//    }
-//
-//    linecount++;
-//
-//    return buf;                                 // Return buffer pointer
-//}
-//
-//static int dehfeof(DEHFILE *fp)
-//{
-//    return (!fp->lump ? feof(fp->f) : fp->size <= 0 || !*fp->inp);
-//}
-//
-//static int dehfgetc(DEHFILE *fp)
-//{
-//    return (!fp->lump ? fgetc(fp->f) : fp->size > 0 ? fp->size--, *fp->inp++ : EOF);
-//}
-//
-//// #include "d_deh.h" -- we don't do that here but we declare the
-//// variables. This externalizes everything that there is a string
-//// set for in the language files. See d_deh.h for detailed comments,
-//// original English values etc. These are set to the macro values,
-//// which are set by D_ENGLSH.H or D_FRENCH.H(etc). BEX files are a
-//// better way of changing these strings globally by language.
-//
-//// ====================================================================
-//// Any of these can be changed using the bex extensions
+static dboolean addtocount;
+static int      linecount;
+
+int             dehcount;
+dboolean        dehacked;
+
+// killough 10/98: emulate IO whether input really comes from a file or not
+
+// haleyjd: got rid of macros for MSVC
+static char *dehfgets(char *buf, int n, DEHFILE *fp)
+{
+    if (!fp->lump)                              // If this is a real file, return regular fgets
+    {
+        linecount++;
+        return fgets(buf, n, fp->f);
+    }
+
+    if (!n || fp->size <= 0 || !*fp->inp)       // If no more characters
+        return NULL;
+
+    if (n == 1)
+    {
+        fp->size--;
+        *buf = *fp->inp++;
+    }
+    else
+    {                                           // copy buffer
+        char    *p = buf;
+
+        while (n > 1 && *fp->inp && fp->size && (n--, fp->size--, *p++ = *fp->inp++) != '\n');
+
+        *p = 0;
+    }
+
+    linecount++;
+
+    return buf;                                 // Return buffer pointer
+}
+
+static int dehfeof( DEHFILE *fp )
+{
+	return ( !fp->lump ? feof( fp->f ) : fp->size <= 0 || !*fp->inp );
+}
+
+static int dehfgetc( DEHFILE *fp )
+{
+	return ( !fp->lump ? fgetc( fp->f ) : fp->size > 0 ? fp->size--, *fp->inp++ : EOF );
+}
+
+// #include "d_deh.h" -- we don't do that here but we declare the
+// variables. This externalizes everything that there is a string
+// set for in the language files. See d_deh.h for detailed comments,
+// original English values etc. These are set to the macro values,
+// which are set by D_ENGLSH.H or D_FRENCH.H(etc). BEX files are a
+// better way of changing these strings globally by language.
+
+// ====================================================================
+// Any of these can be changed using the bex extensions
 
 char    *s_VERSION = "";
 
@@ -1430,46 +1434,46 @@ char **mapnamesn[] =    // Nerve WAD map names.
 };
 
 // Function prototypes
-//static void lfstrip(char *s);       // strip the \r and/or \n off of a line
-//static void rstrip(char *s);        // strip trailing whitespace
-//static char *ptr_lstrip(char *p);   // point past leading whitespace
+static void lfstrip(char *s);       // strip the \r and/or \n off of a line
+static void rstrip(char *s);        // strip trailing whitespace
+static char *ptr_lstrip(char *p);   // point past leading whitespace
 //static int deh_GetData(char *s, char *k, long *l, char **strval);
 //static dboolean deh_procStringSub(char *key, char *lookfor, char *newstring);
-//static char *dehReformatStr(char *string);
-//
-//// Prototypes for block processing functions
-//// Pointers to these functions are used as the blocks are encountered.
-//static void deh_procThing(DEHFILE *fpin, char *line);
-//static void deh_procFrame(DEHFILE *fpin, char *line);
-//static void deh_procPointer(DEHFILE *fpin, char *line);
-//static void deh_procSounds(DEHFILE *fpin, char *line);
-//static void deh_procAmmo(DEHFILE *fpin, char *line);
-//static void deh_procWeapon(DEHFILE *fpin, char *line);
-//static void deh_procSprite(DEHFILE *fpin, char *line);
-//static void deh_procCheat(DEHFILE *fpin, char *line);
-//static void deh_procMisc(DEHFILE *fpin, char *line);
-//static void deh_procText(DEHFILE *fpin, char *line);
-//static void deh_procPars(DEHFILE *fpin, char *line);
-//static void deh_procStrings(DEHFILE *fpin, char *line);
-//static void deh_procError(DEHFILE *fpin, char *line);
-//static void deh_procBexCodePointers(DEHFILE *fpin, char *line);
+static char *dehReformatStr(char *string);
 
-//// Structure deh_block is used to hold the block names that can
-//// be encountered, and the routines to use to decipher them
-//typedef struct
-//{
-//    char    *key;                                       // a mnemonic block code name
-//    void    (*const fptr)(DEHFILE *, char *);           // handler
-//} deh_block;
-//
-//#define DEH_BUFFERMAX   1024    // input buffer area size, hardcoded for now
-//// killough 08/09/98: make DEH_BLOCKMAX self-adjusting
-//#define DEH_BLOCKMAX    arrlen(deh_blocks)              // size of array
-//#define DEH_MAXKEYLEN   32      // as much of any key as we'll look at
-//#define DEH_MOBJINFOMAX 35      // number of ints in the mobjinfo_t structure (!)
-//
-//// Put all the block header values, and the function to be called when that
-//// one is encountered, in this array:
+// Prototypes for block processing functions
+// Pointers to these functions are used as the blocks are encountered.
+//static void deh_procThing(DEHFILE *fpin, char *line);
+//static void deh_procFrame( DEHFILE *fpin, char *line );
+//static void deh_procPointer( DEHFILE *fpin, char *line );
+//static void deh_procSounds( DEHFILE *fpin, char *line );
+//static void deh_procAmmo( DEHFILE *fpin, char *line );
+//static void deh_procWeapon( DEHFILE *fpin, char *line );
+//static void deh_procSprite( DEHFILE *fpin, char *line );
+//static void deh_procCheat( DEHFILE *fpin, char *line );
+//static void deh_procMisc( DEHFILE *fpin, char *line );
+//static void deh_procText( DEHFILE *fpin, char *line );
+//static void deh_procPars( DEHFILE *fpin, char *line );
+//static void deh_procStrings( DEHFILE *fpin, char *line );
+//static void deh_procError( DEHFILE *fpin, char *line );
+//static void deh_procBexCodePointers( DEHFILE *fpin, char *line );
+
+// Structure deh_block is used to hold the block names that can
+// be encountered, and the routines to use to decipher them
+typedef struct
+{
+    char    *key;                                       // a mnemonic block code name
+    void    (*const fptr)(DEHFILE *, char *);           // handler
+} deh_block;
+
+#define DEH_BUFFERMAX   1024    // input buffer area size, hardcoded for now
+// killough 08/09/98: make DEH_BLOCKMAX self-adjusting
+#define DEH_BLOCKMAX    arrlen(deh_blocks)              // size of array
+#define DEH_MAXKEYLEN   32      // as much of any key as we'll look at
+#define DEH_MOBJINFOMAX 35      // number of ints in the mobjinfo_t structure (!)
+
+// Put all the block header values, and the function to be called when that
+// one is encountered, in this array:
 //static const deh_block deh_blocks[] =
 //{
 //    /*  0 */ { "Thing",     deh_procThing           },
@@ -1489,7 +1493,7 @@ char **mapnamesn[] =    // Nerve WAD map names.
 //    /* 12 */ { "[CODEPTR]", deh_procBexCodePointers },  // bex codepointers by mnemonic
 //    /* 13 */ { "",          deh_procError           }   // dummy to handle anything else
 //};
-//
+
 //// flag to skip included deh-style text, used with INCLUDE NOTEXT directive
 //static dboolean includenotext;
 //
@@ -1546,15 +1550,15 @@ char **mapnamesn[] =    // Nerve WAD map names.
 //// killough 10/98:
 ////
 //// Convert array to struct to allow multiple values, make array size variable
-//#define DEH_MOBJFLAGMAX     arrlen(deh_mobjflags)
-//#define DEH_MOBJFLAG2MAX    arrlen(deh_mobjflags2)
-//
-//struct deh_mobjflags_s
-//{
-//    char    *name;
-//    long    value;
-//};
-//
+#define DEH_MOBJFLAGMAX     arrlen(deh_mobjflags)
+#define DEH_MOBJFLAG2MAX    arrlen(deh_mobjflags2)
+
+struct deh_mobjflags_s
+{
+	char    *name;
+	long    value;
+};
+
 //static const struct deh_mobjflags_s deh_mobjflags[] =
 //{
 //    { "SPECIAL",      MF_SPECIAL      },    // call P_Specialthing when touched
@@ -3611,102 +3615,102 @@ static const char *deh_misc[] =
 //
 //    return found;
 //}
+
+// ====================================================================
+// General utility function(s)
+// ====================================================================
+
+// ====================================================================
+// dehReformatStr
+// Purpose: Convert a string into a continuous string with embedded
+//          linefeeds for "\n" sequences in the source string
+// Args:    string -- the string to convert
+// Returns: the converted string (converted in a static buffer)
 //
-//// ====================================================================
-//// General utility function(s)
-//// ====================================================================
+static char *dehReformatStr(char *string)
+{
+    static char buff[DEH_BUFFERMAX];    // only processing the changed string,
+    //  don't need double buffer
+    char        *s = string;            // source
+    char        *t = buff;              // target
+
+    // let's play...
+    while (*s)
+    {
+        if (*s == '\n')
+        {
+            s++;
+            *t++ = '\\';
+            *t++ = 'n';
+            *t++ = '\\';
+            *t++ = '\n';
+        }
+        else
+            *t++ = *s++;
+    }
+
+    *t = '\0';
+    return buff;
+}
+
+// ====================================================================
+// lfstrip
+// Purpose: Strips CR/LF off the end of a string
+// Args:    s -- the string to work on
+// Returns: void -- the string is modified in place
 //
-//// ====================================================================
-//// dehReformatStr
-//// Purpose: Convert a string into a continuous string with embedded
-////          linefeeds for "\n" sequences in the source string
-//// Args:    string -- the string to convert
-//// Returns: the converted string (converted in a static buffer)
-////
-//static char *dehReformatStr(char *string)
-//{
-//    static char buff[DEH_BUFFERMAX];    // only processing the changed string,
-//    //  don't need double buffer
-//    char        *s = string;            // source
-//    char        *t = buff;              // target
+// killough 10/98: only strip at end of line, not entire string
 //
-//    // let's play...
-//    while (*s)
-//    {
-//        if (*s == '\n')
-//        {
-//            s++;
-//            *t++ = '\\';
-//            *t++ = 'n';
-//            *t++ = '\\';
-//            *t++ = '\n';
-//        }
-//        else
-//            *t++ = *s++;
-//    }
+static void lfstrip(char *s)        // strip the \r and/or \n off of a line
+{
+    char    *p = s + strlen(s);
+
+    while (p > s && (*--p == '\r' || *p == '\n'))
+        *p = 0;
+}
+
+// ====================================================================
+// rstrip
+// Purpose: Strips trailing blanks off a string
+// Args:    s -- the string to work on
+// Returns: void -- the string is modified in place
 //
-//    *t = '\0';
-//    return buff;
-//}
+static void rstrip(char *s)         // strip trailing whitespace
+{
+    char    *p = s + strlen(s);     // killough 04/04/98: same here
+
+    while (p > s && isspace((unsigned char)*--p))  // break on first non-whitespace
+        *p = '\0';
+}
+
+// ====================================================================
+// ptr_lstrip
+// Purpose: Points past leading whitespace in a string
+// Args:    s -- the string to work on
+// Returns: char * pointing to the first nonblank character in the
+//          string. The original string is not changed.
 //
-//// ====================================================================
-//// lfstrip
-//// Purpose: Strips CR/LF off the end of a string
-//// Args:    s -- the string to work on
-//// Returns: void -- the string is modified in place
-////
-//// killough 10/98: only strip at end of line, not entire string
-////
-//static void lfstrip(char *s)        // strip the \r and/or \n off of a line
-//{
-//    char    *p = s + strlen(s);
+static char *ptr_lstrip(char *p)    // point past leading whitespace
+{
+    while (isspace((unsigned char)*p))
+        p++;
+
+    return p;
+}
+
+// ====================================================================
+// deh_GetData
+// Purpose: Get a key and data pair from a passed string
+// Args:    s -- the string to be examined
+//          k -- a place to put the key
+//          l -- pointer to a long integer to store the number
+//          strval -- a pointer to the place in s where the number
+//                    value comes from. Pass NULL to not use this.
+// Notes:   Expects a key phrase, optional space, equal sign,
+//          optional space and a value, mostly an int but treated
+//          as a long just in case. The passed pointer to hold
+//          the key must be DEH_MAXKEYLEN in size.
 //
-//    while (p > s && (*--p == '\r' || *p == '\n'))
-//        *p = 0;
-//}
-//
-//// ====================================================================
-//// rstrip
-//// Purpose: Strips trailing blanks off a string
-//// Args:    s -- the string to work on
-//// Returns: void -- the string is modified in place
-////
-//static void rstrip(char *s)         // strip trailing whitespace
-//{
-//    char    *p = s + strlen(s);     // killough 04/04/98: same here
-//
-//    while (p > s && isspace((unsigned char)*--p))  // break on first non-whitespace
-//        *p = '\0';
-//}
-//
-//// ====================================================================
-//// ptr_lstrip
-//// Purpose: Points past leading whitespace in a string
-//// Args:    s -- the string to work on
-//// Returns: char * pointing to the first nonblank character in the
-////          string. The original string is not changed.
-////
-//static char *ptr_lstrip(char *p)    // point past leading whitespace
-//{
-//    while (isspace((unsigned char)*p))
-//        p++;
-//
-//    return p;
-//}
-//
-//// ====================================================================
-//// deh_GetData
-//// Purpose: Get a key and data pair from a passed string
-//// Args:    s -- the string to be examined
-////          k -- a place to put the key
-////          l -- pointer to a long integer to store the number
-////          strval -- a pointer to the place in s where the number
-////                    value comes from. Pass NULL to not use this.
-//// Notes:   Expects a key phrase, optional space, equal sign,
-////          optional space and a value, mostly an int but treated
-////          as a long just in case. The passed pointer to hold
-////          the key must be DEH_MAXKEYLEN in size.
-////
 //static int deh_GetData(char *s, char *k, long *l, char **strval)
 //{
 //    char            *t;                     // current char
