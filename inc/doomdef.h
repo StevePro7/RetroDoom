@@ -216,7 +216,6 @@
 
 // i_video.h
 #define MAX_MOUSE_BUTTONS   8
-
 #define GAMMALEVELS         31
 
 
@@ -736,9 +735,9 @@
 #define MOUSEUSE_DEFAULT                        -1
 
 // stevepro
-#define MAX_MOUSE_BUTTONS   8
-#define MOUSE_WHEELUP       MAX_MOUSE_BUTTONS
-#define MOUSE_WHEELDOWN     (MAX_MOUSE_BUTTONS + 1)
+//#define MAX_MOUSE_BUTTONS   8
+//#define MOUSE_WHEELUP       MAX_MOUSE_BUTTONS
+//#define MOUSE_WHEELDOWN     (MAX_MOUSE_BUTTONS + 1)
 // stevepro
 
 
@@ -867,6 +866,87 @@
 
 #define MAXDRAWSEGS 1280
 #define MAXOPENINGS 16384
+
+
+// p_local.h
+#define FOOTCLIPSIZE        (10 * FRACUNIT)
+
+#define FLOATSPEED          (4 * FRACUNIT)
+
+#define VIEWHEIGHT          (41 * FRACUNIT)
+#define DEADVIEWHEIGHT      (6 * FRACUNIT)
+#define JUMPHEIGHT          (9 * FRACUNIT)
+
+#define DEADLOOKDIR         128
+
+// mapblocks are used to check movement
+// against lines and things
+#define MAPBLOCKUNITS       128
+#define MAPBLOCKSIZE        (MAPBLOCKUNITS * FRACUNIT)
+#define MAPBLOCKSHIFT       (FRACBITS + 7)
+#define MAPBTOFRAC          (MAPBLOCKSHIFT - FRACBITS)
+
+// MAXRADIUS is for precalculated sector block boxes
+// the spider demon is larger,
+// but we do not have any moving sectors nearby
+#define MAXRADIUS           (32 * FRACUNIT)
+
+#define GRAVITY             FRACUNIT
+#define MAXMOVE             (30 * FRACUNIT)
+#define MAXMOVE_STEP        (8 * FRACUNIT)
+
+#define USERANGE            (64 * FRACUNIT)
+#define MELEERANGE          (64 * FRACUNIT)
+#define MISSILERANGE        (32 * 64 * FRACUNIT)
+
+// follow a player exclusively for 3 seconds
+#define BASETHRESHOLD       100
+
+#define BONUSADD            6
+
+#define MOUSE_LEFTBUTTON    1
+#define MOUSE_RIGHTBUTTON   2
+
+#define MOUSE_WHEELUP       MAX_MOUSE_BUTTONS
+#define MOUSE_WHEELDOWN     (MAX_MOUSE_BUTTONS + 1)
+
+#define NEEDEDCARDFLASH     8
+
+#define WEAPONBOTTOM        (128 * FRACUNIT)
+#define WEAPONTOP           (32 * FRACUNIT)
+
+//
+// P_USER.C
+//
+// 16 pixels of bob
+#define MAXBOB              0x100000
+#define MLOOKUNIT           8
+#define PLAYERSLOPE(a)      ((((a)->lookdir / MLOOKUNIT) << FRACBITS) / 153)
+
+//
+// P_MOBJ.C
+//
+#define ONFLOORZ            FIXED_MIN
+#define ONCEILINGZ          FIXED_MAX
+
+// Time interval for item respawning.
+#define ITEMQUEUESIZE       512
+
+#define CARDNOTFOUNDYET    -1
+#define CARDNOTINMAP        0
+
+//
+// P_ENEMY.C
+//
+#define BARRELMS    1500
+
+#define PT_ADDLINES     1
+#define PT_ADDTHINGS    2
+
+//
+// P_INTER.C
+//
+#define MAXHEALTH   100
 
 
 #endif

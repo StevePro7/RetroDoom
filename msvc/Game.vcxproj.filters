@@ -123,6 +123,9 @@
     <ClCompile Include="..\src\r_defs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\p_local.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -233,6 +236,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\r_defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\p_local.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

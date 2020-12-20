@@ -44,6 +44,7 @@
     <ClCompile Include="..\src\m_fixed.c" />
     <ClCompile Include="..\src\m_misc.c" />
     <ClCompile Include="..\src\m_random.c" />
+    <ClCompile Include="..\src\p_local.c" />
     <ClCompile Include="..\src\p_mobj.c" />
     <ClCompile Include="..\src\p_pspr.c" />
     <ClCompile Include="..\src\p_tick.c" />
@@ -85,6 +86,7 @@
     <ClInclude Include="..\inc\m_fixed.h" />
     <ClInclude Include="..\inc\m_misc.h" />
     <ClInclude Include="..\inc\m_random.h" />
+    <ClInclude Include="..\inc\p_local.h" />
     <ClInclude Include="..\inc\p_mobj.h" />
     <ClInclude Include="..\inc\p_pspr.h" />
     <ClInclude Include="..\inc\p_tick.h" />
