@@ -2055,8 +2055,8 @@ static void I_InitWindows32( void )
 	icon = LoadIcon( handle, "IDI_ICON1" );
 	SetClassLongPtr( hwnd, GCLP_HICON, ( LONG_PTR ) icon );
 
-	// steveproTODO
-	//oldProc = ( WNDPROC ) SetWindowLongPtr( hwnd, GWLP_WNDPROC, ( LONG_PTR ) WndProc );
+	// steveproTODO check this works
+	oldProc = ( WNDPROC ) SetWindowLongPtr( hwnd, GWLP_WNDPROC, ( LONG_PTR ) WndProc );
 
 	windowborderwidth = ( GetSystemMetrics( SM_CXFRAME ) + GetSystemMetrics( SM_CXPADDEDBORDER ) ) * 2;
 	windowborderheight = ( GetSystemMetrics( SM_CYFRAME ) + GetSystemMetrics( SM_CXPADDEDBORDER ) ) * 2 + GetSystemMetrics( SM_CYCAPTION );

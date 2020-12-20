@@ -1,26 +1,28 @@
-//#if defined(_WIN32)
-//#pragma warning( disable : 4091 )
-//
-//#include <ShlObj.h>
-//#include <io.h>
-//#include <sys/types.h>
-//#include <sys/stat.h>
-//
-//#if defined(_MSC_VER)
-//#include <direct.h>
-//#endif
-//
-//#else
-//#include <sys/stat.h>
-//#include <sys/types.h>
-//#include <pwd.h>
-//#endif
-//
-//#include <ctype.h>
-//#include <math.h>
-//#include <stdarg.h>
-//#include <string.h>
-//
+#include "m_misc.h"
+
+#if defined(_WIN32)
+#pragma warning( disable : 4091 )
+
+#include <ShlObj.h>
+#include <io.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#if defined(_MSC_VER)
+#include <direct.h>
+#endif
+
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <pwd.h>
+#endif
+
+#include <ctype.h>
+#include <math.h>
+#include <stdarg.h>
+#include <string.h>
+
 //#include "SDL.h"
 //
 //#include "c_console.h"
@@ -466,16 +468,19 @@
 //    return buffer;
 //}
 //
-//// Safe version of strdup() that checks the string was successfully allocated.
-//char *M_StringDuplicate(const char *orig)
-//{
-//    char    *result = _strdup(orig);
-//
-//    if (!result)
-//        I_Error("Failed to duplicate string %s.", stringize(orig));
-//
-//    return result;
-//}
+// Safe version of strdup() that checks the string was successfully allocated.
+char *M_StringDuplicate(const char *orig)
+{
+    char    *result = _strdup(orig);
+
+	if( !result )
+	{
+		//steveproTODO - logging
+		//I_Error( "Failed to duplicate string %s.", stringize( orig ) );
+	}
+
+    return result;
+}
 //
 //// Returns true if str1 and str2 are the same.
 //// (Case-insensitive, return value reverse of strcasecmp() to avoid confusion.
@@ -509,23 +514,23 @@
 //    return (len1 >= len2 && M_StringCompare(s + len1 - len2, suffix));
 //}
 //
-//// Safe, portable vsnprintf().
-//void M_vsnprintf(char *buf, int buf_len, const char *s, va_list args)
-//{
-//    if (buf_len >= 1)
-//    {
-//        // Windows (and other OSes?) has a vsnprintf() that doesn't always
-//        // append a trailing \0. So we must do it, and write into a buffer
-//        // that is one byte shorter; otherwise this function is unsafe.
-//        int result = vsnprintf(buf, buf_len, s, args);
-//
-//        // If truncated, change the final char in the buffer to a \0.
-//        // A negative result indicates a truncated buffer on Windows.
-//        if (result < 0 || result >= buf_len)
-//            buf[buf_len - 1] = '\0';
-//    }
-//}
-//
+// Safe, portable vsnprintf().
+void M_vsnprintf(char *buf, int buf_len, const char *s, va_list args)
+{
+    if (buf_len >= 1)
+    {
+        // Windows (and other OSes?) has a vsnprintf() that doesn't always
+        // append a trailing \0. So we must do it, and write into a buffer
+        // that is one byte shorter; otherwise this function is unsafe.
+        int result = vsnprintf(buf, buf_len, s, args);
+
+        // If truncated, change the final char in the buffer to a \0.
+        // A negative result indicates a truncated buffer on Windows.
+        if (result < 0 || result >= buf_len)
+            buf[buf_len - 1] = '\0';
+    }
+}
+
 //// Safe, portable snprintf().
 //void M_snprintf(char *buf, int buf_len, const char *s, ...)
 //{
