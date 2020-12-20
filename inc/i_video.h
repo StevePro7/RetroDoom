@@ -3,11 +3,12 @@
 
 #include "SDL.h"
 
+#include "doomdef.h"
 #include "doomtype.h"
 
-#define MAX_MOUSE_BUTTONS   8
-
-#define GAMMALEVELS         31
+//#define MAX_MOUSE_BUTTONS   8
+//
+//#define GAMMALEVELS         31
 
 //dboolean MouseShouldBeGrabbed(void);
 //void I_InitKeyboard(void);

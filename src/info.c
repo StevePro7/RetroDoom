@@ -1,52 +1,54 @@
 #include "info.h"
+#include "doomenum.h"
+#include "doomtype.h"
 ////#include "r_defs.h"
 //#include "sounds.h"
 //
-//#define EMPTYMOBJ \
-//{ \
-//    /* doomednum            */ -1,       \
-//    /* spawnstate           */ 0,        \
-//    /* spawnhealth          */ 0,        \
-//    /* gibhealth            */ 0,        \
-//    /* seestate             */ S_NULL,   \
-//    /* seesound             */ sfx_none, \
-//    /* reactiontime         */ 0,        \
-//    /* attacksound          */ sfx_none, \
-//    /* painstate            */ S_NULL,   \
-//    /* painchance           */ 0,        \
-//    /* painsound            */ sfx_none, \
-//    /* meleestate           */ S_NULL,   \
-//    /* missilestate         */ S_NULL,   \
-//    /* deathstate           */ S_NULL,   \
-//    /* xdeathstate          */ S_NULL,   \
-//    /* deathsound           */ sfx_none, \
-//    /* droppeditem          */ MT_NULL,  \
-//    /* meleethreshold       */ 0,        \
-//    /* maxattackrange       */ 0,        \
-//    /* minmissilechance     */ 0,        \
-//    /* speed                */ 0,        \
-//    /* radius               */ 0,        \
-//    /* pickupradius         */ 0,        \
-//    /* height               */ 0,        \
-//    /* projectilepassheight */ 0,        \
-//    /* mass                 */ 0,        \
-//    /* damage               */ 0,        \
-//    /* activesound          */ sfx_none, \
-//    /* flags                */ 0,        \
-//    /* flags2               */ 0,        \
-//    /* raisestate           */ S_NULL,   \
-//    /* frames               */ 0,        \
-//    /* fullbright           */ false,    \
-//    /* blood                */ 0,        \
-//    /* shadowoffset         */ 0,        \
-//    /* name1                */ "",       \
-//    /* plural1              */ "",       \
-//    /* name2                */ "",       \
-//    /* plural2              */ "",       \
-//    /* name3                */ "",       \
-//    /* plural3              */ ""        \
-//},
-//
+#define EMPTYMOBJ \
+{ \
+    /* doomednum            */ -1,       \
+    /* spawnstate           */ 0,        \
+    /* spawnhealth          */ 0,        \
+    /* gibhealth            */ 0,        \
+    /* seestate             */ S_NULL,   \
+    /* seesound             */ sfx_none, \
+    /* reactiontime         */ 0,        \
+    /* attacksound          */ sfx_none, \
+    /* painstate            */ S_NULL,   \
+    /* painchance           */ 0,        \
+    /* painsound            */ sfx_none, \
+    /* meleestate           */ S_NULL,   \
+    /* missilestate         */ S_NULL,   \
+    /* deathstate           */ S_NULL,   \
+    /* xdeathstate          */ S_NULL,   \
+    /* deathsound           */ sfx_none, \
+    /* droppeditem          */ MT_NULL,  \
+    /* meleethreshold       */ 0,        \
+    /* maxattackrange       */ 0,        \
+    /* minmissilechance     */ 0,        \
+    /* speed                */ 0,        \
+    /* radius               */ 0,        \
+    /* pickupradius         */ 0,        \
+    /* height               */ 0,        \
+    /* projectilepassheight */ 0,        \
+    /* mass                 */ 0,        \
+    /* damage               */ 0,        \
+    /* activesound          */ sfx_none, \
+    /* flags                */ 0,        \
+    /* flags2               */ 0,        \
+    /* raisestate           */ S_NULL,   \
+    /* frames               */ 0,        \
+    /* fullbright           */ false,    \
+    /* blood                */ 0,        \
+    /* shadowoffset         */ 0,        \
+    /* name1                */ "",       \
+    /* plural1              */ "",       \
+    /* name2                */ "",       \
+    /* plural2              */ "",       \
+    /* name3                */ "",       \
+    /* plural3              */ ""        \
+},
+
 //mobjinfo_t mobjinfo[] =
 //{
 //    // Player (MT_PLAYER)
