@@ -1,5 +1,7 @@
 #include "sounds.h"
 
+musicinfo_t  *mus_playing;
+
 //
 // Information about all the music
 //

@@ -29,5 +29,26 @@
 #define COMMENT(text)                                           { text,   "",      NULL,  DEFAULT_OTHER,         NOVALUEALIAS }
 
 
+// s_sound.c
+// when to clip out sounds
+// Does not fit the large outdoor areas.
+#define S_CLIPPING_DIST 1200
+
+// Distance to origin when sounds should be maxed out.
+// This should relate to movement clipping resolution
+// (see BLOCKMAP handling).
+// In the source code release: (160 * FRACUNIT). Changed back to the
+// Vanilla value of 200 (why was this changed?)
+#define S_CLOSE_DIST    200
+
+// The range over which sound attenuates
+#define S_ATTENUATOR    (S_CLIPPING_DIST - S_CLOSE_DIST)
+
+// Stereo separation
+#define S_STEREO_SWING  96
+
+#define NORM_SEP        128
+
+#define TIDNUM(x)       (int)(x->musicid & 0xFFFF)  // thing identifier
 
 

@@ -846,4 +846,19 @@
 #define MAXHEALTH   100
 
 
+// s_sound.h
+#define CHUNKSIZE                   1024
+#define SAMPLERATE                  44100
+
+#if !defined(__HAIKU__)
+#define DEFAULT_DEVICE              NULL
+#else
+// Triggers a segfault if no name is provided even though the default device is empty
+#define DEFAULT_DEVICE              ""
+#endif
+
+#define LOWER_MUSIC_VOLUME_FACTOR   3
+
+
+
 #endif

@@ -126,6 +126,18 @@
     <ClCompile Include="..\src\p_local.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\doomvars.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\i_music.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\i_midirpc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\i_sound.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -239,6 +251,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\p_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\doomvars.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\i_music.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\i_midirpc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\i_sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

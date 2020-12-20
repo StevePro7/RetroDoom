@@ -26,6 +26,7 @@
     <ClCompile Include="..\src\doomkeys.c" />
     <ClCompile Include="..\src\doomretro.c" />
     <ClCompile Include="..\src\doomtype.c" />
+    <ClCompile Include="..\src\doomvars.c" />
     <ClCompile Include="..\src\dstrings.c" />
     <ClCompile Include="..\src\d_deh.c" />
     <ClCompile Include="..\src\d_englsh.c" />
@@ -34,6 +35,9 @@
     <ClCompile Include="..\src\d_ticcmd.c" />
     <ClCompile Include="..\src\info.c" />
     <ClCompile Include="..\src\i_gamepad.c" />
+    <ClCompile Include="..\src\i_midirpc.c" />
+    <ClCompile Include="..\src\i_music.c" />
+    <ClCompile Include="..\src\i_sound.c" />
     <ClCompile Include="..\src\i_swap.c" />
     <ClCompile Include="..\src\i_system.c" />
     <ClCompile Include="..\src\i_timer.c" />
@@ -67,6 +71,7 @@
     <ClInclude Include="..\inc\doomenum.h" />
     <ClInclude Include="..\inc\doomkeys.h" />
     <ClInclude Include="..\inc\doomtype.h" />
+    <ClInclude Include="..\inc\doomvars.h" />
     <ClInclude Include="..\inc\dstrings.h" />
     <ClInclude Include="..\inc\d_deh.h" />
     <ClInclude Include="..\inc\d_englsh.h" />
@@ -76,6 +81,9 @@
     <ClInclude Include="..\inc\d_ticcmd.h" />
     <ClInclude Include="..\inc\info.h" />
     <ClInclude Include="..\inc\i_gamepad.h" />
+    <ClInclude Include="..\inc\i_midirpc.h" />
+    <ClInclude Include="..\inc\i_music.h" />
+    <ClInclude Include="..\inc\i_sound.h" />
     <ClInclude Include="..\inc\i_swap.h" />
     <ClInclude Include="..\inc\i_system.h" />
     <ClInclude Include="..\inc\i_timer.h" />

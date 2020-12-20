@@ -67,7 +67,7 @@ extern sfxinfo_t    S_sfx[];
 // the complete set of music
 extern musicinfo_t  S_music[];
 
-extern musicinfo_t  *mus_playing;
+//extern musicinfo_t  *mus_playing;
 
 extern dboolean     midimusictype;
 extern dboolean     musmusictype;
