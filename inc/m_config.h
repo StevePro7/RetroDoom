@@ -6,7 +6,6 @@
 #include "doomkeys.h"
 #include "doomtype.h"
 #include "i_gamepad.h"
-//#include "i_video.h"
 #include "version.h"
 
 extern dboolean     alwaysrun;
@@ -210,40 +209,6 @@ extern int          weaponbob;
 extern dboolean     weaponbounce;
 extern dboolean     weaponrecoil;
 
-//enum
-//{
-//    crosshair_none,
-//    crosshair_cross,
-//    crosshair_dot
-//};
-//
-//enum
-//{
-//    r_blood_none,
-//    r_blood_red,
-//    r_blood_all,
-//    r_blood_green,
-//    r_blood_nofuzz
-//};
-//
-//enum
-//{
-//    r_detail_low,
-//    r_detail_high
-//};
-//
-//enum
-//{
-//    units_imperial,
-//    units_metric
-//};
-//
-//enum
-//{
-//    vid_vsync_adaptive = -1,
-//    vid_vsync_off,
-//    vid_vsync_on
-//};
 
 //#define alwaysrun_default                       false
 //
@@ -757,39 +722,6 @@ extern dboolean     weaponrecoil;
 #define MOUSESTRAFE_DEFAULT                     -1
 #define MOUSEUSE_DEFAULT                        -1
 
-//// stevepro
-//#define MAX_MOUSE_BUTTONS   8
-//#define MOUSE_WHEELUP       MAX_MOUSE_BUTTONS
-//#define MOUSE_WHEELDOWN     (MAX_MOUSE_BUTTONS + 1)
-//// stevepro
-
-//typedef enum
-//{
-//    DEFAULT_INT32,
-//    DEFAULT_UINT64,
-//    DEFAULT_INT32_PERCENT,
-//    DEFAULT_STRING,
-//    DEFAULT_FLOAT,
-//    DEFAULT_FLOAT_PERCENT,
-//    DEFAULT_OTHER
-//} default_type_t;
-//
-//typedef enum
-//{
-//    NOVALUEALIAS,
-//    BOOLVALUEALIAS,
-//    DETAILVALUEALIAS,
-//    GAMMAVALUEALIAS,
-//    BLOODVALUEALIAS,
-//    UNITSVALUEALIAS,
-//    CAPVALUEALIAS,
-//    SKYVALUEALIAS,
-//    SCALEVALUEALIAS,
-//    FACEBACKVALUEALIAS,
-//    ARMORTYPEVALUEALIAS,
-//    CROSSHAIRVALUEALIAS,
-//    VSYNCVALUEALIAS
-//} valuealias_type_t;
 
 typedef struct
 {

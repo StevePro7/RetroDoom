@@ -1,4 +1,5 @@
 #include "m_config.h"
+#include "doomdef.h"
 
 #include <ctype.h>
 #include <string.h>
