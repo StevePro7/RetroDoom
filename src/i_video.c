@@ -39,15 +39,15 @@
 //#include "version.h"
 //#include "w_wad.h"
 
-//#define I_SDLError(func)        I_Error("The call to " stringize(func) "() failed in %s() on line %i of %s with this error:\n" \
-//                                    "    \"%s\".", __FUNCTION__, __LINE__ - 1, leafname(__FILE__), SDL_GetError())
-//
-//#define MAXDISPLAYS             8
-//
-//#define MAXUPSCALEWIDTH         (1600 / VANILLAWIDTH)
-//#define MAXUPSCALEHEIGHT        (1200 / VANILLAHEIGHT)
-//
-//#define SHAKEANGLE              ((double)M_BigRandomInt(-1000, 1000) * r_shake_damage / 100000.0)
+#define I_SDLError(func)        I_Error("The call to " stringize(func) "() failed in %s() on line %i of %s with this error:\n" \
+                                    "    \"%s\".", __FUNCTION__, __LINE__ - 1, leafname(__FILE__), SDL_GetError())
+
+#define MAXDISPLAYS             8
+
+#define MAXUPSCALEWIDTH         (1600 / VANILLAWIDTH)
+#define MAXUPSCALEHEIGHT        (1200 / VANILLAHEIGHT)
+
+#define SHAKEANGLE              ((double)M_BigRandomInt(-1000, 1000) * r_shake_damage / 100000.0)
 
 #if !defined(SDL_VIDEO_RENDER_D3D11)
 #define SDL_VIDEO_RENDER_D3D11  0
@@ -76,93 +76,93 @@ int                 r_color = r_color_default;
 //char                *vid_windowpos = vid_windowpos_default;
 //char                *vid_windowsize = vid_windowsize_default;
 //
-//static dboolean     manuallypositioning;
-//
-//SDL_Window          *window;
-//static int          windowid;
-//SDL_Renderer        *renderer;
-//static SDL_Texture  *texture;
-//static SDL_Texture  *texture_upscaled;
-//static SDL_Surface  *surface;
-//static SDL_Surface  *buffer;
-//static byte         *pixels;
-//static int          pitch;
-//static SDL_Palette  *palette;
-//static SDL_Color    colors[256];
-//byte                *PLAYPAL;
-//
-//static byte         *oscreen;
-//byte                *mapscreen;
-//SDL_Window          *mapwindow = NULL;
-//SDL_Renderer        *maprenderer;
-//static SDL_Texture  *maptexture;
-//static SDL_Texture  *maptexture_upscaled;
-//static SDL_Surface  *mapsurface;
-//static SDL_Surface  *mapbuffer;
-//static byte         *mappixels;
-//static int          mappitch;
-//static SDL_Palette  *mappalette;
-//
-//static dboolean     nearestlinear;
-//static int          upscaledwidth;
-//static int          upscaledheight;
-//
-//static dboolean     software;
-//
-//static int          displayindex;
-//static int          numdisplays;
-//static SDL_Rect     displays[MAXDISPLAYS];
-//
-//// Bit mask of mouse button state
-//static unsigned int mousebuttonstate;
-//
-//static const int buttons[MAX_MOUSE_BUTTONS + 1] =
-//{
-//    0x0000, 0x0001, 0x0004, 0x0002, 0x0008, 0x0010, 0x0020, 0x0040, 0x0080
-//};
-//
-//// Fullscreen width and height
-//static int          screenwidth;
-//static int          screenheight;
-//
-//// Window width and height
-//int                 windowwidth;
-//int                 windowheight;
-//
-//int                 windowx;
-//int                 windowy;
-//
-//static int          displaywidth;
-//static int          displayheight;
-//static int          displaycenterx;
-//static int          displaycentery;
-//
-//dboolean            returntowidescreen;
-//
-//dboolean            windowfocused = true;
-//
-//static dboolean     keys[UCHAR_MAX];
-//
-//static byte         gammatable[GAMMALEVELS][256];
-//
-//const float gammalevels[GAMMALEVELS] =
-//{
-//    // Darker
-//    0.50f, 0.55f, 0.60f, 0.65f, 0.70f, 0.75f, 0.80f, 0.85f, 0.90f, 0.95f,
-//
-//    // No gamma correction
-//    1.0f,
-//
-//    // Lighter
-//    1.05f, 1.10f, 1.15f, 1.20f, 1.25f, 1.30f, 1.35f, 1.40f, 1.45f, 1.50f,
-//    1.55f, 1.60f, 1.65f, 1.70f, 1.75f, 1.80f, 1.85f, 1.90f, 1.95f, 2.0f
-//};
-//
-//int                 gammaindex;
-//
-//static SDL_Rect     src_rect;
-//static SDL_Rect     map_rect;
-//
+static dboolean     manuallypositioning;
+
+SDL_Window          *window;
+static int          windowid;
+SDL_Renderer        *renderer;
+static SDL_Texture  *texture;
+static SDL_Texture  *texture_upscaled;
+static SDL_Surface  *surface;
+static SDL_Surface  *buffer;
+static byte         *pixels;
+static int          pitch;
+static SDL_Palette  *palette;
+static SDL_Color    colors[ 256 ];
+byte                *PLAYPAL;
+
+static byte         *oscreen;
+byte                *mapscreen;
+SDL_Window          *mapwindow = NULL;
+SDL_Renderer        *maprenderer;
+static SDL_Texture  *maptexture;
+static SDL_Texture  *maptexture_upscaled;
+static SDL_Surface  *mapsurface;
+static SDL_Surface  *mapbuffer;
+static byte         *mappixels;
+static int          mappitch;
+static SDL_Palette  *mappalette;
+
+static dboolean     nearestlinear;
+static int          upscaledwidth;
+static int          upscaledheight;
+
+static dboolean     software;
+
+static int          displayindex;
+static int          numdisplays;
+static SDL_Rect     displays[ MAXDISPLAYS ];
+
+// Bit mask of mouse button state
+static unsigned int mousebuttonstate;
+
+static const int buttons[MAX_MOUSE_BUTTONS + 1] =
+{
+    0x0000, 0x0001, 0x0004, 0x0002, 0x0008, 0x0010, 0x0020, 0x0040, 0x0080
+};
+
+// Fullscreen width and height
+static int          screenwidth;
+static int          screenheight;
+
+// Window width and height
+int                 windowwidth;
+int                 windowheight;
+
+int                 windowx;
+int                 windowy;
+
+static int          displaywidth;
+static int          displayheight;
+static int          displaycenterx;
+static int          displaycentery;
+
+dboolean            returntowidescreen;
+
+dboolean            windowfocused = true;
+
+static dboolean     keys[ UCHAR_MAX ];
+
+static byte         gammatable[ GAMMALEVELS ][ 256 ];
+
+const float gammalevels[GAMMALEVELS] =
+{
+    // Darker
+    0.50f, 0.55f, 0.60f, 0.65f, 0.70f, 0.75f, 0.80f, 0.85f, 0.90f, 0.95f,
+
+    // No gamma correction
+    1.0f,
+
+    // Lighter
+    1.05f, 1.10f, 1.15f, 1.20f, 1.25f, 1.30f, 1.35f, 1.40f, 1.45f, 1.50f,
+    1.55f, 1.60f, 1.65f, 1.70f, 1.75f, 1.80f, 1.85f, 1.90f, 1.95f, 2.0f
+};
+
+int                 gammaindex;
+
+static SDL_Rect     src_rect;
+static SDL_Rect     map_rect;
+
 //int                 framespersecond;
 //int                 refreshrate;
 //
@@ -171,7 +171,7 @@ int                 r_color = r_color_default;
 //#endif
 //
 static dboolean     capslock;
-//
+//stevepro			d_event.c
 //evtype_t            lasteventtype = ev_none;
 //
 //extern int          windowborderwidth;

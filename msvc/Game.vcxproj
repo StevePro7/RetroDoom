@@ -60,6 +60,7 @@
     <ClCompile Include="..\src\tables.c" />
     <ClCompile Include="..\src\version.c" />
     <ClCompile Include="..\src\v_data.c" />
+    <ClCompile Include="src\d_event.c" />
     <ClCompile Include="src\d_player.c" />
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +77,7 @@
     <ClInclude Include="..\inc\dstrings.h" />
     <ClInclude Include="..\inc\d_deh.h" />
     <ClInclude Include="..\inc\d_englsh.h" />
+    <ClInclude Include="..\inc\d_event.h" />
     <ClInclude Include="..\inc\d_main.h" />
     <ClInclude Include="..\inc\d_player.h" />
     <ClInclude Include="..\inc\d_think.h" />

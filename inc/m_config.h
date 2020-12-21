@@ -210,6 +210,7 @@ extern dboolean     weaponbounce;
 extern dboolean     weaponrecoil;
 
 
+//doomdef.h
 //#define alwaysrun_default                       false
 //
 //#define am_allmapcdwallcolor_min                0
