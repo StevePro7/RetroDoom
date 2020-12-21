@@ -74,10 +74,36 @@ dboolean        centerweapon = centerweapon_default;
 int             weaponbob = weaponbob_default;
 dboolean        weaponbounce = weaponbounce_default;
 dboolean        weaponrecoil = weaponrecoil_default;
+uint64_t        stat_shotsfired_pistol = 0;
+uint64_t        stat_shotsfired_shotgun = 0;
+uint64_t        stat_shotsfired_supershotgun = 0;
+uint64_t        stat_shotsfired_chaingun = 0;
+uint64_t        stat_shotsfired_rocketlauncher = 0;
+uint64_t        stat_shotsfired_plasmarifle = 0;
+uint64_t        stat_shotsfired_bfg9000 = 0;
+uint64_t        stat_shotssuccessful_pistol = 0;
+uint64_t        stat_shotssuccessful_shotgun = 0;
+uint64_t        stat_shotssuccessful_supershotgun = 0;
+uint64_t        stat_shotssuccessful_chaingun = 0;
+uint64_t        stat_shotssuccessful_rocketlauncher = 0;
+uint64_t        stat_shotssuccessful_plasmarifle = 0;
+uint64_t        stat_shotssuccessful_bfg9000 = 0;
 
 // g_game.c
 dboolean        autoload = autoload_default;
 dboolean        autosave = autosave_default;
+uint64_t        stat_gamessaved = 0;
+uint64_t        stat_mapsstarted = 0;
+uint64_t        stat_mapscompleted = 0;
+uint64_t        stat_skilllevel_imtooyoungtodie = 0;
+uint64_t        stat_skilllevel_heynottoorough = 0;
+uint64_t        stat_skilllevel_hurtmeplenty = 0;
+uint64_t        stat_skilllevel_ultraviolence = 0;
+uint64_t        stat_skilllevel_nightmare = 0;
+dboolean        m_doubleclick_use = m_doubleclick_use_default;
+dboolean        m_invertyaxis = m_invertyaxis_default;
+dboolean        m_novertical = m_novertical_default;
+dboolean        mouselook = mouselook_default;
 
 // p_user.c
 dboolean        autotilt = autotilt_default;
@@ -154,6 +180,7 @@ int             skilllevel = skilllevel_default;
 // st_stuff.c
 int                         facebackcolor = facebackcolor_default;
 int                         r_berserkintensity = r_berserkintensity_default;
+uint64_t                    stat_cheated = 0;
 
 // d_main.c
 dboolean            fade = fade_default;
@@ -161,6 +188,7 @@ char                *iwadfolder = iwadfolder_default;
 dboolean            melt = melt_default;
 int                 turbo = turbo_default;
 int                 units = units_default;
+uint64_t            stat_runs = 0;
 
 #if defined(_WIN32)
 char                *wad = wad_default;
@@ -182,230 +210,294 @@ int                         gp_vibrate_weapons = gp_vibrate_weapons_default;
 
 // p_map.c
 dboolean        infiniteheight = infiniteheight_default;
+uint64_t        stat_distancetraveled = 0;
 
 // c_cmd.c
 char                *version = version_default;
 
+// p_mobj.c
+int         r_blood = r_blood_default;
+int         r_bloodsplats_max = r_bloodsplats_max_default;
+int         r_bloodsplats_total;
+dboolean    r_corpses_color = r_corpses_color_default;
+dboolean    r_corpses_gib = r_corpses_gib_default;
+dboolean    r_corpses_mirrored = r_corpses_mirrored_default;
+dboolean    r_corpses_moreblood = r_corpses_moreblood_default;
+dboolean    r_corpses_nudge = r_corpses_nudge_default;
+dboolean    r_corpses_slide = r_corpses_slide_default;
+dboolean    r_corpses_smearblood = r_corpses_smearblood_default;
+dboolean    r_floatbob = r_floatbob_default;
+dboolean    r_rockettrails = r_rockettrails_default;
+dboolean    r_shadows = r_shadows_default;
+
+// r_main.c
+dboolean            r_bloodsplats_translucency = r_bloodsplats_translucency_default;
+dboolean            r_dither = r_dither_default;
+int                 r_fov = r_fov_default;
+dboolean            r_homindicator = r_homindicator_default;
+dboolean            r_shadows_translucency = r_shadows_translucency_default;
+dboolean            r_shake_barrels = r_shake_barrels_default;
+int                 r_skycolor = r_skycolor_default;
+dboolean            r_textures = r_textures_default;
+dboolean            r_translucency = r_translucency_default;
+
+// v_video.c
+char        *r_lowpixelsize = r_lowpixelsize_default;
+dboolean    r_supersampling = r_supersampling_default;
+
+// s_sounds.c
+int                 s_channels = s_channels_default;
+int                 s_musicvolume = s_musicvolume_default;
+dboolean            s_randommusic = s_randommusic_default;
+dboolean            s_randompitch = s_randompitch_default;
+int                 s_sfxvolume = s_sfxvolume_default;
+dboolean            s_stereo = s_stereo_default;
+
+// p_spec.c
+uint64_t            stat_secretsfound = 0;
+dboolean            r_liquid_bob = r_liquid_bob_default;
 
 
-//#define NUMCVARS                                                197
-//
-//#define CONFIG_VARIABLE_INT(name, oldname, cvar, set)           { #name, #oldname, &cvar, DEFAULT_INT32,         set          }
-//#define CONFIG_VARIABLE_INT_UNSIGNED(name, oldname, cvar, set)  { #name, #oldname, &cvar, DEFAULT_UINT64,        set          }
-//#define CONFIG_VARIABLE_INT_PERCENT(name, oldname, cvar, set)   { #name, #oldname, &cvar, DEFAULT_INT32_PERCENT, set          }
-//#define CONFIG_VARIABLE_FLOAT(name, oldname, cvar, set)         { #name, #oldname, &cvar, DEFAULT_FLOAT,         set          }
-//#define CONFIG_VARIABLE_FLOAT_PERCENT(name, oldname, cvar, set) { #name, #oldname, &cvar, DEFAULT_FLOAT_PERCENT, set          }
-//#define CONFIG_VARIABLE_STRING(name, oldname, cvar, set)        { #name, #oldname, &cvar, DEFAULT_STRING,        set          }
-//#define CONFIG_VARIABLE_OTHER(name, oldname, cvar, set)         { #name, #oldname, &cvar, DEFAULT_OTHER,         set          }
-//#define BLANKLINE                                               { "",     "",      NULL,  DEFAULT_OTHER,         NOVALUEALIAS }
-//#define COMMENT(text)                                           { text,   "",      NULL,  DEFAULT_OTHER,         NOVALUEALIAS }
+// r_things.c
+dboolean                r_liquid_clipsprites = r_liquid_clipsprites_default;
+dboolean                r_playersprites = r_playersprites_default;
 
-//static default_t cvars[NUMCVARS] =
-//{
-//    COMMENT("; CVARs\n"),
-//    CONFIG_VARIABLE_INT          (alwaysrun,                        alwaysrun,                             alwaysrun,                             BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (am_allmapcdwallcolor,             am_allmapcdwallcolor,                  am_allmapcdwallcolor,                  NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_allmapfdwallcolor,             am_allmapfdwallcolor,                  am_allmapfdwallcolor,                  NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_allmapwallcolor,               am_allmapwallcolor,                    am_allmapwallcolor,                    NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_backcolor,                     am_backcolor,                          am_backcolor,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_cdwallcolor,                   am_cdwallcolor,                        am_cdwallcolor,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_crosshaircolor,                am_crosshaircolor,                     am_crosshaircolor,                     NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_external,                      am_external,                           am_external,                           BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (am_fdwallcolor,                   am_fdwallcolor,                        am_fdwallcolor,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_followmode,                    am_followmode,                         am_followmode,                         BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (am_grid,                          am_grid,                               am_grid,                               BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (am_gridcolor,                     am_gridcolor,                          am_gridcolor,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_OTHER        (am_gridsize,                      am_gridsize,                           am_gridsize,                           NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_markcolor,                     am_markcolor,                          am_markcolor,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_path,                          am_path,                               am_path,                               BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (am_pathcolor,                     am_pathcolor,                          am_pathcolor,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_playercolor,                   am_playercolor,                        am_playercolor,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_rotatemode,                    am_rotatemode,                         am_rotatemode,                         BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (am_teleportercolor,               am_teleportercolor,                    am_teleportercolor,                    NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_thingcolor,                    am_thingcolor,                         am_thingcolor,                         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_tswallcolor,                   am_tswallcolor,                        am_tswallcolor,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (am_wallcolor,                     am_wallcolor,                          am_wallcolor,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (autoaim,                          autoaim,                               autoaim,                               BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (autoload,                         autoload,                              autoload,                              BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (autosave,                         autosave,                              autosave,                              BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (autotilt,                         autotilt,                              autotilt,                              BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (autouse,                          autouse,                               autouse,                               BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (centerweapon,                     centerweapon,                          centerweapon,                          BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (con_backcolor,                    con_backcolor,                         con_backcolor,                         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (con_edgecolor,                    con_edgecolor,                         con_edgecolor,                         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (con_obituaries,                   con_obituaries,                        con_obituaries,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (crosshair,                        crosshair,                             crosshair,                             CROSSHAIRVALUEALIAS),
-//    CONFIG_VARIABLE_INT          (crosshaircolor,                   crosshaircolor,                        crosshaircolor,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (episode,                          episode,                               episode,                               NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (expansion,                        expansion,                             expansion,                             NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (facebackcolor,                    facebackcolor,                         facebackcolor,                         FACEBACKVALUEALIAS ),
-//    CONFIG_VARIABLE_INT          (fade,                             fade,                                  fade,                                  BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (gp_analog,                        gp_analog,                             gp_analog,                             BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_FLOAT_PERCENT(gp_deadzone_left,                 gp_deadzone_left,                      gp_deadzone_left,                      NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_FLOAT_PERCENT(gp_deadzone_right,                gp_deadzone_right,                     gp_deadzone_right,                     NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (gp_invertyaxis,                   gp_invertyaxis,                        gp_invertyaxis,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (gp_sensitivity_horizontal,        gp_sensitivity_horizontal,             gp_sensitivity_horizontal,             NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (gp_sensitivity_vertical,          gp_sensitivity_vertical,               gp_sensitivity_vertical,               NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (gp_swapthumbsticks,               gp_swapthumbsticks,                    gp_swapthumbsticks,                    BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (gp_thumbsticks,                   gp_thumbsticks,                        gp_thumbsticks,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_PERCENT  (gp_vibrate_barrels,               gp_vibrate_barrels,                    gp_vibrate_barrels,                    NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_PERCENT  (gp_vibrate_damage,                gp_vibrate_damage,                     gp_vibrate_damage,                     NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_PERCENT  (gp_vibrate_weapons,               gp_vibrate_weapons,                    gp_vibrate_weapons,                    NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (infighting,                       infighting,                            infighting,                            BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (infiniteheight,                   infiniteheight,                        infiniteheight,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_STRING       (iwadfolder,                       iwadfolder,                            iwadfolder,                            NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (m_acceleration,                   m_acceleration,                        m_acceleration,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (m_doubleclick_use,                m_doubleclick_use,                     m_doubleclick_use,                     BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (m_invertyaxis,                    m_invertyaxis,                         m_invertyaxis,                         BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (m_novertical,                     m_novertical,                          m_novertical,                          BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (m_sensitivity,                    m_sensitivity,                         m_sensitivity,                         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (melt,                             wipe,                                  melt,                                  BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (messages,                         messages,                              messages,                              BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (mouselook,                        mouselook,                             mouselook,                             BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT_PERCENT  (movebob,                          movebob,                               movebob,                               NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_STRING       (playername,                       playername,                            playername,                            NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (r_althud,                         r_althud,                              r_althud,                              BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_berserkintensity,               r_berserkintensity,                    r_berserkintensity,                    NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (r_blood,                          r_blood,                               r_blood,                               BLOODVALUEALIAS    ),
-//    CONFIG_VARIABLE_INT          (r_bloodsplats_max,                r_bloodsplats_max,                     r_bloodsplats_max,                     NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (r_bloodsplats_translucency,       r_bloodsplats_translucency,            r_bloodsplats_translucency,            BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_brightmaps,                     r_brightmaps,                          r_brightmaps,                          BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT_PERCENT  (r_color,                          r_color,                               r_color,                               NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (r_corpses_color,                  r_corpses_color,                       r_corpses_color,                       BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_corpses_gib,                    r_corpses_gib,                         r_corpses_gib,                         BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_corpses_mirrored,               r_corpses_mirrored,                    r_corpses_mirrored,                    BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_corpses_moreblood,              r_corpses_moreblood,                   r_corpses_moreblood,                   BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_corpses_nudge,                  r_corpses_nudge,                       r_corpses_nudge,                       BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_corpses_slide,                  r_corpses_slide,                       r_corpses_slide,                       BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_corpses_smearblood,             r_corpses_smearblood,                  r_corpses_smearblood,                  BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_detail,                         r_detail,                              r_detail,                              DETAILVALUEALIAS   ),
-//    CONFIG_VARIABLE_INT          (r_diskicon,                       r_diskicon,                            r_diskicon,                            BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_dither,                         r_dither,                              r_dither,                              BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_fixmaperrors,                   r_fixmaperrors,                        r_fixmaperrors,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_fixspriteoffsets,               r_fixspriteoffsets,                    r_fixspriteoffsets,                    BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_floatbob,                       r_floatbob,                            r_floatbob,                            BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_fov,                            r_fov,                                 r_fov,                                 NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_FLOAT        (r_gamma,                          r_gamma,                               r_gamma,                               GAMMAVALUEALIAS    ),
-//    CONFIG_VARIABLE_INT          (r_graduallighting,                r_graduallighting,                     r_graduallighting,                     BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_homindicator,                   r_homindicator,                        r_homindicator,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_hud,                            r_hud,                                 r_hud,                                 BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_hud_translucency,               r_hud_translucency,                    r_hud_translucency,                    BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_liquid_bob,                     r_liquid_bob,                          r_liquid_bob,                          BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_liquid_clipsprites,             r_liquid_clipsprites,                  r_liquid_clipsprites,                  BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_liquid_current,                 r_liquid_current,                      r_liquid_current,                      BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_liquid_lowerview,               r_liquid_lowerview,                    r_liquid_lowerview,                    BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_liquid_swirl,                   r_liquid_swirl,                        r_liquid_swirl,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_OTHER        (r_lowpixelsize,                   r_lowpixelsize,                        r_lowpixelsize,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (r_mirroredweapons,                r_mirroredweapons,                     r_mirroredweapons,                     BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_playersprites,                  r_playersprites,                       r_playersprites,                       BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_rockettrails,                   r_rockettrails,                        r_rockettrails,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_screensize,                     r_screensize,                          r_screensize,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (r_shadows,                        r_shadows,                             r_shadows,                             BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_shadows_translucency,           r_shadows_translucency,                r_shadows_translucency,                BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_shake_barrels,                  r_shake_barrels,                       r_shake_barrels,                       BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT_PERCENT  (r_shake_damage,                   r_shake_damage,                        r_shake_damage,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (r_skycolor,                       r_skycolor,                            r_skycolor,                            SKYVALUEALIAS      ),
-//    CONFIG_VARIABLE_INT          (r_supersampling,                  r_supersampling,                       r_supersampling,                       BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_textures,                       r_textures,                            r_textures,                            BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (r_translucency,                   r_translucency,                        r_translucency,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (s_channels,                       s_channels,                            s_channels,                            NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_PERCENT  (s_musicvolume,                    s_musicvolume,                         s_musicvolume,                         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (s_randommusic,                    s_randommusic,                         s_randommusic,                         BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (s_randompitch,                    s_randompitch,                         s_randompitch,                         BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT_PERCENT  (s_sfxvolume,                      s_sfxvolume,                           s_sfxvolume,                           NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (s_stereo,                         s_stereo,                              s_stereo,                              BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (savegame,                         savegame,                              savegame,                              NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (skilllevel,                       skilllevel,                            skilllevel,                            NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_PERCENT  (stillbob,                         stillbob,                              stillbob,                              NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (tossdrop,                         tossdrop,                              tossdrop,                              BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT_PERCENT  (turbo,                            turbo,                                 turbo,                                 NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (units,                            units,                                 units,                                 UNITSVALUEALIAS    ),
-//    CONFIG_VARIABLE_STRING       (version,                          version,                               version,                               NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (vid_borderlesswindow,             vid_borderlesswindow,                  vid_borderlesswindow,                  BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (vid_capfps,                       vid_capfps,                            vid_capfps,                            CAPVALUEALIAS      ),
-//    CONFIG_VARIABLE_INT          (vid_display,                      vid_display,                           vid_display,                           NOVALUEALIAS       ),
-//#if !defined(_WIN32)
-//    CONFIG_VARIABLE_STRING       (vid_driver,                       vid_driver,                            vid_driver,                            NOVALUEALIAS       ),
-//#endif
-//    CONFIG_VARIABLE_INT          (vid_fullscreen,                   vid_fullscreen,                        vid_fullscreen,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT_PERCENT  (vid_motionblur,                   vid_motionblur,                        vid_motionblur,                        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (vid_pillarboxes,                  vid_pillarboxes,                       vid_pillarboxes,                       BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_STRING       (vid_scaleapi,                     vid_scaleapi,                          vid_scaleapi,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_STRING       (vid_scalefilter,                  vid_scalefilter,                       vid_scalefilter,                       NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_OTHER        (vid_screenresolution,             vid_screenresolution,                  vid_screenresolution,                  NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (vid_showfps,                      vid_showfps,                           vid_showfps,                           BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (vid_vsync,                        vid_vsync,                             vid_vsync,                             VSYNCVALUEALIAS    ),
-//    CONFIG_VARIABLE_INT          (vid_widescreen,                   vid_widescreen,                        vid_widescreen,                        BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_OTHER        (vid_windowpos,                    vid_windowpos,                         vid_windowpos,                         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_OTHER        (vid_windowsize,                   vid_windowsize,                        vid_windowsize,                        NOVALUEALIAS       ),
-//#if defined(_WIN32)
-//    CONFIG_VARIABLE_STRING       (wad,                              wad,                                   wad,                                   NOVALUEALIAS       ),
-//#endif
-//    CONFIG_VARIABLE_INT          (warninglevel,                     warninglevel,                          warninglevel,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_PERCENT  (weaponbob,                        weaponbob,                             weaponbob,                             NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT          (weaponbounce,                     weaponbounce,                          weaponbounce,                          BOOLVALUEALIAS     ),
-//    CONFIG_VARIABLE_INT          (weaponrecoil,                     weaponrecoil,                          weaponrecoil,                          BOOLVALUEALIAS     ),
-//    BLANKLINE,
-//    COMMENT("; player stats\n"),
-//    CONFIG_VARIABLE_INT_UNSIGNED (barrelsexploded,                  stat_barrelsexploded,                  stat_barrelsexploded,                  NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (cheated,                          stat_cheated,                          stat_cheated,                          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (damageinflicted,                  stat_damageinflicted,                  stat_damageinflicted,                  NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (damagereceived,                   stat_damagereceived,                   stat_damagereceived,                   NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (deaths,                           stat_deaths,                           stat_deaths,                           NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (distancetraveled,                 stat_distancetraveled,                 stat_distancetraveled,                 NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (gamessaved,                       stat_gamessaved,                       stat_gamessaved,                       NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (itemspickedup,                    stat_itemspickedup,                    stat_itemspickedup,                    NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (itemspickedup_ammo_bullets,       stat_itemspickedup_ammo_bullets,       stat_itemspickedup_ammo_bullets,       NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (itemspickedup_ammo_cells,         stat_itemspickedup_ammo_cells,         stat_itemspickedup_ammo_cells,         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (itemspickedup_ammo_rockets,       stat_itemspickedup_ammo_rockets,       stat_itemspickedup_ammo_rockets,       NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (itemspickedup_ammo_shells,        stat_itemspickedup_ammo_shells,        stat_itemspickedup_ammo_shells,        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (itemspickedup_armor,              stat_itemspickedup_armor,              stat_itemspickedup_armor,              NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (itemspickedup_health,             stat_itemspickedup_health,             stat_itemspickedup_health,             NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (mapscompleted,                    stat_mapscompleted,                    stat_mapscompleted,                    NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (mapsstarted,                      stat_mapsstarted,                      stat_mapsstarted,                      NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled,                   stat_monsterskilled,                   stat_monsterskilled,                   NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_arachnotrons,      stat_monsterskilled_arachnotrons,      stat_monsterskilled_arachnotrons,      NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_archviles,         stat_monsterskilled_archviles,         stat_monsterskilled_archviles,         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_baronsofhell,      stat_monsterskilled_baronsofhell,      stat_monsterskilled_baronsofhell,      NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_cacodemons,        stat_monsterskilled_cacodemons,        stat_monsterskilled_cacodemons,        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_cyberdemons,       stat_monsterskilled_cyberdemons,       stat_monsterskilled_cyberdemons,       NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_demons,            stat_monsterskilled_demons,            stat_monsterskilled_demons,            NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_heavyweapondudes,  stat_monsterskilled_heavyweapondudes,  stat_monsterskilled_heavyweapondudes,  NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_hellknights,       stat_monsterskilled_hellknights,       stat_monsterskilled_hellknights,       NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_imps,              stat_monsterskilled_imps,              stat_monsterskilled_imps,              NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_lostsouls,         stat_monsterskilled_lostsouls,         stat_monsterskilled_lostsouls,         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_mancubi,           stat_monsterskilled_mancubi,           stat_monsterskilled_mancubi,           NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_painelementals,    stat_monsterskilled_painelementals,    stat_monsterskilled_painelementals,    NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_revenants,         stat_monsterskilled_revenants,         stat_monsterskilled_revenants,         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_shotgunguys,       stat_monsterskilled_shotgunguys,       stat_monsterskilled_shotgunguys,       NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_spectres,          stat_monsterskilled_spectres,          stat_monsterskilled_spectres,          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_spidermasterminds, stat_monsterskilled_spidermasterminds, stat_monsterskilled_spidermasterminds, NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (monsterskilled_zombiemen,         stat_monsterskilled_zombiemen,         stat_monsterskilled_zombiemen,         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (runs,                             stat_runs,                             stat_runs,                             NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (secretsfound,                     stat_secretsrevealed,                  stat_secretsfound,                     NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotsfired_pistol,                stat_shotsfired_pistol,                stat_shotsfired_pistol,                NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotsfired_shotgun,               stat_shotsfired_shotgun,               stat_shotsfired_shotgun,               NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotsfired_supershotgun,          stat_shotsfired_supershotgun,          stat_shotsfired_supershotgun,          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotsfired_chaingun,              stat_shotsfired_chaingun,              stat_shotsfired_chaingun,              NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotsfired_rocketlauncher,        stat_shotsfired_rocketlauncher,        stat_shotsfired_rocketlauncher,        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotsfired_plasmarifle,           stat_shotsfired_plasmarifle,           stat_shotsfired_plasmarifle,           NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotsfired_bfg9000,               stat_shotsfired_bfg9000,               stat_shotsfired_bfg9000,               NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotssuccessful_pistol,           stat_shotssuccessful_pistol,           stat_shotssuccessful_pistol,           NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotssuccessful_shotgun,          stat_shotssuccessful_shotgun,          stat_shotssuccessful_shotgun,          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotssuccessful_supershotgun,     stat_shotssuccessful_supershotgun,     stat_shotssuccessful_supershotgun,     NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotssuccessful_chaingun,         stat_shotssuccessful_chaingun,         stat_shotssuccessful_chaingun,         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotssuccessful_rocketlauncher,   stat_shotssuccessful_rocketlauncher,   stat_shotssuccessful_rocketlauncher,   NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotssuccessful_plasmarifle,      stat_shotssuccessful_plasmarifle,      stat_shotssuccessful_plasmarifle,      NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (shotssuccessful_bfg9000,          stat_shotssuccessful_bfg9000,          stat_shotssuccessful_bfg9000,          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (skilllevel_heynottoorough,        stat_skilllevel_heynottoorough,        stat_skilllevel_heynottoorough,        NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (skilllevel_hurtmeplenty,          stat_skilllevel_hurtmeplenty,          stat_skilllevel_hurtmeplenty,          NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (skilllevel_imtooyoungtodie,       stat_skilllevel_imtooyoungtodie,       stat_skilllevel_imtooyoungtodie,       NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (skilllevel_nightmare,             stat_skilllevel_nightmare,             stat_skilllevel_nightmare,             NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (skilllevel_ultraviolence,         stat_skilllevel_ultraviolence,         stat_skilllevel_ultraviolence,         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (suicides,                         stat_suicides,                         stat_suicides,                         NOVALUEALIAS       ),
-//    CONFIG_VARIABLE_INT_UNSIGNED (time,                             stat_time,                             stat_time,                             NOVALUEALIAS       )
-//};
-//
+// r_plane.c
+dboolean            r_liquid_current = r_liquid_current_default;
+dboolean            r_liquid_swirl = r_liquid_swirl_default;
+
+// p_doors.c
+dboolean    r_graduallighting = r_graduallighting_default;
+
+// p_setup.c
+dboolean        r_fixmaperrors = r_fixmaperrors_default;
+
+// r_data.c
+dboolean    r_fixspriteoffsets = r_fixspriteoffsets_default;
+
+// r_segs.c
+dboolean            r_brightmaps = r_brightmaps_default;
+
+
+
+#define NUMCVARS                                                197
+
+#define CONFIG_VARIABLE_INT(name, oldname, cvar, set)           { #name, #oldname, &cvar, DEFAULT_INT32,         set          }
+#define CONFIG_VARIABLE_INT_UNSIGNED(name, oldname, cvar, set)  { #name, #oldname, &cvar, DEFAULT_UINT64,        set          }
+#define CONFIG_VARIABLE_INT_PERCENT(name, oldname, cvar, set)   { #name, #oldname, &cvar, DEFAULT_INT32_PERCENT, set          }
+#define CONFIG_VARIABLE_FLOAT(name, oldname, cvar, set)         { #name, #oldname, &cvar, DEFAULT_FLOAT,         set          }
+#define CONFIG_VARIABLE_FLOAT_PERCENT(name, oldname, cvar, set) { #name, #oldname, &cvar, DEFAULT_FLOAT_PERCENT, set          }
+#define CONFIG_VARIABLE_STRING(name, oldname, cvar, set)        { #name, #oldname, &cvar, DEFAULT_STRING,        set          }
+#define CONFIG_VARIABLE_OTHER(name, oldname, cvar, set)         { #name, #oldname, &cvar, DEFAULT_OTHER,         set          }
+#define BLANKLINE                                               { "",     "",      NULL,  DEFAULT_OTHER,         NOVALUEALIAS }
+#define COMMENT(text)                                           { text,   "",      NULL,  DEFAULT_OTHER,         NOVALUEALIAS }
+
+static default_t cvars[ NUMCVARS ] =
+{
+	COMMENT( "; CVARs\n" ),
+	CONFIG_VARIABLE_INT( alwaysrun,                        alwaysrun,                             alwaysrun,                             BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_allmapcdwallcolor,             am_allmapcdwallcolor,                  am_allmapcdwallcolor,                  NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_allmapfdwallcolor,             am_allmapfdwallcolor,                  am_allmapfdwallcolor,                  NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_allmapwallcolor,               am_allmapwallcolor,                    am_allmapwallcolor,                    NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_backcolor,                     am_backcolor,                          am_backcolor,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_cdwallcolor,                   am_cdwallcolor,                        am_cdwallcolor,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_crosshaircolor,                am_crosshaircolor,                     am_crosshaircolor,                     NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_external,                      am_external,                           am_external,                           BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_fdwallcolor,                   am_fdwallcolor,                        am_fdwallcolor,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_followmode,                    am_followmode,                         am_followmode,                         BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_grid,                          am_grid,                               am_grid,                               BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_gridcolor,                     am_gridcolor,                          am_gridcolor,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_OTHER( am_gridsize,                      am_gridsize,                           am_gridsize,                           NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_markcolor,                     am_markcolor,                          am_markcolor,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_path,                          am_path,                               am_path,                               BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_pathcolor,                     am_pathcolor,                          am_pathcolor,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_playercolor,                   am_playercolor,                        am_playercolor,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_rotatemode,                    am_rotatemode,                         am_rotatemode,                         BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_teleportercolor,               am_teleportercolor,                    am_teleportercolor,                    NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_thingcolor,                    am_thingcolor,                         am_thingcolor,                         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_tswallcolor,                   am_tswallcolor,                        am_tswallcolor,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( am_wallcolor,                     am_wallcolor,                          am_wallcolor,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( autoaim,                          autoaim,                               autoaim,                               BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( autoload,                         autoload,                              autoload,                              BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( autosave,                         autosave,                              autosave,                              BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( autotilt,                         autotilt,                              autotilt,                              BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( autouse,                          autouse,                               autouse,                               BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( centerweapon,                     centerweapon,                          centerweapon,                          BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( con_backcolor,                    con_backcolor,                         con_backcolor,                         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( con_edgecolor,                    con_edgecolor,                         con_edgecolor,                         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( con_obituaries,                   con_obituaries,                        con_obituaries,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( crosshair,                        crosshair,                             crosshair,                             CROSSHAIRVALUEALIAS ),
+	CONFIG_VARIABLE_INT( crosshaircolor,                   crosshaircolor,                        crosshaircolor,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( episode,                          episode,                               episode,                               NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( expansion,                        expansion,                             expansion,                             NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( facebackcolor,                    facebackcolor,                         facebackcolor,                         FACEBACKVALUEALIAS ),
+	CONFIG_VARIABLE_INT( fade,                             fade,                                  fade,                                  BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( gp_analog,                        gp_analog,                             gp_analog,                             BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_FLOAT_PERCENT( gp_deadzone_left,                 gp_deadzone_left,                      gp_deadzone_left,                      NOVALUEALIAS ),
+	CONFIG_VARIABLE_FLOAT_PERCENT( gp_deadzone_right,                gp_deadzone_right,                     gp_deadzone_right,                     NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( gp_invertyaxis,                   gp_invertyaxis,                        gp_invertyaxis,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( gp_sensitivity_horizontal,        gp_sensitivity_horizontal,             gp_sensitivity_horizontal,             NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( gp_sensitivity_vertical,          gp_sensitivity_vertical,               gp_sensitivity_vertical,               NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( gp_swapthumbsticks,               gp_swapthumbsticks,                    gp_swapthumbsticks,                    BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( gp_thumbsticks,                   gp_thumbsticks,                        gp_thumbsticks,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( gp_vibrate_barrels,               gp_vibrate_barrels,                    gp_vibrate_barrels,                    NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( gp_vibrate_damage,                gp_vibrate_damage,                     gp_vibrate_damage,                     NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( gp_vibrate_weapons,               gp_vibrate_weapons,                    gp_vibrate_weapons,                    NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( infighting,                       infighting,                            infighting,                            BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( infiniteheight,                   infiniteheight,                        infiniteheight,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_STRING( iwadfolder,                       iwadfolder,                            iwadfolder,                            NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( m_acceleration,                   m_acceleration,                        m_acceleration,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( m_doubleclick_use,                m_doubleclick_use,                     m_doubleclick_use,                     BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( m_invertyaxis,                    m_invertyaxis,                         m_invertyaxis,                         BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( m_novertical,                     m_novertical,                          m_novertical,                          BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( m_sensitivity,                    m_sensitivity,                         m_sensitivity,                         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( melt,                             wipe,                                  melt,                                  BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( messages,                         messages,                              messages,                              BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( mouselook,                        mouselook,                             mouselook,                             BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( movebob,                          movebob,                               movebob,                               NOVALUEALIAS ),
+	CONFIG_VARIABLE_STRING( playername,                       playername,                            playername,                            NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_althud,                         r_althud,                              r_althud,                              BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_berserkintensity,               r_berserkintensity,                    r_berserkintensity,                    NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_blood,                          r_blood,                               r_blood,                               BLOODVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_bloodsplats_max,                r_bloodsplats_max,                     r_bloodsplats_max,                     NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_bloodsplats_translucency,       r_bloodsplats_translucency,            r_bloodsplats_translucency,            BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_brightmaps,                     r_brightmaps,                          r_brightmaps,                          BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( r_color,                          r_color,                               r_color,                               NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_corpses_color,                  r_corpses_color,                       r_corpses_color,                       BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_corpses_gib,                    r_corpses_gib,                         r_corpses_gib,                         BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_corpses_mirrored,               r_corpses_mirrored,                    r_corpses_mirrored,                    BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_corpses_moreblood,              r_corpses_moreblood,                   r_corpses_moreblood,                   BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_corpses_nudge,                  r_corpses_nudge,                       r_corpses_nudge,                       BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_corpses_slide,                  r_corpses_slide,                       r_corpses_slide,                       BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_corpses_smearblood,             r_corpses_smearblood,                  r_corpses_smearblood,                  BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_detail,                         r_detail,                              r_detail,                              DETAILVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_diskicon,                       r_diskicon,                            r_diskicon,                            BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_dither,                         r_dither,                              r_dither,                              BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_fixmaperrors,                   r_fixmaperrors,                        r_fixmaperrors,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_fixspriteoffsets,               r_fixspriteoffsets,                    r_fixspriteoffsets,                    BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_floatbob,                       r_floatbob,                            r_floatbob,                            BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_fov,                            r_fov,                                 r_fov,                                 NOVALUEALIAS ),
+	CONFIG_VARIABLE_FLOAT( r_gamma,                          r_gamma,                               r_gamma,                               GAMMAVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_graduallighting,                r_graduallighting,                     r_graduallighting,                     BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_homindicator,                   r_homindicator,                        r_homindicator,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_hud,                            r_hud,                                 r_hud,                                 BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_hud_translucency,               r_hud_translucency,                    r_hud_translucency,                    BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_liquid_bob,                     r_liquid_bob,                          r_liquid_bob,                          BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_liquid_clipsprites,             r_liquid_clipsprites,                  r_liquid_clipsprites,                  BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_liquid_current,                 r_liquid_current,                      r_liquid_current,                      BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_liquid_lowerview,               r_liquid_lowerview,                    r_liquid_lowerview,                    BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_liquid_swirl,                   r_liquid_swirl,                        r_liquid_swirl,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_OTHER( r_lowpixelsize,                   r_lowpixelsize,                        r_lowpixelsize,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_mirroredweapons,                r_mirroredweapons,                     r_mirroredweapons,                     BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_playersprites,                  r_playersprites,                       r_playersprites,                       BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_rockettrails,                   r_rockettrails,                        r_rockettrails,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_screensize,                     r_screensize,                          r_screensize,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_shadows,                        r_shadows,                             r_shadows,                             BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_shadows_translucency,           r_shadows_translucency,                r_shadows_translucency,                BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_shake_barrels,                  r_shake_barrels,                       r_shake_barrels,                       BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( r_shake_damage,                   r_shake_damage,                        r_shake_damage,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_skycolor,                       r_skycolor,                            r_skycolor,                            SKYVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_supersampling,                  r_supersampling,                       r_supersampling,                       BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_textures,                       r_textures,                            r_textures,                            BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( r_translucency,                   r_translucency,                        r_translucency,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( s_channels,                       s_channels,                            s_channels,                            NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( s_musicvolume,                    s_musicvolume,                         s_musicvolume,                         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( s_randommusic,                    s_randommusic,                         s_randommusic,                         BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( s_randompitch,                    s_randompitch,                         s_randompitch,                         BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( s_sfxvolume,                      s_sfxvolume,                           s_sfxvolume,                           NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( s_stereo,                         s_stereo,                              s_stereo,                              BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( savegame,                         savegame,                              savegame,                              NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( skilllevel,                       skilllevel,                            skilllevel,                            NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( stillbob,                         stillbob,                              stillbob,                              NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( tossdrop,                         tossdrop,                              tossdrop,                              BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( turbo,                            turbo,                                 turbo,                                 NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( units,                            units,                                 units,                                 UNITSVALUEALIAS ),
+	CONFIG_VARIABLE_STRING( version,                          version,                               version,                               NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( vid_borderlesswindow,             vid_borderlesswindow,                  vid_borderlesswindow,                  BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( vid_capfps,                       vid_capfps,                            vid_capfps,                            CAPVALUEALIAS ),
+	CONFIG_VARIABLE_INT( vid_display,                      vid_display,                           vid_display,                           NOVALUEALIAS ),
+#if !defined(_WIN32)
+	CONFIG_VARIABLE_STRING( vid_driver,                       vid_driver,                            vid_driver,                            NOVALUEALIAS ),
+#endif
+	CONFIG_VARIABLE_INT( vid_fullscreen,                   vid_fullscreen,                        vid_fullscreen,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( vid_motionblur,                   vid_motionblur,                        vid_motionblur,                        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( vid_pillarboxes,                  vid_pillarboxes,                       vid_pillarboxes,                       BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_STRING( vid_scaleapi,                     vid_scaleapi,                          vid_scaleapi,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_STRING( vid_scalefilter,                  vid_scalefilter,                       vid_scalefilter,                       NOVALUEALIAS ),
+	CONFIG_VARIABLE_OTHER( vid_screenresolution,             vid_screenresolution,                  vid_screenresolution,                  NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( vid_showfps,                      vid_showfps,                           vid_showfps,                           BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( vid_vsync,                        vid_vsync,                             vid_vsync,                             VSYNCVALUEALIAS ),
+	CONFIG_VARIABLE_INT( vid_widescreen,                   vid_widescreen,                        vid_widescreen,                        BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_OTHER( vid_windowpos,                    vid_windowpos,                         vid_windowpos,                         NOVALUEALIAS ),
+	CONFIG_VARIABLE_OTHER( vid_windowsize,                   vid_windowsize,                        vid_windowsize,                        NOVALUEALIAS ),
+#if defined(_WIN32)
+	CONFIG_VARIABLE_STRING( wad,                              wad,                                   wad,                                   NOVALUEALIAS ),
+#endif
+	CONFIG_VARIABLE_INT( warninglevel,                     warninglevel,                          warninglevel,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_PERCENT( weaponbob,                        weaponbob,                             weaponbob,                             NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT( weaponbounce,                     weaponbounce,                          weaponbounce,                          BOOLVALUEALIAS ),
+	CONFIG_VARIABLE_INT( weaponrecoil,                     weaponrecoil,                          weaponrecoil,                          BOOLVALUEALIAS ),
+	BLANKLINE,
+	COMMENT( "; player stats\n" ),
+	CONFIG_VARIABLE_INT_UNSIGNED( barrelsexploded,                  stat_barrelsexploded,                  stat_barrelsexploded,                  NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( cheated,                          stat_cheated,                          stat_cheated,                          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( damageinflicted,                  stat_damageinflicted,                  stat_damageinflicted,                  NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( damagereceived,                   stat_damagereceived,                   stat_damagereceived,                   NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( deaths,                           stat_deaths,                           stat_deaths,                           NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( distancetraveled,                 stat_distancetraveled,                 stat_distancetraveled,                 NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( gamessaved,                       stat_gamessaved,                       stat_gamessaved,                       NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( itemspickedup,                    stat_itemspickedup,                    stat_itemspickedup,                    NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( itemspickedup_ammo_bullets,       stat_itemspickedup_ammo_bullets,       stat_itemspickedup_ammo_bullets,       NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( itemspickedup_ammo_cells,         stat_itemspickedup_ammo_cells,         stat_itemspickedup_ammo_cells,         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( itemspickedup_ammo_rockets,       stat_itemspickedup_ammo_rockets,       stat_itemspickedup_ammo_rockets,       NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( itemspickedup_ammo_shells,        stat_itemspickedup_ammo_shells,        stat_itemspickedup_ammo_shells,        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( itemspickedup_armor,              stat_itemspickedup_armor,              stat_itemspickedup_armor,              NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( itemspickedup_health,             stat_itemspickedup_health,             stat_itemspickedup_health,             NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( mapscompleted,                    stat_mapscompleted,                    stat_mapscompleted,                    NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( mapsstarted,                      stat_mapsstarted,                      stat_mapsstarted,                      NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled,                   stat_monsterskilled,                   stat_monsterskilled,                   NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_arachnotrons,      stat_monsterskilled_arachnotrons,      stat_monsterskilled_arachnotrons,      NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_archviles,         stat_monsterskilled_archviles,         stat_monsterskilled_archviles,         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_baronsofhell,      stat_monsterskilled_baronsofhell,      stat_monsterskilled_baronsofhell,      NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_cacodemons,        stat_monsterskilled_cacodemons,        stat_monsterskilled_cacodemons,        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_cyberdemons,       stat_monsterskilled_cyberdemons,       stat_monsterskilled_cyberdemons,       NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_demons,            stat_monsterskilled_demons,            stat_monsterskilled_demons,            NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_heavyweapondudes,  stat_monsterskilled_heavyweapondudes,  stat_monsterskilled_heavyweapondudes,  NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_hellknights,       stat_monsterskilled_hellknights,       stat_monsterskilled_hellknights,       NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_imps,              stat_monsterskilled_imps,              stat_monsterskilled_imps,              NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_lostsouls,         stat_monsterskilled_lostsouls,         stat_monsterskilled_lostsouls,         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_mancubi,           stat_monsterskilled_mancubi,           stat_monsterskilled_mancubi,           NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_painelementals,    stat_monsterskilled_painelementals,    stat_monsterskilled_painelementals,    NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_revenants,         stat_monsterskilled_revenants,         stat_monsterskilled_revenants,         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_shotgunguys,       stat_monsterskilled_shotgunguys,       stat_monsterskilled_shotgunguys,       NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_spectres,          stat_monsterskilled_spectres,          stat_monsterskilled_spectres,          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_spidermasterminds, stat_monsterskilled_spidermasterminds, stat_monsterskilled_spidermasterminds, NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( monsterskilled_zombiemen,         stat_monsterskilled_zombiemen,         stat_monsterskilled_zombiemen,         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( runs,                             stat_runs,                             stat_runs,                             NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( secretsfound,                     stat_secretsrevealed,                  stat_secretsfound,                     NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotsfired_pistol,                stat_shotsfired_pistol,                stat_shotsfired_pistol,                NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotsfired_shotgun,               stat_shotsfired_shotgun,               stat_shotsfired_shotgun,               NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotsfired_supershotgun,          stat_shotsfired_supershotgun,          stat_shotsfired_supershotgun,          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotsfired_chaingun,              stat_shotsfired_chaingun,              stat_shotsfired_chaingun,              NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotsfired_rocketlauncher,        stat_shotsfired_rocketlauncher,        stat_shotsfired_rocketlauncher,        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotsfired_plasmarifle,           stat_shotsfired_plasmarifle,           stat_shotsfired_plasmarifle,           NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotsfired_bfg9000,               stat_shotsfired_bfg9000,               stat_shotsfired_bfg9000,               NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotssuccessful_pistol,           stat_shotssuccessful_pistol,           stat_shotssuccessful_pistol,           NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotssuccessful_shotgun,          stat_shotssuccessful_shotgun,          stat_shotssuccessful_shotgun,          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotssuccessful_supershotgun,     stat_shotssuccessful_supershotgun,     stat_shotssuccessful_supershotgun,     NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotssuccessful_chaingun,         stat_shotssuccessful_chaingun,         stat_shotssuccessful_chaingun,         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotssuccessful_rocketlauncher,   stat_shotssuccessful_rocketlauncher,   stat_shotssuccessful_rocketlauncher,   NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotssuccessful_plasmarifle,      stat_shotssuccessful_plasmarifle,      stat_shotssuccessful_plasmarifle,      NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( shotssuccessful_bfg9000,          stat_shotssuccessful_bfg9000,          stat_shotssuccessful_bfg9000,          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( skilllevel_heynottoorough,        stat_skilllevel_heynottoorough,        stat_skilllevel_heynottoorough,        NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( skilllevel_hurtmeplenty,          stat_skilllevel_hurtmeplenty,          stat_skilllevel_hurtmeplenty,          NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( skilllevel_imtooyoungtodie,       stat_skilllevel_imtooyoungtodie,       stat_skilllevel_imtooyoungtodie,       NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( skilllevel_nightmare,             stat_skilllevel_nightmare,             stat_skilllevel_nightmare,             NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( skilllevel_ultraviolence,         stat_skilllevel_ultraviolence,         stat_skilllevel_ultraviolence,         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( suicides,                         stat_suicides,                         stat_suicides,                         NOVALUEALIAS ),
+	CONFIG_VARIABLE_INT_UNSIGNED( time,                             stat_time,                             stat_time,                             NOVALUEALIAS )
+};
+
 //valuealias_t valuealiases[] =
 //{
 //    { "off",       0, BOOLVALUEALIAS      }, { "on",      1, BOOLVALUEALIAS      },
