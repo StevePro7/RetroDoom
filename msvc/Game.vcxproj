@@ -72,6 +72,7 @@
     <ClInclude Include="..\inc\doomdef.h" />
     <ClInclude Include="..\inc\doomenum.h" />
     <ClInclude Include="..\inc\doomkeys.h" />
+    <ClInclude Include="..\inc\doomretro.h" />
     <ClInclude Include="..\inc\doomtype.h" />
     <ClInclude Include="..\inc\doomvars.h" />
     <ClInclude Include="..\inc\dstrings.h" />
