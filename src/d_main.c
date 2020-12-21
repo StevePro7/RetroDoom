@@ -39,9 +39,11 @@ static void D_DoomLoop(void)
 //
 // CPhipps - the old contents of D_DoomMain, but moved out of the main
 //  line of execution so its stack space can be freed
-static void D_DoomMainSetup(void)
+static void D_DoomMainSetup( void )
 {
-   
+	for( ;; )
+	{
+	}
 }
 
 //

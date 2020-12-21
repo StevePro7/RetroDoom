@@ -121,9 +121,10 @@ void logd( const char* format, ... ) {
 	if( loglevel > 0 ) {
 		va_list args;
 		va_start( args, format );
-		fprintf( fp, "%s ", get_timestamp( tmp ) );
+		fprintf( fp, "%s DBG ", get_timestamp( tmp ) );
 		vfprintf( fp, format, args );
 		va_end( args );
+		fflush( fp );
 	}
 }
 
@@ -131,7 +132,7 @@ void loge( const char* format, ... ) {
 	char tmp[ 50 ] = { 0 };
 	va_list args;
 	va_start( args, format );
-	fprintf( fp, "%s ", get_timestamp( tmp ) );
+	fprintf( fp, "%s ERR ", get_timestamp( tmp ) );
 	vfprintf( fp, format, args );
 	va_end( args );
 	fflush( fp );

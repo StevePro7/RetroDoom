@@ -9,6 +9,7 @@
 #include "a_game.h"
 #include "d_main.h"
 #include "doomtype.h"
+#include "logger.h"
 #include "m_argv.h"
 #include "version.h"
 
@@ -38,6 +39,12 @@ int main(int argc, char **argv)
 //
 //    I_SetProcessDPIAware();
 #endif
+
+	set_log_level( LOG_EVERYTHING );
+	log_init( "", "output", "log" );
+	// example
+	//logd( "my number: %d\n", 2 );
+	//logd( "my string: %s\n", "string one" );
 
     D_DoomMain();
 
