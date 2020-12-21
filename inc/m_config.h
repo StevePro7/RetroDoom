@@ -185,7 +185,7 @@ extern int          turbo;
 extern int          units;
 extern char         *version;
 extern dboolean     vid_borderlesswindow;
-extern int          vid_capfps;
+//extern int          vid_capfps;
 extern int          vid_display;
 #if !defined(_WIN32)
 extern char         *vid_driver;
@@ -571,7 +571,7 @@ extern dboolean     weaponrecoil;
 #define vid_borderlesswindow_default            true
 
 #define vid_capfps_min                          0
-#define vid_capfps_default                      200
+//#define vid_capfps_default                      200
 #define vid_capfps_max                          1000
 
 #define vid_display_min                         1

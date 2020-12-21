@@ -153,6 +153,9 @@
     <ClCompile Include="..\src\doomstat.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\d_loop.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -296,6 +299,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\doomstat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\d_loop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

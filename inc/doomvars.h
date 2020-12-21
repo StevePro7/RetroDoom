@@ -6,13 +6,22 @@
 
 // d_main.h
 extern char     *packageconfig;
-
+extern dboolean advancetitle;
 
 // w_wad.c
 extern char *packagewad;
 
 
+// doomstat.h
+extern int              gametime;
 
+
+// m_menu.c
+dboolean        menuactive;
+
+
+// m_config.h
+extern int          vid_capfps;
 
 
 // i_video.h

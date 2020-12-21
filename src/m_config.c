@@ -1,5 +1,6 @@
 #include "m_config.h"
 #include "doomdef.h"
+#include "doomvars.h"
 #include "i_video.h"
 
 #include <ctype.h>
@@ -26,7 +27,7 @@ dboolean            m_acceleration = m_acceleration_default;
 int                 r_color = r_color_default;
 float               r_gamma = r_gamma_default;
 dboolean            vid_borderlesswindow = vid_borderlesswindow_default;
-int                 vid_capfps = vid_capfps_default;
+//int                 vid_capfps = vid_capfps_default;
 int                 vid_display = vid_display_default;
 #if !defined(_WIN32)
 char                *vid_driver = vid_driver_default;

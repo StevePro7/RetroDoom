@@ -479,7 +479,7 @@
 //#define vid_borderlesswindow_default            true
 //
 //#define vid_capfps_min                          0
-//#define vid_capfps_default                      200
+#define vid_capfps_default                      200
 //#define vid_capfps_max                          1000
 //
 //#define vid_display_min                         1

@@ -5,8 +5,17 @@
 // d_main.c
 char                *packageconfig;
 char                *packagewad;
+dboolean            advancetitle;
+
+// g_game.c
+int             gametime = 0;
 
 
+// m_menu.h
+extern dboolean         menuactive;     // Menu overlaid?
+
+// m_config.c
+int                 vid_capfps = vid_capfps_default;
 
 
 // i_video.c
