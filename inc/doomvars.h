@@ -5,15 +5,15 @@
 
 // i_video.h
 extern dboolean     returntowidescreen;
-extern dboolean     vid_widescreen;
+//extern dboolean     vid_widescreen;
 
 // d_main.h
 #if defined(_WIN32)
 extern char *previouswad;
 #endif
-#if defined(_WIN32)
-extern char         *wad;
-#endif
+//#if defined(_WIN32)
+//extern char         *wad;
+//#endif
 
 
 #endif

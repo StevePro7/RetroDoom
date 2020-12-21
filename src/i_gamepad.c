@@ -1,6 +1,6 @@
 #include "i_gamepad.h"
 //#include "c_console.h"
-//#include "m_config.h"
+#include "m_config.h"
 //#include "m_fixed.h"
 //#include "m_misc.h"
 

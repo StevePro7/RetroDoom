@@ -1,5 +1,6 @@
 #include "m_config.h"
 #include "doomdef.h"
+#include "i_video.h"
 
 #include <ctype.h>
 #include <string.h>
@@ -17,6 +18,175 @@
 //#include "version.h"
 
 static dboolean cvarsloaded;
+
+// CVARs
+// i_video.c
+dboolean            alwaysrun = alwaysrun_default;
+dboolean            m_acceleration = m_acceleration_default;
+int                 r_color = r_color_default;
+float               r_gamma = r_gamma_default;
+dboolean            vid_borderlesswindow = vid_borderlesswindow_default;
+int                 vid_capfps = vid_capfps_default;
+int                 vid_display = vid_display_default;
+#if !defined(_WIN32)
+char                *vid_driver = vid_driver_default;
+#endif
+dboolean            vid_fullscreen = vid_fullscreen_default;
+int                 vid_motionblur = vid_motionblur_default;
+dboolean            vid_pillarboxes = vid_pillarboxes_default;
+char                *vid_scaleapi = vid_scaleapi_default;
+char                *vid_scalefilter = vid_scalefilter_default;
+char                *vid_screenresolution = vid_screenresolution_default;
+dboolean            vid_showfps = vid_showfps_default;
+int                 vid_vsync = vid_vsync_default;
+dboolean            vid_widescreen = vid_widescreen_default;
+char                *vid_windowpos = vid_windowpos_default;
+char                *vid_windowsize = vid_windowsize_default;
+
+// am_map.c
+int am_allmapcdwallcolor = am_allmapcdwallcolor_default;
+int am_allmapfdwallcolor = am_allmapfdwallcolor_default;
+int am_allmapwallcolor = am_allmapwallcolor_default;
+int am_backcolor = am_backcolor_default;
+int am_cdwallcolor = am_cdwallcolor_default;
+int am_crosshaircolor = am_crosshaircolor_default;
+int am_fdwallcolor = am_fdwallcolor_default;
+int am_gridcolor = am_gridcolor_default;
+int am_markcolor = am_markcolor_default;
+int am_pathcolor = am_pathcolor_default;
+int am_playercolor = am_playercolor_default;
+int am_teleportercolor = am_teleportercolor_default;
+int am_thingcolor = am_thingcolor_default;
+int am_tswallcolor = am_tswallcolor_default;
+int am_wallcolor = am_wallcolor_default;
+
+// am_map.c
+dboolean            am_external = am_external_default;
+dboolean            am_followmode = am_followmode_default;
+dboolean            am_grid = am_grid_default;
+char                *am_gridsize = am_gridsize_default;
+dboolean            am_path = am_path_default;
+dboolean            am_rotatemode = am_rotatemode_default;
+
+// p_pspr.c
+dboolean        autoaim = autoaim_default;
+dboolean        centerweapon = centerweapon_default;
+int             weaponbob = weaponbob_default;
+dboolean        weaponbounce = weaponbounce_default;
+dboolean        weaponrecoil = weaponrecoil_default;
+
+// g_game.c
+dboolean        autoload = autoload_default;
+dboolean        autosave = autosave_default;
+
+// p_user.c
+dboolean        autotilt = autotilt_default;
+dboolean        autouse = autouse_default;
+dboolean        infighting = infighting_default;
+int             movebob = movebob_default;
+dboolean        r_liquid_lowerview = r_liquid_lowerview_default;
+int             r_shake_damage = r_shake_damage_default;
+int             stillbob = stillbob_default;
+
+// c_console.c
+int                     con_backcolor = con_backcolor_default;
+int                     con_edgecolor = con_edgecolor_default;
+int                     warninglevel = warninglevel_default;
+
+// p_inter.c
+dboolean        con_obituaries = con_obituaries_default;
+dboolean        r_mirroredweapons = r_mirroredweapons_default;
+dboolean        tossdrop = tossdrop_default;
+
+uint64_t        stat_barrelsexploded = 0;
+uint64_t        stat_damageinflicted = 0;
+uint64_t        stat_damagereceived = 0;
+uint64_t        stat_deaths = 0;
+uint64_t        stat_itemspickedup = 0;
+uint64_t        stat_itemspickedup_ammo_bullets = 0;
+uint64_t        stat_itemspickedup_ammo_cells = 0;
+uint64_t        stat_itemspickedup_ammo_rockets = 0;
+uint64_t        stat_itemspickedup_ammo_shells = 0;
+uint64_t        stat_itemspickedup_armor = 0;
+uint64_t        stat_itemspickedup_health = 0;
+uint64_t        stat_monsterskilled = 0;
+uint64_t        stat_monsterskilled_arachnotrons = 0;
+uint64_t        stat_monsterskilled_archviles = 0;
+uint64_t        stat_monsterskilled_baronsofhell = 0;
+uint64_t        stat_monsterskilled_cacodemons = 0;
+uint64_t        stat_monsterskilled_cyberdemons = 0;
+uint64_t        stat_monsterskilled_demons = 0;
+uint64_t        stat_monsterskilled_heavyweapondudes = 0;
+uint64_t        stat_monsterskilled_hellknights = 0;
+uint64_t        stat_monsterskilled_imps = 0;
+uint64_t        stat_monsterskilled_lostsouls = 0;
+uint64_t        stat_monsterskilled_mancubi = 0;
+uint64_t        stat_monsterskilled_painelementals = 0;
+uint64_t        stat_monsterskilled_revenants = 0;
+uint64_t        stat_monsterskilled_shotgunguys = 0;
+uint64_t        stat_monsterskilled_spectres = 0;
+uint64_t        stat_monsterskilled_spidermasterminds = 0;
+uint64_t        stat_monsterskilled_zombiemen = 0;
+uint64_t        stat_suicides = 0;
+
+// p_tick.c
+uint64_t    stat_time = 0;
+
+// hu_stuff.c
+int                     crosshair = crosshair_default;
+int                     crosshaircolor = crosshaircolor_default;
+char                    *playername = playername_default;
+dboolean                r_althud = r_althud_default;
+dboolean                r_diskicon = r_diskicon_default;
+dboolean                r_hud = r_hud_default;
+dboolean                r_hud_translucency = r_hud_translucency_default;
+
+// m_menu.c
+int             episode = episode_default;
+int             expansion = expansion_default;
+int             m_sensitivity = m_sensitivity_default;
+dboolean        messages = messages_default;
+int             r_detail = r_detail_default;
+int             r_screensize = r_screensize_default;
+int             savegame = savegame_default;
+int             skilllevel = skilllevel_default;
+
+// st_stuff.c
+int                         facebackcolor = facebackcolor_default;
+int                         r_berserkintensity = r_berserkintensity_default;
+
+// d_main.c
+dboolean            fade = fade_default;
+char                *iwadfolder = iwadfolder_default;
+dboolean            melt = melt_default;
+int                 turbo = turbo_default;
+int                 units = units_default;
+
+#if defined(_WIN32)
+char                *wad = wad_default;
+#endif
+
+
+// i_gamepad.c
+dboolean                    gp_analog = gp_analog_default;
+float                       gp_deadzone_left = gp_deadzone_left_default;
+float                       gp_deadzone_right = gp_deadzone_right_default;
+dboolean                    gp_invertyaxis = gp_invertyaxis_default;
+int                         gp_sensitivity_horizontal = gp_sensitivity_horizontal_default;
+int                         gp_sensitivity_vertical = gp_sensitivity_vertical_default;
+dboolean                    gp_swapthumbsticks = gp_swapthumbsticks_default;
+int                         gp_thumbsticks = gp_thumbsticks_default;
+int                         gp_vibrate_barrels = gp_vibrate_barrels_default;
+int                         gp_vibrate_damage = gp_vibrate_damage_default;
+int                         gp_vibrate_weapons = gp_vibrate_weapons_default;
+
+// p_map.c
+dboolean        infiniteheight = infiniteheight_default;
+
+// c_cmd.c
+char                *version = version_default;
+
+
 
 //#define NUMCVARS                                                197
 //

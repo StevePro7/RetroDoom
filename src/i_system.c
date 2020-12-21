@@ -6,6 +6,7 @@
 #include "i_sound.h"
 #include "i_timer.h"
 #include "i_video.h"
+#include "m_config.h"
 ////#include "c_console.h"
 ////#include "d_main.h"
 
