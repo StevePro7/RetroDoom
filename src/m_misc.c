@@ -24,6 +24,7 @@
 #include <string.h>
 
 #include "doomdef.h"
+#include "doomtype.h"
 #include "logger.h"
 //#include "SDL.h"
 //
@@ -35,144 +36,144 @@
 //#include "version.h"
 //#include "w_file.h"
 //
-//#if defined(__APPLE__)
-//#import <Cocoa/Cocoa.h>
+#if defined(__APPLE__)
+#import <Cocoa/Cocoa.h>
+
+#include <dirent.h>
+#include <libgen.h>
+#include <mach-o/dyld.h>
+#include <errno.h>
+#elif defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__)
+#include <sys/sysctl.h>
+#include <dirent.h>
+#include <errno.h>
+#include <libgen.h>
+#include <unistd.h>
+#elif defined(__linux__) || defined(__HAIKU__)
+#include <dirent.h>
+#include <errno.h>
+#include <libgen.h>
+#include <unistd.h>
+
+#if defined(__HAIKU__)
+#include <FindDirectory.h>
+#endif
+#endif
+
 //
-//#include <dirent.h>
-//#include <libgen.h>
-//#include <mach-o/dyld.h>
-//#include <errno.h>
-//#elif defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__)
-//#include <sys/sysctl.h>
-//#include <dirent.h>
-//#include <errno.h>
-//#include <libgen.h>
-//#include <unistd.h>
-//#elif defined(__linux__) || defined(__HAIKU__)
-//#include <dirent.h>
-//#include <errno.h>
-//#include <libgen.h>
-//#include <unistd.h>
+// Create a directory
 //
-//#if defined(__HAIKU__)
-//#include <FindDirectory.h>
-//#endif
-//#endif
-//
-////
-//// Create a directory
-////
-//void M_MakeDirectory(const char *path)
-//{
-//#if defined(_WIN32)
-//    _mkdir(path);
-//#else
-//    mkdir(path, 0755);
-//#endif
-//}
-//
-//// Check if a file exists
-//dboolean M_FileExists(const char *filename)
-//{
-//    FILE    *fstream = fopen(filename, "r");
-//
-//    if (fstream)
-//    {
-//        fclose(fstream);
-//        return true;
-//    }
-//
-//    return false;
-//}
-//
-//#if !defined(_WIN32) && !defined(__APPLE__)
-//// Check if a file exists by probing for common case variation of its filename.
-//// Returns a newly allocated string that the caller is responsible for freeing.
-//char *M_FileCaseExists(const char *path)
-//{
-//    char    *path_dup = M_StringDuplicate(path);
-//    char    *filename;
-//    char    *ext;
-//
-//    // actual path
-//    if (M_FileExists(path_dup))
-//        return path_dup;
-//
-//    if ((filename = strrchr(path_dup, DIR_SEPARATOR)))
-//        filename++;
-//    else
-//        filename = path_dup;
-//
-//    // lowercase filename, e.g. doom2.wad
-//    lowercase(filename);
-//
-//    if (M_FileExists(path_dup))
-//        return path_dup;
-//
-//    // uppercase filename, e.g. DOOM2.WAD
-//    uppercase(filename);
-//
-//    if (M_FileExists(path_dup))
-//        return path_dup;
-//
-//    // uppercase basename with lowercase extension, e.g. DOOM2.wad
-//    if ((ext = strrchr(path_dup, '.')) && ext > filename)
-//    {
-//        lowercase(ext + 1);
-//
-//        if (M_FileExists(path_dup))
-//            return path_dup;
-//    }
-//
-//    // lowercase filename with uppercase first letter, e.g. Doom2.wad
-//    if (strlen(filename) > 1)
-//    {
-//        lowercase(filename + 1);
-//
-//        if (M_FileExists(path_dup))
-//            return path_dup;
-//    }
-//
-//    // no luck
-//    free(path_dup);
-//    return NULL;
-//}
-//#endif
-//
-//// Check if a folder exists
-//dboolean M_FolderExists(const char *folder)
-//{
-//    struct stat status;
-//
-//    return (!stat(folder, &status) && (status.st_mode & S_IFDIR));
-//}
-//
-//// Safe string copy function that works like OpenBSD's strlcpy().
-//void M_StringCopy(char *dest, const char *src, const size_t dest_size)
-//{
-//    if (dest_size >= 1)
-//    {
-//        dest[dest_size - 1] = '\0';
-//        strncpy(dest, src, dest_size - 1);
-//    }
-//}
-//
-//char *M_ExtractFolder(char *path)
-//{
-//    char    *pos;
-//    char    *folder;
-//
-//    if (!*path)
-//        return "";
-//
-//    folder = M_StringDuplicate(path);
-//
-//    if ((pos = strrchr(folder, DIR_SEPARATOR)))
-//        *pos = '\0';
-//
-//    return folder;
-//}
-//
+void M_MakeDirectory(const char *path)
+{
+#if defined(_WIN32)
+    _mkdir(path);
+#else
+    mkdir(path, 0755);
+#endif
+}
+
+// Check if a file exists
+dboolean M_FileExists(const char *filename)
+{
+    FILE    *fstream = fopen(filename, "r");
+
+    if (fstream)
+    {
+        fclose(fstream);
+        return true;
+    }
+
+    return false;
+}
+
+#if !defined(_WIN32) && !defined(__APPLE__)
+// Check if a file exists by probing for common case variation of its filename.
+// Returns a newly allocated string that the caller is responsible for freeing.
+char *M_FileCaseExists(const char *path)
+{
+    char    *path_dup = M_StringDuplicate(path);
+    char    *filename;
+    char    *ext;
+
+    // actual path
+    if (M_FileExists(path_dup))
+        return path_dup;
+
+    if ((filename = strrchr(path_dup, DIR_SEPARATOR)))
+        filename++;
+    else
+        filename = path_dup;
+
+    // lowercase filename, e.g. doom2.wad
+    lowercase(filename);
+
+    if (M_FileExists(path_dup))
+        return path_dup;
+
+    // uppercase filename, e.g. DOOM2.WAD
+    uppercase(filename);
+
+    if (M_FileExists(path_dup))
+        return path_dup;
+
+    // uppercase basename with lowercase extension, e.g. DOOM2.wad
+    if ((ext = strrchr(path_dup, '.')) && ext > filename)
+    {
+        lowercase(ext + 1);
+
+        if (M_FileExists(path_dup))
+            return path_dup;
+    }
+
+    // lowercase filename with uppercase first letter, e.g. Doom2.wad
+    if (strlen(filename) > 1)
+    {
+        lowercase(filename + 1);
+
+        if (M_FileExists(path_dup))
+            return path_dup;
+    }
+
+    // no luck
+    free(path_dup);
+    return NULL;
+}
+#endif
+
+// Check if a folder exists
+dboolean M_FolderExists(const char *folder)
+{
+    struct stat status;
+
+    return (!stat(folder, &status) && (status.st_mode & S_IFDIR));
+}
+
+// Safe string copy function that works like OpenBSD's strlcpy().
+void M_StringCopy(char *dest, const char *src, const size_t dest_size)
+{
+    if (dest_size >= 1)
+    {
+        dest[dest_size - 1] = '\0';
+        strncpy(dest, src, dest_size - 1);
+    }
+}
+
+char *M_ExtractFolder(char *path)
+{
+    char    *pos;
+    char    *folder;
+
+    if (!*path)
+        return "";
+
+    folder = M_StringDuplicate(path);
+
+    if ((pos = strrchr(folder, DIR_SEPARATOR)))
+        *pos = '\0';
+
+    return folder;
+}
+
 //char *M_GetAppDataFolder(void)
 //{
 //    char    *executablefolder = M_GetExecutableFolder();
@@ -216,121 +217,121 @@
 //        return executablefolder;
 //#endif
 //}
-//
-//char *M_GetResourceFolder(void)
-//{
-//    char    *executablefolder = M_GetExecutableFolder();
-//
-//#if !defined(_WIN32)
-//    // On Linux and macOS, first assume that the executable is in ../bin and
-//    // try to load resources from ../share/doomretro.
-//    char    *resourcefolder = M_StringJoin(executablefolder,
-//                DIR_SEPARATOR_S ".." DIR_SEPARATOR_S "share" DIR_SEPARATOR_S PACKAGE, NULL);
-//    DIR     *resourcedir = opendir(resourcefolder);
-//
-//    if (resourcedir)
-//    {
-//        closedir(resourcedir);
-//        free(executablefolder);
-//        return resourcefolder;
-//    }
-//
-//#if defined(__APPLE__)
-//    // On macOS, load resources from the Contents/Resources folder within the application bundle
-//    // if ../share/doomretro is not available.
-//    NSURL   *resourceURL = [NSBundle mainBundle].resourceURL;
-//
-//    return (char *)resourceURL.fileSystemRepresentation;
-//#else
-//    // And on Linux, fall back to the same folder as the executable.
-//    return executablefolder;
-//#endif
-//
-//#else
-//    // On Windows, load resources from the same folder as the executable.
-//    return executablefolder;
-//#endif
-//}
-//
-//char *M_GetExecutableFolder(void)
-//{
-//#if defined(_WIN32)
-//    char    *pos;
-//    char    *folder = malloc(MAX_PATH);
-//    TCHAR   buffer[MAX_PATH];
-//
-//    if (!folder)
-//        return NULL;
-//
-//    GetModuleFileName(NULL, buffer, MAX_PATH);
-//    M_StringCopy(folder, buffer, MAX_PATH);
-//
-//    if ((pos = strrchr(folder, '\\')))
-//        *pos = '\0';
-//
-//    return folder;
-//#elif defined(__linux__) || defined(__NetBSD__)
-//    char    exe[MAX_PATH];
-//#if defined(__linux__)
-//    ssize_t len = readlink("/proc/self/exe", exe, MAX_PATH - 1);
-//#else
-//    ssize_t len = readlink("/proc/curproc/exe", exe, MAX_PATH - 1);
-//#endif
-//
-//    if (len == -1)
-//    {
-//        strcpy(exe, ".");
-//        return strdup(exe);
-//    }
-//    else
-//    {
-//        exe[len] = '\0';
-//        return strdup(dirname(exe));
-//    }
-//#elif defined(__FreeBSD__)
-//    char    *exe = malloc(MAX_PATH);
-//    size_t  len = MAX_PATH;
-//    int     mib[] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
-//
-//    if (!sysctl(mib, 4, exe, &len, NULL, 0))
-//    {
-//        exe[len] = '\0';
-//        return dirname(exe);
-//    }
-//    else
-//    {
-//        strcpy(exe, ".");
-//        return exe;
-//    }
-//#elif defined(__APPLE__)
-//    char        *exe = malloc(MAX_PATH);
-//    uint32_t    len = MAX_PATH;
-//
-//    if (_NSGetExecutablePath(exe, &len))
-//    {
-//        strcpy(exe, ".");
-//        return exe;
-//    }
-//
-//    return dirname(exe);
-//#elif defined(__HAIKU__)
-//    char    *exe = malloc(MAX_PATH);
-//
-//    exe[0] = '\0';
-//
-//    if (find_path(B_APP_IMAGE_SYMBOL, B_FIND_PATH_IMAGE_PATH, NULL, exe, MAX_PATH) == B_OK)
-//        return dirname(exe);
-//
-//    strcpy(exe, ".");
-//    return exe;
-//#else
-//    char    *folder = malloc(2);
-//
-//    strcpy(folder, ".");
-//    return folder;
-//#endif
-//}
-//
+
+char *M_GetResourceFolder(void)
+{
+    char    *executablefolder = M_GetExecutableFolder();
+
+#if !defined(_WIN32)
+    // On Linux and macOS, first assume that the executable is in ../bin and
+    // try to load resources from ../share/doomretro.
+    char    *resourcefolder = M_StringJoin(executablefolder,
+                DIR_SEPARATOR_S ".." DIR_SEPARATOR_S "share" DIR_SEPARATOR_S PACKAGE, NULL);
+    DIR     *resourcedir = opendir(resourcefolder);
+
+    if (resourcedir)
+    {
+        closedir(resourcedir);
+        free(executablefolder);
+        return resourcefolder;
+    }
+
+#if defined(__APPLE__)
+    // On macOS, load resources from the Contents/Resources folder within the application bundle
+    // if ../share/doomretro is not available.
+    NSURL   *resourceURL = [NSBundle mainBundle].resourceURL;
+
+    return (char *)resourceURL.fileSystemRepresentation;
+#else
+    // And on Linux, fall back to the same folder as the executable.
+    return executablefolder;
+#endif
+
+#else
+    // On Windows, load resources from the same folder as the executable.
+    return executablefolder;
+#endif
+}
+
+char *M_GetExecutableFolder( void )
+{
+#if defined(_WIN32)
+	char    *pos;
+	char    *folder = malloc( MAX_PATH );
+	TCHAR   buffer[ MAX_PATH ];
+
+	if( !folder )
+		return NULL;
+
+	GetModuleFileName( NULL, buffer, MAX_PATH );
+	M_StringCopy( folder, buffer, MAX_PATH );
+
+	if( ( pos = strrchr( folder, '\\' ) ) )
+		*pos = '\0';
+
+	return folder;
+#elif defined(__linux__) || defined(__NetBSD__)
+	char    exe[ MAX_PATH ];
+#if defined(__linux__)
+	ssize_t len = readlink( "/proc/self/exe", exe, MAX_PATH - 1 );
+#else
+	ssize_t len = readlink( "/proc/curproc/exe", exe, MAX_PATH - 1 );
+#endif
+
+	if( len == -1 )
+	{
+		strcpy( exe, "." );
+		return strdup( exe );
+	}
+	else
+	{
+		exe[ len ] = '\0';
+		return strdup( dirname( exe ) );
+	}
+#elif defined(__FreeBSD__)
+	char    *exe = malloc( MAX_PATH );
+	size_t  len = MAX_PATH;
+	int     mib[] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
+
+	if( !sysctl( mib, 4, exe, &len, NULL, 0 ) )
+	{
+		exe[ len ] = '\0';
+		return dirname( exe );
+	}
+	else
+	{
+		strcpy( exe, "." );
+		return exe;
+	}
+#elif defined(__APPLE__)
+	char        *exe = malloc( MAX_PATH );
+	uint32_t    len = MAX_PATH;
+
+	if( _NSGetExecutablePath( exe, &len ) )
+	{
+		strcpy( exe, "." );
+		return exe;
+	}
+
+	return dirname( exe );
+#elif defined(__HAIKU__)
+	char    *exe = malloc( MAX_PATH );
+
+	exe[ 0 ] = '\0';
+
+	if( find_path( B_APP_IMAGE_SYMBOL, B_FIND_PATH_IMAGE_PATH, NULL, exe, MAX_PATH ) == B_OK )
+		return dirname( exe );
+
+	strcpy( exe, "." );
+	return exe;
+#else
+	char    *folder = malloc( 2 );
+
+	strcpy( folder, "." );
+	return folder;
+#endif
+}
+
 //char *M_TempFile(char *s)
 //{
 //    char    *tempdir;

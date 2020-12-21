@@ -10,27 +10,27 @@
 
 #include "doomtype.h"
 
-//void M_MakeDirectory(const char *path);
-//dboolean M_FileExists(const char *filename);
-//dboolean M_FolderExists(const char *folder);
-//char *M_ExtractFolder(char *path);
-//
-//#if !defined(_WIN32) && !defined(__APPLE__)
-//char *M_FileCaseExists(const char *path);
-//#endif
-//
-//// Returns the file system location where application resource files are located.
-//// On Windows and Linux, this is the folder in which doomretro.exe is located;
-//// on macOS, this is the Contents/Resources folder within the application bundle.
-//char *M_GetResourceFolder(void);
-//
+void M_MakeDirectory(const char *path);
+dboolean M_FileExists(const char *filename);
+dboolean M_FolderExists(const char *folder);
+char *M_ExtractFolder(char *path);
+
+#if !defined(_WIN32) && !defined(__APPLE__)
+char *M_FileCaseExists(const char *path);
+#endif
+
+// Returns the file system location where application resource files are located.
+// On Windows and Linux, this is the folder in which doomretro.exe is located;
+// on macOS, this is the Contents/Resources folder within the application bundle.
+char *M_GetResourceFolder(void);
+
 //// Returns the file system location where generated application
 //// data (configuration files, logs, savegames etc.) should be saved.
 //// On Windows and Linux, this is the folder in which doomretro.exe is located;
 //// on macOS, this is ~/Library/Application Support/DOOM Retro/.
 //char *M_GetAppDataFolder(void);
 //
-//char *M_GetExecutableFolder(void);
+char *M_GetExecutableFolder(void);
 //dboolean M_StrToInt(const char *str, unsigned int *result);
 //const char *M_StrCaseStr(const char *haystack, const char *needle);
 //void M_StringCopy(char *dest, const char *src, const size_t dest_size);
