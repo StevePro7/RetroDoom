@@ -174,49 +174,49 @@ char *M_ExtractFolder(char *path)
     return folder;
 }
 
-//char *M_GetAppDataFolder(void)
-//{
-//    char    *executablefolder = M_GetExecutableFolder();
-//
-//#if defined(_WIN32)
-//    return executablefolder;
-//#else
-//    // On Linux and macOS, if ../share/doomretro doesn't exist then we're dealing with
-//    // a portable installation, and we write doomretro.cfg to the executable directory.
-//    char    *resourcefolder = M_StringJoin(executablefolder,
-//                DIR_SEPARATOR_S ".." DIR_SEPARATOR_S "share" DIR_SEPARATOR_S PACKAGE, NULL);
-//    DIR     *resourcedir = opendir(resourcefolder);
-//
-//    free(resourcefolder);
-//
-//    if (resourcedir)
-//    {
-//        closedir(resourcedir);
-//
-//#if defined(__APPLE__)
-//        // On macOS, store generated application files in ~/Library/Application Support/DOOM Retro.
-//        NSFileManager   *manager = [NSFileManager defaultManager];
-//        NSURL           *baseAppSupportURL = [manager URLsForDirectory : NSApplicationSupportDirectory
-//                            inDomains : NSUserDomainMask].firstObject;
-//        NSURL           *appSupportURL = [baseAppSupportURL URLByAppendingPathComponent : @PACKAGE_NAME];
-//
-//        return (char *)appSupportURL.fileSystemRepresentation;
-//#else
-//        // On Linux, store generated application files in /home/<username>/.config/doomretro
-//        char            *buffer;
-//
-//        if (!(buffer = SDL_getenv("HOME")))
-//            buffer = getpwuid(getuid())->pw_dir;
-//
-//        free(executablefolder);
-//
-//        return M_StringJoin(buffer, DIR_SEPARATOR_S ".config" DIR_SEPARATOR_S PACKAGE, NULL);
-//#endif
-//    }
-//    else
-//        return executablefolder;
-//#endif
-//}
+char *M_GetAppDataFolder(void)
+{
+    char    *executablefolder = M_GetExecutableFolder();
+
+#if defined(_WIN32)
+    return executablefolder;
+#else
+    // On Linux and macOS, if ../share/doomretro doesn't exist then we're dealing with
+    // a portable installation, and we write doomretro.cfg to the executable directory.
+    char    *resourcefolder = M_StringJoin(executablefolder,
+                DIR_SEPARATOR_S ".." DIR_SEPARATOR_S "share" DIR_SEPARATOR_S PACKAGE, NULL);
+    DIR     *resourcedir = opendir(resourcefolder);
+
+    free(resourcefolder);
+
+    if (resourcedir)
+    {
+        closedir(resourcedir);
+
+#if defined(__APPLE__)
+        // On macOS, store generated application files in ~/Library/Application Support/DOOM Retro.
+        NSFileManager   *manager = [NSFileManager defaultManager];
+        NSURL           *baseAppSupportURL = [manager URLsForDirectory : NSApplicationSupportDirectory
+                            inDomains : NSUserDomainMask].firstObject;
+        NSURL           *appSupportURL = [baseAppSupportURL URLByAppendingPathComponent : @PACKAGE_NAME];
+
+        return (char *)appSupportURL.fileSystemRepresentation;
+#else
+        // On Linux, store generated application files in /home/<username>/.config/doomretro
+        char            *buffer;
+
+        if (!(buffer = SDL_getenv("HOME")))
+            buffer = getpwuid(getuid())->pw_dir;
+
+        free(executablefolder);
+
+        return M_StringJoin(buffer, DIR_SEPARATOR_S ".config" DIR_SEPARATOR_S PACKAGE, NULL);
+#endif
+    }
+    else
+        return executablefolder;
+#endif
+}
 
 char *M_GetResourceFolder(void)
 {
@@ -332,145 +332,145 @@ char *M_GetExecutableFolder( void )
 #endif
 }
 
-//char *M_TempFile(char *s)
-//{
-//    char    *tempdir;
+char *M_TempFile(char *s)
+{
+    char    *tempdir;
+
+#if defined(_WIN32)
+    tempdir = getenv("TEMP");
+
+    if (!tempdir)
+        tempdir = ".";
+#else
+    tempdir = "/tmp";
+#endif
+
+    return M_StringJoin(tempdir, DIR_SEPARATOR_S, s, NULL);
+}
+
+// Return a newly-malloced string with all the strings given as arguments
+// concatenated together.
+char *M_StringJoin(char *s, ...)
+{
+    char    *result;
+    char    *v;
+    va_list args;
+    size_t  result_len = strlen(s) + 1;
+
+    va_start(args, s);
+
+    while (true)
+    {
+        v = va_arg(args, char *);
+
+        if (!v)
+            break;
+
+        result_len += strlen(v);
+    }
+
+    va_end(args);
+
+    if (!(result = malloc(result_len)))
+        return NULL;
+
+    M_StringCopy(result, s, result_len);
+
+    va_start(args, s);
+
+    while (true)
+    {
+        if (!(v = va_arg(args, char *)))
+            break;
+
+        strncat(result, v, result_len);
+    }
+
+    va_end(args);
+
+    return result;
+}
+
+dboolean M_StrToInt(const char *str, unsigned int *result)
+{
+    return (sscanf(str, " 0x%2x", result) == 1 || sscanf(str, " 0X%2x", result) == 1
+        || sscanf(str, " 0%3o", result) == 1 || sscanf(str, " %10u", result) == 1);
+}
+
 //
-//#if defined(_WIN32)
-//    tempdir = getenv("TEMP");
+// M_StrCaseStr
 //
-//    if (!tempdir)
-//        tempdir = ".";
-//#else
-//    tempdir = "/tmp";
-//#endif
+// Case-insensitive version of strstr()
 //
-//    return M_StringJoin(tempdir, DIR_SEPARATOR_S, s, NULL);
-//}
+const char *M_StrCaseStr(const char *haystack, const char *needle)
+{
+    int haystack_len = (int)strlen(haystack);
+    int needle_len = (int)strlen(needle);
+    int len;
+
+    if (haystack_len < needle_len)
+        return NULL;
+
+    len = haystack_len - needle_len;
+
+    for (int i = 0; i <= len; i++)
+        if (!strncasecmp(haystack + i, needle, needle_len))
+            return (haystack + i);
+
+    return NULL;
+}
+
+static char *stristr(char *ch1, char *ch2)
+{
+    char    *chN1 = M_StringDuplicate(ch1);
+    char    *chN2 = M_StringDuplicate(ch2);
+    char    *chRet = NULL;
+
+    if (chN1 && chN2)
+    {
+        char    *chNdx = chN1;
+
+        while (*chNdx)
+        {
+            *chNdx = (char)tolower(*chNdx);
+            chNdx++;
+        }
+
+        chNdx = chN2;
+
+        while (*chNdx)
+        {
+            *chNdx = (char)tolower(*chNdx);
+            chNdx++;
+        }
+
+        if ((chNdx = strstr(chN1, chN2)))
+            chRet = ch1 + (chNdx - chN1);
+    }
+
+    free(chN1);
+    free(chN2);
+
+    return chRet;
+}
+
 //
-//// Return a newly-malloced string with all the strings given as arguments
-//// concatenated together.
-//char *M_StringJoin(char *s, ...)
-//{
-//    char    *result;
-//    char    *v;
-//    va_list args;
-//    size_t  result_len = strlen(s) + 1;
+// String replace function.
 //
-//    va_start(args, s);
-//
-//    while (true)
-//    {
-//        v = va_arg(args, char *);
-//
-//        if (!v)
-//            break;
-//
-//        result_len += strlen(v);
-//    }
-//
-//    va_end(args);
-//
-//    if (!(result = malloc(result_len)))
-//        return NULL;
-//
-//    M_StringCopy(result, s, result_len);
-//
-//    va_start(args, s);
-//
-//    while (true)
-//    {
-//        if (!(v = va_arg(args, char *)))
-//            break;
-//
-//        strncat(result, v, result_len);
-//    }
-//
-//    va_end(args);
-//
-//    return result;
-//}
-//
-//dboolean M_StrToInt(const char *str, unsigned int *result)
-//{
-//    return (sscanf(str, " 0x%2x", result) == 1 || sscanf(str, " 0X%2x", result) == 1
-//        || sscanf(str, " 0%3o", result) == 1 || sscanf(str, " %10u", result) == 1);
-//}
-//
-////
-//// M_StrCaseStr
-////
-//// Case-insensitive version of strstr()
-////
-//const char *M_StrCaseStr(const char *haystack, const char *needle)
-//{
-//    int haystack_len = (int)strlen(haystack);
-//    int needle_len = (int)strlen(needle);
-//    int len;
-//
-//    if (haystack_len < needle_len)
-//        return NULL;
-//
-//    len = haystack_len - needle_len;
-//
-//    for (int i = 0; i <= len; i++)
-//        if (!strncasecmp(haystack + i, needle, needle_len))
-//            return (haystack + i);
-//
-//    return NULL;
-//}
-//
-//static char *stristr(char *ch1, char *ch2)
-//{
-//    char    *chN1 = M_StringDuplicate(ch1);
-//    char    *chN2 = M_StringDuplicate(ch2);
-//    char    *chRet = NULL;
-//
-//    if (chN1 && chN2)
-//    {
-//        char    *chNdx = chN1;
-//
-//        while (*chNdx)
-//        {
-//            *chNdx = (char)tolower(*chNdx);
-//            chNdx++;
-//        }
-//
-//        chNdx = chN2;
-//
-//        while (*chNdx)
-//        {
-//            *chNdx = (char)tolower(*chNdx);
-//            chNdx++;
-//        }
-//
-//        if ((chNdx = strstr(chN1, chN2)))
-//            chRet = ch1 + (chNdx - chN1);
-//    }
-//
-//    free(chN1);
-//    free(chN2);
-//
-//    return chRet;
-//}
-//
-////
-//// String replace function.
-////
-//char *M_StringReplace(char *haystack, char *needle, char *replacement)
-//{
-//    static char buffer[4096];
-//    char        *p;
-//
-//    if (!(p = stristr(haystack, needle)))
-//        return haystack;
-//
-//    strncpy(buffer, haystack, p - haystack);
-//    buffer[p - haystack] = '\0';
-//    sprintf(buffer + (p - haystack), "%s%s", replacement, p + strlen(needle));
-//    return buffer;
-//}
-//
+char *M_StringReplace(char *haystack, char *needle, char *replacement)
+{
+    static char buffer[4096];
+    char        *p;
+
+    if (!(p = stristr(haystack, needle)))
+        return haystack;
+
+    strncpy(buffer, haystack, p - haystack);
+    buffer[p - haystack] = '\0';
+    sprintf(buffer + (p - haystack), "%s%s", replacement, p + strlen(needle));
+    return buffer;
+}
+
 // Safe version of strdup() that checks the string was successfully allocated.
 char *M_StringDuplicate(const char *orig)
 {
@@ -485,39 +485,39 @@ char *M_StringDuplicate(const char *orig)
 
     return result;
 }
-//
-//// Returns true if str1 and str2 are the same.
-//// (Case-insensitive, return value reverse of strcasecmp() to avoid confusion.
-//dboolean M_StringCompare(const char *str1, const char *str2)
-//{
-//    return !strcasecmp(str1, str2);
-//}
-//
-//// Returns true if string begins with the specified prefix.
-//dboolean M_StringStartsWith(const char *s, const char *prefix)
-//{
-//    size_t  len = strlen(prefix);
-//
-//    return (strlen(s) >= len && !strncasecmp(s, prefix, len));
-//}
-//
-//// Returns true if string begins with the specified prefix.
-//dboolean M_StringStartsWithExact(const char *s, const char *prefix)
-//{
-//    size_t  len = strlen(prefix);
-//
-//    return (strlen(s) >= len && !strncmp(s, prefix, len));
-//}
-//
-//// Returns true if string ends with the specified suffix.
-//dboolean M_StringEndsWith(const char *s, const char *suffix)
-//{
-//    size_t  len1 = strlen(s);
-//    size_t  len2 = strlen(suffix);
-//
-//    return (len1 >= len2 && M_StringCompare(s + len1 - len2, suffix));
-//}
-//
+
+// Returns true if str1 and str2 are the same.
+// (Case-insensitive, return value reverse of strcasecmp() to avoid confusion.
+dboolean M_StringCompare(const char *str1, const char *str2)
+{
+    return !strcasecmp(str1, str2);
+}
+
+// Returns true if string begins with the specified prefix.
+dboolean M_StringStartsWith(const char *s, const char *prefix)
+{
+    size_t  len = strlen(prefix);
+
+    return (strlen(s) >= len && !strncasecmp(s, prefix, len));
+}
+
+// Returns true if string begins with the specified prefix.
+dboolean M_StringStartsWithExact(const char *s, const char *prefix)
+{
+    size_t  len = strlen(prefix);
+
+    return (strlen(s) >= len && !strncmp(s, prefix, len));
+}
+
+// Returns true if string ends with the specified suffix.
+dboolean M_StringEndsWith(const char *s, const char *suffix)
+{
+    size_t  len1 = strlen(s);
+    size_t  len2 = strlen(suffix);
+
+    return (len1 >= len2 && M_StringCompare(s + len1 - len2, suffix));
+}
+
 // Safe, portable vsnprintf().
 void M_vsnprintf(char *buf, int buf_len, const char *s, va_list args)
 {
@@ -535,390 +535,390 @@ void M_vsnprintf(char *buf, int buf_len, const char *s, va_list args)
     }
 }
 
-//// Safe, portable snprintf().
-//void M_snprintf(char *buf, int buf_len, const char *s, ...)
-//{
-//    va_list args;
-//
-//    va_start(args, s);
-//    M_vsnprintf(buf, buf_len, s, args);
-//    va_end(args);
-//}
-//
-//#if !defined(strndup)
-//char *strndup(const char *s, size_t n)
-//{
-//    size_t  len = strnlen(s, n);
-//    char    *new = malloc(len + 1);
-//
-//    if (!new)
-//        return NULL;
-//
-//    new[len] = '\0';
-//    return memcpy(new, s, len);
-//}
-//#endif
-//
-//char *M_SubString(const char *str, size_t begin, size_t len)
-//{
-//    size_t  length = strlen(str);
-//
-//    if (!length || length < begin || length < begin + len)
-//        return 0;
-//
-//    return strndup(str + begin, len);
-//}
-//
-//char *uppercase(const char *str)
-//{
-//    char    *newstr;
-//    char    *p = newstr = M_StringDuplicate(str);
-//
-//    while ((*p = toupper(*p)))
-//        p++;
-//
-//    return newstr;
-//}
-//
-//char *lowercase(char *str)
-//{
-//    for (char *p = str; *p; p++)
-//        *p = tolower(*p);
-//
-//    return str;
-//}
-//
-//char *titlecase(const char *str)
-//{
-//    char    *newstr = M_StringDuplicate(str);
-//    int     len = (int)strlen(newstr);
-//
-//    if (len > 0)
-//    {
-//        newstr[0] = toupper(newstr[0]);
-//
-//        if (len > 1)
-//            for (int i = 1; i < len; i++)
-//                if ((newstr[i - 1] != '\'' || (i >= 2 && newstr[i - 2] == ' '))
-//                    && !isalnum((unsigned char)newstr[i - 1])
-//                    && isalnum((unsigned char)newstr[i]))
-//                    newstr[i] = toupper(newstr[i]);
-//    }
-//
-//    return newstr;
-//}
-//
-//char *sentencecase(const char *str)
-//{
-//    char    *newstr = M_StringDuplicate(str);
-//
-//    if (newstr[0] != '\0')
-//        newstr[0] = toupper(newstr[0]);
-//
-//    return newstr;
-//}
-//
-//char *commify(int64_t value)
-//{
-//    char    result[64];
-//
-//    M_snprintf(result, sizeof(result), "%lli", value);
-//
-//    if (value <= -1000 || value >= 1000)
-//    {
-//        char    *pt;
-//        size_t  n;
-//
-//        for (pt = result; *pt && *pt != '.'; pt++);
-//
-//        n = result + sizeof(result) - pt;
-//
-//        do
-//        {
-//            pt -= 3;
-//
-//            if (pt > result)
-//            {
-//                memmove(pt + 1, pt, n);
-//                *pt = ',';
-//                n += 4;
-//            }
-//            else
-//                break;
-//        } while (true);
-//    }
-//
-//    return M_StringDuplicate(result);
-//}
-//
-//char *uncommify(const char *input)
-//{
-//    char    *p;
-//
-//    if (!*input)
-//        return "";
-//
-//    if ((p = malloc(strlen(input) + 1)))
-//    {
-//        char    *p2 = p;
-//
-//        while (*input != '\0')
-//            if (*input != ',' || *(input + 1) == '\0')
-//                *p2++ = *input++;
-//            else
-//                input++;
-//
-//        *p2 = '\0';
-//    }
-//
-//    return p;
-//}
-//
-//dboolean wildcard(char *input, char *pattern)
-//{
-//    if (!*pattern)
-//        return true;
-//
-//    for (int i = 0; pattern[i] != '\0'; i++)
-//    {
-//        if (pattern[i] == '?')
-//            continue;
-//        else if (pattern[i] == '*')
-//        {
-//            for (int z = i; input[z] != '\0'; z++)
-//                if (wildcard(input + z, pattern + i + 1))
-//                    return true;
-//
-//            return false;
-//        }
-//        else if (pattern[i] != input[i])
-//            return false;
-//    }
-//
-//    return false;
-//}
-//
-//int gcd(int a, int b)
-//{
-//    return (!b ? a : gcd(b, a % b));
-//}
-//
-//int numspaces(char *str)
-//{
-//    int result = 0;
-//    int len = (int)strlen(str);
-//
-//    for (int i = 0; i < len; i++)
-//        result += (str[i] == ' ');
-//
-//    return result;
-//}
-//
-//char *removespaces(const char *input)
-//{
-//    char    *p;
-//
-//    if (!*input)
-//        return "";
-//
-//    if ((p = malloc(strlen(input) + 1)))
-//    {
-//        char    *p2 = p;
-//
-//        while (*input != '\0')
-//            if (!isspace((unsigned char)*input))
-//                *p2++ = *input++;
-//            else
-//                input++;
-//
-//        *p2 = '\0';
-//    }
-//
-//    return p;
-//}
-//
-//char *removenonalpha(const char *input)
-//{
-//    char    *p;
-//
-//    if (!*input)
-//        return "";
-//
-//    if ((p = malloc(strlen(input) + 1)))
-//    {
-//        char    *p2 = p;
-//
-//        while (*input != '\0')
-//            if (!isspace((unsigned char)*input) && *input != '-' && *input != '(' && *input != ')')
-//                *p2++ = *input++;
-//            else
-//                input++;
-//
-//        *p2 = '\0';
-//    }
-//
-//    return p;
-//}
-//
-//char *trimwhitespace(char *input)
-//{
-//    char    *end;
-//
-//    while (isspace((unsigned char)*input))
-//        input++;
-//
-//    if (!*input)
-//        return input;
-//
-//    end = input + strlen(input) - 1;
-//
-//    while (end > input && isspace((unsigned char)*end))
-//        end--;
-//
-//    *(end + 1) = '\0';
-//
-//    return input;
-//}
-//
-//char *makevalidfilename(const char *input)
-//{
-//    char    *newstr = M_StringDuplicate(input);
-//    int     len = (int)strlen(newstr);
-//
-//    for (int i = 0; i < len; i++)
-//        if (strchr("\\/:?\"<>|", newstr[i]))
-//            newstr[i] = ' ';
-//
-//    return newstr;
-//}
-//
-//char *leafname(char *path)
-//{
-//    char    cc;
-//    char    *ptr = path;
-//
-//    do
-//    {
-//        cc = *ptr++;
-//
-//        if (cc == '\\' || cc == '/')
-//            path = ptr;
-//    } while (cc);
-//
-//    return path;
-//}
-//
-//char *removeext(const char *file)
-//{
-//    char    *newstr = M_StringDuplicate(file);
-//    char    *lastdot = strrchr(newstr, '.');
-//
-//    *lastdot = '\0';
-//
-//    return newstr;
-//}
-//
-//dboolean isvowel(const char ch)
-//{
-//    return !!strchr("aeiouAEIOU", ch);
-//}
-//
-//dboolean ispunctuation(const char ch)
-//{
-//    return !!strchr(".!?", ch);
-//}
-//
-//dboolean isbreak(const char ch)
-//{
-//    return !!strchr(" /\\-", ch);
-//}
-//
-//char *striptrailingzero(float value, int precision)
-//{
-//    char    *result = malloc(100);
-//
-//    if (result)
-//    {
-//        int len;
-//
-//        M_snprintf(result, 100, "%.*f", (precision == 2 ? 2 : (value != floor(value))), value);
-//        len = (int)strlen(result);
-//
-//        if (len >= 4 && result[len - 3] == '.' && result[len - 1] == '0')
-//            result[len - 1] = '\0';
-//    }
-//
-//    return result;
-//}
-//
-//void strreplace(char *target, char *needle, const char *replacement)
-//{
-//    char    buffer[1024] = "";
-//    char    *insert_point = &buffer[0];
-//    char    *tmp = target;
-//    int     needle_len = (int)strlen(needle);
-//    int     repl_len = (int)strlen(replacement);
-//
-//    while (true)
-//    {
-//        char    *p = stristr(tmp, needle);
-//
-//        if (!p)
-//        {
-//            strcpy(insert_point, tmp);
-//            break;
-//        }
-//
-//        memcpy(insert_point, tmp, p - tmp);
-//        insert_point += p - tmp;
-//
-//        memcpy(insert_point, replacement, repl_len);
-//        insert_point += repl_len;
-//
-//        tmp = p + needle_len;
-//    }
-//
-//    strcpy(target, buffer);
-//}
-//
-//static const long hextable[] =
-//{
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1,
-//    -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-//    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
-//};
-//
-//int hextodec(char *hex)
-//{
-//    int ret = 0;
-//
-//    while (*hex && ret >= 0)
-//        ret = ((ret << 4) | hextable[*hex++]);
-//
-//    return ret;
-//}
-//
-//void M_StripQuotes(char *string)
-//{
-//    int len = (int)strlen(string);
-//
-//    if (len > 2 && ((string[0] == '"' && string[len - 1] == '"') || (string[0] == '\'' && string[len - 1] == '\'')))
-//    {
-//        len -= 2;
-//        memmove(string, string + 1, len);
-//        string[len] = '\0';
-//    }
-//}
+// Safe, portable snprintf().
+void M_snprintf(char *buf, int buf_len, const char *s, ...)
+{
+    va_list args;
+
+    va_start(args, s);
+    M_vsnprintf(buf, buf_len, s, args);
+    va_end(args);
+}
+
+#if !defined(strndup)
+char *strndup(const char *s, size_t n)
+{
+    size_t  len = strnlen(s, n);
+    char    *new = malloc(len + 1);
+
+    if (!new)
+        return NULL;
+
+    new[len] = '\0';
+    return memcpy(new, s, len);
+}
+#endif
+
+char *M_SubString(const char *str, size_t begin, size_t len)
+{
+    size_t  length = strlen(str);
+
+    if (!length || length < begin || length < begin + len)
+        return 0;
+
+    return strndup(str + begin, len);
+}
+
+char *uppercase(const char *str)
+{
+    char    *newstr;
+    char    *p = newstr = M_StringDuplicate(str);
+
+    while ((*p = toupper(*p)))
+        p++;
+
+    return newstr;
+}
+
+char *lowercase(char *str)
+{
+    for (char *p = str; *p; p++)
+        *p = tolower(*p);
+
+    return str;
+}
+
+char *titlecase(const char *str)
+{
+    char    *newstr = M_StringDuplicate(str);
+    int     len = (int)strlen(newstr);
+
+    if (len > 0)
+    {
+        newstr[0] = toupper(newstr[0]);
+
+        if (len > 1)
+            for (int i = 1; i < len; i++)
+                if ((newstr[i - 1] != '\'' || (i >= 2 && newstr[i - 2] == ' '))
+                    && !isalnum((unsigned char)newstr[i - 1])
+                    && isalnum((unsigned char)newstr[i]))
+                    newstr[i] = toupper(newstr[i]);
+    }
+
+    return newstr;
+}
+
+char *sentencecase(const char *str)
+{
+    char    *newstr = M_StringDuplicate(str);
+
+    if (newstr[0] != '\0')
+        newstr[0] = toupper(newstr[0]);
+
+    return newstr;
+}
+
+char *commify(int64_t value)
+{
+    char    result[64];
+
+    M_snprintf(result, sizeof(result), "%lli", value);
+
+    if (value <= -1000 || value >= 1000)
+    {
+        char    *pt;
+        size_t  n;
+
+        for (pt = result; *pt && *pt != '.'; pt++);
+
+        n = result + sizeof(result) - pt;
+
+        do
+        {
+            pt -= 3;
+
+            if (pt > result)
+            {
+                memmove(pt + 1, pt, n);
+                *pt = ',';
+                n += 4;
+            }
+            else
+                break;
+        } while (true);
+    }
+
+    return M_StringDuplicate(result);
+}
+
+char *uncommify(const char *input)
+{
+    char    *p;
+
+    if (!*input)
+        return "";
+
+    if ((p = malloc(strlen(input) + 1)))
+    {
+        char    *p2 = p;
+
+        while (*input != '\0')
+            if (*input != ',' || *(input + 1) == '\0')
+                *p2++ = *input++;
+            else
+                input++;
+
+        *p2 = '\0';
+    }
+
+    return p;
+}
+
+dboolean wildcard(char *input, char *pattern)
+{
+    if (!*pattern)
+        return true;
+
+    for (int i = 0; pattern[i] != '\0'; i++)
+    {
+        if (pattern[i] == '?')
+            continue;
+        else if (pattern[i] == '*')
+        {
+            for (int z = i; input[z] != '\0'; z++)
+                if (wildcard(input + z, pattern + i + 1))
+                    return true;
+
+            return false;
+        }
+        else if (pattern[i] != input[i])
+            return false;
+    }
+
+    return false;
+}
+
+int gcd(int a, int b)
+{
+    return (!b ? a : gcd(b, a % b));
+}
+
+int numspaces(char *str)
+{
+    int result = 0;
+    int len = (int)strlen(str);
+
+    for (int i = 0; i < len; i++)
+        result += (str[i] == ' ');
+
+    return result;
+}
+
+char *removespaces(const char *input)
+{
+    char    *p;
+
+    if (!*input)
+        return "";
+
+    if ((p = malloc(strlen(input) + 1)))
+    {
+        char    *p2 = p;
+
+        while (*input != '\0')
+            if (!isspace((unsigned char)*input))
+                *p2++ = *input++;
+            else
+                input++;
+
+        *p2 = '\0';
+    }
+
+    return p;
+}
+
+char *removenonalpha(const char *input)
+{
+    char    *p;
+
+    if (!*input)
+        return "";
+
+    if ((p = malloc(strlen(input) + 1)))
+    {
+        char    *p2 = p;
+
+        while (*input != '\0')
+            if (!isspace((unsigned char)*input) && *input != '-' && *input != '(' && *input != ')')
+                *p2++ = *input++;
+            else
+                input++;
+
+        *p2 = '\0';
+    }
+
+    return p;
+}
+
+char *trimwhitespace(char *input)
+{
+    char    *end;
+
+    while (isspace((unsigned char)*input))
+        input++;
+
+    if (!*input)
+        return input;
+
+    end = input + strlen(input) - 1;
+
+    while (end > input && isspace((unsigned char)*end))
+        end--;
+
+    *(end + 1) = '\0';
+
+    return input;
+}
+
+char *makevalidfilename( const char *input )
+{
+	char    *newstr = M_StringDuplicate( input );
+	int     len = ( int ) strlen( newstr );
+
+	for( int i = 0; i < len; i++ )
+		if( strchr( "\\/:?\"<>|", newstr[ i ] ) )
+			newstr[ i ] = ' ';
+
+	return newstr;
+}
+
+char *leafname( char *path )
+{
+	char    cc;
+	char    *ptr = path;
+
+	do
+	{
+		cc = *ptr++;
+
+		if( cc == '\\' || cc == '/' )
+			path = ptr;
+	} while( cc );
+
+	return path;
+}
+
+char *removeext( const char *file )
+{
+	char    *newstr = M_StringDuplicate( file );
+	char    *lastdot = strrchr( newstr, '.' );
+
+	*lastdot = '\0';
+
+	return newstr;
+}
+
+dboolean isvowel( const char ch )
+{
+	return !!strchr( "aeiouAEIOU", ch );
+}
+
+dboolean ispunctuation( const char ch )
+{
+	return !!strchr( ".!?", ch );
+}
+
+dboolean isbreak( const char ch )
+{
+	return !!strchr( " /\\-", ch );
+}
+
+char *striptrailingzero( float value, int precision )
+{
+	char    *result = malloc( 100 );
+
+	if( result )
+	{
+		int len;
+
+		M_snprintf( result, 100, "%.*f", ( precision == 2 ? 2 : ( value != floor( value ) ) ), value );
+		len = ( int ) strlen( result );
+
+		if( len >= 4 && result[ len - 3 ] == '.' && result[ len - 1 ] == '0' )
+			result[ len - 1 ] = '\0';
+	}
+
+	return result;
+}
+
+void strreplace( char *target, char *needle, const char *replacement )
+{
+	char    buffer[ 1024 ] = "";
+	char    *insert_point = &buffer[ 0 ];
+	char    *tmp = target;
+	int     needle_len = ( int ) strlen( needle );
+	int     repl_len = ( int ) strlen( replacement );
+
+	while( true )
+	{
+		char    *p = stristr( tmp, needle );
+
+		if( !p )
+		{
+			strcpy( insert_point, tmp );
+			break;
+		}
+
+		memcpy( insert_point, tmp, p - tmp );
+		insert_point += p - tmp;
+
+		memcpy( insert_point, replacement, repl_len );
+		insert_point += repl_len;
+
+		tmp = p + needle_len;
+	}
+
+	strcpy( target, buffer );
+}
+
+static const long hextable[] =
+{
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1,
+	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+};
+
+int hextodec( char *hex )
+{
+	int ret = 0;
+
+	while( *hex && ret >= 0 )
+		ret = ( ( ret << 4 ) | hextable[ *hex++ ] );
+
+	return ret;
+}
+
+void M_StripQuotes( char *string )
+{
+	int len = ( int ) strlen( string );
+
+	if( len > 2 && ( ( string[ 0 ] == '"' && string[ len - 1 ] == '"' ) || ( string[ 0 ] == '\'' && string[ len - 1 ] == '\'' ) ) )
+	{
+		len -= 2;
+		memmove( string, string + 1, len );
+		string[ len ] = '\0';
+	}
+}
