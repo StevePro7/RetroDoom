@@ -1,5 +1,6 @@
 #define __STDC_WANT_LIB_EXT1__  1
 
+#include "logger.h"
 #include <time.h>
 
 #if defined(_WIN32)
@@ -41,9 +42,6 @@ static void D_DoomLoop(void)
 //  line of execution so its stack space can be freed
 static void D_DoomMainSetup( void )
 {
-	for( ;; )
-	{
-	}
 }
 
 //

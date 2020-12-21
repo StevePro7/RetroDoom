@@ -860,5 +860,12 @@
 #define LOWER_MUSIC_VOLUME_FACTOR   3
 
 
+// c_console.h
+#define CONSOLETOP              0
+
+#define EMPTYVALUE              "\"\""
+
+#define stringize(x)            #x
+
 
 #endif

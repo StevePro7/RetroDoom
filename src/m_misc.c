@@ -23,6 +23,8 @@
 #include <stdarg.h>
 #include <string.h>
 
+#include "doomdef.h"
+#include "logger.h"
 //#include "SDL.h"
 //
 //#include "c_console.h"
@@ -477,6 +479,7 @@ char *M_StringDuplicate(const char *orig)
 	{
 		//steveproTODO - logging
 		//I_Error( "Failed to duplicate string %s.", stringize( orig ) );
+		loge( "Failed to duplicate string %s.", stringize( orig ) );
 	}
 
     return result;
