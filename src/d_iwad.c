@@ -7,7 +7,7 @@
 //#include "c_console.h"
 //#include "d_deh.h"
 //#include "d_main.h"
-//#include "doomstat.h"
+#include "doomstat.h"
 #include "doomtype.h"
 #include "doomvars.h"
 #include "i_system.h"

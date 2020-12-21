@@ -25,6 +25,8 @@
     <ClCompile Include="..\src\doomenum.c" />
     <ClCompile Include="..\src\doomkeys.c" />
     <ClCompile Include="..\src\doomretro.c" />
+    <ClCompile Include="..\src\doomstat.c" />
+    <ClCompile Include="..\src\doomstruct.c" />
     <ClCompile Include="..\src\doomtype.c" />
     <ClCompile Include="..\src\doomvars.c" />
     <ClCompile Include="..\src\dstrings.c" />
@@ -74,6 +76,8 @@
     <ClInclude Include="..\inc\doomenum.h" />
     <ClInclude Include="..\inc\doomkeys.h" />
     <ClInclude Include="..\inc\doomretro.h" />
+    <ClInclude Include="..\inc\doomstat.h" />
+    <ClInclude Include="..\inc\doomstruct.h" />
     <ClInclude Include="..\inc\doomtype.h" />
     <ClInclude Include="..\inc\doomvars.h" />
     <ClInclude Include="..\inc\dstrings.h" />

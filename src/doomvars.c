@@ -6,12 +6,7 @@
 char                *packageconfig;
 char                *packagewad;
 
-// doomstat.h
-// Game Mode - identify IWAD as shareware, retail etc.
-GameMode_t      gamemode = indetermined;
-GameMission_t   gamemission = doom;
-char            gamedescription[ 255 ];
-dboolean        hacx;
+
 
 
 // i_video.c

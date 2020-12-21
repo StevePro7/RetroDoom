@@ -77,6 +77,15 @@ static void D_DoomMainSetup( void )
 //	C_PrintSDLVersions();
 
 	iwadfile = D_FindIWAD();
+
+	//modifiedgame = false;
+
+	//for( int i = 0; i < MAXALIASES; i++ )
+	//{
+	//	aliases[ i ].name[ 0 ] = '\0';
+	//	aliases[ i ].string[ 0 ] = '\0';
+	//}
+
 }
 
 //

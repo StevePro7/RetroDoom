@@ -12,13 +12,7 @@ extern char     *packageconfig;
 extern char *packagewad;
 
 
-// doomstat.h
-// Game Mode - identify IWAD as shareware, retail etc.
-//
-extern GameMode_t       gamemode;
-extern GameMission_t    gamemission;
-extern char             gamedescription[ 255 ];
-extern dboolean         hacx;
+
 
 
 // i_video.h

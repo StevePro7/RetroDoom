@@ -868,4 +868,8 @@
 #define stringize(x)            #x
 
 
+// d_loop.h
+// Tic handling related.
+#define BACKUPTICS  8
+
 #endif
