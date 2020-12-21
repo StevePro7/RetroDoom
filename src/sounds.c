@@ -1,4 +1,5 @@
 #include "sounds.h"
+#include "doomenum.h"
 
 musicinfo_t  *mus_playing;
 

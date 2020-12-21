@@ -42,6 +42,7 @@
     <ClCompile Include="..\src\i_system.c" />
     <ClCompile Include="..\src\i_timer.c" />
     <ClCompile Include="..\src\i_video.c" />
+    <ClCompile Include="..\src\logger.c" />
     <ClCompile Include="..\src\m_argv.c" />
     <ClCompile Include="..\src\m_config.c" />
     <ClCompile Include="..\src\m_controls.c" />
@@ -88,6 +89,7 @@
     <ClInclude Include="..\inc\i_system.h" />
     <ClInclude Include="..\inc\i_timer.h" />
     <ClInclude Include="..\inc\i_video.h" />
+    <ClInclude Include="..\inc\logger.h" />
     <ClInclude Include="..\inc\m_argv.h" />
     <ClInclude Include="..\inc\m_config.h" />
     <ClInclude Include="..\inc\m_controls.h" />

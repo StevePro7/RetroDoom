@@ -18,7 +18,6 @@
 // This includes all the data for thing animation,
 // i.e. the Thing Attributes table
 // and the Frame Sequence table.
-//#include "states.h"
 
 //
 // Frame flags:
@@ -27,17 +26,6 @@
 #define FF_FULLBRIGHT   0x8000  // flag in thing->frame
 #define FF_FRAMEMASK    0x7FFF
 
-//
-// Overlay psprites are scaled shapes
-// drawn directly on the view screen,
-// coordinates are given for a 320*200 view screen.
-//
-//enum
-//{
-//    ps_weapon,
-//    ps_flash,
-//    NUMPSPRITES
-//};
 
 typedef struct
 {

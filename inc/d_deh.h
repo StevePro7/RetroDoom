@@ -469,4 +469,7 @@ extern int      dehcount;
 
 //void ProcessDehFile(char *filename, int lumpnum, dboolean automatic);
 
+// stevepro	was dstrings.h
+extern char **endmsg[];
+
 #endif

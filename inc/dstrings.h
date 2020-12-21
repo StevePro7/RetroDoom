@@ -2,7 +2,7 @@
 #define __DSTRINGS_H__
 
 // All important printed strings.
-//#include "d_englsh.h"
+#include "d_englsh.h"
 
 // Misc. other strings.
 #define SAVEGAMENAME        "doomsav"
@@ -29,6 +29,7 @@
 #define DOOM2_ENDMSG6       "just leave. when you come\nback, i'll be waiting with a bat."
 #define DOOM2_ENDMSG7       "you're lucky i don't smack\nyou for thinking about leaving."
 
-extern char **endmsg[];
+// stevepro	moved to d_deh.c
+//extern char **endmsg[];
 
 #endif
