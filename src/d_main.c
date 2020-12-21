@@ -1,6 +1,5 @@
 #define __STDC_WANT_LIB_EXT1__  1
 
-#include "logger.h"
 #include <time.h>
 
 #if defined(_WIN32)
@@ -11,8 +10,14 @@
 #include <mmsystem.h>
 #endif
 
+#include "logger.h"
+#include "d_iwad.h"
 #include "d_main.h"
+#include "doomtype.h"
+#include "doomvars.h"
+#include "m_argv.h"
 #include "m_misc.h"
+#include "version.h"
 
 #if !defined(_WIN32)
 #include <dirent.h>
@@ -31,9 +36,7 @@
 //
 static void D_DoomLoop(void)
 {
-    
 }
-
 
 
 //
@@ -43,14 +46,37 @@ static void D_DoomLoop(void)
 //  line of execution so its stack space can be freed
 static void D_DoomMainSetup( void )
 {
-	//int     p = M_CheckParmWithArgs( "-config", 1, 1 );
+	int     p = M_CheckParmWithArgs( "-config", 1, 1 );
 	//int     choseniwad = 0;
 	//char    lumpname[ 6 ];
-	//char    *appdatafolder = M_GetAppDataFolder();
-	//char    *iwadfile;
+	char    *appdatafolder = M_GetAppDataFolder();
+	char    *iwadfile;
 	//int     startloadgame;
-	//char    *resourcefolder = M_GetResourceFolder();
-	//char    *seconds;
+	char    *resourcefolder = M_GetResourceFolder();
+//	char    *seconds;
+
+	packagewad = M_StringJoin( resourcefolder, DIR_SEPARATOR_S, PACKAGE_WAD, NULL );
+	free( resourcefolder );
+
+	M_MakeDirectory( appdatafolder );
+	packageconfig = ( p ? M_StringDuplicate( myargv[ p + 1 ] ) : M_StringJoin( appdatafolder, DIR_SEPARATOR_S, PACKAGE_CONFIG, NULL ) );
+
+#if !defined(__APPLE__)
+	free( appdatafolder );
+#endif
+
+//	C_Output( "" );
+//	C_PrintCompileDate();
+//
+//#if defined(_WIN32)
+//	I_PrintWindowsVersion();
+//#endif
+//
+//	I_PrintSystemInfo();
+//
+//	C_PrintSDLVersions();
+
+	iwadfile = D_FindIWAD();
 }
 
 //

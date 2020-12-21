@@ -31,6 +31,7 @@
     <ClCompile Include="..\src\d_deh.c" />
     <ClCompile Include="..\src\d_englsh.c" />
     <ClCompile Include="..\src\d_event.c" />
+    <ClCompile Include="..\src\d_iwad.c" />
     <ClCompile Include="..\src\d_main.c" />
     <ClCompile Include="..\src\d_player.c" />
     <ClCompile Include="..\src\d_think.c" />
@@ -79,6 +80,7 @@
     <ClInclude Include="..\inc\d_deh.h" />
     <ClInclude Include="..\inc\d_englsh.h" />
     <ClInclude Include="..\inc\d_event.h" />
+    <ClInclude Include="..\inc\d_iwad.h" />
     <ClInclude Include="..\inc\d_main.h" />
     <ClInclude Include="..\inc\d_player.h" />
     <ClInclude Include="..\inc\d_think.h" />

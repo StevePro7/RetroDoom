@@ -144,6 +144,9 @@
     <ClCompile Include="..\src\d_player.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\d_iwad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -278,6 +281,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\doomretro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\d_iwad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
