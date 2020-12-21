@@ -1,3 +1,8 @@
+//#include "doomretro.h"
+
+#if !defined(__DOOMRETRO_H__)
+#define __DOOMRETRO_H__
+
 #if defined(_WIN32)
 #include <Windows.h>
 #include <ShellAPI.h>
@@ -12,6 +17,8 @@
 #include "logger.h"
 #include "m_argv.h"
 #include "version.h"
+
+#endif
 
 int main(int argc, char **argv)
 {

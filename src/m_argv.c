@@ -3,13 +3,13 @@
 int     myargc;
 char    **myargv;
 
-////
-//// M_CheckParm
-//// Checks for the given parameter
-//// in the program's command line arguments.
-//// Returns the argument number (1 to argc-1)
-//// or 0 if not present
-////
+//
+// M_CheckParm
+// Checks for the given parameter
+// in the program's command line arguments.
+// Returns the argument number (1 to argc-1)
+// or 0 if not present
+//
 //int M_CheckParmWithArgs(char *check, int num_args, int start)
 //{
 //    for (int i = start; i < myargc - num_args; i++)
@@ -18,7 +18,7 @@ char    **myargv;
 //
 //    return 0;
 //}
-//
+
 //int M_CheckParmsWithArgs(char *check1, char *check2, char *check3, int num_args, int start)
 //{
 //    for (int i = start; i < myargc - num_args; i++)

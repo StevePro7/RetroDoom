@@ -12,6 +12,7 @@
 #endif
 
 #include "d_main.h"
+#include "m_misc.h"
 
 #if !defined(_WIN32)
 #include <dirent.h>
@@ -42,6 +43,14 @@ static void D_DoomLoop(void)
 //  line of execution so its stack space can be freed
 static void D_DoomMainSetup( void )
 {
+	//int     p = M_CheckParmWithArgs( "-config", 1, 1 );
+	//int     choseniwad = 0;
+	//char    lumpname[ 6 ];
+	//char    *appdatafolder = M_GetAppDataFolder();
+	//char    *iwadfile;
+	//int     startloadgame;
+	//char    *resourcefolder = M_GetResourceFolder();
+	//char    *seconds;
 }
 
 //

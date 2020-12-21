@@ -90,9 +90,6 @@
     <ClCompile Include="..\src\p_pspr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\d_player.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\p_mobj.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -141,7 +138,10 @@
     <ClCompile Include="..\src\logger.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\d_event.c">
+    <ClCompile Include="..\src\d_event.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\d_player.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

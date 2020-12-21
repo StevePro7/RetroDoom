@@ -30,7 +30,9 @@
     <ClCompile Include="..\src\dstrings.c" />
     <ClCompile Include="..\src\d_deh.c" />
     <ClCompile Include="..\src\d_englsh.c" />
+    <ClCompile Include="..\src\d_event.c" />
     <ClCompile Include="..\src\d_main.c" />
+    <ClCompile Include="..\src\d_player.c" />
     <ClCompile Include="..\src\d_think.c" />
     <ClCompile Include="..\src\d_ticcmd.c" />
     <ClCompile Include="..\src\info.c" />
@@ -60,8 +62,6 @@
     <ClCompile Include="..\src\tables.c" />
     <ClCompile Include="..\src\version.c" />
     <ClCompile Include="..\src\v_data.c" />
-    <ClCompile Include="src\d_event.c" />
-    <ClCompile Include="src\d_player.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc" />
