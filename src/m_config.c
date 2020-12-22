@@ -5,6 +5,7 @@
 #include "doomvars.h"
 #include "i_video.h"
 #include "m_fixed.h"
+#include "m_misc.h"
 
 #include <ctype.h>
 #include <string.h>
@@ -897,7 +898,7 @@ static void M_CheckCVARs(void)
 	if( gp_analog != false && gp_analog != true )
 		gp_analog = gp_analog_default;
 
-	gp_deadzone_left = BETWEENF( gp_deadzone_left_min, gp_deadzone_left, gp_deadzone_left_max );
+	/*gp_deadzone_left = BETWEENF( gp_deadzone_left_min, gp_deadzone_left, gp_deadzone_left_max );
 	I_SetGamepadLeftDeadZone();
 
 	gp_deadzone_right = BETWEENF( gp_deadzone_right_min, gp_deadzone_right, gp_deadzone_right_max );
@@ -911,7 +912,7 @@ static void M_CheckCVARs(void)
 
 	gp_sensitivity_vertical = BETWEEN( gp_sensitivity_vertical_min, gp_sensitivity_vertical, gp_sensitivity_vertical_max );
 	I_SetGamepadVerticalSensitivity();
-
+*/
 	if( gp_swapthumbsticks != false && gp_swapthumbsticks != true )
 		gp_swapthumbsticks = gp_swapthumbsticks_default;
 
@@ -931,7 +932,7 @@ static void M_CheckCVARs(void)
 		infiniteheight = infiniteheight_default;
 
 	if( !*iwadfolder || M_StringCompare( iwadfolder, iwadfolder_default ) || !M_FolderExists( iwadfolder ) )
-		D_InitIWADFolder();
+		//D_InitIWADFolder();
 
 	if( m_acceleration != false && m_acceleration != true )
 		m_acceleration = m_acceleration_default;

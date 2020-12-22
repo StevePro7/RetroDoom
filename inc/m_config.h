@@ -5,7 +5,7 @@
 #include "doomenum.h"
 #include "doomkeys.h"
 #include "doomtype.h"
-#include "i_gamepad.h"
+//#include "i_gamepad.h"
 #include "version.h"
 
 extern dboolean     alwaysrun;

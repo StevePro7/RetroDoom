@@ -226,7 +226,7 @@ void I_Quit(dboolean shutdown)
 
         I_ShutdownGraphics();
         I_ShutdownKeyboard();
-        I_ShutdownGamepad();
+        //I_ShutdownGamepad();
         I_ShutdownTimer();
     }
 
@@ -272,7 +272,7 @@ void I_Error(const char *error, ...)
 
     I_ShutdownGraphics();
     I_ShutdownKeyboard();
-    I_ShutdownGamepad();
+    //I_ShutdownGamepad();
     I_ShutdownTimer();
 //
 #if defined(_WIN32)

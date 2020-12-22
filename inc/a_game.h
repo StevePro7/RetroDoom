@@ -23,8 +23,8 @@ extern void I_ToggleFullscreen( void );
 extern void I_WindowResizeBlit( void );
 
 // i_gamepad.c
-void I_ShutdownGamepad( void );
-void I_InitGamepad( void );
+//void I_ShutdownGamepad( void );
+//void I_InitGamepad( void );
 
 LRESULT CALLBACK WndProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam );
 
