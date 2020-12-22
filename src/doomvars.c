@@ -279,8 +279,8 @@ dboolean            r_textures = r_textures_default;
 dboolean            r_translucency = r_translucency_default;
 
 // v_video.c
-char        *r_lowpixelsize = r_lowpixelsize_default;
-dboolean    r_supersampling = r_supersampling_default;
+//char        *r_lowpixelsize = r_lowpixelsize_default;
+//dboolean    r_supersampling = r_supersampling_default;
 
 // s_sounds.c
 int                 s_channels = s_channels_default;
