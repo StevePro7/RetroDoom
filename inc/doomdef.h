@@ -219,9 +219,9 @@
 
 #define con_obituaries_default                  true
 
-//#define crosshair_min                           crosshair_none
-//#define crosshair_default                       crosshair_none
-//#define crosshair_max                           crosshair_dot
+#define crosshair_min                           crosshair_none
+#define crosshair_default                       crosshair_none
+#define crosshair_max                           crosshair_dot
 
 #define crosshaircolor_min                      0
 #define crosshaircolor_default                  4
@@ -293,7 +293,7 @@
 #define iwadfolder_default                      "/"
 #endif
 
-//#define m_acceleration_default                  true
+#define m_acceleration_default                  true
 
 #define m_doubleclick_use_default               false
 
@@ -323,9 +323,9 @@
 #define r_berserkintensity_default              2
 #define r_berserkintensity_max                  8
 
-//#define r_blood_min                             r_blood_none
-//#define r_blood_default                         r_blood_all
-//#define r_blood_max                             r_blood_nofuzz
+#define r_blood_min                             r_blood_none
+#define r_blood_default                         r_blood_all
+#define r_blood_max                             r_blood_nofuzz
 
 #define r_bloodsplats_max_min                   0
 #define r_bloodsplats_max_default               65536
@@ -419,7 +419,7 @@
 
 #define r_skycolor_none                         -1
 #define r_skycolor_min                          0
-//#define r_skycolor_default                      r_skycolor_none
+#define r_skycolor_default                      r_skycolor_none
 #define r_skycolor_max                          255
 
 #define r_supersampling_default                 true
