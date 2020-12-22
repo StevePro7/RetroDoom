@@ -478,7 +478,7 @@ char *M_StringDuplicate(const char *orig)
 	{
 		//steveproTODO - logging
 		//I_Error( "Failed to duplicate string %s.", stringize( orig ) );
-		loge( "Failed to duplicate string %s.", stringize( orig ) );
+		loge( "Failed to duplicate string %s.\n", stringize( orig ) );
 	}
 
     return result;

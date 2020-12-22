@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\a_game.c" />
+    <ClCompile Include="..\src\c_console2.c" />
     <ClCompile Include="..\src\doomdata.c" />
     <ClCompile Include="..\src\doomdef.c" />
     <ClCompile Include="..\src\doomenum.c" />
@@ -72,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\a_game.h" />
+    <ClInclude Include="..\inc\c_console2.h" />
     <ClInclude Include="..\inc\doomdata.h" />
     <ClInclude Include="..\inc\doomdef.h" />
     <ClInclude Include="..\inc\doomenum.h" />

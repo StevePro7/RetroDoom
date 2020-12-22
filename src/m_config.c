@@ -565,7 +565,7 @@ void M_SaveCVARs(void)
 			warning = true;
 			//stevepro
 			//C_Warning( 1, "<b>%s</b> couldn't be saved.", packageconfig );
-			logd( "<b>%s</b> couldn't be saved.", packageconfig );
+			logd( "<b>%s</b> couldn't be saved.\n", packageconfig );
 		}
 
 		return;
@@ -1206,7 +1206,7 @@ void M_LoadCVARs(char *filename)
         M_SaveCVARs();
 
 		// stevepro
-		logd( "Created <b>%s</b>.", filename );
+		logd( "Created <b>%s</b>.\n", filename );
 //        C_Output("Created <b>%s</b>.", filename);
         cvarsloaded = true;
         return;
@@ -1392,8 +1392,8 @@ void M_LoadCVARs(char *filename)
         //C_Output("Loaded %s CVARs and %s player stats from <b>%s</b>.", temp1, temp2, filename);
         //C_Output("Bound %s actions to the keyboard, mouse and gamepad.", temp3);
 
-		logd( "Loaded %s CVARs and %s player stats from <b>%s</b>.", temp1, temp2, filename );
-		logd( "Bound %s actions to the keyboard, mouse and gamepad.", temp3 );
+		logd( "Loaded %s CVARs and %s player stats from <b>%s</b>.\n", temp1, temp2, filename );
+		logd( "Bound %s actions to the keyboard, mouse and gamepad.\n", temp3 );
 
         M_CheckCVARs();
         cvarsloaded = true;

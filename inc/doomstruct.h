@@ -47,4 +47,14 @@ typedef enum
 	gamepadcontrol = 3
 } controltype_t;
 
+
+// d_deh.h
+typedef struct
+{
+	char    **ppstr;        // doubly indirect pointer to string
+	char    *lookup;        // pointer to lookup string name
+	int     assigned;       // [BH] counter indicating string has been assigned
+} deh_strs;
+
+
 #endif

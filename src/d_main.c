@@ -18,6 +18,7 @@
 #include "doomvars.h"
 #include "m_argv.h"
 #include "m_config.h"
+#include "m_fixed.h"
 #include "m_misc.h"
 #include "version.h"
 
@@ -111,6 +112,30 @@ static void D_DoomMainSetup( void )
 
 	// Load configuration files before initializing other subsystems.
 	M_LoadCVARs( packageconfig );
+
+	//steveproTODO	not checking cmd line params
+	//if( ( respawnmonsters = M_CheckParm( "-respawn" ) ) )
+	//	C_Output( "A <b>-respawn</b> parameter was found on the command-line. Monsters will respawn." );
+	//else if( ( respawnmonsters = M_CheckParm( "-respawnmonsters" ) ) )
+	//	C_Output( "A <b>-respawnmonsters</b> parameter was found on the command-line. Monsters will respawn." );
+
+	//if( ( nomonsters = M_CheckParm( "-nomonsters" ) ) )
+	//{
+	//	C_Output( "A <b>-nomonsters</b> parameter was found on the command-line. No monsters will be spawned." );
+	//	stat_cheated = SafeAdd( stat_cheated, 1 );
+	//	M_SaveCVARs();
+	//}
+
+	//if( ( pistolstart = M_CheckParm( "-pistolstart" ) ) )
+	//	C_Output( "A <b>-pistolstart</b> parameter was found on the command-line. The player will start each map with only a pistol." );
+
+	//if( ( fastparm = M_CheckParm( "-fast" ) ) )
+	//	C_Output( "A <b>-fast</b> parameter was found on the command-line. Monsters will be faster." );
+	//else if( ( fastparm = M_CheckParm( "-fastmonsters" ) ) )
+	//	C_Output( "A <b>-fastmonsters</b> parameter was found on the command-line. Monsters will be faster." );
+
+	//if( ( devparm = M_CheckParm( "-devparm" ) ) )
+	//	C_Output( "A <b>-devparm</b> parameter was found on the command-line. %s", s_D_DEVSTR );
 }
 
 //
