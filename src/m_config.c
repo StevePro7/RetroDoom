@@ -1218,179 +1218,188 @@ void M_LoadCVARs(char *filename)
         aliases[i].string[0] = '\0';
     }
 
-//    // Clear all default controls before reading them from config file
-//    if (!togglingvanilla && M_StringEndsWith(filename, PACKAGE_CONFIG))
-//    {
-//        for (int i = 0; *actions[i].action; i++)
-//        {
-//            if (actions[i].keyboard1)
-//                *(int *)actions[i].keyboard1 = 0;
-//
-//            if (actions[i].keyboard2)
-//                *(int *)actions[i].keyboard2 = 0;
-//
-//            if (actions[i].mouse1)
-//                *(int *)actions[i].mouse1 = -1;
-//
-//            if (actions[i].gamepad1)
-//                *(int *)actions[i].gamepad1 = 0;
-//
-//            if (actions[i].gamepad2)
-//                *(int *)actions[i].gamepad2 = 0;
-//        }
-//
-//        for (int i = 0; i < NUMKEYS; i++)
-//            keyactionlist[i][0] = '\0';
-//
-//        for (int i = 0; i < MAX_MOUSE_BUTTONS + 2; i++)
-//            mouseactionlist[i][0] = '\0';
-//    }
-//
-//    while (!feof(file))
-//    {
-//        char    cvar[64] = "";
-//        char    value[256] = "";
-//
-//        if (fscanf(file, "%63s %255[^\n]\n", cvar, value) != 2)
-//            continue;
-//
-//        if (cvar[0] == ';')
-//            continue;
-//
-//        if (M_StringCompare(cvar, "bind"))
-//        {
-//            bind_cmd_func2("bind", value);
-//            bindcount++;
-//            continue;
-//        }
-//        else if (M_StringCompare(cvar, "alias"))
-//        {
-//            if (!togglingvanilla)
-//                alias_cmd_func2("alias", value);
-//
-//            continue;
-//        }
-//
-//        // Strip off trailing non-printable characters (\r characters from DOS text files)
-//        while (*value && !isprint((unsigned char)value[strlen(value) - 1]))
-//            value[strlen(value) - 1] = '\0';
-//
-//        if (togglingvanilla)
-//        {
-//            char    *temp = uncommify(value);
-//
-//            C_ValidateInput(M_StringJoin(cvar, " ", temp, NULL));
-//            free(temp);
-//            continue;
-//        }
-//
-//        // Find the setting in the list
-//        for (int i = 0; i < arrlen(cvars); i++)
-//        {
-//            char    *s;
-//
-//            if (!M_StringCompare(cvar, cvars[i].name) && !M_StringCompare(cvar, cvars[i].oldname))
-//                continue;       // not this one
-//
-//            // parameter found
-//            switch (cvars[i].type)
-//            {
-//                case DEFAULT_STRING:
-//                    s = M_StringDuplicate(value + 1);
-//                    s[strlen(s) - 1] = '\0';
-//                    *(char **)cvars[i].location = s;
-//                    cvarcount++;
-//                    break;
-//
-//                case DEFAULT_INT32:
-//                {
-//                    char    *temp = uncommify(value);
-//
-//                    M_StringCopy(value, temp, sizeof(value));
-//                    *(int *)cvars[i].location = ParseIntParameter(value, cvars[i].valuealiastype);
-//                    free(temp);
-//                    cvarcount++;
-//                    break;
-//                }
-//
-//                case DEFAULT_UINT64:
-//                {
-//                    char    *temp = uncommify(value);
-//
-//                    M_StringCopy(value, temp, sizeof(value));
-//                    sscanf(value, "%10" PRIu64, (uint64_t *)cvars[i].location);
-//                    free(temp);
-//                    statcount++;
-//                    break;
-//                }
-//
-//                case DEFAULT_INT32_PERCENT:
-//                {
-//                    char    *temp = uncommify(value);
-//
-//                    M_StringCopy(value, temp, sizeof(value));
-//
-//                    if (value[strlen(value) - 1] == '%')
-//                        value[strlen(value) - 1] = '\0';
-//
-//                    *(int *)cvars[i].location = ParseIntParameter(value, cvars[i].valuealiastype);
-//                    free(temp);
-//                    cvarcount++;
-//                    break;
-//                }
-//
-//                case DEFAULT_FLOAT:
-//                {
-//                    char    *temp = uncommify(value);
-//
-//                    M_StringCopy(value, temp, sizeof(value));
-//                    *(float *)cvars[i].location = ParseFloatParameter(value, cvars[i].valuealiastype);
-//                    free(temp);
-//                    cvarcount++;
-//                    break;
-//                }
-//
-//                case DEFAULT_FLOAT_PERCENT:
-//                {
-//                    char    *temp = uncommify(value);
-//
-//                    M_StringCopy(value, temp, sizeof(value));
-//
-//                    if (value[strlen(value) - 1] == '%')
-//                        value[strlen(value) - 1] = '\0';
-//
-//                    *(float *)cvars[i].location = ParseFloatParameter(value, cvars[i].valuealiastype);
-//                    free(temp);
-//                    cvarcount++;
-//                    break;
-//                }
-//
-//                case DEFAULT_OTHER:
-//                    *(char **)cvars[i].location = M_StringDuplicate(value);
-//                    cvarcount++;
-//                    break;
-//            }
-//
-//            // finish
-//            break;
-//        }
-//    }
-//
-//    fclose(file);
-//
-//    if (!togglingvanilla)
-//    {
-//        char    *temp1 = commify(cvarcount);
-//        char    *temp2 = commify(statcount);
-//        char    *temp3 = commify(bindcount);
-//
-//        C_Output("Loaded %s CVARs and %s player stats from <b>%s</b>.", temp1, temp2, filename);
-//        C_Output("Bound %s actions to the keyboard, mouse and gamepad.", temp3);
-//        M_CheckCVARs();
-//        cvarsloaded = true;
-//
-//        free(temp1);
-//        free(temp2);
-//        free(temp3);
-//    }
+	// steveproTODO	do not bind mouse + keyboard 
+
+    // Clear all default controls before reading them from config file
+    //if (!togglingvanilla && M_StringEndsWith(filename, PACKAGE_CONFIG))
+    //{
+    //    for (int i = 0; *actions[i].action; i++)
+    //    {
+    //        if (actions[i].keyboard1)
+    //            *(int *)actions[i].keyboard1 = 0;
+
+    //        if (actions[i].keyboard2)
+    //            *(int *)actions[i].keyboard2 = 0;
+
+    //        if (actions[i].mouse1)
+    //            *(int *)actions[i].mouse1 = -1;
+
+    //        if (actions[i].gamepad1)
+    //            *(int *)actions[i].gamepad1 = 0;
+
+    //        if (actions[i].gamepad2)
+    //            *(int *)actions[i].gamepad2 = 0;
+    //    }
+
+    //    for (int i = 0; i < NUMKEYS; i++)
+    //        keyactionlist[i][0] = '\0';
+
+    //    for (int i = 0; i < MAX_MOUSE_BUTTONS + 2; i++)
+    //        mouseactionlist[i][0] = '\0';
+    //}
+
+    while (!feof(file))
+    {
+        char    cvar[64] = "";
+        char    value[256] = "";
+
+        if (fscanf(file, "%63s %255[^\n]\n", cvar, value) != 2)
+            continue;
+
+        if (cvar[0] == ';')
+            continue;
+
+		// steveproTODO	do not bind or alias
+        //if (M_StringCompare(cvar, "bind"))
+        //{
+        //    bind_cmd_func2("bind", value);
+        //    bindcount++;
+        //    continue;
+        //}
+        //else if (M_StringCompare(cvar, "alias"))
+        //{
+        //    if (!togglingvanilla)
+        //        alias_cmd_func2("alias", value);
+
+        //    continue;
+        //}
+
+        // Strip off trailing non-printable characters (\r characters from DOS text files)
+        while (*value && !isprint((unsigned char)value[strlen(value) - 1]))
+            value[strlen(value) - 1] = '\0';
+
+        if (togglingvanilla)
+        {
+            char    *temp = uncommify(value);
+
+			//stevepro	no current calls out to console
+            //C_ValidateInput(M_StringJoin(cvar, " ", temp, NULL));
+            free(temp);
+            continue;
+        }
+
+        // Find the setting in the list
+        for (int i = 0; i < arrlen(cvars); i++)
+        {
+            char    *s;
+
+            if (!M_StringCompare(cvar, cvars[i].name) && !M_StringCompare(cvar, cvars[i].oldname))
+                continue;       // not this one
+
+            // parameter found
+            switch (cvars[i].type)
+            {
+                case DEFAULT_STRING:
+                    s = M_StringDuplicate(value + 1);
+                    s[strlen(s) - 1] = '\0';
+                    *(char **)cvars[i].location = s;
+                    cvarcount++;
+                    break;
+
+                case DEFAULT_INT32:
+                {
+                    char    *temp = uncommify(value);
+
+                    M_StringCopy(value, temp, sizeof(value));
+                    *(int *)cvars[i].location = ParseIntParameter(value, cvars[i].valuealiastype);
+                    free(temp);
+                    cvarcount++;
+                    break;
+                }
+
+                case DEFAULT_UINT64:
+                {
+                    char    *temp = uncommify(value);
+
+                    M_StringCopy(value, temp, sizeof(value));
+                    sscanf(value, "%10" PRIu64, (uint64_t *)cvars[i].location);
+                    free(temp);
+                    statcount++;
+                    break;
+                }
+
+                case DEFAULT_INT32_PERCENT:
+                {
+                    char    *temp = uncommify(value);
+
+                    M_StringCopy(value, temp, sizeof(value));
+
+                    if (value[strlen(value) - 1] == '%')
+                        value[strlen(value) - 1] = '\0';
+
+                    *(int *)cvars[i].location = ParseIntParameter(value, cvars[i].valuealiastype);
+                    free(temp);
+                    cvarcount++;
+                    break;
+                }
+
+                case DEFAULT_FLOAT:
+                {
+                    char    *temp = uncommify(value);
+
+                    M_StringCopy(value, temp, sizeof(value));
+                    *(float *)cvars[i].location = ParseFloatParameter(value, cvars[i].valuealiastype);
+                    free(temp);
+                    cvarcount++;
+                    break;
+                }
+
+                case DEFAULT_FLOAT_PERCENT:
+                {
+                    char    *temp = uncommify(value);
+
+                    M_StringCopy(value, temp, sizeof(value));
+
+                    if (value[strlen(value) - 1] == '%')
+                        value[strlen(value) - 1] = '\0';
+
+                    *(float *)cvars[i].location = ParseFloatParameter(value, cvars[i].valuealiastype);
+                    free(temp);
+                    cvarcount++;
+                    break;
+                }
+
+                case DEFAULT_OTHER:
+                    *(char **)cvars[i].location = M_StringDuplicate(value);
+                    cvarcount++;
+                    break;
+            }
+
+            // finish
+            break;
+        }
+    }
+
+    fclose(file);
+
+    if (!togglingvanilla)
+    {
+        char    *temp1 = commify(cvarcount);
+        char    *temp2 = commify(statcount);
+        char    *temp3 = commify(bindcount);
+
+		//stevepro
+        //C_Output("Loaded %s CVARs and %s player stats from <b>%s</b>.", temp1, temp2, filename);
+        //C_Output("Bound %s actions to the keyboard, mouse and gamepad.", temp3);
+
+		logd( "Loaded %s CVARs and %s player stats from <b>%s</b>.", temp1, temp2, filename );
+		logd( "Bound %s actions to the keyboard, mouse and gamepad.", temp3 );
+
+        M_CheckCVARs();
+        cvarsloaded = true;
+
+        free(temp1);
+        free(temp2);
+        free(temp3);
+    }
 }
