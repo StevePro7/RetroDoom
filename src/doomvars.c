@@ -225,7 +225,7 @@ char                *iwadfolder = iwadfolder_default;
 dboolean            melt = melt_default;
 int                 turbo = turbo_default;
 int                 units = units_default;
-uint64_t            stat_runs = 0;
+uint64_t            stat_runs;// = 0;
 
 #if defined(_WIN32)
 char                *wad = wad_default;

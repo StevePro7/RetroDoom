@@ -17,6 +17,7 @@
 #include "doomtype.h"
 #include "doomvars.h"
 #include "g_game.h"
+#include "i_timer.h"
 #include "m_argv.h"
 #include "m_config.h"
 #include "m_fixed.h"
@@ -33,6 +34,8 @@
 #include <wordexp.h>
 #endif
 #endif
+
+uint64_t            stat_runs = 0;
 
 
 static void D_ProcessDehCommandLine( void )
@@ -170,6 +173,7 @@ static void D_DoomMainSetup( void )
 
 	// init subsystems
 	V_Init();
+	I_InitTimer();
 }
 
 //
