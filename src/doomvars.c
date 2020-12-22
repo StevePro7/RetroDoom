@@ -300,3 +300,12 @@ dboolean    r_fixspriteoffsets = r_fixspriteoffsets_default;
 
 // r_segs.c
 dboolean            r_brightmaps = r_brightmaps_default;
+
+
+// s_sound.c
+// Maximum volume of a sound effect.
+// Internal default is max out of 0-31.
+int                 sfxVolume;
+
+// Maximum volume of music.
+int                 musicVolume;

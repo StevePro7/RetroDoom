@@ -1944,15 +1944,15 @@ void I_ToggleFullscreen( void )
 //        for (int j = 0; j < 256; j++)
 //            gammatable[i][j] = (byte)(pow(j / 255.0, 1.0 / gammalevels[i]) * 255.0 + 0.5);
 //}
-//
-//void I_SetGamma(float value)
-//{
-//    for (gammaindex = 0; gammaindex < GAMMALEVELS && gammalevels[gammaindex] != value; gammaindex++);
-//
-//    if (gammaindex == GAMMALEVELS)
-//        for (gammaindex = 0; gammalevels[gammaindex] != r_gamma_default; gammaindex++);
-//}
-//
+
+void I_SetGamma( float value )
+{
+	for( gammaindex = 0; gammaindex < GAMMALEVELS && gammalevels[ gammaindex ] != value; gammaindex++ );
+
+	if( gammaindex == GAMMALEVELS )
+		for( gammaindex = 0; gammalevels[ gammaindex ] != r_gamma_default; gammaindex++ );
+}
+
 //void I_InitKeyboard(void)
 //{
 //    if (keyboardalwaysrun == KEY_CAPSLOCK)

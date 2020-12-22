@@ -10,6 +10,7 @@
 #include "doomenum.h"
 #include "doomstruct.h"
 #include "doomtype.h"
+#include "doomvars.h"
 #include "d_ticcmd.h"
 
 // ------------------------
@@ -123,8 +124,8 @@ extern dboolean         WISCRT2;
 //  Sound FX volume has default, 0 - 31
 //  Music volume has default, 0 - 31
 // These are multiplied by 4.
-extern int              sfxVolume;
-extern int              musicVolume;
+//extern int              sfxVolume;
+//extern int              musicVolume;
 
 // -------------------------
 // Status flags for refresh.

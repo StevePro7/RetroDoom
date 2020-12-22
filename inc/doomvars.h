@@ -249,4 +249,19 @@ extern int          weaponbob;
 extern dboolean     weaponbounce;
 extern dboolean     weaponrecoil;
 
+
+// doomstat
+// -------------------------
+// Internal parameters for sound rendering.
+// These have been taken from the DOS version,
+//  but are not (yet) supported with Linux
+//  (e.g. no sound volume adjustment with menu.
+
+// From m_menu.c:
+//  Sound FX volume has default, 0 - 31
+//  Music volume has default, 0 - 31
+// These are multiplied by 4.
+extern int              sfxVolume;
+extern int              musicVolume;
+
 #endif

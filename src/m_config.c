@@ -895,35 +895,36 @@ static void M_CheckCVARs(void)
 	if( fade != false && fade != true )
 		fade = fade_default;
 
-	if( gp_analog != false && gp_analog != true )
-		gp_analog = gp_analog_default;
+	// steveproTODO	going to ignore gamepad as not used.
+	//if( gp_analog != false && gp_analog != true )
+	//	gp_analog = gp_analog_default;
 
-	/*gp_deadzone_left = BETWEENF( gp_deadzone_left_min, gp_deadzone_left, gp_deadzone_left_max );
-	I_SetGamepadLeftDeadZone();
+	//gp_deadzone_left = BETWEENF( gp_deadzone_left_min, gp_deadzone_left, gp_deadzone_left_max );
+	//I_SetGamepadLeftDeadZone();
 
-	gp_deadzone_right = BETWEENF( gp_deadzone_right_min, gp_deadzone_right, gp_deadzone_right_max );
-	I_SetGamepadRightDeadZone();
+	//gp_deadzone_right = BETWEENF( gp_deadzone_right_min, gp_deadzone_right, gp_deadzone_right_max );
+	//I_SetGamepadRightDeadZone();
 
-	if( gp_invertyaxis != false && gp_invertyaxis != true )
-		gp_invertyaxis = gp_invertyaxis_default;
+	//if( gp_invertyaxis != false && gp_invertyaxis != true )
+	//	gp_invertyaxis = gp_invertyaxis_default;
 
-	gp_sensitivity_horizontal = BETWEEN( gp_sensitivity_horizontal_min, gp_sensitivity_horizontal, gp_sensitivity_horizontal_max );
-	I_SetGamepadHorizontalSensitivity();
+	//gp_sensitivity_horizontal = BETWEEN( gp_sensitivity_horizontal_min, gp_sensitivity_horizontal, gp_sensitivity_horizontal_max );
+	//I_SetGamepadHorizontalSensitivity();
 
-	gp_sensitivity_vertical = BETWEEN( gp_sensitivity_vertical_min, gp_sensitivity_vertical, gp_sensitivity_vertical_max );
-	I_SetGamepadVerticalSensitivity();
-*/
-	if( gp_swapthumbsticks != false && gp_swapthumbsticks != true )
-		gp_swapthumbsticks = gp_swapthumbsticks_default;
+	//gp_sensitivity_vertical = BETWEEN( gp_sensitivity_vertical_min, gp_sensitivity_vertical, gp_sensitivity_vertical_max );
+	//I_SetGamepadVerticalSensitivity();
 
-	if( gp_thumbsticks < gp_thumbsticks_min || gp_thumbsticks > gp_thumbsticks_max )
-		gp_thumbsticks = gp_thumbsticks_default;
+	//if( gp_swapthumbsticks != false && gp_swapthumbsticks != true )
+	//	gp_swapthumbsticks = gp_swapthumbsticks_default;
 
-	gp_vibrate_barrels = BETWEEN( gp_vibrate_barrels_min, gp_vibrate_barrels, gp_vibrate_barrels_max );
+	//if( gp_thumbsticks < gp_thumbsticks_min || gp_thumbsticks > gp_thumbsticks_max )
+	//	gp_thumbsticks = gp_thumbsticks_default;
 
-	gp_vibrate_damage = BETWEEN( gp_vibrate_damage_min, gp_vibrate_damage, gp_vibrate_damage_max );
+	//gp_vibrate_barrels = BETWEEN( gp_vibrate_barrels_min, gp_vibrate_barrels, gp_vibrate_barrels_max );
 
-	gp_vibrate_weapons = BETWEEN( gp_vibrate_weapons_min, gp_vibrate_damage, gp_vibrate_weapons_max );
+	//gp_vibrate_damage = BETWEEN( gp_vibrate_damage_min, gp_vibrate_damage, gp_vibrate_damage_max );
+
+	//gp_vibrate_weapons = BETWEEN( gp_vibrate_weapons_min, gp_vibrate_damage, gp_vibrate_weapons_max );
 
 	if( infighting != false && infighting != true )
 		infighting = infighting_default;
@@ -971,169 +972,171 @@ static void M_CheckCVARs(void)
 		&& r_blood != r_blood_nofuzz )
 		r_blood = r_blood_default;
 
-//    r_bloodsplats_max = BETWEEN(r_bloodsplats_max_min, r_bloodsplats_max, r_bloodsplats_max_max);
-//
-//    if (r_bloodsplats_translucency != false && r_bloodsplats_translucency != true)
-//        r_bloodsplats_translucency = r_bloodsplats_translucency_default;
-//
-//    if (r_brightmaps != false && r_brightmaps != true)
-//        r_brightmaps = r_brightmaps_default;
-//
-//    r_color = BETWEEN(r_color_min, r_color, r_color_max);
-//
-//    if (r_corpses_color != false && r_corpses_color != true)
-//        r_corpses_color = r_corpses_color_default;
-//
-//    if (r_corpses_gib != false && r_corpses_gib != true)
-//        r_corpses_gib = r_corpses_gib_default;
-//
-//    if (r_corpses_mirrored != false && r_corpses_mirrored != true)
-//        r_corpses_mirrored = r_corpses_mirrored_default;
-//
-//    if (r_corpses_moreblood != false && r_corpses_moreblood != true)
-//        r_corpses_moreblood = r_corpses_moreblood_default;
-//
-//    if (r_corpses_nudge != false && r_corpses_nudge != true)
-//        r_corpses_nudge = r_corpses_nudge_default;
-//
-//    if (r_corpses_slide != false && r_corpses_slide != true)
-//        r_corpses_slide = r_corpses_slide_default;
-//
-//    if (r_corpses_smearblood != false && r_corpses_smearblood != true)
-//        r_corpses_smearblood = r_corpses_smearblood_default;
-//
-//    if (r_detail != r_detail_low && r_detail != r_detail_high)
-//        r_detail = r_detail_default;
-//
-//    if (r_diskicon != false && r_diskicon != true)
-//        r_diskicon = r_diskicon_default;
-//
-//    if (r_dither != false && r_dither != true)
-//        r_dither = r_dither_default;
-//
-//    if (r_fixmaperrors != false && r_fixmaperrors != true)
-//        r_fixmaperrors = r_fixmaperrors_default;
-//
-//    if (r_fixspriteoffsets != false && r_fixspriteoffsets != true)
-//        r_fixspriteoffsets = r_fixspriteoffsets_default;
-//
-//    if (r_floatbob != false && r_floatbob != true)
-//        r_floatbob = r_floatbob_default;
-//
-//    r_fov = BETWEEN(r_fov_min, r_fov, r_fov_max);
-//
-//    r_gamma = BETWEENF(r_gamma_min, r_gamma, r_gamma_max);
-//    I_SetGamma(r_gamma);
-//
-//    if (r_graduallighting != false && r_graduallighting != true)
-//        r_graduallighting = r_graduallighting_default;
-//
-//    if (r_homindicator != false && r_homindicator != true)
-//        r_homindicator = r_homindicator_default;
-//
-//    if (r_hud != false && r_hud != true)
-//        r_hud = r_hud_default;
-//
-//    if (r_hud_translucency != false && r_hud_translucency != true)
-//        r_hud_translucency = r_hud_translucency_default;
-//
-//    if (r_liquid_bob != false && r_liquid_bob != true)
-//        r_liquid_bob = r_liquid_bob_default;
-//
-//    if (r_liquid_clipsprites != false && r_liquid_clipsprites != true)
-//        r_liquid_clipsprites = r_liquid_clipsprites_default;
-//
-//    if (r_liquid_current != false && r_liquid_current != true)
-//        r_liquid_current = r_liquid_current_default;
-//
-//    if (r_liquid_lowerview != false && r_liquid_lowerview != true)
-//        r_liquid_lowerview = r_liquid_lowerview_default;
-//
-//    if (r_liquid_swirl != false && r_liquid_swirl != true)
-//        r_liquid_swirl = r_liquid_swirl_default;
-//
-//    if (r_mirroredweapons != false && r_mirroredweapons != true)
-//        r_mirroredweapons = r_mirroredweapons_default;
-//
-//    if (r_playersprites != false && r_playersprites != true)
-//        r_playersprites = r_playersprites_default;
-//
-//    if (r_rockettrails != false && r_rockettrails != true)
-//        r_rockettrails = r_rockettrails_default;
-//
-//    r_screensize = BETWEEN(r_screensize_min, r_screensize, r_screensize_max);
-//
-//    if (r_shadows != false && r_shadows != true)
-//        r_shadows = r_shadows_default;
-//
-//    if (r_shadows_translucency != false && r_shadows_translucency != true)
-//        r_shadows_translucency = r_shadows_translucency_default;
-//
-//    if (r_shake_barrels != false && r_shake_barrels != true)
-//        r_shake_barrels = r_shake_barrels_default;
-//
-//    r_shake_damage = BETWEEN(r_shake_damage_min, r_shake_damage, r_shake_damage_max);
-//
-//    if (r_skycolor != r_skycolor_none && (r_skycolor < r_skycolor_min || r_skycolor > r_skycolor_max))
-//        r_skycolor = r_skycolor_default;
-//
-//    if (r_supersampling != false && r_supersampling != true)
-//        r_supersampling = r_supersampling_default;
-//
-//    if (r_textures != false && r_textures != true)
-//        r_textures = r_textures_default;
-//
-//    if (r_translucency != false && r_translucency != true)
-//        r_translucency = r_translucency_default;
-//
-//    s_channels = BETWEEN(s_channels_min, s_channels, s_channels_max);
-//
-//    s_musicvolume = BETWEEN(s_musicvolume_min, s_musicvolume, s_musicvolume_max);
-//    musicVolume = (s_musicvolume * 31 + 50) / 100;
-//
-//    if (s_randommusic != false && s_randommusic != true)
-//        s_randommusic = s_randommusic_default;
-//
-//    if (s_randompitch != false && s_randompitch != true)
-//        s_randompitch = s_randompitch_default;
-//
-//    s_sfxvolume = BETWEEN(s_sfxvolume_min, s_sfxvolume, s_sfxvolume_max);
-//    sfxVolume = (s_sfxvolume * 31 + 50) / 100;
-//
-//    if (s_stereo != false && s_stereo != true)
-//        s_stereo = s_stereo_default;
-//
-//    savegame = BETWEEN(savegame_min, savegame, savegame_max);
-//
-//    skilllevel = BETWEEN(skilllevel_min, skilllevel, skilllevel_max);
-//
-//    stillbob = BETWEEN(stillbob_min, stillbob, stillbob_max);
-//
-//    if (tossdrop != false && tossdrop != true)
-//        tossdrop = tossdrop_default;
-//
-//    turbo = BETWEEN(turbo_min, turbo, turbo_max);
-//
-//    if (units != units_imperial && units != units_metric)
-//        units = units_default;
-//
-//    version = version_default;
-//
-//    if (vid_borderlesswindow != false && vid_borderlesswindow != true)
-//        vid_borderlesswindow = vid_borderlesswindow_default;
-//
-//    vid_capfps = BETWEEN(vid_capfps_min, vid_capfps, vid_capfps_max);
-//
-//    vid_display = MAX(vid_display_min, vid_display);
-//
-//    if (vid_fullscreen != false && vid_fullscreen != true)
-//        vid_fullscreen = vid_fullscreen_default;
-//
-//    vid_motionblur = BETWEEN(vid_motionblur_min, vid_motionblur, vid_motionblur_max);
-//
-//    if (vid_pillarboxes != false && vid_pillarboxes != true)
-//        vid_pillarboxes = vid_pillarboxes_default;
-//
+	r_bloodsplats_max = BETWEEN( r_bloodsplats_max_min, r_bloodsplats_max, r_bloodsplats_max_max );
+
+	if( r_bloodsplats_translucency != false && r_bloodsplats_translucency != true )
+		r_bloodsplats_translucency = r_bloodsplats_translucency_default;
+
+	if( r_brightmaps != false && r_brightmaps != true )
+		r_brightmaps = r_brightmaps_default;
+
+	r_color = BETWEEN( r_color_min, r_color, r_color_max );
+
+	if( r_corpses_color != false && r_corpses_color != true )
+		r_corpses_color = r_corpses_color_default;
+
+	if( r_corpses_gib != false && r_corpses_gib != true )
+		r_corpses_gib = r_corpses_gib_default;
+
+	if( r_corpses_mirrored != false && r_corpses_mirrored != true )
+		r_corpses_mirrored = r_corpses_mirrored_default;
+
+	if( r_corpses_moreblood != false && r_corpses_moreblood != true )
+		r_corpses_moreblood = r_corpses_moreblood_default;
+
+	if( r_corpses_nudge != false && r_corpses_nudge != true )
+		r_corpses_nudge = r_corpses_nudge_default;
+
+	if( r_corpses_slide != false && r_corpses_slide != true )
+		r_corpses_slide = r_corpses_slide_default;
+
+	if( r_corpses_smearblood != false && r_corpses_smearblood != true )
+		r_corpses_smearblood = r_corpses_smearblood_default;
+
+	if( r_detail != r_detail_low && r_detail != r_detail_high )
+		r_detail = r_detail_default;
+
+	if( r_diskicon != false && r_diskicon != true )
+		r_diskicon = r_diskicon_default;
+
+	if( r_dither != false && r_dither != true )
+		r_dither = r_dither_default;
+
+	if( r_fixmaperrors != false && r_fixmaperrors != true )
+		r_fixmaperrors = r_fixmaperrors_default;
+
+	if( r_fixspriteoffsets != false && r_fixspriteoffsets != true )
+		r_fixspriteoffsets = r_fixspriteoffsets_default;
+
+	if( r_floatbob != false && r_floatbob != true )
+		r_floatbob = r_floatbob_default;
+
+	r_fov = BETWEEN( r_fov_min, r_fov, r_fov_max );
+
+	// steveproTODO	gamma is messed up so hardcode for now
+	//r_gamma = BETWEENF( r_gamma_min, r_gamma, r_gamma_max );
+	r_gamma = r_gamma_default;
+	I_SetGamma( r_gamma );
+
+	if( r_graduallighting != false && r_graduallighting != true )
+		r_graduallighting = r_graduallighting_default;
+
+	if( r_homindicator != false && r_homindicator != true )
+		r_homindicator = r_homindicator_default;
+
+	if( r_hud != false && r_hud != true )
+		r_hud = r_hud_default;
+
+	if( r_hud_translucency != false && r_hud_translucency != true )
+		r_hud_translucency = r_hud_translucency_default;
+
+	if( r_liquid_bob != false && r_liquid_bob != true )
+		r_liquid_bob = r_liquid_bob_default;
+
+	if( r_liquid_clipsprites != false && r_liquid_clipsprites != true )
+		r_liquid_clipsprites = r_liquid_clipsprites_default;
+
+	if( r_liquid_current != false && r_liquid_current != true )
+		r_liquid_current = r_liquid_current_default;
+
+	if( r_liquid_lowerview != false && r_liquid_lowerview != true )
+		r_liquid_lowerview = r_liquid_lowerview_default;
+
+	if( r_liquid_swirl != false && r_liquid_swirl != true )
+		r_liquid_swirl = r_liquid_swirl_default;
+
+	if( r_mirroredweapons != false && r_mirroredweapons != true )
+		r_mirroredweapons = r_mirroredweapons_default;
+
+	if( r_playersprites != false && r_playersprites != true )
+		r_playersprites = r_playersprites_default;
+
+	if( r_rockettrails != false && r_rockettrails != true )
+		r_rockettrails = r_rockettrails_default;
+
+	r_screensize = BETWEEN( r_screensize_min, r_screensize, r_screensize_max );
+
+	if( r_shadows != false && r_shadows != true )
+		r_shadows = r_shadows_default;
+
+	if( r_shadows_translucency != false && r_shadows_translucency != true )
+		r_shadows_translucency = r_shadows_translucency_default;
+
+	if( r_shake_barrels != false && r_shake_barrels != true )
+		r_shake_barrels = r_shake_barrels_default;
+
+	r_shake_damage = BETWEEN( r_shake_damage_min, r_shake_damage, r_shake_damage_max );
+
+	if( r_skycolor != r_skycolor_none && ( r_skycolor < r_skycolor_min || r_skycolor > r_skycolor_max ) )
+		r_skycolor = r_skycolor_default;
+
+	if( r_supersampling != false && r_supersampling != true )
+		r_supersampling = r_supersampling_default;
+
+	if( r_textures != false && r_textures != true )
+		r_textures = r_textures_default;
+
+	if( r_translucency != false && r_translucency != true )
+		r_translucency = r_translucency_default;
+
+	s_channels = BETWEEN( s_channels_min, s_channels, s_channels_max );
+
+	s_musicvolume = BETWEEN( s_musicvolume_min, s_musicvolume, s_musicvolume_max );
+	musicVolume = ( s_musicvolume * 31 + 50 ) / 100;
+
+	if( s_randommusic != false && s_randommusic != true )
+		s_randommusic = s_randommusic_default;
+
+	if( s_randompitch != false && s_randompitch != true )
+		s_randompitch = s_randompitch_default;
+
+	s_sfxvolume = BETWEEN( s_sfxvolume_min, s_sfxvolume, s_sfxvolume_max );
+	sfxVolume = ( s_sfxvolume * 31 + 50 ) / 100;
+
+	if( s_stereo != false && s_stereo != true )
+		s_stereo = s_stereo_default;
+
+	savegame = BETWEEN( savegame_min, savegame, savegame_max );
+
+	skilllevel = BETWEEN( skilllevel_min, skilllevel, skilllevel_max );
+
+	stillbob = BETWEEN( stillbob_min, stillbob, stillbob_max );
+
+	if( tossdrop != false && tossdrop != true )
+		tossdrop = tossdrop_default;
+
+	turbo = BETWEEN( turbo_min, turbo, turbo_max );
+
+	if( units != units_imperial && units != units_metric )
+		units = units_default;
+
+	version = version_default;
+
+	if( vid_borderlesswindow != false && vid_borderlesswindow != true )
+		vid_borderlesswindow = vid_borderlesswindow_default;
+
+	vid_capfps = BETWEEN( vid_capfps_min, vid_capfps, vid_capfps_max );
+
+	vid_display = MAX( vid_display_min, vid_display );
+
+	if( vid_fullscreen != false && vid_fullscreen != true )
+		vid_fullscreen = vid_fullscreen_default;
+
+	vid_motionblur = BETWEEN( vid_motionblur_min, vid_motionblur, vid_motionblur_max );
+
+	if( vid_pillarboxes != false && vid_pillarboxes != true )
+		vid_pillarboxes = vid_pillarboxes_default;
+
 //    if (!M_StringCompare(vid_scaleapi, vid_scaleapi_software)
 //#if defined(_WIN32)
 //        && !M_StringCompare(vid_scaleapi, vid_scaleapi_direct3d)

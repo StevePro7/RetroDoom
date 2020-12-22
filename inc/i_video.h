@@ -40,9 +40,9 @@ void I_ShutdownGraphics(void);
 //void I_ToggleFullscreen(void);
 //void I_SetPillarboxes(void);
 //void I_SetMotionBlur(int percent);
-//
-//void I_SetGamma(float value);
-//
+
+void I_SetGamma(float value);
+
 //#if defined(_WIN32)
 //void I_WindowResizeBlit(void);
 //#endif
