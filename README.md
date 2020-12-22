@@ -1,4 +1,18 @@
 # RetroDoom
+22/12/2020
+
+I *found* out why the extern is in one central header file but the implementations
+are dispersed in various other header files esp. when the variable has a default value:
+e.g.
+r_lowpixelsize
+v_video.c
+
+There is code in v_video.c that queries r_lowpixelsize so the default value must be
+set in the same file
+However, I *believe* the same implementation can be actioned in multiple *.c files
+so you don't have to risk having a potential cyclical dependency later...??
+
+
 20/12/2020
 
 c_console.c
