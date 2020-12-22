@@ -544,11 +544,11 @@ static void SaveBind( FILE *file, char *control, char *string )
 //		}
 //}
 
-////
-//// M_SaveCVARs
-////
-//void M_SaveCVARs(void)
-//{
+//
+// M_SaveCVARs
+//
+void M_SaveCVARs(void)
+{
 //    int     numaliases = 0;
 //    FILE    *file;
 //
@@ -785,8 +785,8 @@ static void SaveBind( FILE *file, char *control, char *string )
 //            return (float)valuealiases[i].value;
 //
 //    return (float)atof(strparm);
-//}
-//
+}
+
 static void M_CheckCVARs(void)
 {
     if (alwaysrun != false && alwaysrun != true)

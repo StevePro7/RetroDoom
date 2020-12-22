@@ -750,6 +750,6 @@ typedef struct
 extern valuealias_t     valuealiases[];
 
 void M_LoadCVARs(char *filename);
-//void M_SaveCVARs(void);
+void M_SaveCVARs(void);
 
 #endif
