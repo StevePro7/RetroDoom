@@ -1,18 +1,6 @@
 #if !defined(__DOOMDEF_H__)
 #define __DOOMDEF_H__
 
-#include <stdio.h>
-
-//stevepro
-#include "doomtype.h"
-
-#if defined(_WIN32)
-#define strcasecmp  _stricmp
-#define strncasecmp _strnicmp
-#else
-#include <strings.h>
-#endif
-
 //
 // The packed attribute forces structures to be packed into the minimum
 // space necessary. If this is not done, the compiler may align structure
@@ -100,6 +88,7 @@
 #define ORIG_FRICTION_FACTOR    2048    // original value
 
 
+// NEW
 // i_video.h
 #define MAX_MOUSE_BUTTONS   8
 #define GAMMALEVELS         31
@@ -871,5 +860,10 @@
 // d_loop.h
 // Tic handling related.
 #define BACKUPTICS  8
+
+
+// c_cmds.h
+#define MAXALIASES      256
+
 
 #endif

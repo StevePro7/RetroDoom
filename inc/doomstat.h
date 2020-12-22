@@ -32,7 +32,7 @@ extern GameMission_t    gamemission;
 extern char             gamedescription[255];
 
 // Set if homebrew PWAD stuff has been added.
-extern dboolean         modifiedgame;
+//extern dboolean         modifiedgame;
 
 // -------------------------------------------
 // Selected skill type, map etc.

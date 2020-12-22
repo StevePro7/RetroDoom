@@ -1,8 +1,10 @@
 #if !defined(__DOOMVARS_H__)
 #define __DOOMVARS_H__
 
+#include "doomdef.h"
 #include "doomenum.h"
 #include "doomtype.h"
+#include "doomstruct.h"
 
 // d_main.h
 extern char     *packageconfig;
@@ -22,6 +24,14 @@ dboolean        menuactive;
 
 // m_config.h
 extern int          vid_capfps;
+
+
+// doomstat.h
+// Set if homebrew PWAD stuff has been added.
+extern dboolean         modifiedgame;
+
+// c_cmds.h
+extern alias_t          aliases[ MAXALIASES ];
 
 
 // i_video.h

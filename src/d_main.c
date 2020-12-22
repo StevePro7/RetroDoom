@@ -13,9 +13,11 @@
 #include "logger.h"
 #include "d_iwad.h"
 #include "d_main.h"
+#include "doomdef.h"
 #include "doomtype.h"
 #include "doomvars.h"
 #include "m_argv.h"
+#include "m_config.h"
 #include "m_misc.h"
 #include "version.h"
 
@@ -29,6 +31,25 @@
 #endif
 #endif
 
+
+static void D_ProcessDehCommandLine( void )
+{
+	int p = M_CheckParm( "-deh" );
+
+	if( p || ( p = M_CheckParm( "-bex" ) ) )
+	{
+		dboolean    deh = true;
+
+		while( ++p < myargc )
+			if( *myargv[ p ] == '-' )
+				deh = ( M_StringCompare( myargv[ p ], "-deh" ) || M_StringCompare( myargv[ p ], "-bex" ) );
+			else if( deh )
+			{
+				// stevepro TODO? skip deh file
+				//ProcessDehFile( myargv[ p ], 0, false );
+			}
+	}
+}
 
 
 //
@@ -78,14 +99,18 @@ static void D_DoomMainSetup( void )
 
 	iwadfile = D_FindIWAD();
 
-	//modifiedgame = false;
+	modifiedgame = false;
 
-	//for( int i = 0; i < MAXALIASES; i++ )
-	//{
-	//	aliases[ i ].name[ 0 ] = '\0';
-	//	aliases[ i ].string[ 0 ] = '\0';
-	//}
+	for( int i = 0; i < MAXALIASES; i++ )
+	{
+		aliases[ i ].name[ 0 ] = '\0';
+		aliases[ i ].string[ 0 ] = '\0';
+	}
 
+	D_ProcessDehCommandLine();
+
+	// Load configuration files before initializing other subsystems.
+	M_LoadCVARs( packageconfig );
 }
 
 //

@@ -1,5 +1,13 @@
 #include "m_misc.h"
 
+// stevepro	was in doomdef.h
+#if defined(_WIN32)
+#define strcasecmp  _stricmp
+#define strncasecmp _strnicmp
+#else
+#include <strings.h>
+#endif
+
 #if defined(_WIN32)
 #pragma warning( disable : 4091 )
 

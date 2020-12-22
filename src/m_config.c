@@ -1,10 +1,14 @@
 #include "m_config.h"
 #include "doomdef.h"
+#include "doomenum.h"
+#include "doomstruct.h"
 #include "doomvars.h"
 #include "i_video.h"
+#include "m_fixed.h"
 
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 
 //#include "c_cmds.h"
 //#include "c_console.h"
@@ -499,45 +503,46 @@ static default_t cvars[ NUMCVARS ] =
 	CONFIG_VARIABLE_INT_UNSIGNED( time,                             stat_time,                             stat_time,                             NOVALUEALIAS )
 };
 
-//valuealias_t valuealiases[] =
+valuealias_t valuealiases[] =
+{
+	{ "off",       0, BOOLVALUEALIAS      }, { "on",      1, BOOLVALUEALIAS      },
+	{ "0",         0, BOOLVALUEALIAS      }, { "1",       1, BOOLVALUEALIAS      },
+	{ "no",        0, BOOLVALUEALIAS      }, { "yes",     1, BOOLVALUEALIAS      },
+	{ "false",     0, BOOLVALUEALIAS      }, { "true",    1, BOOLVALUEALIAS      },
+	{ "low",       0, DETAILVALUEALIAS    }, { "high",    1, DETAILVALUEALIAS    },
+	{ "off",       1, GAMMAVALUEALIAS     }, { "none",    0, BLOODVALUEALIAS     },
+	{ "red",       1, BLOODVALUEALIAS     }, { "all",     2, BLOODVALUEALIAS     },
+	{ "green",     3, BLOODVALUEALIAS     }, { "nofuzz",  4, BLOODVALUEALIAS     },
+	{ "imperial",  0, UNITSVALUEALIAS     }, { "metric",  1, UNITSVALUEALIAS     },
+	{ "off",       0, CAPVALUEALIAS       }, { "none",   -1, SKYVALUEALIAS       },
+	{ "off",      -1, SKYVALUEALIAS       }, { "none",    5, FACEBACKVALUEALIAS  },
+	{ "off",       5, FACEBACKVALUEALIAS  }, { "none",    0, ARMORTYPEVALUEALIAS },
+	{ "green",     1, ARMORTYPEVALUEALIAS }, { "blue",    2, ARMORTYPEVALUEALIAS },
+	{ "none",      0, CROSSHAIRVALUEALIAS }, { "off",     0, CROSSHAIRVALUEALIAS },
+	{ "cross",     1, CROSSHAIRVALUEALIAS }, { "dot",     2, CROSSHAIRVALUEALIAS },
+	{ "adaptive", -1, VSYNCVALUEALIAS     }, { "off",     0, VSYNCVALUEALIAS     },
+	{ "on",        1, VSYNCVALUEALIAS     }, { "",        0, NOVALUEALIAS        }
+};
+
+static void SaveBind( FILE *file, char *control, char *string )
+{
+	if( strlen( control ) == 1 )
+		fprintf( file, "bind '%s' %s\n", ( control[ 0 ] == '=' ? "+" : control ), string );
+	else
+		fprintf( file, "bind %s %s\n", control, string );
+}
+
+// stevepro TODO we won't rebind for now
+//static void SaveBindByValue( FILE *file, char *action, int value, controltype_t type )
 //{
-//    { "off",       0, BOOLVALUEALIAS      }, { "on",      1, BOOLVALUEALIAS      },
-//    { "0",         0, BOOLVALUEALIAS      }, { "1",       1, BOOLVALUEALIAS      },
-//    { "no",        0, BOOLVALUEALIAS      }, { "yes",     1, BOOLVALUEALIAS      },
-//    { "false",     0, BOOLVALUEALIAS      }, { "true",    1, BOOLVALUEALIAS      },
-//    { "low",       0, DETAILVALUEALIAS    }, { "high",    1, DETAILVALUEALIAS    },
-//    { "off",       1, GAMMAVALUEALIAS     }, { "none",    0, BLOODVALUEALIAS     },
-//    { "red",       1, BLOODVALUEALIAS     }, { "all",     2, BLOODVALUEALIAS     },
-//    { "green",     3, BLOODVALUEALIAS     }, { "nofuzz",  4, BLOODVALUEALIAS     },
-//    { "imperial",  0, UNITSVALUEALIAS     }, { "metric",  1, UNITSVALUEALIAS     },
-//    { "off",       0, CAPVALUEALIAS       }, { "none",   -1, SKYVALUEALIAS       },
-//    { "off",      -1, SKYVALUEALIAS       }, { "none",    5, FACEBACKVALUEALIAS  },
-//    { "off",       5, FACEBACKVALUEALIAS  }, { "none",    0, ARMORTYPEVALUEALIAS },
-//    { "green",     1, ARMORTYPEVALUEALIAS }, { "blue",    2, ARMORTYPEVALUEALIAS },
-//    { "none",      0, CROSSHAIRVALUEALIAS }, { "off",     0, CROSSHAIRVALUEALIAS },
-//    { "cross",     1, CROSSHAIRVALUEALIAS }, { "dot",     2, CROSSHAIRVALUEALIAS },
-//    { "adaptive", -1, VSYNCVALUEALIAS     }, { "off",     0, VSYNCVALUEALIAS     },
-//    { "on",        1, VSYNCVALUEALIAS     }, { "",        0, NOVALUEALIAS        }
-//};
-//
-//static void SaveBind(FILE *file, char *control, char *string)
-//{
-//    if (strlen(control) == 1)
-//        fprintf(file, "bind '%s' %s\n", (control[0] == '=' ? "+" : control), string);
-//    else
-//        fprintf(file, "bind %s %s\n", control, string);
+//	for( int i = 0; controls[ i ].type; i++ )
+//		if( controls[ i ].type == type && controls[ i ].value == value )
+//		{
+//			SaveBind( file, controls[ i ].control, action );
+//			break;
+//		}
 //}
-//
-//static void SaveBindByValue(FILE *file, char *action, int value, controltype_t type)
-//{
-//    for (int i = 0; controls[i].type; i++)
-//        if (controls[i].type == type && controls[i].value == value)
-//        {
-//            SaveBind(file, controls[i].control, action);
-//            break;
-//        }
-//}
-//
+
 ////
 //// M_SaveCVARs
 ////
@@ -781,190 +786,190 @@ static default_t cvars[ NUMCVARS ] =
 //    return (float)atof(strparm);
 //}
 //
-//static void M_CheckCVARs(void)
-//{
-//    if (alwaysrun != false && alwaysrun != true)
-//        alwaysrun = alwaysrun_default;
-//
-//    if (am_allmapcdwallcolor < am_allmapcdwallcolor_min || am_allmapcdwallcolor > am_allmapcdwallcolor_max)
-//        am_allmapcdwallcolor = am_allmapcdwallcolor_default;
-//
-//    if (am_allmapfdwallcolor < am_allmapfdwallcolor_min || am_allmapfdwallcolor > am_allmapfdwallcolor_max)
-//        am_allmapfdwallcolor = am_allmapfdwallcolor_default;
-//
-//    if (am_allmapwallcolor < am_allmapwallcolor_min || am_allmapwallcolor > am_allmapwallcolor_max)
-//        am_allmapwallcolor = am_allmapwallcolor_default;
-//
-//    if (am_backcolor < am_backcolor_min || am_backcolor > am_backcolor_max)
-//        am_backcolor = am_backcolor_default;
-//
-//    if (am_cdwallcolor < am_cdwallcolor_min || am_cdwallcolor > am_cdwallcolor_max)
-//        am_cdwallcolor = am_cdwallcolor_default;
-//
-//    if (am_crosshaircolor < am_crosshaircolor_min || am_crosshaircolor > am_crosshaircolor_max)
-//        am_crosshaircolor = am_crosshaircolor_default;
-//
-//    if (am_external != false && am_external != true)
-//        am_external = am_external_default;
-//
-//    if (am_fdwallcolor < am_fdwallcolor_min || am_fdwallcolor > am_fdwallcolor_max)
-//        am_fdwallcolor = am_fdwallcolor_default;
-//
-//    if (am_followmode != false && am_followmode != true)
-//        am_followmode = am_followmode_default;
-//
-//    if (am_grid != false && am_grid != true)
-//        am_grid = am_grid_default;
-//
-//    if (am_gridcolor < am_gridcolor_min || am_gridcolor > am_gridcolor_max)
-//        am_gridcolor = am_gridcolor_default;
-//
-//    if (am_markcolor < am_markcolor_min || am_markcolor > am_markcolor_max)
-//        am_markcolor = am_markcolor_default;
-//
-//    if (am_path != false && am_path != true)
-//        am_path = am_path_default;
-//
-//    if (am_pathcolor < am_pathcolor_min || am_pathcolor > am_pathcolor_max)
-//        am_pathcolor = am_pathcolor_default;
-//
-//    if (am_playercolor < am_playercolor_min || am_playercolor > am_playercolor_max)
-//        am_playercolor = am_playercolor_default;
-//
-//    if (am_rotatemode != false && am_rotatemode != true)
-//        am_rotatemode = am_rotatemode_default;
-//
-//    if (am_teleportercolor < am_teleportercolor_min || am_teleportercolor > am_teleportercolor_max)
-//        am_teleportercolor = am_teleportercolor_default;
-//
-//    if (am_thingcolor < am_thingcolor_min || am_thingcolor > am_thingcolor_max)
-//        am_thingcolor = am_thingcolor_default;
-//
-//    if (am_tswallcolor < am_tswallcolor_min || am_tswallcolor > am_tswallcolor_max)
-//        am_tswallcolor = am_tswallcolor_default;
-//
-//    if (am_wallcolor < am_wallcolor_min || am_wallcolor > am_wallcolor_max)
-//        am_wallcolor = am_wallcolor_default;
-//
-//    if (autoaim != false && autoaim != true)
-//        autoaim = autoaim_default;
-//
-//    if (autoload != false && autoload != true)
-//        autoload = autoload_default;
-//
-//    if (autosave != false && autosave != true)
-//        autosave = autosave_default;
-//
-//    if (autotilt != false && autotilt != true)
-//        autotilt = autotilt_default;
-//
-//    if (autouse != false && autouse != true)
-//        autouse = autouse_default;
-//
-//    if (centerweapon != false && centerweapon != true)
-//        centerweapon = centerweapon_default;
-//
-//    if (con_backcolor < con_backcolor_min || con_backcolor > con_backcolor_max)
-//        con_backcolor = con_backcolor_default;
-//
-//    if (con_edgecolor < con_edgecolor_min || con_edgecolor > con_edgecolor_max)
-//        con_edgecolor = con_edgecolor_default;
-//
-//    if (con_obituaries != false && con_obituaries != true)
-//        con_obituaries = con_obituaries_default;
-//
-//    if (crosshair != crosshair_none && crosshair != crosshair_cross && crosshair != crosshair_dot)
-//        crosshair = crosshair_default;
-//
-//    if (crosshaircolor < crosshaircolor_min || crosshaircolor > crosshaircolor_max)
-//        crosshaircolor = crosshaircolor_default;
-//
-//    episode = BETWEEN(episode_min, episode, episode_max);
-//
-//    expansion = BETWEEN(expansion_min, expansion, expansion_max);
-//
-//    if (facebackcolor < facebackcolor_min || facebackcolor > facebackcolor_max)
-//        facebackcolor = facebackcolor_default;
-//
-//    if (fade != false && fade != true)
-//        fade = fade_default;
-//
-//    if (gp_analog != false && gp_analog != true)
-//        gp_analog = gp_analog_default;
-//
-//    gp_deadzone_left = BETWEENF(gp_deadzone_left_min, gp_deadzone_left, gp_deadzone_left_max);
-//    I_SetGamepadLeftDeadZone();
-//
-//    gp_deadzone_right = BETWEENF(gp_deadzone_right_min, gp_deadzone_right, gp_deadzone_right_max);
-//    I_SetGamepadRightDeadZone();
-//
-//    if (gp_invertyaxis != false && gp_invertyaxis != true)
-//        gp_invertyaxis = gp_invertyaxis_default;
-//
-//    gp_sensitivity_horizontal = BETWEEN(gp_sensitivity_horizontal_min, gp_sensitivity_horizontal, gp_sensitivity_horizontal_max);
-//    I_SetGamepadHorizontalSensitivity();
-//
-//    gp_sensitivity_vertical = BETWEEN(gp_sensitivity_vertical_min, gp_sensitivity_vertical, gp_sensitivity_vertical_max);
-//    I_SetGamepadVerticalSensitivity();
-//
-//    if (gp_swapthumbsticks != false && gp_swapthumbsticks != true)
-//        gp_swapthumbsticks = gp_swapthumbsticks_default;
-//
-//    if (gp_thumbsticks < gp_thumbsticks_min || gp_thumbsticks > gp_thumbsticks_max)
-//        gp_thumbsticks = gp_thumbsticks_default;
-//
-//    gp_vibrate_barrels = BETWEEN(gp_vibrate_barrels_min, gp_vibrate_barrels, gp_vibrate_barrels_max);
-//
-//    gp_vibrate_damage = BETWEEN(gp_vibrate_damage_min, gp_vibrate_damage, gp_vibrate_damage_max);
-//
-//    gp_vibrate_weapons = BETWEEN(gp_vibrate_weapons_min, gp_vibrate_damage, gp_vibrate_weapons_max);
-//
-//    if (infighting != false && infighting != true)
-//        infighting = infighting_default;
-//
-//    if (infiniteheight != false && infiniteheight != true)
-//        infiniteheight = infiniteheight_default;
-//
-//    if (!*iwadfolder || M_StringCompare(iwadfolder, iwadfolder_default) || !M_FolderExists(iwadfolder))
-//        D_InitIWADFolder();
-//
-//    if (m_acceleration != false && m_acceleration != true)
-//        m_acceleration = m_acceleration_default;
-//
-//    if (m_doubleclick_use != false && m_doubleclick_use != true)
-//        m_doubleclick_use = m_doubleclick_use_default;
-//
-//    if (m_invertyaxis != false && m_invertyaxis != true)
-//        m_invertyaxis = m_invertyaxis_default;
-//
-//    if (m_novertical != false && m_novertical != true)
-//        m_novertical = m_novertical_default;
-//
-//    m_sensitivity = BETWEEN(m_sensitivity_min, m_sensitivity, m_sensitivity_max);
-//
-//    if (melt != false && melt != true)
-//        melt = melt_default;
-//
-//    if (messages != false && messages != true)
-//        messages = messages_default;
-//
-//    if (mouselook != false && mouselook != true)
-//        mouselook = mouselook_default;
-//
-//    movebob = BETWEEN(movebob_min, movebob, movebob_max);
-//
-//    if (!*playername)
-//        playername = M_StringDuplicate(playername_default);
-//
-//    if (r_althud != false && r_althud != true)
-//        r_althud = r_althud_default;
-//
-//    r_berserkintensity = BETWEEN(r_berserkintensity_min, r_berserkintensity, r_berserkintensity_max);
-//
-//    if (r_blood != r_blood_none && r_blood != r_blood_red && r_blood != r_blood_all && r_blood != r_blood_green
-//        && r_blood != r_blood_nofuzz)
-//        r_blood = r_blood_default;
-//
+static void M_CheckCVARs(void)
+{
+    if (alwaysrun != false && alwaysrun != true)
+        alwaysrun = alwaysrun_default;
+
+	if( am_allmapcdwallcolor < am_allmapcdwallcolor_min || am_allmapcdwallcolor > am_allmapcdwallcolor_max )
+		am_allmapcdwallcolor = am_allmapcdwallcolor_default;
+
+	if( am_allmapfdwallcolor < am_allmapfdwallcolor_min || am_allmapfdwallcolor > am_allmapfdwallcolor_max )
+		am_allmapfdwallcolor = am_allmapfdwallcolor_default;
+
+	if( am_allmapwallcolor < am_allmapwallcolor_min || am_allmapwallcolor > am_allmapwallcolor_max )
+		am_allmapwallcolor = am_allmapwallcolor_default;
+
+	if( am_backcolor < am_backcolor_min || am_backcolor > am_backcolor_max )
+		am_backcolor = am_backcolor_default;
+
+	if( am_cdwallcolor < am_cdwallcolor_min || am_cdwallcolor > am_cdwallcolor_max )
+		am_cdwallcolor = am_cdwallcolor_default;
+
+	if( am_crosshaircolor < am_crosshaircolor_min || am_crosshaircolor > am_crosshaircolor_max )
+		am_crosshaircolor = am_crosshaircolor_default;
+
+	if( am_external != false && am_external != true )
+		am_external = am_external_default;
+
+	if( am_fdwallcolor < am_fdwallcolor_min || am_fdwallcolor > am_fdwallcolor_max )
+		am_fdwallcolor = am_fdwallcolor_default;
+
+	if( am_followmode != false && am_followmode != true )
+		am_followmode = am_followmode_default;
+
+	if( am_grid != false && am_grid != true )
+		am_grid = am_grid_default;
+
+	if( am_gridcolor < am_gridcolor_min || am_gridcolor > am_gridcolor_max )
+		am_gridcolor = am_gridcolor_default;
+
+	if( am_markcolor < am_markcolor_min || am_markcolor > am_markcolor_max )
+		am_markcolor = am_markcolor_default;
+
+	if( am_path != false && am_path != true )
+		am_path = am_path_default;
+
+	if( am_pathcolor < am_pathcolor_min || am_pathcolor > am_pathcolor_max )
+		am_pathcolor = am_pathcolor_default;
+
+	if( am_playercolor < am_playercolor_min || am_playercolor > am_playercolor_max )
+		am_playercolor = am_playercolor_default;
+
+	if( am_rotatemode != false && am_rotatemode != true )
+		am_rotatemode = am_rotatemode_default;
+
+	if( am_teleportercolor < am_teleportercolor_min || am_teleportercolor > am_teleportercolor_max )
+		am_teleportercolor = am_teleportercolor_default;
+
+	if( am_thingcolor < am_thingcolor_min || am_thingcolor > am_thingcolor_max )
+		am_thingcolor = am_thingcolor_default;
+
+	if( am_tswallcolor < am_tswallcolor_min || am_tswallcolor > am_tswallcolor_max )
+		am_tswallcolor = am_tswallcolor_default;
+
+	if( am_wallcolor < am_wallcolor_min || am_wallcolor > am_wallcolor_max )
+		am_wallcolor = am_wallcolor_default;
+
+	if( autoaim != false && autoaim != true )
+		autoaim = autoaim_default;
+
+	if( autoload != false && autoload != true )
+		autoload = autoload_default;
+
+	if( autosave != false && autosave != true )
+		autosave = autosave_default;
+
+	if( autotilt != false && autotilt != true )
+		autotilt = autotilt_default;
+
+	if( autouse != false && autouse != true )
+		autouse = autouse_default;
+
+	if( centerweapon != false && centerweapon != true )
+		centerweapon = centerweapon_default;
+
+	if( con_backcolor < con_backcolor_min || con_backcolor > con_backcolor_max )
+		con_backcolor = con_backcolor_default;
+
+	if( con_edgecolor < con_edgecolor_min || con_edgecolor > con_edgecolor_max )
+		con_edgecolor = con_edgecolor_default;
+
+	if( con_obituaries != false && con_obituaries != true )
+		con_obituaries = con_obituaries_default;
+
+	if( crosshair != crosshair_none && crosshair != crosshair_cross && crosshair != crosshair_dot )
+		crosshair = crosshair_default;
+
+	if( crosshaircolor < crosshaircolor_min || crosshaircolor > crosshaircolor_max )
+		crosshaircolor = crosshaircolor_default;
+
+	episode = BETWEEN( episode_min, episode, episode_max );
+
+	expansion = BETWEEN( expansion_min, expansion, expansion_max );
+
+	if( facebackcolor < facebackcolor_min || facebackcolor > facebackcolor_max )
+		facebackcolor = facebackcolor_default;
+
+	if( fade != false && fade != true )
+		fade = fade_default;
+
+	if( gp_analog != false && gp_analog != true )
+		gp_analog = gp_analog_default;
+
+	gp_deadzone_left = BETWEENF( gp_deadzone_left_min, gp_deadzone_left, gp_deadzone_left_max );
+	I_SetGamepadLeftDeadZone();
+
+	gp_deadzone_right = BETWEENF( gp_deadzone_right_min, gp_deadzone_right, gp_deadzone_right_max );
+	I_SetGamepadRightDeadZone();
+
+	if( gp_invertyaxis != false && gp_invertyaxis != true )
+		gp_invertyaxis = gp_invertyaxis_default;
+
+	gp_sensitivity_horizontal = BETWEEN( gp_sensitivity_horizontal_min, gp_sensitivity_horizontal, gp_sensitivity_horizontal_max );
+	I_SetGamepadHorizontalSensitivity();
+
+	gp_sensitivity_vertical = BETWEEN( gp_sensitivity_vertical_min, gp_sensitivity_vertical, gp_sensitivity_vertical_max );
+	I_SetGamepadVerticalSensitivity();
+
+	if( gp_swapthumbsticks != false && gp_swapthumbsticks != true )
+		gp_swapthumbsticks = gp_swapthumbsticks_default;
+
+	if( gp_thumbsticks < gp_thumbsticks_min || gp_thumbsticks > gp_thumbsticks_max )
+		gp_thumbsticks = gp_thumbsticks_default;
+
+	gp_vibrate_barrels = BETWEEN( gp_vibrate_barrels_min, gp_vibrate_barrels, gp_vibrate_barrels_max );
+
+	gp_vibrate_damage = BETWEEN( gp_vibrate_damage_min, gp_vibrate_damage, gp_vibrate_damage_max );
+
+	gp_vibrate_weapons = BETWEEN( gp_vibrate_weapons_min, gp_vibrate_damage, gp_vibrate_weapons_max );
+
+	if( infighting != false && infighting != true )
+		infighting = infighting_default;
+
+	if( infiniteheight != false && infiniteheight != true )
+		infiniteheight = infiniteheight_default;
+
+	if( !*iwadfolder || M_StringCompare( iwadfolder, iwadfolder_default ) || !M_FolderExists( iwadfolder ) )
+		D_InitIWADFolder();
+
+	if( m_acceleration != false && m_acceleration != true )
+		m_acceleration = m_acceleration_default;
+
+	if( m_doubleclick_use != false && m_doubleclick_use != true )
+		m_doubleclick_use = m_doubleclick_use_default;
+
+	if( m_invertyaxis != false && m_invertyaxis != true )
+		m_invertyaxis = m_invertyaxis_default;
+
+	if( m_novertical != false && m_novertical != true )
+		m_novertical = m_novertical_default;
+
+	m_sensitivity = BETWEEN( m_sensitivity_min, m_sensitivity, m_sensitivity_max );
+
+	if( melt != false && melt != true )
+		melt = melt_default;
+
+	if( messages != false && messages != true )
+		messages = messages_default;
+
+	if( mouselook != false && mouselook != true )
+		mouselook = mouselook_default;
+
+	movebob = BETWEEN( movebob_min, movebob, movebob_max );
+
+	if( !*playername )
+		playername = M_StringDuplicate( playername_default );
+
+	if( r_althud != false && r_althud != true )
+		r_althud = r_althud_default;
+
+	r_berserkintensity = BETWEEN( r_berserkintensity_min, r_berserkintensity, r_berserkintensity_max );
+
+	if( r_blood != r_blood_none && r_blood != r_blood_red && r_blood != r_blood_all && r_blood != r_blood_green
+		&& r_blood != r_blood_nofuzz )
+		r_blood = r_blood_default;
+
 //    r_bloodsplats_max = BETWEEN(r_bloodsplats_max_min, r_bloodsplats_max, r_bloodsplats_max_max);
 //
 //    if (r_bloodsplats_translucency != false && r_bloodsplats_translucency != true)
@@ -1173,22 +1178,22 @@ static default_t cvars[ NUMCVARS ] =
 //
 //    if (weaponrecoil != false && weaponrecoil != true)
 //        weaponrecoil = weaponrecoil_default;
-//}
+}
 //
-////
-//// M_LoadCVARs
-////
-//void M_LoadCVARs(char *filename)
-//{
+//
+// M_LoadCVARs
+//
+void M_LoadCVARs(char *filename)
+{
 //    int     bindcount = 0;
 //    int     cvarcount = 0;
 //    int     statcount = 0;
 //
-//    // read the file in, overriding any set defaults
-//    FILE    *file = fopen(filename, "r");
-//
-//    if (!file)
-//    {
+    // read the file in, overriding any set defaults
+    FILE    *file = fopen(filename, "r");
+
+    if (!file)
+    {
 //        M_CheckCVARs();
 //        M_SaveCVARs();
 //        C_Output("Created <b>%s</b>.", filename);
@@ -1228,7 +1233,7 @@ static default_t cvars[ NUMCVARS ] =
 //
 //        for (int i = 0; i < MAX_MOUSE_BUTTONS + 2; i++)
 //            mouseactionlist[i][0] = '\0';
-//    }
+    }
 //
 //    while (!feof(file))
 //    {
@@ -1377,4 +1382,4 @@ static default_t cvars[ NUMCVARS ] =
 //        free(temp2);
 //        free(temp3);
 //    }
-//}
+}

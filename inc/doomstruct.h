@@ -32,4 +32,19 @@ typedef struct
 	int             stime;
 } wbstartstruct_t;
 
+
+// c_cmds.h
+typedef struct
+{
+	char    name[ 128 ];
+	char    string[ 128 ];
+} alias_t;
+
+typedef enum
+{
+	keyboardcontrol = 1,
+	mousecontrol = 2,
+	gamepadcontrol = 3
+} controltype_t;
+
 #endif
