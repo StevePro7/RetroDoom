@@ -32,7 +32,8 @@ extern dboolean         modifiedgame;
 
 // c_cmds.h
 extern alias_t          aliases[ MAXALIASES ];
-
+extern dboolean         vanilla;
+extern dboolean         togglingvanilla;
 
 // i_video.h
 extern dboolean     returntowidescreen;

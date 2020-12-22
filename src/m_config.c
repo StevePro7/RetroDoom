@@ -1,9 +1,11 @@
 #include "m_config.h"
+#include "d_iwad.h"
 #include "doomdef.h"
 #include "doomenum.h"
 #include "doomstruct.h"
 #include "doomvars.h"
 #include "i_video.h"
+#include "logger.h"
 #include "m_fixed.h"
 #include "m_misc.h"
 
@@ -285,7 +287,6 @@ static dboolean cvarsloaded;
 //dboolean            r_brightmaps = r_brightmaps_default;
 
 
-
 #define NUMCVARS                                                197
 
 #define CONFIG_VARIABLE_INT(name, oldname, cvar, set)           { #name, #oldname, &cvar, DEFAULT_INT32,         set          }
@@ -534,257 +535,260 @@ static void SaveBind( FILE *file, char *control, char *string )
 }
 
 // stevepro TODO we won't rebind for now
-//static void SaveBindByValue( FILE *file, char *action, int value, controltype_t type )
-//{
+static void SaveBindByValue( FILE *file, char *action, int value, controltype_t type )
+{
 //	for( int i = 0; controls[ i ].type; i++ )
 //		if( controls[ i ].type == type && controls[ i ].value == value )
 //		{
 //			SaveBind( file, controls[ i ].control, action );
 //			break;
 //		}
-//}
+}
 
 //
 // M_SaveCVARs
 //
 void M_SaveCVARs(void)
 {
-//    int     numaliases = 0;
-//    FILE    *file;
-//
-//    if (!cvarsloaded || vanilla || togglingvanilla)
-//        return;
-//
-//    if (!(file = fopen(packageconfig, "w")))
-//    {
-//        static dboolean warning;
-//
-//        if (!warning)
-//        {
-//            warning = true;
-//            C_Warning(1, "<b>%s</b> couldn't be saved.", packageconfig);
-//        }
-//
-//        return;
-//    }
-//
-//    if (returntowidescreen)
-//        vid_widescreen = true;
-//
-//    for (int i = 0; i < NUMCVARS; i++)
-//    {
-//        if (!*cvars[i].name)
-//        {
-//            fputs("\n", file);
-//            continue;
-//        }
-//
-//        if (cvars[i].name[0] == ';')
-//        {
-//            fputs(cvars[i].name, file);
-//            continue;
-//        }
-//
-//        // Print the name
-//        fprintf(file, "%s ", cvars[i].name);
-//
-//        // Print the value
-//        switch (cvars[i].type)
-//        {
-//            case DEFAULT_INT32:
-//            {
-//                dboolean    flag = false;
-//                int         v = *(int *)cvars[i].location;
-//
-//                for (int j = 0; *valuealiases[j].text; j++)
-//                    if (v == valuealiases[j].value && cvars[i].valuealiastype == valuealiases[j].type)
-//                    {
-//                        fputs(valuealiases[j].text, file);
-//                        flag = true;
-//                        break;
-//                    }
-//
-//                if (!flag)
-//                {
-//                    char    *temp = commify(v);
-//
-//                    fputs(temp, file);
-//                    free(temp);
-//                }
-//
-//                break;
-//            }
-//
-//            case DEFAULT_UINT64:
-//            {
-//                char    *temp = commify(*(uint64_t *)cvars[i].location);
-//
-//                fputs(temp, file);
-//                free(temp);
-//                break;
-//            }
-//
-//            case DEFAULT_INT32_PERCENT:
-//            {
-//                dboolean    flag = false;
-//                int         v = *(int *)cvars[i].location;
-//
-//                for (int j = 0; *valuealiases[j].text; j++)
-//                    if (v == valuealiases[j].value && cvars[i].valuealiastype == valuealiases[j].type)
-//                    {
-//                        fputs(valuealiases[j].text, file);
-//                        flag = true;
-//                        break;
-//                    }
-//
-//                if (!flag)
-//                {
-//                    char    *temp = commify(v);
-//
-//                    fprintf(file, "%s%%", temp);
-//                    free(temp);
-//                }
-//
-//                break;
-//            }
-//
-//            case DEFAULT_FLOAT:
-//            {
-//                dboolean    flag = false;
-//                float       v = *(float *)cvars[i].location;
-//
-//                for (int j = 0; *valuealiases[j].text; j++)
-//                    if (v == valuealiases[j].value && cvars[i].valuealiastype == valuealiases[j].type)
-//                    {
-//                        fputs(valuealiases[j].text, file);
-//                        flag = true;
-//                        break;
-//                    }
-//
-//                if (!flag)
-//                {
-//                    static char buffer[128];
-//                    int         len;
-//
-//                    M_snprintf(buffer, sizeof(buffer), "%.2f", v);
-//                    len = (int)strlen(buffer);
-//
-//                    if (len >= 2 && buffer[len - 1] == '0' && buffer[len - 2] == '0')
-//                        buffer[len - 1] = '\0';
-//
-//                    fputs(buffer, file);
-//                }
-//
-//                break;
-//            }
-//
-//            case DEFAULT_FLOAT_PERCENT:
-//            {
-//                dboolean    flag = false;
-//                float       v = *(float *)cvars[i].location;
-//
-//                for (int j = 0; *valuealiases[j].text; j++)
-//                    if (v == valuealiases[j].value && cvars[i].valuealiastype == valuealiases[j].type)
-//                    {
-//                        fputs(valuealiases[j].text, file);
-//                        flag = true;
-//                        break;
-//                    }
-//
-//                if (!flag)
-//                {
-//                    char    *temp = striptrailingzero(v, 1);
-//
-//                    fprintf(file, "%s%%", temp);
-//                    free(temp);
-//                }
-//
-//                break;
-//            }
-//
-//            case DEFAULT_STRING:
-//                if (M_StringCompare(*(char **)cvars[i].location, EMPTYVALUE))
-//                    fputs(*(char **)cvars[i].location, file);
-//                else
-//                    fprintf(file, "%s%s%s", (M_StringCompare(cvars[i].name, "version") ? "" : "\""),
-//                        *(char **)cvars[i].location, (M_StringCompare(cvars[i].name, "version") ? "" : "\""));
-//
-//                break;
-//
-//            case DEFAULT_OTHER:
-//                fputs(*(char **)cvars[i].location, file);
-//                break;
-//        }
-//
-//        fputs("\n", file);
-//    }
-//
-//    fputs("\n; bound controls\n", file);
-//
-//    for (int i = 0; *actions[i].action; i++)
-//    {
-//        if (actions[i].keyboard1)
-//            SaveBindByValue(file, actions[i].action, *(int *)actions[i].keyboard1, keyboardcontrol);
-//
-//        if (actions[i].keyboard2)
-//            SaveBindByValue(file, actions[i].action, *(int *)actions[i].keyboard2, keyboardcontrol);
-//
-//        if (actions[i].mouse1)
-//            SaveBindByValue(file, actions[i].action, *(int *)actions[i].mouse1, mousecontrol);
-//
-//        if (actions[i].gamepad1)
-//            SaveBindByValue(file, actions[i].action, *(int *)actions[i].gamepad1, gamepadcontrol);
-//
-//        if (actions[i].gamepad2)
-//            SaveBindByValue(file, actions[i].action, *(int *)actions[i].gamepad2, gamepadcontrol);
-//    }
-//
-//    for (int i = 0; controls[i].type; i++)
-//        if (controls[i].type == keyboardcontrol && keyactionlist[controls[i].value][0])
-//            SaveBind(file, controls[i].control, keyactionlist[controls[i].value]);
-//        else if (controls[i].type == mousecontrol && mouseactionlist[controls[i].value][0])
-//            SaveBind(file, controls[i].control, mouseactionlist[controls[i].value]);
-//
-//    for (int i = 0; i < MAXALIASES; i++)
-//        if (*aliases[i].name)
-//            numaliases++;
-//
-//    if (numaliases)
-//    {
-//        fputs("\n; aliases\n", file);
-//
-//        for (int i = 0; i < MAXALIASES; i++)
-//            if (*aliases[i].name)
-//                fprintf(file, "alias %s \"%s\"\n", aliases[i].name, aliases[i].string);
-//    }
-//
-//    fclose(file);
-//
-//    if (returntowidescreen)
-//        vid_widescreen = false;
-//}
-//
-//// Parses integer values in the configuration file
-//static int ParseIntParameter(char *strparm, int valuealiastype)
-//{
-//    int parm = INT_MAX;
-//
-//    for (int i = 0; *valuealiases[i].text; i++)
-//        if (M_StringCompare(strparm, valuealiases[i].text) && valuealiastype == valuealiases[i].type)
-//            return valuealiases[i].value;
-//
-//    sscanf(strparm, "%10d", &parm);
-//    return parm;
-//}
-//
-//// Parses float values in the configuration file
-//static float ParseFloatParameter(char *strparm, int valuealiastype)
-//{
-//    for (int i = 0; *valuealiases[i].text; i++)
-//        if (M_StringCompare(strparm, valuealiases[i].text) && valuealiastype == valuealiases[i].type)
-//            return (float)valuealiases[i].value;
-//
-//    return (float)atof(strparm);
+	int     numaliases = 0;
+	FILE    *file;
+
+	if( !cvarsloaded || vanilla || togglingvanilla )
+		return;
+
+	if( !( file = fopen( packageconfig, "w" ) ) )
+	{
+		static dboolean warning;
+
+		if( !warning )
+		{
+			warning = true;
+			//stevepro
+			//C_Warning( 1, "<b>%s</b> couldn't be saved.", packageconfig );
+			logd( "<b>%s</b> couldn't be saved.", packageconfig );
+		}
+
+		return;
+	}
+
+    if (returntowidescreen)
+        vid_widescreen = true;
+
+	for( int i = 0; i < NUMCVARS; i++ )
+	{
+		if( !*cvars[ i ].name )
+		{
+			fputs( "\n", file );
+			continue;
+		}
+
+		if( cvars[ i ].name[ 0 ] == ';' )
+		{
+			fputs( cvars[ i ].name, file );
+			continue;
+		}
+
+        // Print the name
+        fprintf(file, "%s ", cvars[i].name);
+
+        // Print the value
+        switch (cvars[i].type)
+        {
+            case DEFAULT_INT32:
+            {
+                dboolean    flag = false;
+                int         v = *(int *)cvars[i].location;
+
+                for (int j = 0; *valuealiases[j].text; j++)
+                    if (v == valuealiases[j].value && cvars[i].valuealiastype == valuealiases[j].type)
+                    {
+                        fputs(valuealiases[j].text, file);
+                        flag = true;
+                        break;
+                    }
+
+                if (!flag)
+                {
+                    char    *temp = commify(v);
+
+                    fputs(temp, file);
+                    free(temp);
+                }
+
+                break;
+            }
+
+            case DEFAULT_UINT64:
+            {
+                char    *temp = commify(*(uint64_t *)cvars[i].location);
+
+                fputs(temp, file);
+                free(temp);
+                break;
+            }
+
+            case DEFAULT_INT32_PERCENT:
+            {
+                dboolean    flag = false;
+                int         v = *(int *)cvars[i].location;
+
+                for (int j = 0; *valuealiases[j].text; j++)
+                    if (v == valuealiases[j].value && cvars[i].valuealiastype == valuealiases[j].type)
+                    {
+                        fputs(valuealiases[j].text, file);
+                        flag = true;
+                        break;
+                    }
+
+                if (!flag)
+                {
+                    char    *temp = commify(v);
+
+                    fprintf(file, "%s%%", temp);
+                    free(temp);
+                }
+
+                break;
+            }
+
+            case DEFAULT_FLOAT:
+            {
+                dboolean    flag = false;
+                float       v = *(float *)cvars[i].location;
+
+                for (int j = 0; *valuealiases[j].text; j++)
+                    if (v == valuealiases[j].value && cvars[i].valuealiastype == valuealiases[j].type)
+                    {
+                        fputs(valuealiases[j].text, file);
+                        flag = true;
+                        break;
+                    }
+
+                if (!flag)
+                {
+                    static char buffer[128];
+                    int         len;
+
+                    M_snprintf(buffer, sizeof(buffer), "%.2f", v);
+                    len = (int)strlen(buffer);
+
+                    if (len >= 2 && buffer[len - 1] == '0' && buffer[len - 2] == '0')
+                        buffer[len - 1] = '\0';
+
+                    fputs(buffer, file);
+                }
+
+                break;
+            }
+
+            case DEFAULT_FLOAT_PERCENT:
+            {
+                dboolean    flag = false;
+                float       v = *(float *)cvars[i].location;
+
+                for (int j = 0; *valuealiases[j].text; j++)
+                    if (v == valuealiases[j].value && cvars[i].valuealiastype == valuealiases[j].type)
+                    {
+                        fputs(valuealiases[j].text, file);
+                        flag = true;
+                        break;
+                    }
+
+                if (!flag)
+                {
+                    char    *temp = striptrailingzero(v, 1);
+
+                    fprintf(file, "%s%%", temp);
+                    free(temp);
+                }
+
+                break;
+            }
+
+            case DEFAULT_STRING:
+                if (M_StringCompare(*(char **)cvars[i].location, EMPTYVALUE))
+                    fputs(*(char **)cvars[i].location, file);
+                else
+                    fprintf(file, "%s%s%s", (M_StringCompare(cvars[i].name, "version") ? "" : "\""),
+                        *(char **)cvars[i].location, (M_StringCompare(cvars[i].name, "version") ? "" : "\""));
+
+                break;
+
+            case DEFAULT_OTHER:
+                fputs(*(char **)cvars[i].location, file);
+                break;
+        }
+
+        fputs("\n", file);
+    }
+
+	fputs( "\n; bound controls\n", file );
+
+	// steveproTODO not going to bind actions + controls
+	//for( int i = 0; *actions[ i ].action; i++ )
+	//{
+	//	if( actions[ i ].keyboard1 )
+	//		SaveBindByValue( file, actions[ i ].action, *( int * ) actions[ i ].keyboard1, keyboardcontrol );
+
+	//	if( actions[ i ].keyboard2 )
+	//		SaveBindByValue( file, actions[ i ].action, *( int * ) actions[ i ].keyboard2, keyboardcontrol );
+
+	//	if( actions[ i ].mouse1 )
+	//		SaveBindByValue( file, actions[ i ].action, *( int * ) actions[ i ].mouse1, mousecontrol );
+
+	//	if( actions[ i ].gamepad1 )
+	//		SaveBindByValue( file, actions[ i ].action, *( int * ) actions[ i ].gamepad1, gamepadcontrol );
+
+	//	if( actions[ i ].gamepad2 )
+	//		SaveBindByValue( file, actions[ i ].action, *( int * ) actions[ i ].gamepad2, gamepadcontrol );
+	//}
+
+	//for( int i = 0; controls[ i ].type; i++ )
+	//	if( controls[ i ].type == keyboardcontrol && keyactionlist[ controls[ i ].value ][ 0 ] )
+	//		SaveBind( file, controls[ i ].control, keyactionlist[ controls[ i ].value ] );
+	//	else if( controls[ i ].type == mousecontrol && mouseactionlist[ controls[ i ].value ][ 0 ] )
+	//		SaveBind( file, controls[ i ].control, mouseactionlist[ controls[ i ].value ] );
+
+	for( int i = 0; i < MAXALIASES; i++ )
+		if( *aliases[ i ].name )
+			numaliases++;
+
+	if( numaliases )
+	{
+		fputs( "\n; aliases\n", file );
+
+		for( int i = 0; i < MAXALIASES; i++ )
+			if( *aliases[ i ].name )
+				fprintf( file, "alias %s \"%s\"\n", aliases[ i ].name, aliases[ i ].string );
+	}
+
+	fclose( file );
+
+	if( returntowidescreen )
+		vid_widescreen = false;
+}
+
+// Parses integer values in the configuration file
+static int ParseIntParameter(char *strparm, int valuealiastype)
+{
+    int parm = INT_MAX;
+
+    for (int i = 0; *valuealiases[i].text; i++)
+        if (M_StringCompare(strparm, valuealiases[i].text) && valuealiastype == valuealiases[i].type)
+            return valuealiases[i].value;
+
+    sscanf(strparm, "%10d", &parm);
+    return parm;
+}
+
+// Parses float values in the configuration file
+static float ParseFloatParameter(char *strparm, int valuealiastype)
+{
+    for (int i = 0; *valuealiases[i].text; i++)
+        if (M_StringCompare(strparm, valuealiases[i].text) && valuealiastype == valuealiases[i].type)
+            return (float)valuealiases[i].value;
+
+    return (float)atof(strparm);
 }
 
 static void M_CheckCVARs(void)
@@ -933,7 +937,7 @@ static void M_CheckCVARs(void)
 		infiniteheight = infiniteheight_default;
 
 	if( !*iwadfolder || M_StringCompare( iwadfolder, iwadfolder_default ) || !M_FolderExists( iwadfolder ) )
-		//D_InitIWADFolder();
+		D_InitIWADFolder();
 
 	if( m_acceleration != false && m_acceleration != true )
 		m_acceleration = m_acceleration_default;
@@ -1189,28 +1193,31 @@ static void M_CheckCVARs(void)
 //
 void M_LoadCVARs(char *filename)
 {
-//    int     bindcount = 0;
-//    int     cvarcount = 0;
-//    int     statcount = 0;
-//
+	int     bindcount = 0;
+	int     cvarcount = 0;
+	int     statcount = 0;
+
     // read the file in, overriding any set defaults
     FILE    *file = fopen(filename, "r");
 
     if (!file)
     {
-//        M_CheckCVARs();
-//        M_SaveCVARs();
+        M_CheckCVARs();
+        M_SaveCVARs();
+
+		// stevepro
+		logd( "Created <b>%s</b>.", filename );
 //        C_Output("Created <b>%s</b>.", filename);
-//        cvarsloaded = true;
-//        return;
-//    }
-//
-//    for (int i = 0; i < MAXALIASES; i++)
-//    {
-//        aliases[i].name[0] = '\0';
-//        aliases[i].string[0] = '\0';
-//    }
-//
+        cvarsloaded = true;
+        return;
+    }
+
+    for (int i = 0; i < MAXALIASES; i++)
+    {
+        aliases[i].name[0] = '\0';
+        aliases[i].string[0] = '\0';
+    }
+
 //    // Clear all default controls before reading them from config file
 //    if (!togglingvanilla && M_StringEndsWith(filename, PACKAGE_CONFIG))
 //    {
@@ -1237,7 +1244,7 @@ void M_LoadCVARs(char *filename)
 //
 //        for (int i = 0; i < MAX_MOUSE_BUTTONS + 2; i++)
 //            mouseactionlist[i][0] = '\0';
-    }
+//    }
 //
 //    while (!feof(file))
 //    {

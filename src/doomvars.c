@@ -25,6 +25,9 @@ dboolean        modifiedgame;
 
 // c_cmds.c
 alias_t             aliases[ MAXALIASES ];
+dboolean            togglingvanilla = false;
+dboolean            vanilla = false;
+
 
 // i_video.c
 dboolean            returntowidescreen;

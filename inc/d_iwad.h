@@ -10,6 +10,6 @@ char *D_FindIWAD(void);
 //void D_IdentifyVersion(void);
 //void D_SetGameDescription(void);
 void D_IdentifyIWADByName(char *name);
-//void D_InitIWADFolder(void);
+void D_InitIWADFolder(void);
 
 #endif

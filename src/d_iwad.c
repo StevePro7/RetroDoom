@@ -602,50 +602,50 @@ char *D_FindWADByName(char *filename)
     return NULL;
 }
 
-//void D_InitIWADFolder(void)
-//{
-//#if defined(_WIN32)
-//    char    path[MAX_PATH];
-//#endif
+void D_InitIWADFolder(void)
+{
+#if defined(_WIN32)
+    char    path[MAX_PATH];
+#endif
+
+    BuildIWADDirList();
+
+    for (int i = 0; i < num_iwad_dirs; i++)
+        if (M_FolderExists(iwad_dirs[i]))
+        {
+            iwadfolder = M_StringDuplicate(iwad_dirs[i]);
+            strreplace(iwadfolder, "/", "\\");
+            break;
+        }
+
+#if defined(_WIN32)
+    M_snprintf(path, sizeof(path), "%s" DIR_SEPARATOR_S "DOOM.WAD", iwadfolder);
+
+    if (M_FileExists(path))
+        wad = "DOOM.WAD";
+    else
+    {
+        M_snprintf(path, sizeof(path), "%s" DIR_SEPARATOR_S "DOOM2.WAD", iwadfolder);
+
+        if (M_FileExists(path))
+            wad = "DOOM2.WAD";
+    }
+#endif
+}
+
 //
-//    BuildIWADDirList();
+// D_TryWADByName
 //
-//    for (int i = 0; i < num_iwad_dirs; i++)
-//        if (M_FolderExists(iwad_dirs[i]))
-//        {
-//            iwadfolder = M_StringDuplicate(iwad_dirs[i]);
-//            strreplace(iwadfolder, "/", "\\");
-//            break;
-//        }
+// Searches for a WAD by its filename, or passes through the filename
+// if not found.
 //
-//#if defined(_WIN32)
-//    M_snprintf(path, sizeof(path), "%s" DIR_SEPARATOR_S "DOOM.WAD", iwadfolder);
-//
-//    if (M_FileExists(path))
-//        wad = "DOOM.WAD";
-//    else
-//    {
-//        M_snprintf(path, sizeof(path), "%s" DIR_SEPARATOR_S "DOOM2.WAD", iwadfolder);
-//
-//        if (M_FileExists(path))
-//            wad = "DOOM2.WAD";
-//    }
-//#endif
-//}
-//
-////
-//// D_TryWADByName
-////
-//// Searches for a WAD by its filename, or passes through the filename
-//// if not found.
-////
-//char *D_TryFindWADByName(char *filename)
-//{
-//    char    *result = D_FindWADByName(filename);
-//
-//    return (result ? result : filename);
-//}
-//
+char *D_TryFindWADByName(char *filename)
+{
+    char    *result = D_FindWADByName(filename);
+
+    return (result ? result : filename);
+}
+
 ////
 //// FindIWAD
 //// Checks availability of IWAD files by name,
