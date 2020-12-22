@@ -16,6 +16,7 @@
 #include "doomdef.h"
 #include "doomtype.h"
 #include "doomvars.h"
+#include "g_game.h"
 #include "m_argv.h"
 #include "m_config.h"
 #include "m_fixed.h"
@@ -136,6 +137,35 @@ static void D_DoomMainSetup( void )
 
 	//if( ( devparm = M_CheckParm( "-devparm" ) ) )
 	//	C_Output( "A <b>-devparm</b> parameter was found on the command-line. %s", s_D_DEVSTR );
+
+	// turbo option
+	//if( ( p = M_CheckParm( "-turbo" ) ) )
+	//{
+	//	int scale = 200;
+
+	//	if( p < myargc - 1 )
+	//	{
+	//		scale = atoi( myargv[ p + 1 ] );
+
+	//		if( scale >= 10 && scale <= 400 && scale != 100 )
+	//			C_Output( "A <b>-turbo</b> parameter was found on the command-line. The player will be %i%% their normal speed.", scale );
+	//		else
+	//			scale = 100;
+	//	}
+	//	else
+	//		C_Output( "A <b>-turbo</b> parameter was found on the command-line. The player will be twice as fast." );
+
+	//	if( scale != 100 )
+	//		G_SetMovementSpeed( scale );
+
+	//	if( scale > turbo_default )
+	//	{
+	//		stat_cheated = SafeAdd( stat_cheated, 1 );
+	//		M_SaveCVARs();
+	//	}
+	//}
+	//else
+	//	G_SetMovementSpeed( turbo );
 }
 
 //

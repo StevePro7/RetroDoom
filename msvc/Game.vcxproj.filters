@@ -159,6 +159,9 @@
     <ClCompile Include="..\src\c_console2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\g_game.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -308,6 +311,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\c_console2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\g_game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
