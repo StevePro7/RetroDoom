@@ -68,6 +68,7 @@
     <ClCompile Include="..\src\tables.c" />
     <ClCompile Include="..\src\version.c" />
     <ClCompile Include="..\src\v_data.c" />
+    <ClCompile Include="..\src\v_video.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc" />
@@ -122,6 +123,7 @@
     <ClInclude Include="..\inc\tables.h" />
     <ClInclude Include="..\inc\version.h" />
     <ClInclude Include="..\inc\v_data.h" />
+    <ClInclude Include="..\inc\v_video.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{63EBE55D-973D-460A-B009-3E0BAE9C8196}</ProjectGuid>

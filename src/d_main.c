@@ -21,6 +21,7 @@
 #include "m_config.h"
 #include "m_fixed.h"
 #include "m_misc.h"
+#include "v_video.h"
 #include "version.h"
 
 #if !defined(_WIN32)
@@ -166,6 +167,9 @@ static void D_DoomMainSetup( void )
 	//}
 	//else
 	//	G_SetMovementSpeed( turbo );
+
+	// init subsystems
+	V_Init();
 }
 
 //
