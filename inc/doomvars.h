@@ -924,4 +924,10 @@ extern state_t  states[ NUMSTATES ];
 // p_pspr.h
 extern dboolean skippsprinterp;
 
+
+// w_wad.h
+extern lumpinfo_t   **lumpinfo;
+extern int          numlumps;
+
+
 #endif

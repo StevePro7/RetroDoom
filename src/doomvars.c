@@ -1754,3 +1754,9 @@ state_t  states[ NUMSTATES ];
 
 // p_pspr.c
 dboolean        skippsprinterp;
+
+
+// w_wad.c
+// Location of each lump on disk.
+lumpinfo_t  **lumpinfo;
+int         numlumps;

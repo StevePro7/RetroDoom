@@ -9,6 +9,7 @@
 
 //extern state_t  states[ NUMSTATES ];
 
+// steveproTODO	delete??
 void foo_states();
 
 #endif
