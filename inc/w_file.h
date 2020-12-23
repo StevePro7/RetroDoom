@@ -1,6 +1,7 @@
 #if !defined(__W_FILE_H__)
 #define __W_FILE_H__
 
+#include "doomstruct.h"
 #include "doomtype.h"
 #include <stdio.h>
 
@@ -12,15 +13,15 @@
 #define MAX_PATH    260
 #endif
 
-typedef struct wadfile_s wadfile_t;
-
-struct wadfile_s
-{
-    FILE        *fstream;
-    dboolean    freedoom;
-    char        path[MAX_PATH];
-    int         type;
-};
+//typedef struct wadfile_s wadfile_t;
+//
+//struct wadfile_s
+//{
+//    FILE        *fstream;
+//    dboolean    freedoom;
+//    char        path[MAX_PATH];
+//    int         type;
+//};
 
 // Open the specified file. Returns a pointer to a new wadfile_t
 // handle for the WAD file, or NULL if it could not be opened.

@@ -295,17 +295,17 @@ void I_Error(const char *error, ...)
     exit(-1);
 }
 
-////
-//// I_Realloc
-////
-//void *I_Realloc(void *ptr, size_t size)
-//{
-//    void    *newp = realloc(ptr, size);
 //
-//    if (!newp && size)
-//        I_Error("I_Realloc: Failure trying to reallocate %zu bytes", size);
+// I_Realloc
 //
-//    ptr = newp;
-//
-//    return ptr;
-//}
+void *I_Realloc(void *ptr, size_t size)
+{
+    void    *newp = realloc(ptr, size);
+
+    if (!newp && size)
+        I_Error("I_Realloc: Failure trying to reallocate %zu bytes", size);
+
+    ptr = newp;
+
+    return ptr;
+}

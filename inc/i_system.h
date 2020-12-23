@@ -1,7 +1,7 @@
 #if !defined(__I_SYSTEM_H__)
 #define __I_SYSTEM_H__
 
-//#include "d_event.h"
+#include "stdlib.h"
 
 #if defined(_WIN32)
 #define WINDOWS     "Windows"
@@ -31,6 +31,6 @@ void I_Error(const char *error, ...);
 //void I_PrintWindowsVersion(void);
 //void I_PrintSystemInfo(void);
 //
-//void *I_Realloc(void *ptr, size_t size);
+void *I_Realloc(void *ptr, size_t size);
 
 #endif
