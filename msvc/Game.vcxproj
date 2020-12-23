@@ -69,6 +69,9 @@
     <ClCompile Include="..\src\version.c" />
     <ClCompile Include="..\src\v_data.c" />
     <ClCompile Include="..\src\v_video.c" />
+    <ClCompile Include="..\src\w_file.c" />
+    <ClCompile Include="..\src\w_wad.c" />
+    <ClCompile Include="..\src\z_zone.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc" />
@@ -124,6 +127,9 @@
     <ClInclude Include="..\inc\version.h" />
     <ClInclude Include="..\inc\v_data.h" />
     <ClInclude Include="..\inc\v_video.h" />
+    <ClInclude Include="..\inc\w_file.h" />
+    <ClInclude Include="..\inc\w_wad.h" />
+    <ClInclude Include="..\inc\z_zone.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{63EBE55D-973D-460A-B009-3E0BAE9C8196}</ProjectGuid>

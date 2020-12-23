@@ -2469,4 +2469,21 @@ enum
 	CF_READONLY = 128
 };
 
+
+// z_zone.h
+//
+// ZONE MEMORY
+// PU - purge tags.
+//
+enum
+{
+	PU_FREE,       // a free block
+	PU_STATIC,     // static entire execution time
+	PU_LEVEL,      // static until level exited
+	PU_LEVSPEC,    // a special thinker in a level
+	PU_CACHE,
+	PU_MAX         // Must always be last -- killough
+};
+
+
 #endif

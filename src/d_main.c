@@ -156,6 +156,18 @@ static void D_ProcessDehCommandLine( void )
 	}
 }
 
+static dboolean D_CheckParms( void )
+{
+	dboolean    result = false;
+
+	if( myargc == 2 && M_StringEndsWith( myargv[ 1 ], ".wad" ) )
+	{
+		// steveproTODO	ripped out all of this logic 
+	}
+
+	return result;
+}
+
 
 //
 // D_DoomLoop
@@ -173,7 +185,7 @@ static void D_DoomLoop(void)
 static void D_DoomMainSetup( void )
 {
 	int     p = M_CheckParmWithArgs( "-config", 1, 1 );
-	//int     choseniwad = 0;
+	int     choseniwad = 0;
 	//char    lumpname[ 6 ];
 	char    *appdatafolder = M_GetAppDataFolder();
 	char    *iwadfile;
@@ -317,6 +329,153 @@ static void D_DoomMainSetup( void )
 
 	p = M_CheckParmsWithArgs( "-file", "-pwad", "-merge", 1, 1 );
 
+//	if( !( choseniwad = D_CheckParms() ) )
+//	{
+//		if( iwadfile )
+//		{
+//			startuptimer = I_GetTimeMS();
+//
+//			if( W_AddFile( iwadfile, false ) )
+//				stat_runs = SafeAdd( stat_runs, 1 );
+//		}
+//		else if( !p )
+//		{
+//#if defined(_WIN32) || defined(__APPLE__)
+//			do
+//			{
+//				if( ( choseniwad = D_OpenWADLauncher() ) == -1 )
+//					I_Quit( false );
+//#if defined(_WIN32)
+//				else if( !choseniwad && !error && ( !*wad || M_StringEndsWith( wad, ".wad" ) ) )
+//#else
+//				else if( !choseniwad && !error )
+//#endif
+//				{
+//					char    buffer[ 256 ];
+//
+//#if defined(_WIN32)
+//					M_snprintf( buffer, sizeof( buffer ), PACKAGE_NAME " couldn't find %s.", ( *wad ? wad : "any IWADs" ) );
+//
+//					if( previouswad )
+//						wad = M_StringDuplicate( previouswad );
+//#else
+//					M_snprintf( buffer, sizeof( buffer ), PACKAGE_NAME " couldn't find any IWADs." );
+//#endif
+//
+//					SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_WARNING, PACKAGE_NAME, buffer, NULL );
+//				}
+//			} while( !choseniwad );
+//#endif
+//
+//			stat_runs = SafeAdd( stat_runs, 1 );
+//		}
+//	}
+//
+//	M_SaveCVARs();
+//
+//#if defined(_WIN32)
+//	if( keyboardscreenshot == KEY_PRINTSCREEN )
+//	{
+//		RegisterHotKey( NULL, 1, MOD_ALT, VK_SNAPSHOT );
+//		RegisterHotKey( NULL, 2, 0, VK_SNAPSHOT );
+//	}
+//#endif
+//
+//	if( p > 0 )
+//		do
+//		{
+//			for( p = p + 1; p < myargc && myargv[ p ][ 0 ] != '-'; p++ )
+//			{
+//				char    *file = D_TryFindWADByName( myargv[ p ] );
+//
+//				if( iwadfile )
+//				{
+//					D_CheckSupportedPWAD( file );
+//
+//					if( W_MergeFile( file, false ) )
+//					{
+//						modifiedgame = true;
+//
+//						if( IWADRequiredByPWAD( file ) != none )
+//							pwadfile = M_StringDuplicate( leafname( file ) );
+//					}
+//				}
+//				else
+//				{
+//					GameMission_t   iwadrequired = IWADRequiredByPWAD( file );
+//					char            fullpath[ MAX_PATH ];
+//					char            *folder = M_ExtractFolder( file );
+//
+//					if( iwadrequired == none )
+//						iwadrequired = doom2;
+//
+//					// try the current folder first
+//					M_snprintf( fullpath, sizeof( fullpath ), "%s" DIR_SEPARATOR_S "%s", folder, iwadsrequired[ iwadrequired ] );
+//					D_IdentifyIWADByName( fullpath );
+//
+//					if( W_AddFile( fullpath, true ) )
+//					{
+//						iwadfile = M_StringDuplicate( fullpath );
+//						iwadfolder = M_StringDuplicate( folder );
+//						D_CheckSupportedPWAD( file );
+//
+//						if( W_MergeFile( file, false ) )
+//						{
+//							modifiedgame = true;
+//
+//							if( IWADRequiredByPWAD( file ) != none )
+//								pwadfile = M_StringDuplicate( leafname( file ) );
+//						}
+//					}
+//					else
+//					{
+//						// otherwise try the iwadfolder CVAR
+//						M_snprintf( fullpath, sizeof( fullpath ), "%s" DIR_SEPARATOR_S "%s", iwadfolder, iwadsrequired[ iwadrequired ] );
+//						D_IdentifyIWADByName( fullpath );
+//
+//						if( W_AddFile( fullpath, true ) )
+//						{
+//							iwadfile = M_StringDuplicate( fullpath );
+//							D_CheckSupportedPWAD( file );
+//
+//							if( W_MergeFile( file, false ) )
+//							{
+//								modifiedgame = true;
+//
+//								if( IWADRequiredByPWAD( file ) != none )
+//									pwadfile = M_StringDuplicate( leafname( file ) );
+//							}
+//						}
+//						else
+//						{
+//							// still nothing? try some common installation folders
+//							if( W_AddFile( D_FindWADByName( iwadsrequired[ iwadrequired ] ), true ) )
+//							{
+//								iwadfile = M_StringDuplicate( fullpath );
+//								D_CheckSupportedPWAD( file );
+//
+//								if( W_MergeFile( file, false ) )
+//								{
+//									modifiedgame = true;
+//
+//									if( IWADRequiredByPWAD( file ) != none )
+//										pwadfile = M_StringDuplicate( leafname( file ) );
+//								}
+//							}
+//						}
+//					}
+//
+//					free( folder );
+//				}
+//
+//			}
+//		} while( ( p = M_CheckParmsWithArgs( "-file", "-pwad", "-merge", 1, p ) ) );
+//
+//		if( !iwadfile && !modifiedgame && !choseniwad )
+//			I_Error( PACKAGE_NAME " couldn't find any IWADs." );
+
+	
+//W_Init();
 }
 
 //

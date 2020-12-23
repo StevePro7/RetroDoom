@@ -1,5 +1,6 @@
-#include "i_system.h"
 #include "z_zone.h"
+#include "i_system.h"
+#include <stdlib.h>
 
 // Minimum chunk size at which blocks are allocated
 #define CHUNK_SIZE  32
@@ -43,8 +44,11 @@ void *Z_Malloc(size_t size, int tag, void **user)
 
     while (!(block = malloc(size + headersize)))
     {
-        if (!blockbytag[PU_CACHE])
-            I_Error("Z_Malloc: Failure trying to allocate %lu bytes", (unsigned long)size);
+		if( !blockbytag[ PU_CACHE ] )
+		{
+			I_Error( "Z_Malloc: Failure trying to allocate %lu bytes", ( unsigned long ) size );
+		}
+            
 
         Z_FreeTags(PU_CACHE, PU_CACHE);
     }

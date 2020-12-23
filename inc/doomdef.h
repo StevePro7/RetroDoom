@@ -881,4 +881,7 @@
 #define DIVIDERSTRING   "===================================================================================================="
 
 
+// z_zone.h
+#define PU_PURGELEVEL    PU_CACHE    // First purgeable tag's level
+
 #endif

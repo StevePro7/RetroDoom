@@ -165,6 +165,15 @@
     <ClCompile Include="..\src\c_cmds.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\w_wad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\w_file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\z_zone.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -320,6 +329,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\c_cmds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\w_wad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\w_file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\z_zone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
