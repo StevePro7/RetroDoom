@@ -896,6 +896,13 @@
 #define PWAD 2
 
 
+// p_pspr.h
+//
+// Frame flags:
+// handles maximum brightness (torches, muzzle flare, light sources)
+//
+#define FF_FULLBRIGHT   0x8000  // flag in thing->frame
+#define FF_FRAMEMASK    0x7FFF
 
 
 #endif

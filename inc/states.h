@@ -1,11 +1,11 @@
 #if !defined(__STATES_H__)
 #define __STATES_H__
 
-#include "doomenum.h"
+//#include "doomenum.h"
 #include "doomstruct.h"
-#include "doomtype.h"
-#include "d_think.h"
-#include "sprites.h"
+//#include "doomtype.h"
+//#include "d_think.h"
+//#include "sprites.h"
 
 //typedef enum
 //{
@@ -1135,4 +1135,6 @@
 //} state_t;
 
 extern state_t  states[ NUMSTATES ];
+
+
 #endif
