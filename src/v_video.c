@@ -17,7 +17,7 @@
 //#include "doomstat.h"
 //#include "hu_lib.h"
 //#include "i_colors.h"
-//#include "i_swap.h"
+#include "i_swap.h"
 //#include "i_system.h"
 //#include "m_argv.h"
 //#include "m_config.h"
@@ -451,50 +451,50 @@ dboolean    r_supersampling = r_supersampling_default;
 //        }
 //    }
 //}
-//
-//void V_DrawConsoleOutputTextPatch(int x, int y, patch_t *patch, int width, int color,
-//    int backgroundcolor, dboolean italics, byte *translucency)
-//{
-//    byte        *desttop = &screens[0][y * SCREENWIDTH + x];
-//    const int   italicize[] = { 2, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0, -1, -1, -1 };
-//
-//    for (int col = 0; col < width; col++, desttop++)
-//    {
-//        column_t    *column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
-//        byte        topdelta;
-//
-//        // step through the posts in a column
-//        while ((topdelta = column->topdelta) != 0xFF)
-//        {
-//            byte    *source = (byte *)column + 3;
-//            byte    *dest = &desttop[topdelta * SCREENWIDTH];
-//
-//            for (int i = 0; i < CONSOLELINEHEIGHT; i++)
-//            {
-//                if (y + i >= CONSOLETOP && *source)
-//                {
-//                    byte    *dot = dest;
-//
-//                    if (italics)
-//                        dot += italicize[i];
-//
-//                    *dot = (!translucency ? color : translucency[(color << 8) + *dot]);
-//
-//                    if (!(y + i))
-//                        *dot = tinttab50[*dot];
-//                    else if (y + i == 1)
-//                        *dot = tinttab25[*dot];
-//                }
-//
-//                source++;
-//                dest += SCREENWIDTH;
-//            }
-//
-//            column = (column_t *)((byte *)column + CONSOLELINEHEIGHT + 4);
-//        }
-//    }
-//}
-//
+
+void V_DrawConsoleOutputTextPatch(int x, int y, patch_t *patch, int width, int color,
+    int backgroundcolor, dboolean italics, byte *translucency)
+{
+    byte        *desttop = &screens[0][y * SCREENWIDTH + x];
+    const int   italicize[] = { 2, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0, -1, -1, -1 };
+
+    for (int col = 0; col < width; col++, desttop++)
+    {
+        column_t    *column = (column_t *)((byte *)patch + LONG(patch->columnofs[col]));
+        byte        topdelta;
+
+        // step through the posts in a column
+        while ((topdelta = column->topdelta) != 0xFF)
+        {
+            byte    *source = (byte *)column + 3;
+            byte    *dest = &desttop[topdelta * SCREENWIDTH];
+
+            for (int i = 0; i < CONSOLELINEHEIGHT; i++)
+            {
+                if (y + i >= CONSOLETOP && *source)
+                {
+                    byte    *dot = dest;
+
+                    if (italics)
+                        dot += italicize[i];
+
+                    *dot = (!translucency ? color : translucency[(color << 8) + *dot]);
+
+                    if (!(y + i))
+                        *dot = tinttab50[*dot];
+                    else if (y + i == 1)
+                        *dot = tinttab25[*dot];
+                }
+
+                source++;
+                dest += SCREENWIDTH;
+            }
+
+            column = (column_t *)((byte *)column + CONSOLELINEHEIGHT + 4);
+        }
+    }
+}
+
 //void V_DrawConsolePatch(int x, int y, patch_t *patch, int color)
 //{
 //    byte        *desttop = &screens[0][y * SCREENWIDTH + x];

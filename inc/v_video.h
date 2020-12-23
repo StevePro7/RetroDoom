@@ -1,6 +1,7 @@
 #if !defined(__V_VIDEO_H__)
 #define __V_VIDEO_H__
 
+#include "doomstruct.h"
 #include "doomtype.h"
 //#include "r_data.h"
 //#include "w_file.h"
@@ -36,8 +37,8 @@ void V_Init(void);
 //void V_DrawConsoleBrandingPatch(int x, int y, patch_t *patch, int color);
 //void V_DrawConsoleInputTextPatch(int x, int y, patch_t *patch, int width, int color,
 //    int backgroundcolor, dboolean italics, byte *translucency);
-//void V_DrawConsoleOutputTextPatch(int x, int y, patch_t *patch, int width, int color,
-//    int backgroundcolor, dboolean italics, byte *translucency);
+void V_DrawConsoleOutputTextPatch(int x, int y, patch_t *patch, int width, int color,
+    int backgroundcolor, dboolean italics, byte *translucency);
 //void V_DrawShadowPatch(int x, int y, patch_t *patch);
 //void V_DrawSolidShadowPatch(int x, int y, patch_t *patch);
 //void V_DrawSpectreShadowPatch(int x, int y, patch_t *patch);

@@ -931,6 +931,10 @@ extern lumpinfo_t   **lumpinfo;
 extern int          numlumps;
 
 
+// c_console.h
+extern dboolean         consoleactive;
+
+
 // c_console.c
 extern int              framespersecond;
 extern int              refreshrate;
@@ -991,6 +995,14 @@ extern patch_t  *brdr_tl;
 extern patch_t  *brdr_tr;
 extern patch_t  *brdr_bl;
 extern patch_t  *brdr_br;
+
+
+// c_cmds.c
+//
+// vid_showfps CVAR
+//
+extern uint64_t starttime;
+extern int      frames;
 
 
 #endif

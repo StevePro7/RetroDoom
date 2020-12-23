@@ -33,7 +33,7 @@ void I_SetPalette(byte *playpal);
 //void I_SetSimplePalette(byte *playpal);
 //void I_SetPaletteWithBrightness(byte *playpal, double brightness);
 //
-//void I_UpdateBlitFunc(dboolean shake);
+void I_UpdateBlitFunc(dboolean shake);
 void I_CreateExternalAutomap(int outputlevel);
 //void I_DestroyExternalAutomap(void);
 //
@@ -43,9 +43,9 @@ void I_CreateExternalAutomap(int outputlevel);
 
 void I_SetGamma(float value);
 
-//#if defined(_WIN32)
-//void I_WindowResizeBlit(void);
-//#endif
+#if defined(_WIN32)
+void I_WindowResizeBlit(void);
+#endif
 
 extern void (*blitfunc)(void);
 extern void (*mapblitfunc)(void);

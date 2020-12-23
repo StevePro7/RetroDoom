@@ -114,7 +114,8 @@ dboolean            respawnmonsters;        // checkparm of -respawn
 dboolean            returntowidescreen;
 int                 framespersecond;
 int                 refreshrate;
-
+uint64_t        starttime;
+int             frames;// = -1;
 
 
 
@@ -213,10 +214,16 @@ dboolean        r_liquid_lowerview = r_liquid_lowerview_default;
 int             r_shake_damage = r_shake_damage_default;
 int             stillbob = stillbob_default;
 
+
 // c_console.c
+dboolean                consoleactive;
+
+// c_console.c
+// steveproTODO		set default value in c_console.c
 int                     con_backcolor = con_backcolor_default;
 int                     con_edgecolor = con_edgecolor_default;
 int                     warninglevel = warninglevel_default;
+
 
 // p_inter.c
 dboolean        con_obituaries = con_obituaries_default;

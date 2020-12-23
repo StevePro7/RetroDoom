@@ -186,6 +186,9 @@
     <ClCompile Include="..\src\st_stuff.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\c_console.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -362,6 +365,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\st_stuff.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\c_console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

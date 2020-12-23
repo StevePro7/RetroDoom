@@ -19,7 +19,7 @@
 
 #include "doomtype.h"
 
-//#include "c_console.h"
+#include "c_console.h"
 //#include "d_deh.h"
 //#include "d_main.h"
 //#include "doomstat.h"
@@ -27,13 +27,12 @@
 #include "i_colors.h"
 //#include "i_gamepad.h"
 #include "i_system.h"
-//#include "i_timer.h"
+#include "i_timer.h"
 #include "logger.h"
 //#include "m_cheat.h"
 #include "m_config.h"
-
 #include "m_misc.h"
-//#include "m_random.h"
+#include "m_random.h"
 //#include "r_main.h"
 //#include "s_sound.h"
 //#include "st_stuff.h"
@@ -765,26 +764,26 @@ void I_ShutdownKeyboard( void )
 //    I_ReadMouse();
 //    I_UpdateGamepadVibration();
 //}
-//
-//static void UpdateGrab(void)
-//{
-//    dboolean        grab = MouseShouldBeGrabbed();
-//    static dboolean currently_grabbed;
-//
-//    if (grab == currently_grabbed)
-//        return;
-//
-//    if (grab && !currently_grabbed)
-//        SetShowCursor(false);
-//    else if (!grab && currently_grabbed)
-//    {
-//        SetShowCursor(true);
-//        SDL_WarpMouseInWindow(window, windowwidth - 10 * windowwidth / SCREENWIDTH, windowheight - 16);
-//        SDL_GetRelativeMouseState(NULL, NULL);
-//    }
-//
-//    currently_grabbed = grab;
-//}
+
+static void UpdateGrab( void )
+{
+	dboolean        grab = MouseShouldBeGrabbed();
+	static dboolean currently_grabbed;
+
+	if( grab == currently_grabbed )
+		return;
+
+	if( grab && !currently_grabbed )
+		SetShowCursor( false );
+	else if( !grab && currently_grabbed )
+	{
+		SetShowCursor( true );
+		SDL_WarpMouseInWindow( window, windowwidth - 10 * windowwidth / SCREENWIDTH, windowheight - 16 );
+		SDL_GetRelativeMouseState( NULL, NULL );
+	}
+
+	currently_grabbed = grab;
+}
 
 static void GetUpscaledTextureSize( int width, int height )
 {
@@ -806,158 +805,153 @@ static void nullfunc( void ) {}
 
 static uint64_t performancefrequency;
 //uint64_t        starttime;
-//int             frames = -1;
-//
-//static void CalculateFPS(void)
-//{
-//    uint64_t    currenttime = SDL_GetPerformanceCounter();
-//
-//    frames++;
-//
-//    if (starttime < currenttime - performancefrequency)
-//    {
-//        framespersecond = frames;
-//        frames = 0;
-//        starttime = currenttime;
-//    }
-//
-//    if (framespersecond)
-//        C_UpdateFPS();
-//}
-//
-//#if defined(_WIN32)
+int             frames = -1;
 
-// stevepro
-void I_WindowResizeBlit( void )
+static void CalculateFPS( void )
 {
+	uint64_t    currenttime = SDL_GetPerformanceCounter();
+
+	frames++;
+
+	if( starttime < currenttime - performancefrequency )
+	{
+		framespersecond = frames;
+		frames = 0;
+		starttime = currenttime;
+	}
+
+	if( framespersecond )
+		C_UpdateFPS();
 }
-//void I_WindowResizeBlit(void)
-//{
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//
-//    if (nearestlinear)
-//    {
-//        SDL_SetRenderTarget(renderer, texture_upscaled);
-//        SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//        SDL_SetRenderTarget(renderer, NULL);
-//        SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
-//    }
-//    else
-//        SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//
-//    SDL_RenderPresent(renderer);
-//}
-//#endif
-//
-//static void I_Blit(void)
-//{
-//    UpdateGrab();
-//
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//    SDL_RenderPresent(renderer);
-//}
-//
-//static void I_Blit_NearestLinear(void)
-//{
-//    UpdateGrab();
-//
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//    SDL_SetRenderTarget(renderer, texture_upscaled);
-//    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//    SDL_SetRenderTarget(renderer, NULL);
-//    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
-//    SDL_RenderPresent(renderer);
-//}
-//
-//static void I_Blit_ShowFPS(void)
-//{
-//    UpdateGrab();
-//    CalculateFPS();
-//
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//    SDL_RenderPresent(renderer);
-//}
-//
-//static void I_Blit_NearestLinear_ShowFPS(void)
-//{
-//    UpdateGrab();
-//    CalculateFPS();
-//
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//    SDL_SetRenderTarget(renderer, texture_upscaled);
-//    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//    SDL_SetRenderTarget(renderer, NULL);
-//    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
-//    SDL_RenderPresent(renderer);
-//}
-//
-//static void I_Blit_Shake(void)
-//{
-//    UpdateGrab();
-//
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//    SDL_RenderCopyEx(renderer, texture, &src_rect, NULL, SHAKEANGLE, NULL, SDL_FLIP_NONE);
-//    SDL_RenderPresent(renderer);
-//}
-//
-//static void I_Blit_NearestLinear_Shake(void)
-//{
-//    UpdateGrab();
-//
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//    SDL_SetRenderTarget(renderer, texture_upscaled);
-//    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//    SDL_RenderCopyEx(renderer, texture, &src_rect, NULL, SHAKEANGLE, NULL, SDL_FLIP_NONE);
-//    SDL_SetRenderTarget(renderer, NULL);
-//    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
-//    SDL_RenderPresent(renderer);
-//}
-//
-//static void I_Blit_ShowFPS_Shake(void)
-//{
-//    UpdateGrab();
-//    CalculateFPS();
-//
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//    SDL_RenderCopyEx(renderer, texture, &src_rect, NULL, SHAKEANGLE, NULL, SDL_FLIP_NONE);
-//    SDL_RenderPresent(renderer);
-//}
-//
-//static void I_Blit_NearestLinear_ShowFPS_Shake(void)
-//{
-//    UpdateGrab();
-//    CalculateFPS();
-//
-//    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
-//    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
-//    SDL_RenderClear(renderer);
-//    SDL_SetRenderTarget(renderer, texture_upscaled);
-//    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
-//    SDL_RenderCopyEx(renderer, texture, &src_rect, NULL, SHAKEANGLE, NULL, SDL_FLIP_NONE);
-//    SDL_SetRenderTarget(renderer, NULL);
-//    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
-//    SDL_RenderPresent(renderer);
-//}
+
+#if defined(_WIN32)
+void I_WindowResizeBlit(void)
+{
+    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
+    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
+    SDL_RenderClear(renderer);
+
+    if (nearestlinear)
+    {
+        SDL_SetRenderTarget(renderer, texture_upscaled);
+        SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+        SDL_SetRenderTarget(renderer, NULL);
+        SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
+    }
+    else
+        SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+
+    SDL_RenderPresent(renderer);
+}
+#endif
+
+static void I_Blit( void )
+{
+	UpdateGrab();
+
+	SDL_LowerBlit( surface, &src_rect, buffer, &src_rect );
+	SDL_UpdateTexture( texture, &src_rect, pixels, pitch );
+	SDL_RenderClear( renderer );
+	SDL_RenderCopy( renderer, texture, &src_rect, NULL );
+	SDL_RenderPresent( renderer );
+}
+
+static void I_Blit_NearestLinear(void)
+{
+    UpdateGrab();
+
+    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
+    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(renderer, texture_upscaled);
+    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
+    SDL_RenderPresent(renderer);
+}
+
+static void I_Blit_ShowFPS(void)
+{
+    UpdateGrab();
+    CalculateFPS();
+
+    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
+    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+    SDL_RenderPresent(renderer);
+}
+
+static void I_Blit_NearestLinear_ShowFPS(void)
+{
+    UpdateGrab();
+    CalculateFPS();
+
+    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
+    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(renderer, texture_upscaled);
+    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
+    SDL_RenderPresent(renderer);
+}
+
+static void I_Blit_Shake(void)
+{
+    UpdateGrab();
+
+    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
+    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+    SDL_RenderCopyEx(renderer, texture, &src_rect, NULL, SHAKEANGLE, NULL, SDL_FLIP_NONE);
+    SDL_RenderPresent(renderer);
+}
+
+static void I_Blit_NearestLinear_Shake(void)
+{
+    UpdateGrab();
+
+    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
+    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(renderer, texture_upscaled);
+    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+    SDL_RenderCopyEx(renderer, texture, &src_rect, NULL, SHAKEANGLE, NULL, SDL_FLIP_NONE);
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
+    SDL_RenderPresent(renderer);
+}
+
+static void I_Blit_ShowFPS_Shake(void)
+{
+    UpdateGrab();
+    CalculateFPS();
+
+    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
+    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+    SDL_RenderCopyEx(renderer, texture, &src_rect, NULL, SHAKEANGLE, NULL, SDL_FLIP_NONE);
+    SDL_RenderPresent(renderer);
+}
+
+static void I_Blit_NearestLinear_ShowFPS_Shake(void)
+{
+    UpdateGrab();
+    CalculateFPS();
+
+    SDL_LowerBlit(surface, &src_rect, buffer, &src_rect);
+    SDL_UpdateTexture(texture, &src_rect, pixels, pitch);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(renderer, texture_upscaled);
+    SDL_RenderCopy(renderer, texture, &src_rect, NULL);
+    SDL_RenderCopyEx(renderer, texture, &src_rect, NULL, SHAKEANGLE, NULL, SDL_FLIP_NONE);
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
+    SDL_RenderPresent(renderer);
+}
 
 static void I_Blit_Automap( void )
 {
@@ -980,19 +974,19 @@ static void I_Blit_Automap_NearestLinear( void )
 	SDL_RenderPresent( maprenderer );
 }
 
-//void I_UpdateBlitFunc(dboolean shake)
-//{
-//    dboolean    override = (vid_fullscreen && !(displayheight % VANILLAHEIGHT));
-//
-//    if (shake && !software)
-//        blitfunc = (vid_showfps ? (nearestlinear && !override ? &I_Blit_NearestLinear_ShowFPS_Shake :
-//            &I_Blit_ShowFPS_Shake) : (nearestlinear && !override ? &I_Blit_NearestLinear_Shake : &I_Blit_Shake));
-//    else
-//        blitfunc = (vid_showfps ? (nearestlinear && !override ? &I_Blit_NearestLinear_ShowFPS : &I_Blit_ShowFPS) :
-//            (nearestlinear && !override ? &I_Blit_NearestLinear : &I_Blit));
-//
-//    mapblitfunc = (mapwindow ? (nearestlinear && !override ? &I_Blit_Automap_NearestLinear : &I_Blit_Automap) : &nullfunc);
-//}
+void I_UpdateBlitFunc( dboolean shake )
+{
+	dboolean    override = ( vid_fullscreen && !( displayheight % VANILLAHEIGHT ) );
+
+	if( shake && !software )
+		blitfunc = ( vid_showfps ? ( nearestlinear && !override ? &I_Blit_NearestLinear_ShowFPS_Shake :
+			&I_Blit_ShowFPS_Shake ) : ( nearestlinear && !override ? &I_Blit_NearestLinear_Shake : &I_Blit_Shake ) );
+	else
+		blitfunc = ( vid_showfps ? ( nearestlinear && !override ? &I_Blit_NearestLinear_ShowFPS : &I_Blit_ShowFPS ) :
+		( nearestlinear && !override ? &I_Blit_NearestLinear : &I_Blit ) );
+
+	mapblitfunc = ( mapwindow ? ( nearestlinear && !override ? &I_Blit_Automap_NearestLinear : &I_Blit_Automap ) : &nullfunc );
+}
 
 //
 // I_SetPalette
@@ -2066,7 +2060,7 @@ void I_SetGamma( float value )
 //
 void I_InitGraphics( void )
 {
-	//SDL_Event   dummy;
+	SDL_Event   dummy;
 	SDL_version linked;
 	SDL_version compiled;
 
@@ -2122,20 +2116,20 @@ void I_InitGraphics( void )
 
 	mapscreen = oscreen = malloc( SCREENAREA );
 	I_CreateExternalAutomap( 2 );
-//
-//#if defined(_WIN32)
-//	I_InitWindows32();
-//#endif
-//
-//	SDL_SetWindowTitle( window, PACKAGE_NAME );
-//
-//	I_UpdateBlitFunc( false );
-//	memset( screens[ 0 ], nearestblack, SCREENAREA );
-//	blitfunc();
-//
-//	I_Sleep( 500 );
-//
-//	while( SDL_PollEvent( &dummy ) );
+
+#if defined(_WIN32)
+	I_InitWindows32();
+#endif
+
+	SDL_SetWindowTitle( window, PACKAGE_NAME );
+
+	I_UpdateBlitFunc( false );
+	memset( screens[ 0 ], nearestblack, SCREENAREA );
+	blitfunc();
+
+	I_Sleep( 500 );
+
+	while( SDL_PollEvent( &dummy ) );
 }
 
 
