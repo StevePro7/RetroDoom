@@ -1,8 +1,10 @@
 #if !defined(__I_COLORS_H__)
 #define __I_COLORS_H__
 
+#include "doomstruct.h"
 #include "doomtype.h"
-#include "r_defs.h"
+#include "doomvars.h"
+//#include "r_defs.h"
 
 extern byte *tinttab20;
 extern byte *tinttab25;

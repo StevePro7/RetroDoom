@@ -43,6 +43,7 @@
     <ClCompile Include="..\src\d_ticcmd.c" />
     <ClCompile Include="..\src\g_game.c" />
     <ClCompile Include="..\src\info.c" />
+    <ClCompile Include="..\src\i_colors.c" />
     <ClCompile Include="..\src\i_gamepad.c" />
     <ClCompile Include="..\src\i_midirpc.c" />
     <ClCompile Include="..\src\i_music.c" />
@@ -103,6 +104,7 @@
     <ClInclude Include="..\inc\d_ticcmd.h" />
     <ClInclude Include="..\inc\g_game.h" />
     <ClInclude Include="..\inc\info.h" />
+    <ClInclude Include="..\inc\i_colors.h" />
     <ClInclude Include="..\inc\i_gamepad.h" />
     <ClInclude Include="..\inc\i_midirpc.h" />
     <ClInclude Include="..\inc\i_music.h" />

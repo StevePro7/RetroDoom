@@ -1,12 +1,13 @@
 #include "i_video.h"
 #include "a_game.h"
 #include "doomkeys.h"
-#include "doomkeys.h"
+#include "doomvars.h"
 #include "m_controls.h"
 
 #if defined(_WIN32)
 #include <Windows.h>
 #include <mmsystem.h>
+#include <stdlib.h>
 
 #include "SDL_syswm.h"
 #elif defined(X11)
@@ -30,14 +31,14 @@
 //#include "m_cheat.h"
 //#include "m_config.h"
 //#include "m_menu.h"
-//#include "m_misc.h"
+#include "m_misc.h"
 //#include "m_random.h"
 //#include "r_main.h"
 //#include "s_sound.h"
 //#include "st_stuff.h"
-//#include "v_video.h"
+#include "v_video.h"
 //#include "version.h"
-//#include "w_wad.h"
+#include "w_wad.h"
 
 #define I_SDLError(func)        I_Error("The call to " stringize(func) "() failed in %s() on line %i of %s with this error:\n" \
                                     "    \"%s\".", __FUNCTION__, __LINE__ - 1, leafname(__FILE__), SDL_GetError())
@@ -52,6 +53,8 @@
 #if !defined(SDL_VIDEO_RENDER_D3D11)
 #define SDL_VIDEO_RENDER_D3D11  0
 #endif
+
+static void I_InitWindows32( void );
 
 // CVARs
 //dboolean            alwaysrun = alwaysrun_default;
@@ -799,8 +802,8 @@ void I_ShutdownKeyboard( void )
 //void (*mapblitfunc)(void);
 //
 //static void nullfunc(void) {}
-//
-//static uint64_t performancefrequency;
+
+static uint64_t performancefrequency;
 //uint64_t        starttime;
 //int             frames = -1;
 //
@@ -1833,7 +1836,7 @@ void I_WindowResizeBlit( void )
 //    src_rect.w = SCREENWIDTH;
 //    src_rect.h = SCREENHEIGHT - SBARHEIGHT * vid_widescreen;
 //}
-//
+
 //void I_ToggleWidescreen(dboolean toggle)
 //{
 //    if (toggle)
@@ -1880,7 +1883,7 @@ void I_WindowResizeBlit( void )
 //
 //    forceconsoleblurredraw = true;
 //}
-//
+
 
 // stevepro
 void I_ToggleFullscreen( void )
@@ -1971,75 +1974,75 @@ void I_SetGamma( float value )
 //    }
 //}
 //
-//void I_InitGraphics(void)
-//{
-//    SDL_Event   dummy;
-//    SDL_version linked;
-//    SDL_version compiled;
-//
-//    SDL_GetVersion(&linked);
-//    SDL_VERSION(&compiled);
-//
-//    if (linked.major != compiled.major || linked.minor != compiled.minor)
-//        I_Error("The wrong version of %s was found. %s requires v%i.%i.%i.",
-//            SDL_FILENAME, PACKAGE_NAME, compiled.major, compiled.minor, compiled.patch);
-//
-//    if (linked.patch != compiled.patch)
-//        C_Warning(1, "The wrong version of <b>%s</b> was found. <i>%s</i> requires v%i.%i.%i.",
-//            SDL_FILENAME, PACKAGE_NAME, compiled.major, compiled.minor, compiled.patch);
-//
-//    performancefrequency = SDL_GetPerformanceFrequency();
-//
-//    for (int i = 0; i < UCHAR_MAX; i++)
-//        keys[i] = true;
-//
-//    keys['v'] = keys['V'] = false;
-//    keys['s'] = keys['S'] = false;
-//    keys['i'] = keys['I'] = false;
-//    keys['r'] = keys['R'] = false;
-//    keys['a'] = keys['A'] = false;
-//    keys['l'] = keys['L'] = false;
-//
-//    PLAYPAL = W_CacheLumpName("PLAYPAL");
-//    I_InitTintTables(PLAYPAL);
-//    FindNearestColors(PLAYPAL);
-//
-//    I_InitGammaTables();
-//
-//#if !defined(_WIN32)
-//    if (*vid_driver)
-//        SDL_setenv("SDL_VIDEODRIVER", vid_driver, true);
-//#endif
-//
-//    SDL_InitSubSystem(SDL_INIT_VIDEO);
-//    GetDisplays();
-//
-//#if defined(_DEBUG)
-//    vid_fullscreen = false;
-//#endif
-//
-//    SetVideoMode(true);
-//
-//    if (vid_fullscreen)
-//        SetShowCursor(false);
-//
-//    mapscreen = oscreen = malloc(SCREENAREA);
-//    I_CreateExternalAutomap(2);
-//
-//#if defined(_WIN32)
-//    I_InitWindows32();
-//#endif
-//
-//    SDL_SetWindowTitle(window, PACKAGE_NAME);
-//
-//    I_UpdateBlitFunc(false);
-//    memset(screens[0], nearestblack, SCREENAREA);
-//    blitfunc();
-//
-//    I_Sleep(500);
-//
-//    while (SDL_PollEvent(&dummy));
-//}
+void I_InitGraphics( void )
+{
+	/*SDL_Event   dummy;
+	SDL_version linked;
+	SDL_version compiled;
+
+	SDL_GetVersion( &linked );
+	SDL_VERSION( &compiled );
+
+	if( linked.major != compiled.major || linked.minor != compiled.minor )
+		I_Error( "The wrong version of %s was found. %s requires v%i.%i.%i.",
+			SDL_FILENAME, PACKAGE_NAME, compiled.major, compiled.minor, compiled.patch );
+
+	if( linked.patch != compiled.patch )
+		C_Warning( 1, "The wrong version of <b>%s</b> was found. <i>%s</i> requires v%i.%i.%i.",
+			SDL_FILENAME, PACKAGE_NAME, compiled.major, compiled.minor, compiled.patch );
+
+	performancefrequency = SDL_GetPerformanceFrequency();
+
+	for( int i = 0; i < UCHAR_MAX; i++ )
+		keys[ i ] = true;
+
+	keys[ 'v' ] = keys[ 'V' ] = false;
+	keys[ 's' ] = keys[ 'S' ] = false;
+	keys[ 'i' ] = keys[ 'I' ] = false;
+	keys[ 'r' ] = keys[ 'R' ] = false;
+	keys[ 'a' ] = keys[ 'A' ] = false;
+	keys[ 'l' ] = keys[ 'L' ] = false;
+
+	PLAYPAL = W_CacheLumpName( "PLAYPAL" );
+	I_InitTintTables( PLAYPAL );
+	FindNearestColors( PLAYPAL );
+
+	I_InitGammaTables();
+
+#if !defined(_WIN32)
+	if( *vid_driver )
+		SDL_setenv( "SDL_VIDEODRIVER", vid_driver, true );
+#endif
+
+	SDL_InitSubSystem( SDL_INIT_VIDEO );
+	GetDisplays();
+
+#if defined(_DEBUG)
+	vid_fullscreen = false;
+#endif
+
+	SetVideoMode( true );
+
+	if( vid_fullscreen )
+		SetShowCursor( false );
+
+	mapscreen = oscreen = malloc( SCREENAREA );
+	I_CreateExternalAutomap( 2 );
+
+#if defined(_WIN32)
+	I_InitWindows32();
+#endif
+
+	SDL_SetWindowTitle( window, PACKAGE_NAME );
+
+	I_UpdateBlitFunc( false );
+	memset( screens[ 0 ], nearestblack, SCREENAREA );
+	blitfunc();
+
+	I_Sleep( 500 );
+
+	while( SDL_PollEvent( &dummy ) );*/
+}
 
 
 static void I_InitWindows32( void )

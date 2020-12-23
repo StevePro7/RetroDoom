@@ -1,10 +1,10 @@
-#include <stdlib.h>
-
 #include "i_colors.h"
+
 #include "i_swap.h"
 #include "v_video.h"
 #include "w_wad.h"
 #include "z_zone.h"
+#include <stdlib.h>
 
 #define R   1
 #define W   2

@@ -112,7 +112,8 @@ dboolean            respawnmonsters;        // checkparm of -respawn
 
 // i_video.c
 dboolean            returntowidescreen;
-
+int                 framespersecond;
+int                 refreshrate;
 
 
 
@@ -1760,3 +1761,43 @@ dboolean        skippsprinterp;
 // Location of each lump on disk.
 lumpinfo_t  **lumpinfo;
 int         numlumps;
+
+
+// i_colors.c
+byte        *tinttab20;
+byte        *tinttab25;
+byte        *tinttab30;
+byte        *tinttab33;
+byte        *tinttab40;
+byte        *tinttab50;
+byte        *tinttab60;
+byte        *tinttab66;
+byte        *tinttab75;
+
+byte        *alttinttab20;
+byte        *alttinttab40;
+byte        *alttinttab60;
+
+byte        *tranmap;
+
+byte        *tinttabadditive;
+byte        *tinttabred;
+byte        *tinttabredwhite1;
+byte        *tinttabredwhite2;
+byte        *tinttabgreen;
+byte        *tinttabblue;
+
+byte        *tinttabred33;
+byte        *tinttabredwhite50;
+byte        *tinttabgreen33;
+byte        *tinttabblue25;
+
+byte        nearestcolors[ 256 ];
+byte        nearestblack;
+byte        nearestred;
+byte        nearestwhite;
+
+byte        *black25;
+byte        *black40;
+byte        *yellow15;
+byte        *white25;

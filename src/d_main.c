@@ -19,6 +19,7 @@
 #include "g_game.h"
 #include "i_system.h"
 #include "i_timer.h"
+#include "i_video.h"
 #include "m_argv.h"
 #include "m_config.h"
 #include "m_fixed.h"
@@ -595,6 +596,8 @@ static void D_DoomMainSetup( void )
 	TITLEPIC = ( W_CheckNumForName( "TITLEPIC" ) >= 0 );
 	WISCRT2 = ( W_CheckMultipleLumps( "WISCRT2" ) > 1 );
 	DSSECRET = ( W_CheckNumForName( "DSSECRET" ) >= 0 );
+
+	I_InitGraphics();
 }
 
 //

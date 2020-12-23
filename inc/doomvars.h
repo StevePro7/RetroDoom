@@ -930,4 +930,66 @@ extern lumpinfo_t   **lumpinfo;
 extern int          numlumps;
 
 
+// c_console.c
+extern int              framespersecond;
+extern int              refreshrate;
+extern dboolean         quitcmd;
+
+
+// i_color.h
+extern byte *tinttab20;
+extern byte *tinttab25;
+extern byte *tinttab30;
+extern byte *tinttab33;
+extern byte *tinttab40;
+extern byte *tinttab50;
+extern byte *tinttab60;
+extern byte *tinttab66;
+extern byte *tinttab75;
+
+extern byte *alttinttab20;
+extern byte *alttinttab40;
+extern byte *alttinttab60;
+
+extern byte *tranmap;
+extern byte *tinttabadditive;
+extern byte *tinttabred;
+extern byte *tinttabredwhite1;
+extern byte *tinttabredwhite2;
+extern byte *tinttabgreen;
+extern byte *tinttabblue;
+extern byte *tinttabred33;
+extern byte *tinttabredwhite50;
+extern byte *tinttabgreen33;
+extern byte *tinttabblue25;
+
+extern byte nearestcolors[ 256 ];
+extern byte nearestblack;
+extern byte nearestred;
+extern byte nearestwhite;
+
+extern byte *black25;
+extern byte *black40;
+extern byte *yellow15;
+extern byte *white25;
+
+
+// st_stuff.h
+extern dboolean idclev;
+extern int      idclevtics;
+extern dboolean idmus;
+extern int      st_palette;
+extern dboolean oldweaponsowned[ NUMWEAPONS ];
+
+//extern patch_t  *grnrock;
+//extern patch_t  *brdr_t;
+//extern patch_t  *brdr_b;
+//extern patch_t  *brdr_l;
+//extern patch_t  *brdr_r;
+//extern patch_t  *brdr_tl;
+//extern patch_t  *brdr_tr;
+//extern patch_t  *brdr_bl;
+//extern patch_t  *brdr_br;
+
+
 #endif
