@@ -82,7 +82,7 @@
 ////void A_VileStart(mobj_t *actor, player_t *player, pspdef_t *psp);
 ////void A_VileTarget(mobj_t *actor, player_t *player, pspdef_t *psp);
 ////void A_WeaponReady(mobj_t *actor, player_t *player, pspdef_t *psp);
-////void A_XScream(mobj_t *actor, player_t *player, pspdef_t *psp);
+//void A_XScream(mobj_t *actor, player_t *player, pspdef_t *psp);
 //
 
 /*

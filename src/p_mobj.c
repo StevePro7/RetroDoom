@@ -1076,15 +1076,17 @@
 //        }
 //    }
 //}
+
 //
-////
-//// P_SpawnMapThing
-//// The fields of the mapthing should
-////  already be in host byte order.
-////
-//int prevthingx, prevthingy;
-//int prevthingbob;
+// P_SpawnMapThing
+// The fields of the mapthing should
+//  already be in host byte order.
 //
+int prevthingx = 0;
+int prevthingy = 0;
+int prevthingbob = 0;
+//stevepro	for some strange reason init'd in p_setup.c	hence why extern vars??
+
 //mobj_t *P_SpawnMapThing(mapthing_t *mthing, dboolean spawnmonsters)
 //{
 //    mobjtype_t  i;
