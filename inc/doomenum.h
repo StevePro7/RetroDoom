@@ -2486,4 +2486,18 @@ enum
 };
 
 
+// c_console.h
+typedef enum
+{
+	inputstring,
+	outputstring,
+	dividerstring,
+	warningstring,
+	playermessagestring,
+	obituarystring,
+	headerstring,
+	STRINGTYPES
+} stringtype_t;
+
+
 #endif

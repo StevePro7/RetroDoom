@@ -1011,4 +1011,41 @@ typedef struct visplane_s
 	dboolean            modified;
 } visplane_t;
 
+
+// c_console.h
+typedef struct
+{
+	char                string[ 1024 ];
+	unsigned int        count;
+	unsigned int        line;
+	unsigned int        truncate;
+	stringtype_t        stringtype;
+	patch_t             *header;
+	int                 tabs[ 4 ];
+	unsigned int        tics;
+	char                timestamp[ 9 ];
+} console_t;
+
+typedef struct
+{
+	char                *input;
+	int                 caretpos;
+	int                 selectstart;
+	int                 selectend;
+} undohistory_t;
+
+typedef struct
+{
+	char                char1;
+	char                char2;
+	int                 adjust;
+} kern_t;
+
+typedef struct
+{
+	char                text[ 255 ];
+	int                 game;
+} autocomplete_t;
+
+
 #endif

@@ -2,9 +2,10 @@
 #define __C_CONSOLE_H__
 
 #include "doomdef.h"
+#include "doomenum.h"
 #include "doomstruct.h"
 #include "doomtype.h"
-#include "doomvars.h"
+
 #include "d_event.h"
 //#include "r_defs.h"
 
@@ -51,17 +52,17 @@
 //#define SDL_IMAGE_FILENAME      "SDL2_image"
 //#endif
 
-typedef enum
-{
-    inputstring,
-    outputstring,
-    dividerstring,
-    warningstring,
-    playermessagestring,
-    obituarystring,
-    headerstring,
-    STRINGTYPES
-} stringtype_t;
+//typedef enum
+//{
+//    inputstring,
+//    outputstring,
+//    dividerstring,
+//    warningstring,
+//    playermessagestring,
+//    obituarystring,
+//    headerstring,
+//    STRINGTYPES
+//} stringtype_t;
 
 //#define BINDLISTHEADER          "\tCONTROL\t+ACTION/COMMAND(S)"
 //#define CMDLISTHEADER           "\tCCMD\tDESCRIPTION"
@@ -71,69 +72,69 @@ typedef enum
 //#define PLAYERSTATSHEADER       "STAT\tCURRENT MAP\tTOTAL"
 //#define THINGLISTHEADER         "\tTHING\tPOSITION"
 
-typedef struct
-{
-    char                string[1024];
-    unsigned int        count;
-    unsigned int        line;
-    unsigned int        truncate;
-    stringtype_t        stringtype;
-    patch_t             *header;
-    int                 tabs[4];
-    unsigned int        tics;
-    char                timestamp[9];
-} console_t;
+//typedef struct
+//{
+//    char                string[1024];
+//    unsigned int        count;
+//    unsigned int        line;
+//    unsigned int        truncate;
+//    stringtype_t        stringtype;
+//    patch_t             *header;
+//    int                 tabs[4];
+//    unsigned int        tics;
+//    char                timestamp[9];
+//} console_t;
 
-extern patch_t          *bindlist;
-extern patch_t          *cmdlist;
-extern patch_t          *cvarlist;
-extern patch_t          *maplist;
-extern patch_t          *mapstats;
-extern patch_t          *playerstats;
-extern patch_t          *thinglist;
+//extern patch_t          *bindlist;
+//extern patch_t          *cmdlist;
+//extern patch_t          *cvarlist;
+//extern patch_t          *maplist;
+//extern patch_t          *mapstats;
+//extern patch_t          *playerstats;
+//extern patch_t          *thinglist;
+//
+//extern console_t        *console;
+//
+//extern dboolean         consoleactive;
+//extern int              consoleheight;
+//extern int              consoledirection;
+//
+//extern int              consolestrings;
+//extern size_t           consolestringsmax;
+//
+//extern char             consolecheat[255];
+//extern char             consolecheatparm[3];
+//extern char             consolecmdparm[255];
+//
+//extern dboolean         forceconsoleblurredraw;
+//
+//extern dboolean         scrollbardrawn;
 
-extern console_t        *console;
+//typedef struct
+//{
+//    char                *input;
+//    int                 caretpos;
+//    int                 selectstart;
+//    int                 selectend;
+//} undohistory_t;
+//
+//typedef struct
+//{
+//    char                char1;
+//    char                char2;
+//    int                 adjust;
+//} kern_t;
 
-extern dboolean         consoleactive;
-extern int              consoleheight;
-extern int              consoledirection;
-
-extern int              consolestrings;
-extern size_t           consolestringsmax;
-
-extern char             consolecheat[255];
-extern char             consolecheatparm[3];
-extern char             consolecmdparm[255];
-
-extern dboolean         forceconsoleblurredraw;
-
-extern dboolean         scrollbardrawn;
-
-typedef struct
-{
-    char                *input;
-    int                 caretpos;
-    int                 selectstart;
-    int                 selectend;
-} undohistory_t;
-
-typedef struct
-{
-    char                char1;
-    char                char2;
-    int                 adjust;
-} kern_t;
-
-extern const kern_t     kern[];
-extern const kern_t     altkern[];
-
-typedef struct
-{
-    char                text[255];
-    int                 game;
-} autocomplete_t;
-
-extern autocomplete_t   autocompletelist[];
+//extern const kern_t     kern[];
+//extern const kern_t     altkern[];
+//
+//typedef struct
+//{
+//    char                text[255];
+//    int                 game;
+//} autocomplete_t;
+//
+//extern autocomplete_t   autocompletelist[];
 
 //void C_Input(const char *string, ...);
 //void C_InputNoRepeat(const char *string, ...);

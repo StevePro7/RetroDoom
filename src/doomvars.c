@@ -216,13 +216,40 @@ int             stillbob = stillbob_default;
 
 
 // c_console.c
+console_t               *console;
+int                     consoleheight;// = 0;
+int                     consoledirection;// = -1;
 dboolean                consoleactive;
 
-// c_console.c
-// steveproTODO		set default value in c_console.c
-int                     con_backcolor = con_backcolor_default;
-int                     con_edgecolor = con_edgecolor_default;
-int                     warninglevel = warninglevel_default;
+dboolean                forceconsoleblurredraw;
+
+patch_t                 *consolefont[ CONSOLEFONTSIZE ];
+patch_t                 *degree;
+patch_t                 *unknownchar;
+patch_t                 *altunderscores;
+patch_t                 *brand;
+patch_t                 *lsquote;
+patch_t                 *ldquote;
+
+patch_t                 *bindlist;
+patch_t                 *cmdlist;
+patch_t                 *cvarlist;
+patch_t                 *maplist;
+patch_t                 *mapstats;
+patch_t                 *playerstats;
+patch_t                 *thinglist;
+
+int                     consolestrings;// = 0;
+size_t                  consolestringsmax;// = 0;
+
+char                    consolecheat[ 255 ];
+char                    consolecheatparm[ 3 ];
+
+int                     con_backcolor;// = con_backcolor_default;
+int                     con_edgecolor;// = con_edgecolor_default;
+int                     warninglevel;// = warninglevel_default;
+
+dboolean                scrollbardrawn;
 
 
 // p_inter.c

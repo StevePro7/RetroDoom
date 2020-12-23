@@ -1,4 +1,5 @@
 #include "c_console.h"
+#include "doomvars.h"
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -31,27 +32,27 @@
 //console_t               *console;
 //
 //dboolean                consoleactive;
-//int                     consoleheight = 0;
-//int                     consoledirection = -1;
+int                     consoleheight = 0;
+int                     consoledirection = -1;
 //static int              consoleanim;
 //
 //dboolean                forceconsoleblurredraw;
 //
-patch_t                 *consolefont[CONSOLEFONTSIZE];
+//patch_t                 *consolefont[CONSOLEFONTSIZE];
 //patch_t                 *degree;
 //patch_t                 *unknownchar;
 //patch_t                 *altunderscores;
 //patch_t                 *brand;
 //patch_t                 *lsquote;
 //patch_t                 *ldquote;
-//
-//static patch_t          *dot;
-//static patch_t          *trademark;
-//static patch_t          *copyright;
-//static patch_t          *regomark;
-//static patch_t          *multiply;
-//static patch_t          *warning;
-//
+
+static patch_t          *dot;
+static patch_t          *trademark;
+static patch_t          *copyright;
+static patch_t          *regomark;
+static patch_t          *multiply;
+static patch_t          *warning;
+
 //patch_t                 *bindlist;
 //patch_t                 *cmdlist;
 //patch_t                 *cvarlist;
@@ -59,33 +60,33 @@ patch_t                 *consolefont[CONSOLEFONTSIZE];
 //patch_t                 *mapstats;
 //patch_t                 *playerstats;
 //patch_t                 *thinglist;
-//
-//static short            brandwidth;
-//static short            brandheight;
+
+static short            brandwidth;
+static short            brandheight;
 static short            spacewidth;
-//
-//static char             consoleinput[255];
-//static int              numautocomplete;
-//int                     consolestrings = 0;
-//size_t                  consolestringsmax = 0;
-//
-//static size_t           undolevels;
-//static undohistory_t    *undohistory;
-//
-//static int              caretpos;
-//static dboolean         showcaret = true;
-//static int              caretwait;
-//static int              selectstart;
-//static int              selectend;
-//
+
+static char             consoleinput[255];
+static int              numautocomplete;
+int                     consolestrings = 0;
+size_t                  consolestringsmax = 0;
+
+static size_t           undolevels;
+static undohistory_t    *undohistory;
+
+static int              caretpos;
+static dboolean         showcaret = true;
+static int              caretwait;
+static int              selectstart;
+static int              selectend;
+
 //char                    consolecheat[255];
 //char                    consolecheatparm[3];
-//
-//static int              outputhistory = -1;
-//
-//int                     con_backcolor = con_backcolor_default;
-//int                     con_edgecolor = con_edgecolor_default;
-//int                     warninglevel = warninglevel_default;
+
+static int              outputhistory = -1;
+
+int                     con_backcolor = con_backcolor_default;
+int                     con_edgecolor = con_edgecolor_default;
+int                     warninglevel = warninglevel_default;
 
 static int              timerx;
 static int              zerowidth;

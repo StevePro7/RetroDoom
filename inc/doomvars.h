@@ -931,9 +931,39 @@ extern lumpinfo_t   **lumpinfo;
 extern int          numlumps;
 
 
-// c_console.h
-extern dboolean         consoleactive;
+// hu_lib.c
+extern patch_t  *consolefont[ CONSOLEFONTSIZE ];
 
+
+// c_console.h
+extern patch_t          *bindlist;
+extern patch_t          *cmdlist;
+extern patch_t          *cvarlist;
+extern patch_t          *maplist;
+extern patch_t          *mapstats;
+extern patch_t          *playerstats;
+extern patch_t          *thinglist;
+
+extern console_t        *console;
+
+extern dboolean         consoleactive;
+extern int              consoleheight;
+extern int              consoledirection;
+
+extern int              consolestrings;
+extern size_t           consolestringsmax;
+
+extern char             consolecheat[ 255 ];
+extern char             consolecheatparm[ 3 ];
+extern char             consolecmdparm[ 255 ];
+
+extern dboolean         forceconsoleblurredraw;
+extern dboolean         scrollbardrawn;
+
+extern const kern_t     kern[];
+extern const kern_t     altkern[];
+
+extern autocomplete_t   autocompletelist[];
 
 // c_console.c
 extern int              framespersecond;
