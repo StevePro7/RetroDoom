@@ -3,7 +3,7 @@
 #include "doomenum.h"
 #include "doomtype.h"
 #include "m_fixed.h"
-////#include "r_defs.h"
+#include "r_defs.h"
 //#include "sounds.h"
 //
 #define EMPTYMOBJ \
