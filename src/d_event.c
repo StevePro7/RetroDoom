@@ -4,5 +4,5 @@
 //
 // GLOBAL VARIABLES
 //
-gameaction_t gameaction;
-evtype_t     lasteventtype;
+gameaction_t gameaction;						// g_game.c
+evtype_t            lasteventtype = ev_none;	// i_video.c

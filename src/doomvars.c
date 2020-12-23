@@ -72,7 +72,6 @@ HANDLE       CapFPSEvent;
 // g_game.c
 int             gametime;// = 0;
 
-
 // m_menu.h
 extern dboolean         menuactive;     // Menu overlaid?
 
@@ -90,8 +89,16 @@ ticcmd_t    localcmds[ BACKUPTICS ];
 
 // c_cmds.c
 alias_t             aliases[ MAXALIASES ];
+dboolean            executingalias;// = false;
+dboolean            healthcvar;// = false;
+dboolean            quitcmd;// = false;
+dboolean            resettingcvar;// = false;
 dboolean            togglingvanilla;// = false;
 dboolean            vanilla;// = false;
+
+dboolean        massacre;
+
+
 
 dboolean            devparm;                // started game with -devparm
 dboolean            fastparm;               // checkparm of -fast
@@ -250,6 +257,8 @@ uint64_t        stat_suicides = 0;
 uint64_t    stat_time = 0;
 
 // hu_stuff.c
+dboolean                message_on;
+
 int                     crosshair = crosshair_default;
 int                     crosshaircolor = crosshaircolor_default;
 char                    *playername = playername_default;

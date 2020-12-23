@@ -5,6 +5,7 @@
 #include "doomenum.h"
 #include "doomtype.h"
 #include "doomstruct.h"
+#include "d_event.h"
 #include "d_ticcmd.h"
 
 #if defined(_WIN32)
@@ -12,21 +13,29 @@
 #endif
 
 // d_main.h
+extern char     **episodes[];
+extern char     **expansions[];
+extern char     **skilllevels[];
+extern char     *packageconfig;
 extern char     *pwadfile;
+extern dboolean advancetitle;
+extern dboolean splashscreen;
+extern dboolean dowipe;
+extern int      titlesequence;
+extern int      fadecount;
 
-extern dboolean     fade;
-extern char         *iwadfolder;
-extern dboolean     melt;
-extern int          turbo;
-extern int          units;
-
+// d_main.c
 #if defined(_WIN32)
-extern char         *wad;
+extern HANDLE       CapFPSEvent;
 #endif
 
-extern char     *packageconfig;
-extern char *packagewad;
+extern dboolean     message_on;
+extern gameaction_t loadaction;
 
+
+
+
+// i_system.c
 #if defined(_WIN32)
 extern char *previouswad;
 #endif
@@ -35,9 +44,7 @@ extern dboolean advancetitle;
 
 
 
-#if defined(_WIN32)
-extern HANDLE       CapFPSEvent;
-#endif
+
 
 
 
@@ -56,9 +63,16 @@ dboolean        menuactive;
 
 
 // c_cmds.h
+extern action_t         actions[];
+extern const control_t  controls[];
+extern consolecmd_t     consolecmds[];
 extern alias_t          aliases[ MAXALIASES ];
+extern dboolean         executingalias;
+extern dboolean         resettingcvar;
 extern dboolean         vanilla;
 extern dboolean         togglingvanilla;
+extern dboolean         massacre;
+
 
 // ------------------------
 // Command line parameters.
@@ -731,7 +745,6 @@ extern int      dehcount;
 
 
 // doomstat.h
-
 // ------------------------
 // Command line parameters.
 //
@@ -744,9 +757,9 @@ extern dboolean         fastparm;               // checkparm of -fast
 
 extern dboolean         devparm;                // DEBUG: launched with -devparm
 
-												// -----------------------------------------------------
-												// Game Mode - identify IWAD as shareware, retail etc.
-												//
+// -----------------------------------------------------
+// Game Mode - identify IWAD as shareware, retail etc.
+//
 extern GameMode_t       gamemode;
 extern GameMission_t    gamemission;
 extern char             gamedescription[ 255 ];

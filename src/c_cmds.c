@@ -40,46 +40,6 @@
 //#include "w_wad.h"
 //#include "z_zone.h"
 
-//#define ALIASCMDFORMAT              "<i>alias</i> [[<b>\"</b>]<i>command</i>[<b>;</b> <i>command</i> ...<b>\"</b>]]"
-//#define BINDCMDFORMAT               "<i>control</i> [<b>+</b><i>action</i>|[<b>\"</b>]<i>command</i>[<b>;</b> <i>command</i> ...<b>\"</b>]]"
-//#define EXECCMDFORMAT               "<i>filename</i><b>.cfg</b>"
-//#define GIVECMDFORMAT               "<b>ammo</b>|<b>armor</b>|<b>health</b>|<b>keys</b>|<b>weapons</b>|<b>all</b>|<i>item</i>"
-//#define IFCMDFORMAT                 "<i>CVAR</i> <i>value</i> <b>then</b> [<b>\"</b>]<i>command</i>[<b>;</b> <i>command</i> ...<b>\"</b>]"
-//#define KILLCMDFORMAT               "<b>player</b>|<b>all</b>|<i>monster</i>|<b>barrels</b>|<b>missiles</b>"
-//#define LOADCMDFORMAT               "<i>filename</i><b>.save</b>"
-//#define MAPCMDFORMAT1               "<b>E</b><i>x</i><b>M</b><i>y</i>[<b>B</b>]|<i>title</i>|<b>first</b>|<b>previous</b>|<b>next</b>|<b>last</b>|<b>random</b>"
-//#define MAPCMDFORMAT2               "<b>MAP</b><i>xy</i>|<i>title</i>|<b>first</b>|<b>previous</b>|<b>next</b>|<b>last</b>|<b>random</b>"
-//#define PLAYCMDFORMAT               "<i>soundeffect</i>|<i>music</i>"
-//#define NAMECMDFORMAT               "[<b>friendly</b> ]<i>monster</i> <i>name</i>"
-//#define PRINTCMDFORMAT              "<b>\"</b><i>message</i><b>\"</b>"
-//#define RESETCMDFORMAT              "<i>CVAR</i>"
-//#define RESURRECTCMDFORMAT          "<b>player</b>|<b>all</b>|<i>monster</i>"
-//#define SAVECMDFORMAT               "<i>filename</i><b>.save</b>"
-//#define SPAWNCMDFORMAT              "<i>item</i>|[<b>friendly</b> ]<i>monster</i>"
-//#define TAKECMDFORMAT               "<b>ammo</b>|<b>armor</b>|<b>health</b>|<b>keys</b>|<b>weapons</b>|<b>all</b>|<i>item</i>"
-//#define TELEPORTCMDFORMAT           "<i>x</i> <i>y</i>[ <i>z</i>]"
-//#define TIMERCMDFORMAT              "<i>minutes</i>"
-//#define UNBINDCMDFORMAT             "<i>control</i>|<b>+</b><i>action</i>"
-//
-//#define PENDINGCHANGE               "This change won't be effective until the next map."
-//
-//#define INTEGERCVARWITHDEFAULT      "It is <b>%s</b> and is <b>%s</b> by default."
-//#define INTEGERCVARWITHNODEFAULT    "It is <b>%s</b>."
-//#define INTEGERCVARISDEFAULT        "It is its default of <b>%s</b>."
-//#define INTEGERCVARISREADONLY       "It is <b>%s</b> and is read-only."
-//#define PERCENTCVARWITHDEFAULT      "It is <b>%s%%</b> and is <b>%s%%</b> by default."
-//#define PERCENTCVARWITHNODEFAULT    "It is <b>%s%%</b>."
-//#define PERCENTCVARISDEFAULT        "It is its default of <b>%s%%</b>."
-//#define PERCENTCVARISREADONLY       "It is <b>%s%%</b> and is read-only."
-//#define STRINGCVARWITHDEFAULT       "It is <b>\"%s\"</b> and is <b>\"%s\"</b> by default."
-//#define STRINGCVARISDEFAULT         "It is its default of <b>\"%s\"</b>."
-//#define STRINGCVARISREADONLY        "It is <b>%s%s%s</b> and is read-only."
-//#define TIMECVARISREADONLY          "It is <b>%02i:%02i:%02i</b> and is read-only."
-
-//#define UNITSPERFOOT                16
-//#define FEETPERMETER                3.28084f
-//#define METERSPERKILOMETER          1000.0f
-//#define FEETPERMILE                 5280
 
 //alias_t             aliases[MAXALIASES];
 //
@@ -92,10 +52,10 @@
 //static int          mapcmdmap;
 //static char         mapcmdlump[7];
 
-////dboolean            executingalias = false;
-////dboolean            healthcvar = false;
-////dboolean            quitcmd = false;
-//dboolean            resettingcvar = false;
+dboolean            executingalias = false;
+dboolean            healthcvar = false;
+dboolean            quitcmd = false;
+dboolean            resettingcvar = false;
 dboolean            togglingvanilla = false;
 dboolean            vanilla = false;
 
@@ -184,7 +144,7 @@ dboolean            vanilla = false;
 //static void weapon5_action_func(void);
 //static void weapon6_action_func(void);
 //static void weapon7_action_func(void);
-//
+
 //action_t actions[] =
 //{
 //    { "+alwaysrun",   true,  alwaysrun_action_func,   &keyboardalwaysrun,         NULL,                  NULL,             &gamepadalwaysrun,         NULL         },
@@ -223,7 +183,7 @@ dboolean            vanilla = false;
 //    { "+zoomout",     true,  NULL,                    &keyboardautomapzoomout,    NULL,                  NULL,             &gamepadautomapzoomout,    NULL         },
 //    { "",             false, NULL,                    NULL,                       NULL,                  NULL,             NULL,                      NULL         }
 //};
-//
+
 //static dboolean alive_func1(char *cmd, char *parms);
 //static dboolean cheat_func1(char *cmd, char *parms);
 //static dboolean game_func1(char *cmd, char *parms);
@@ -2496,7 +2456,7 @@ dboolean            vanilla = false;
 ////
 //static int      killcmdtype = NUMMOBJTYPES;
 //static mobj_t   *killcmdmobj;
-//dboolean        massacre;
+////dboolean        massacre;
 //
 //static dboolean kill_cmd_func1(char *cmd, char *parms)
 //{

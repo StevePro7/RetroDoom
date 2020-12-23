@@ -1,5 +1,6 @@
 #include "g_game.h"
 
+#include "d_event.h"
 #include "m_fixed.h"
 
 #if defined(_WIN32)
@@ -129,9 +130,9 @@ static fixed_t  gamepadangleturn[] = { 640, 960 };
 //static int      savegameslot;
 //static char     savedescription[SAVESTRINGSIZE];
 //char            savename[MAX_PATH];
-//
-//gameaction_t    loadaction = ga_nothing;
-//
+
+gameaction_t    loadaction = ga_nothing;
+
 //uint64_t        stat_gamessaved = 0;
 //uint64_t        stat_mapsstarted = 0;
 //uint64_t        stat_mapscompleted = 0;
