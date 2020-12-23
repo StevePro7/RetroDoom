@@ -1,10 +1,13 @@
 //#include "w_merge.h"
 //
 ////#include "c_console.h"
+//
 //#include "d_items.h"
+//#include "doomdef.h"
 //#include "doomstat.h"
 //#include "doomvars.h"
 //#include "i_system.h"
+//#include "logger.h"
 //#include "m_misc.h"
 //#include "sprites.h"
 //#include "version.h"
@@ -461,8 +464,12 @@
 //                    {
 //                        char    *temp = commify(patches);
 //
-//                        C_Warning(1, "The %s%s between the <b>HI_START</b> and <b>HI_END</b> markers will be ignored.",
-//                            (patches > 1 ? temp : ""), (patches > 1 ? " patches" : "patch"));
+//						// stevepro
+//                        //C_Warning(1, "The %s%s between the <b>HI_START</b> and <b>HI_END</b> markers will be ignored.",
+//                          //  (patches > 1 ? temp : ""), (patches > 1 ? " patches" : "patch"));
+//						logd( "The %s%s between the <b>HI_START</b> and <b>HI_END</b> markers will be ignored.\n",
+//							( patches > 1 ? temp : "" ), ( patches > 1 ? " patches" : "patch" ) );
+//
 //                        free(temp);
 //                    }
 //
