@@ -273,6 +273,50 @@ static void D_DoomMainSetup( void )
 	// init subsystems
 	V_Init();
 	I_InitTimer();
+
+	if( !stat_runs )
+	{
+		//C_Output( "This is the first time <i><b>" PACKAGE_NAME "</b></i> has been run." );
+		logd( "This is the first time <i><b>" PACKAGE_NAME "</b></i> has been run.\n" );
+	}
+		
+	else if( stat_runs == 1 )
+	{
+		//C_Output( "<i><b>" PACKAGE_NAME "</b></i> has now been run twice." );
+		logd( "<i><b>" PACKAGE_NAME "</b></i> has now been run twice.\n" );
+	}
+	else
+	{
+		char    *temp = commify( SafeAdd( stat_runs, 1 ) );
+
+		//C_Output( "<i><b>" PACKAGE_NAME "</b></i> has now been run %s times.", temp );
+		logd( "<i><b>" PACKAGE_NAME "</b></i> has now been run %s times.\n", temp );
+
+		free( temp );
+	}
+
+	if( !M_FileExists( packagewad ) )
+	{
+		//I_Error( "%s can't be found.", packagewad );
+		loge( "%s can't be found.\n", packagewad );
+	}
+		
+
+	if( M_CheckParm( "-nodeh" ) )
+	{
+		//C_Output( "A <b>-nodeh</b> parameter was found on the command-line. All <b>DEHACKED</b> lumps will be ignored." );
+		logd( "A <b>-nodeh</b> parameter was found on the command-line. All <b>DEHACKED</b> lumps will be ignored.\n" );
+	}
+		
+	else if( M_CheckParm( "-nobex" ) )
+	{
+		//C_Output( "A <b>-nobex</b> parameter was found on the command-line. All <b>DEHACKED</b> lumps will be ignored." );
+		logd( "A <b>-nobex</b> parameter was found on the command-line. All <b>DEHACKED</b> lumps will be ignored.\n" );
+	}
+		
+
+	p = M_CheckParmsWithArgs( "-file", "-pwad", "-merge", 1, 1 );
+
 }
 
 //
