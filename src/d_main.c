@@ -458,12 +458,12 @@ static void D_DoomMainSetup( void )
 //			} while( !choseniwad );
 //#endif
 //
-//			stat_runs = SafeAdd( stat_runs, 1 );
+			stat_runs = SafeAdd( stat_runs, 1 );
 //		}
 //	}
 //
-//	M_SaveCVARs();
-//
+	M_SaveCVARs();
+
 //#if defined(_WIN32)
 //	if( keyboardscreenshot == KEY_PRINTSCREEN )
 //	{
