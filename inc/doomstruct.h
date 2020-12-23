@@ -278,6 +278,14 @@ typedef struct bloodsplat_s
 } bloodsplat_t;
 
 
+// p_pspr.h
+typedef struct
+{
+	state_t *state; // a NULL state means not active
+	int     tics;
+	fixed_t sx, sy;
+} pspdef_t;
+
 
 
 #endif

@@ -3,6 +3,7 @@
 
 // stevepro
 #include "doomenum.h"
+#include "doomstruct.h"
 #include "doomtype.h"
 #include "m_fixed.h"
 #include "states.h"
@@ -23,16 +24,16 @@
 // Frame flags:
 // handles maximum brightness (torches, muzzle flare, light sources)
 //
-#define FF_FULLBRIGHT   0x8000  // flag in thing->frame
-#define FF_FRAMEMASK    0x7FFF
+//#define FF_FULLBRIGHT   0x8000  // flag in thing->frame
+//#define FF_FRAMEMASK    0x7FFF
 
 
-typedef struct
-{
-    state_t *state; // a NULL state means not active
-    int     tics;
-    fixed_t sx, sy;
-} pspdef_t;
+//typedef struct
+//{
+//    state_t *state; // a NULL state means not active
+//    int     tics;
+//    fixed_t sx, sy;
+//} pspdef_t;
 
 //dboolean P_CheckAmmo(weapontype_t weapon);
 //void P_EquipWeapon(weapontype_t weapon);
