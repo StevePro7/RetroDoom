@@ -84,6 +84,10 @@ int                 vid_capfps;// = vid_capfps_default;
 // Set if homebrew PWAD stuff has been added.
 dboolean        modifiedgame;
 
+ticcmd_t    localcmds[ BACKUPTICS ];
+
+
+
 // c_cmds.c
 alias_t             aliases[ MAXALIASES ];
 dboolean            togglingvanilla;// = false;
