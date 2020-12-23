@@ -1,12 +1,14 @@
-#include <ctype.h>
+#include "w_merge.h"
 
-#include "c_console.h"
+//#include "c_console.h"
+#include "d_items.h"
 #include "doomstat.h"
 #include "i_system.h"
 #include "m_misc.h"
 #include "version.h"
 #include "w_wad.h"
 #include "z_zone.h"
+#include <ctype.h>
 
 typedef enum
 {

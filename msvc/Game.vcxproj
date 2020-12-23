@@ -70,6 +70,7 @@
     <ClCompile Include="..\src\v_data.c" />
     <ClCompile Include="..\src\v_video.c" />
     <ClCompile Include="..\src\w_file.c" />
+    <ClCompile Include="..\src\w_merge.c" />
     <ClCompile Include="..\src\w_wad.c" />
     <ClCompile Include="..\src\z_zone.c" />
   </ItemGroup>
@@ -128,6 +129,7 @@
     <ClInclude Include="..\inc\v_data.h" />
     <ClInclude Include="..\inc\v_video.h" />
     <ClInclude Include="..\inc\w_file.h" />
+    <ClInclude Include="..\inc\w_merge.h" />
     <ClInclude Include="..\inc\w_wad.h" />
     <ClInclude Include="..\inc\z_zone.h" />
   </ItemGroup>

@@ -1,8 +1,10 @@
 #if !defined(__DOOMSTRUCT_H__)
 #define __DOOMSTRUCT_H__
 
+#include "doomdef.h"
 #include "doomenum.h"
 #include "doomtype.h"
+#include <stdio.h>
 
 // d_player.h
 //
@@ -87,6 +89,37 @@ typedef struct
 	char    name[ 128 ];
 	char    string[ 128 ];
 } alias_t;
+
+
+// w_file.h
+typedef struct wadfile_s wadfile_t;
+
+struct wadfile_s
+{
+	FILE        *fstream;
+	dboolean    freedoom;
+	char        path[ MAX_PATH ];
+	int         type;
+};
+
+
+// w_wad.h
+typedef struct lumpinfo_s lumpinfo_t;
+
+struct lumpinfo_s
+{
+	char        name[ 9 ];
+	int         size;
+	void        *cache;
+
+	// killough 01/31/98: hash table fields, used for ultra-fast hash table lookup
+	int         index;
+	int         next;
+
+	int         position;
+
+	wadfile_t   *wadfile;
+};
 
 
 #endif

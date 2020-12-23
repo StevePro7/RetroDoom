@@ -884,4 +884,15 @@
 // z_zone.h
 #define PU_PURGELEVEL    PU_CACHE    // First purgeable tag's level
 
+
+// w_file.h
+#if !defined(MAX_PATH)
+#define MAX_PATH    260
+#endif
+
+
+// w_wad.h
+#define IWAD 1
+#define PWAD 2
+
 #endif
