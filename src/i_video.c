@@ -24,13 +24,14 @@
 //#include "d_main.h"
 //#include "doomstat.h"
 //#include "hu_stuff.h"
-//#include "i_colors.h"
+#include "i_colors.h"
 //#include "i_gamepad.h"
-//#include "i_system.h"
+#include "i_system.h"
 //#include "i_timer.h"
+#include "logger.h"
 //#include "m_cheat.h"
-//#include "m_config.h"
-//#include "m_menu.h"
+#include "m_config.h"
+
 #include "m_misc.h"
 //#include "m_random.h"
 //#include "r_main.h"
@@ -291,45 +292,45 @@ dboolean MouseShouldBeGrabbed( void )
 //
 //    return state[TranslateKey2(key)];
 //}
-//
-//void I_CapFPS(int cap)
-//{
-//#if defined(_WIN32)
-//    static UINT CapFPSTimer;
-//
-//    if (CapFPSTimer)
-//    {
-//        timeKillEvent(CapFPSTimer);
-//        CapFPSTimer = 0;
-//    }
-//
-//    if (!cap || cap == TICRATE)
-//    {
-//        if (CapFPSEvent)
-//        {
-//            CloseHandle(CapFPSEvent);
-//            CapFPSEvent = NULL;
-//        }
-//    }
-//    else
-//    {
-//        if (!CapFPSEvent)
-//            CapFPSEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
-//
-//        if (CapFPSEvent)
-//        {
-//            CapFPSTimer = timeSetEvent(1000 / cap, 0, (LPTIMECALLBACK)CapFPSEvent, 0, (TIME_PERIODIC | TIME_CALLBACK_EVENT_SET));
-//
-//            if (!CapFPSTimer)
-//            {
-//                CloseHandle(CapFPSEvent);
-//                CapFPSEvent = NULL;
-//            }
-//        }
-//    }
-//#endif
-//}
-//
+
+void I_CapFPS( int cap )
+{
+#if defined(_WIN32)
+	static UINT CapFPSTimer;
+
+	if( CapFPSTimer )
+	{
+		timeKillEvent( CapFPSTimer );
+		CapFPSTimer = 0;
+	}
+
+	if( !cap || cap == TICRATE )
+	{
+		if( CapFPSEvent )
+		{
+			CloseHandle( CapFPSEvent );
+			CapFPSEvent = NULL;
+		}
+	}
+	else
+	{
+		if( !CapFPSEvent )
+			CapFPSEvent = CreateEvent( NULL, FALSE, TRUE, NULL );
+
+		if( CapFPSEvent )
+		{
+			CapFPSTimer = timeSetEvent( 1000 / cap, 0, ( LPTIMECALLBACK ) CapFPSEvent, 0, ( TIME_PERIODIC | TIME_CALLBACK_EVENT_SET ) );
+
+			if( !CapFPSTimer )
+			{
+				CloseHandle( CapFPSEvent );
+				CapFPSEvent = NULL;
+			}
+		}
+	}
+#endif
+}
+
 //static void FreeSurfaces(void)
 //{
 //    SDL_FreePalette(palette);
@@ -784,24 +785,24 @@ void I_ShutdownKeyboard( void )
 //
 //    currently_grabbed = grab;
 //}
-//
-//static void GetUpscaledTextureSize(int width, int height)
-//{
-//    const int   actualheight = SCREENWIDTH * 3 / 4;
-//
-//    if (width * actualheight < height * SCREENWIDTH)
-//        height = width * actualheight / SCREENWIDTH;
-//    else
-//        width = height * SCREENWIDTH / actualheight;
-//
-//    upscaledwidth = MIN(width / SCREENWIDTH + !!(width % SCREENWIDTH), MAXUPSCALEWIDTH);
-//    upscaledheight = MIN(height / SCREENHEIGHT + !!(height % SCREENHEIGHT), MAXUPSCALEHEIGHT);
-//}
-//
-//void (*blitfunc)(void);
-//void (*mapblitfunc)(void);
-//
-//static void nullfunc(void) {}
+
+static void GetUpscaledTextureSize( int width, int height )
+{
+	const int   actualheight = SCREENWIDTH * 3 / 4;
+
+	if( width * actualheight < height * SCREENWIDTH )
+		height = width * actualheight / SCREENWIDTH;
+	else
+		width = height * SCREENWIDTH / actualheight;
+
+	upscaledwidth = MIN( width / SCREENWIDTH + !!( width % SCREENWIDTH ), MAXUPSCALEWIDTH );
+	upscaledheight = MIN( height / SCREENHEIGHT + !!( height % SCREENHEIGHT ), MAXUPSCALEHEIGHT );
+}
+
+void( *blitfunc )( void );
+void( *mapblitfunc )( void );
+
+static void nullfunc( void ) {}
 
 static uint64_t performancefrequency;
 //uint64_t        starttime;
@@ -992,44 +993,44 @@ void I_WindowResizeBlit( void )
 //
 //    mapblitfunc = (mapwindow ? (nearestlinear && !override ? &I_Blit_Automap_NearestLinear : &I_Blit_Automap) : &nullfunc);
 //}
+
 //
-////
-//// I_SetPalette
-////
-//void I_SetPalette(byte *playpal)
-//{
-//    if (r_color == r_color_max)
-//    {
-//        for (int i = 0; i < 256; i++)
-//        {
-//            colors[i].r = gammatable[gammaindex][*playpal++];
-//            colors[i].g = gammatable[gammaindex][*playpal++];
-//            colors[i].b = gammatable[gammaindex][*playpal++];
-//        }
-//    }
-//    else
-//    {
-//        double  color = r_color / 100.0;
+// I_SetPalette
 //
-//        for (int i = 0; i < 256; i++)
-//        {
-//            byte    r = gammatable[gammaindex][*playpal++];
-//            byte    g = gammatable[gammaindex][*playpal++];
-//            byte    b = gammatable[gammaindex][*playpal++];
-//            double  p = sqrt((double)r * r * 0.299 + (double)g * g * 0.587 + (double)b * b * 0.114);
-//
-//            colors[i].r = (byte)(p + (r - p) * color);
-//            colors[i].g = (byte)(p + (g - p) * color);
-//            colors[i].b = (byte)(p + (b - p) * color);
-//        }
-//    }
-//
-//    SDL_SetPaletteColors(palette, colors, 0, 256);
-//
-//    if (vid_pillarboxes)
-//        SDL_SetRenderDrawColor(renderer, colors[0].r, colors[0].g, colors[0].b, SDL_ALPHA_OPAQUE);
-//}
-//
+void I_SetPalette(byte *playpal)
+{
+    if (r_color == r_color_max)
+    {
+        for (int i = 0; i < 256; i++)
+        {
+            colors[i].r = gammatable[gammaindex][*playpal++];
+            colors[i].g = gammatable[gammaindex][*playpal++];
+            colors[i].b = gammatable[gammaindex][*playpal++];
+        }
+    }
+    else
+    {
+        double  color = r_color / 100.0;
+
+        for (int i = 0; i < 256; i++)
+        {
+            byte    r = gammatable[gammaindex][*playpal++];
+            byte    g = gammatable[gammaindex][*playpal++];
+            byte    b = gammatable[gammaindex][*playpal++];
+            double  p = sqrt((double)r * r * 0.299 + (double)g * g * 0.587 + (double)b * b * 0.114);
+
+            colors[i].r = (byte)(p + (r - p) * color);
+            colors[i].g = (byte)(p + (g - p) * color);
+            colors[i].b = (byte)(p + (b - p) * color);
+        }
+    }
+
+    SDL_SetPaletteColors(palette, colors, 0, 256);
+
+    if (vid_pillarboxes)
+        SDL_SetRenderDrawColor(renderer, colors[0].r, colors[0].g, colors[0].b, SDL_ALPHA_OPAQUE);
+}
+
 //void I_SetExternalAutomapPalette(void)
 //{
 //    if (mappalette)
@@ -1096,16 +1097,16 @@ void I_WindowResizeBlit( void )
 //        SetFocus(info.info.win.window);
 //#endif
 //}
-//
-//static void GetDisplays(void)
-//{
-//    numdisplays = MIN(SDL_GetNumVideoDisplays(), MAXDISPLAYS);
-//
-//    for (int i = 0; i < numdisplays; i++)
-//        if (SDL_GetDisplayBounds(i, &displays[i]) < 0)
-//            I_SDLError(SDL_GetDisplayBounds);
-//}
-//
+
+static void GetDisplays( void )
+{
+	numdisplays = MIN( SDL_GetNumVideoDisplays(), MAXDISPLAYS );
+
+	for( int i = 0; i < numdisplays; i++ )
+		if( SDL_GetDisplayBounds( i, &displays[ i ] ) < 0 )
+			I_SDLError( SDL_GetDisplayBounds );
+}
+
 //void I_CreateExternalAutomap(int outputlevel)
 //{
 //    uint32_t    pixelformat;
@@ -1222,135 +1223,135 @@ void I_WindowResizeBlit( void )
 //    mapblitfunc = &nullfunc;
 //}
 //
-//void GetWindowPosition(void)
-//{
-//    int x = 0;
-//    int y = 0;
-//
-//    if (M_StringCompare(vid_windowpos, vid_windowpos_centered) || M_StringCompare(vid_windowpos, vid_windowpos_centred))
-//    {
-//        windowx = 0;
-//        windowy = 0;
-//    }
-//    else if (sscanf(vid_windowpos, "(%10d,%10d)", &x, &y) != 2)
-//    {
-//        windowx = 0;
-//        windowy = 0;
-//        vid_windowpos = vid_windowpos_centered;
-//        M_SaveCVARs();
-//    }
-//    else
-//    {
-//        windowx = BETWEEN(displays[displayindex].x, x, displays[displayindex].x + displays[displayindex].w - 50);
-//        windowy = BETWEEN(displays[displayindex].y, y, displays[displayindex].y + displays[displayindex].h - 50);
-//    }
-//}
-//
-//void GetWindowSize(void)
-//{
-//    char    width[11] = "";
-//    char    height[11] = "";
-//
-//    if (sscanf(vid_windowsize, "%10[^x]x%10[^x]", width, height) != 2)
-//    {
-//        windowheight = SCREENHEIGHT + windowborderheight;
-//        windowwidth = SCREENHEIGHT * 16 / 10 + windowborderwidth;
-//        vid_windowsize = vid_windowsize_default;
-//        M_SaveCVARs();
-//    }
-//    else
-//    {
-//        char    *temp1 = uncommify(width);
-//        char    *temp2 = uncommify(height);
-//        int     w = atoi(temp1);
-//        int     h = atoi(temp2);
-//
-//        if (w < VANILLAWIDTH + windowborderwidth || h < VANILLAWIDTH * 3 / 4 + windowborderheight)
-//        {
-//            char    size[16];
-//            char    *temp3 = commify((windowwidth = VANILLAWIDTH + windowborderwidth));
-//            char    *temp4 = commify((windowheight = VANILLAWIDTH * 3 / 4 + windowborderheight));
-//
-//            M_snprintf(size, sizeof(size), "%sx%s", temp3, temp4);
-//            vid_windowsize = M_StringDuplicate(size);
-//            M_SaveCVARs();
-//
-//            free(temp3);
-//            free(temp4);
-//        }
-//        else
-//        {
-//            windowwidth = w;
-//            windowheight = h;
-//        }
-//
-//        free(temp1);
-//        free(temp2);
-//    }
-//}
-//
-//static dboolean ValidScreenMode(int width, int height)
-//{
-//    const int   modes = SDL_GetNumDisplayModes(displayindex);
-//
-//    for (int i = 0; i < modes; i++)
-//    {
-//        SDL_DisplayMode mode;
-//
-//        SDL_GetDisplayMode(displayindex, i, &mode);
-//
-//        if (width == mode.w && height == mode.h)
-//            return true;
-//    }
-//
-//    return false;
-//}
-//
-//void GetScreenResolution(void)
-//{
-//    if (M_StringCompare(vid_screenresolution, vid_screenresolution_desktop))
-//    {
-//        screenwidth = 0;
-//        screenheight = 0;
-//    }
-//    else
-//    {
-//        int width;
-//        int height;
-//
-//        if (sscanf(vid_screenresolution, "%10dx%10d", &width, &height) != 2 || !ValidScreenMode(width, height))
-//        {
-//            screenwidth = 0;
-//            screenheight = 0;
-//            vid_screenresolution = vid_screenresolution_desktop;
-//            M_SaveCVARs();
-//        }
-//        else
-//        {
-//            screenwidth = width;
-//            screenheight = height;
-//        }
-//    }
-//}
-//
-//static char *getaspectratio(int width, int height)
-//{
-//    int         hcf = gcd(width, height);
-//    static char ratio[10];
-//
-//    width /= hcf;
-//    height /= hcf;
-//
-//    if (width == 8)
-//    {
-//        width = 16;
-//        height *= 2;
-//    }
-//
-//    M_snprintf(ratio, sizeof(ratio), "%i:%i", width, height);
-//    return ratio;
-//}
-//
+void GetWindowPosition( void )
+{
+	int x = 0;
+	int y = 0;
+
+	if( M_StringCompare( vid_windowpos, vid_windowpos_centered ) || M_StringCompare( vid_windowpos, vid_windowpos_centred ) )
+	{
+		windowx = 0;
+		windowy = 0;
+	}
+	else if( sscanf( vid_windowpos, "(%10d,%10d)", &x, &y ) != 2 )
+	{
+		windowx = 0;
+		windowy = 0;
+		vid_windowpos = vid_windowpos_centered;
+		M_SaveCVARs();
+	}
+	else
+	{
+		windowx = BETWEEN( displays[ displayindex ].x, x, displays[ displayindex ].x + displays[ displayindex ].w - 50 );
+		windowy = BETWEEN( displays[ displayindex ].y, y, displays[ displayindex ].y + displays[ displayindex ].h - 50 );
+	}
+}
+
+void GetWindowSize( void )
+{
+	char    width[ 11 ] = "";
+	char    height[ 11 ] = "";
+
+	if( sscanf( vid_windowsize, "%10[^x]x%10[^x]", width, height ) != 2 )
+	{
+		windowheight = SCREENHEIGHT + windowborderheight;
+		windowwidth = SCREENHEIGHT * 16 / 10 + windowborderwidth;
+		vid_windowsize = vid_windowsize_default;
+		M_SaveCVARs();
+	}
+	else
+	{
+		char    *temp1 = uncommify( width );
+		char    *temp2 = uncommify( height );
+		int     w = atoi( temp1 );
+		int     h = atoi( temp2 );
+
+		if( w < VANILLAWIDTH + windowborderwidth || h < VANILLAWIDTH * 3 / 4 + windowborderheight )
+		{
+			char    size[ 16 ];
+			char    *temp3 = commify( ( windowwidth = VANILLAWIDTH + windowborderwidth ) );
+			char    *temp4 = commify( ( windowheight = VANILLAWIDTH * 3 / 4 + windowborderheight ) );
+
+			M_snprintf( size, sizeof( size ), "%sx%s", temp3, temp4 );
+			vid_windowsize = M_StringDuplicate( size );
+			M_SaveCVARs();
+
+			free( temp3 );
+			free( temp4 );
+		}
+		else
+		{
+			windowwidth = w;
+			windowheight = h;
+		}
+
+		free( temp1 );
+		free( temp2 );
+	}
+}
+
+static dboolean ValidScreenMode( int width, int height )
+{
+	const int   modes = SDL_GetNumDisplayModes( displayindex );
+
+	for( int i = 0; i < modes; i++ )
+	{
+		SDL_DisplayMode mode;
+
+		SDL_GetDisplayMode( displayindex, i, &mode );
+
+		if( width == mode.w && height == mode.h )
+			return true;
+	}
+
+	return false;
+}
+
+void GetScreenResolution( void )
+{
+	if( M_StringCompare( vid_screenresolution, vid_screenresolution_desktop ) )
+	{
+		screenwidth = 0;
+		screenheight = 0;
+	}
+	else
+	{
+		int width;
+		int height;
+
+		if( sscanf( vid_screenresolution, "%10dx%10d", &width, &height ) != 2 || !ValidScreenMode( width, height ) )
+		{
+			screenwidth = 0;
+			screenheight = 0;
+			vid_screenresolution = vid_screenresolution_desktop;
+			M_SaveCVARs();
+		}
+		else
+		{
+			screenwidth = width;
+			screenheight = height;
+		}
+	}
+}
+
+static char *getaspectratio( int width, int height )
+{
+	int         hcf = gcd( width, height );
+	static char ratio[ 10 ];
+
+	width /= hcf;
+	height /= hcf;
+
+	if( width == 8 )
+	{
+		width = 16;
+		height *= 2;
+	}
+
+	M_snprintf( ratio, sizeof( ratio ), "%i:%i", width, height );
+	return ratio;
+}
+
 //static void PositionOnCurrentDisplay(void)
 //{
 //    manuallypositioning = true;
@@ -1375,467 +1376,545 @@ void I_WindowResizeBlit( void )
 //        SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_NONE);
 //    }
 //}
-//
-//static void SetVideoMode(dboolean output)
-//{
-//    int                 rendererflags = SDL_RENDERER_TARGETTEXTURE;
-//    int                 windowflags = SDL_WINDOW_RESIZABLE;
-//    int                 width, height;
-//    uint32_t            pixelformat;
-//    uint32_t            rmask;
-//    uint32_t            gmask;
-//    uint32_t            bmask;
-//    uint32_t            amask;
-//    int                 bpp = 0;
-//    SDL_RendererInfo    rendererinfo;
-//    const char          *displayname = SDL_GetDisplayName((displayindex = vid_display - 1));
-//
-//    if (displayindex < 0 || displayindex >= numdisplays)
-//    {
-//        if (output)
-//            C_Warning(1, "Unable to find display %i.", vid_display);
-//
-//        displayname = SDL_GetDisplayName((displayindex = vid_display_default - 1));
-//    }
-//
-//    if (output)
-//    {
-//        if (displayname)
-//        {
-//            if (numdisplays == 1)
-//                C_Output("Using the \"%s\" display.", displayname);
-//            else
-//                C_Output("Using \"%s\" (display %i of %i).", displayname, displayindex + 1, numdisplays);
-//        }
-//        else
-//        {
-//            if (numdisplays != 1)
-//                C_Output("Using display %i of %i.", displayindex + 1, numdisplays);
-//        }
-//    }
-//
-//    if (vid_vsync)
-//        rendererflags |= SDL_RENDERER_PRESENTVSYNC;
-//
-//    if (M_StringCompare(vid_scalefilter, vid_scalefilter_nearest_linear))
-//        nearestlinear = true;
-//    else
-//    {
-//        nearestlinear = false;
-//
-//        if (!M_StringCompare(vid_scalefilter, vid_scalefilter_linear)
-//            && !M_StringCompare(vid_scalefilter, vid_scalefilter_nearest))
-//        {
-//            vid_scalefilter = vid_scalefilter_default;
-//            M_SaveCVARs();
-//        }
-//
-//        if (!(SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter, SDL_HINT_OVERRIDE)))
-//            I_SDLError(SDL_SetHintWithPriority);
-//    }
-//
-//    if (!(SDL_SetHintWithPriority(SDL_HINT_RENDER_DRIVER, vid_scaleapi, SDL_HINT_OVERRIDE)))
-//        I_SDLError(SDL_SetHintWithPriority);
-//
-//    software = M_StringCompare(vid_scaleapi, vid_scaleapi_software);
-//
-//    GetWindowPosition();
-//    GetWindowSize();
-//    GetScreenResolution();
-//
-//    if (M_StringStartsWith(vid_scaleapi, "opengl"))
-//        windowflags |= SDL_WINDOW_OPENGL;
-//
-//    if (vid_fullscreen)
-//    {
-//        if (!screenwidth && !screenheight)
-//        {
-//            width = displays[displayindex].w;
-//            height = displays[displayindex].h;
-//
-//            if (!width || !height)
-//                I_Error("Graphics couldn't be initialized.");
-//
-//            if (!(window = SDL_CreateWindow(PACKAGE_NAME, SDL_WINDOWPOS_UNDEFINED_DISPLAY(displayindex),
-//                SDL_WINDOWPOS_UNDEFINED_DISPLAY(displayindex), width, height,
-//                (windowflags | (vid_borderlesswindow ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN)))))
-//                I_SDLError(SDL_CreateWindow);
-//
-//            if (output)
-//            {
-//                char    *temp1 = commify(width);
-//                char    *temp2 = commify(height);
-//
-//                C_Output("Staying at the native desktop resolution of %sx%s with a %s aspect ratio.",
-//                    temp1, temp2, getaspectratio(width, height));
-//
-//                free(temp1);
-//                free(temp2);
-//            }
-//        }
-//        else
-//        {
-//            width = screenwidth;
-//            height = screenheight;
-//
-//            if (!(window = SDL_CreateWindow(PACKAGE_NAME, SDL_WINDOWPOS_UNDEFINED_DISPLAY(displayindex),
-//                SDL_WINDOWPOS_UNDEFINED_DISPLAY(displayindex), width, height,
-//                (windowflags | (vid_borderlesswindow ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN)))))
-//                I_SDLError(SDL_CreateWindow);
-//
-//            if (output)
-//            {
-//                char    *temp1 = commify(width);
-//                char    *temp2 = commify(height);
-//
-//                C_Output("Switched to a resolution of %sx%s with a %s aspect ratio.", temp1, temp2, getaspectratio(width, height));
-//
-//                free(temp1);
-//                free(temp2);
-//            }
-//        }
-//    }
-//    else
-//    {
-//        if (windowheight > displays[displayindex].h)
-//        {
-//            windowheight = displays[displayindex].h - windowborderheight;
-//            windowwidth = windowheight * 4 / 3;
-//            M_SaveCVARs();
-//        }
-//
-//        width = windowwidth;
-//        height = windowheight;
-//
-//        if (!windowx && !windowy)
-//        {
-//            if (!(window = SDL_CreateWindow(PACKAGE_NAME, SDL_WINDOWPOS_CENTERED_DISPLAY(displayindex),
-//                SDL_WINDOWPOS_CENTERED_DISPLAY(displayindex), width, height, windowflags)))
-//                I_SDLError(SDL_CreateWindow);
-//
-//            if (output)
-//            {
-//                char    *temp1 = commify(width);
-//                char    *temp2 = commify(height);
-//
-//                C_Output("Created a %sx%s resizable window centered on the screen.", temp1, temp2);
-//
-//                free(temp1);
-//                free(temp2);
-//            }
-//        }
-//        else
-//        {
-//            if (!(window = SDL_CreateWindow(PACKAGE_NAME, windowx, windowy, width, height, windowflags)))
-//                I_SDLError(SDL_CreateWindow);
-//
-//            if (output)
-//            {
-//                char    *temp1 = commify(width);
-//                char    *temp2 = commify(height);
-//
-//                C_Output("Created a %sx%s resizable window at (%i,%i).", temp1, temp2, windowx, windowy);
-//
-//                free(temp1);
-//                free(temp2);
-//            }
-//        }
-//    }
-//
-//    GetUpscaledTextureSize(width, height);
-//
-//    windowid = SDL_GetWindowID(window);
-//
-//    SDL_GetWindowSize(window, &displaywidth, &displayheight);
-//    displaycenterx = displaywidth / 2;
-//    displaycentery = displayheight / 2;
-//
-//    if (!(renderer = SDL_CreateRenderer(window, -1, rendererflags)) && !software)
-//    {
-//        if (!(renderer = SDL_CreateRenderer(window, -1, (SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE))))
-//            I_SDLError(SDL_CreateRenderer);
-//        else
-//        {
-//            C_Warning(1, "The <b>vid_scaleapi</b> CVAR was changed from <b>%s</b> to <b>\"software\"</b>.", vid_scaleapi);
-//            vid_scaleapi = vid_scaleapi_software;
-//            M_SaveCVARs();
-//        }
-//    }
-//
-//    if (SDL_RenderSetLogicalSize(renderer, SCREENWIDTH, SCREENWIDTH * 3 / 4) < 0)
-//        I_SDLError(SDL_RenderSetLogicalSize);
-//
-//    if (output)
-//    {
-//        char    *temp1 = commify(height * 4 / 3);
-//        char    *temp2 = commify(height);
-//
-//        C_Output("A software renderer is used to render each frame.");
-//
-//        if (nearestlinear)
-//        {
-//            char    *temp3 = commify((int64_t)upscaledwidth * SCREENWIDTH);
-//            char    *temp4 = commify((int64_t)upscaledheight * SCREENHEIGHT);
-//
-//            C_Output("Each frame is scaled up from %ix%i to %sx%s using nearest-neighbor interpolation.",
-//                SCREENWIDTH, SCREENHEIGHT, temp3, temp4);
-//            C_Output("Each frame is then scaled down to %sx%s using linear filtering.", temp1, temp2);
-//
-//            free(temp3);
-//            free(temp4);
-//        }
-//        else if (M_StringCompare(vid_scalefilter, vid_scalefilter_linear) && !software)
-//            C_Output("Each frame is scaled up from %ix%i to %sx%s using linear filtering.", SCREENWIDTH, SCREENHEIGHT, temp1, temp2);
-//        else
-//            C_Output("Each frame is scaled up from %ix%i to %sx%s using nearest-neighbor interpolation.",
-//                SCREENWIDTH, SCREENHEIGHT, temp1, temp2);
-//
-//        free(temp1);
-//        free(temp2);
-//    }
-//
-//    if (!SDL_GetRendererInfo(renderer, &rendererinfo))
-//    {
-//        if (M_StringCompare(rendererinfo.name, vid_scaleapi_opengl))
-//        {
-//            int major;
-//            int minor;
-//
-//            SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
-//            SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
-//
-//            if (major * 10 + minor < 21)
-//            {
-//                C_Warning(1, "<i>" PACKAGE_NAME "</i> requires at least <i>OpenGL v2.1</i>.");
-//
-//#if defined(_WIN32)
-//                vid_scaleapi = vid_scaleapi_direct3d;
-//                M_SaveCVARs();
-//
-//                if (!(SDL_SetHintWithPriority(SDL_HINT_RENDER_DRIVER, vid_scaleapi, SDL_HINT_OVERRIDE)))
-//                    I_SDLError(SDL_SetHintWithPriority);
-//
-//                if (output)
-//                    C_Output("This scaling is now done in hardware using <i><b>Direct3D %s.</b></i>",
-//                        (SDL_VIDEO_RENDER_D3D11 ? "v11.0" : "v9.0"));
-//#endif
-//            }
-//            else
-//            {
-//                if (output)
-//                    C_Output("This scaling is done in hardware using <i><b>OpenGL v%i.%i.</b></i>", major, minor);
-//
-//                if (!M_StringCompare(vid_scaleapi, vid_scaleapi_opengl))
-//                {
-//                    vid_scaleapi = vid_scaleapi_opengl;
-//                    M_SaveCVARs();
-//                }
-//            }
-//        }
-//#if defined(_WIN32)
-//        else if (M_StringCompare(rendererinfo.name, vid_scaleapi_direct3d))
-//        {
-//            if (output)
-//                C_Output("This scaling is done in hardware using <i><b>Direct3D %s.</b></i>",
-//                    (SDL_VIDEO_RENDER_D3D11 ? "v11.0" : "v9.0"));
-//
-//            if (!M_StringCompare(vid_scaleapi, vid_scaleapi_direct3d))
-//            {
-//                vid_scaleapi = vid_scaleapi_direct3d;
-//                M_SaveCVARs();
-//            }
-//        }
-//#elif defined(__APPLE__)
-//        else if (M_StringCompare(rendererinfo.name, vid_scaleapi_metal))
-//        {
-//            if (output)
-//                C_Output("This scaling is done in hardware using <i><b>Metal.</b></i>");
-//        }
-//#endif
-//#if !defined(_WIN32)
-//        else if (M_StringCompare(rendererinfo.name, vid_scaleapi_opengles))
-//        {
-//            if (output)
-//                C_Output("This scaling is done in hardware using <i><b>OpenGL ES.</b></i>");
-//        }
-//        else if (M_StringCompare(rendererinfo.name, vid_scaleapi_opengles2))
-//        {
-//            if (output)
-//                C_Output("This scaling is done in hardware using <i><b>OpenGL ES 2.</b></i>");
-//        }
-//#endif
-//        else if (M_StringCompare(rendererinfo.name, vid_scaleapi_software))
-//        {
-//            software = true;
-//            nearestlinear = false;
-//
-//            if (!(SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_nearest, SDL_HINT_OVERRIDE)))
-//                I_SDLError(SDL_SetHintWithPriority);
-//
-//            if (output)
-//                C_Output("This scaling is also done in software.");
-//
-//            if (!M_StringCompare(vid_scaleapi, vid_scaleapi_software))
-//            {
-//                vid_scaleapi = vid_scaleapi_software;
-//                M_SaveCVARs();
-//            }
-//
-//            if (output && (M_StringCompare(vid_scalefilter, vid_scalefilter_linear)
-//                || M_StringCompare(vid_scalefilter, vid_scalefilter_nearest_linear)))
-//                C_Warning(1, "Linear filtering can't be used in software.");
-//        }
-//
-//        if (output)
-//        {
-//            typedef const GLubyte   *(APIENTRY *glStringFn_t)(GLenum);
-//            glStringFn_t            pglGetString = (glStringFn_t)SDL_GL_GetProcAddress("glGetString");
-//
-//            if (pglGetString)
-//            {
-//                const char  *graphicscard = (const char *)pglGetString(GL_RENDERER);
-//                const char  *vendor = (const char *)pglGetString(GL_VENDOR);
-//
-//                if (graphicscard && vendor)
-//                    C_Output("Using %s <i><b>%s</b></i> graphics card from <i><b>%s.</b></i>",
-//                        (isvowel(graphicscard[0]) ? "an" : "a"), graphicscard, vendor);
-//            }
-//        }
-//
-//        I_CapFPS(0);
-//
-//        refreshrate = 0;
-//
-//        if (rendererinfo.flags & SDL_RENDERER_PRESENTVSYNC)
-//        {
-//            SDL_DisplayMode displaymode;
-//
-//            if (!SDL_GetWindowDisplayMode(window, &displaymode))
-//            {
-//                refreshrate = displaymode.refresh_rate;
-//
-//                if (vid_vsync == vid_vsync_adaptive && M_StringStartsWith(vid_scaleapi, "opengl"))
-//                    SDL_GL_SetSwapInterval(-1);
-//
-//                if (refreshrate < vid_capfps || !vid_capfps)
-//                {
-//                    if (output)
-//                        C_Output("The framerate is synced with the display's refresh rate of %iHz.", refreshrate);
-//                }
-//                else
-//                {
-//                    I_CapFPS(vid_capfps);
-//
-//                    if (output)
-//                    {
-//                        char    *temp = commify(vid_capfps);
-//
-//                        C_Output("The framerate is capped at %s FPS.", temp);
-//                        free(temp);
-//                    }
-//                }
-//            }
-//        }
-//        else
-//        {
-//            if (vid_capfps < vid_capfps_max)
-//                I_CapFPS(vid_capfps);
-//
-//            if (output)
-//            {
-//                if (vid_vsync)
-//                {
-//                    if (M_StringCompare(rendererinfo.name, vid_scaleapi_software))
-//                        C_Warning(1, "The framerate can't be synced with the display's refresh rate in software.");
-//                    else
-//                        C_Warning(1, "The framerate can't be synced with the display's refresh rate using this graphics card.");
-//                }
-//
-//                if (vid_capfps)
-//                {
-//                    char    *temp = commify(vid_capfps);
-//
-//                    C_Output("The framerate is capped at %s FPS.", temp);
-//                    free(temp);
-//                }
-//                else
-//                    C_Output("The framerate is uncapped.");
-//            }
-//        }
-//    }
-//
-//    if (output)
-//    {
-//        wadfile_t   *playpalwad = lumpinfo[W_CheckNumForName("PLAYPAL")]->wadfile;
-//
-//        C_Output("Using the 256-color palette from the <b>PLAYPAL</b> lump in %s <b>%s</b>.",
-//            (playpalwad->type == IWAD ? "IWAD" : "PWAD"), playpalwad->path);
-//
-//        if (gammaindex == 10)
-//            C_Output("Gamma correction is off.");
-//        else
-//        {
-//            char    text[128];
-//            int     len;
-//
-//            M_snprintf(text, sizeof(text), "The gamma correction level is %.2f.", r_gamma);
-//            len = (int)strlen(text);
-//
-//            if (text[len - 2] == '0' && text[len - 3] == '0')
-//            {
-//                text[len - 2] = '.';
-//                text[len - 1] = '\0';
-//            }
-//
-//            C_Output(text);
-//        }
-//    }
-//
-//    if (!(surface = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 8, 0, 0, 0, 0)))
-//        I_SDLError(SDL_CreateRGBSurface);
-//
-//    screens[0] = surface->pixels;
-//
-//    pixelformat = SDL_GetWindowPixelFormat(window);
-//
-//    if (!(SDL_PixelFormatEnumToMasks(pixelformat, &bpp, &rmask, &gmask, &bmask, &amask)))
-//        I_SDLError(SDL_PixelFormatEnumToMasks);
-//
-//    if (!(buffer = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, bpp, rmask, gmask, bmask, amask)))
-//        I_SDLError(SDL_CreateRGBSurface);
-//
-//    pitch = buffer->pitch;
-//    pixels = buffer->pixels;
-//
-//    SDL_FillRect(buffer, NULL, 0);
-//
-//    if (nearestlinear && !(SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_nearest, SDL_HINT_OVERRIDE)))
-//        I_SDLError(SDL_SetHintWithPriority);
-//
-//    if (!(texture = SDL_CreateTexture(renderer, pixelformat, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT)))
-//        I_SDLError(SDL_CreateTexture);
-//
-//    if (nearestlinear)
-//    {
-//        if (!(SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_linear, SDL_HINT_OVERRIDE)))
-//            I_SDLError(SDL_SetHintWithPriority);
-//
-//        if (!(texture_upscaled = SDL_CreateTexture(renderer, pixelformat, SDL_TEXTUREACCESS_TARGET,
-//            upscaledwidth * SCREENWIDTH, upscaledheight * SCREENHEIGHT)))
-//            I_SDLError(SDL_CreateTexture);
-//    }
-//
-//    if (!(palette = SDL_AllocPalette(256)))
-//        I_SDLError(SDL_AllocPalette);
-//
-//    if (SDL_SetSurfacePalette(surface, palette) < 0)
-//        I_SDLError(SDL_SetSurfacePalette);
-//
-//    I_SetPalette(&PLAYPAL[st_palette * 768]);
-//
-//    src_rect.w = SCREENWIDTH;
-//    src_rect.h = SCREENHEIGHT - SBARHEIGHT * vid_widescreen;
-//}
+
+static void SetVideoMode( dboolean output )
+{
+	int                 rendererflags = SDL_RENDERER_TARGETTEXTURE;
+	int                 windowflags = SDL_WINDOW_RESIZABLE;
+	int                 width, height;
+	uint32_t            pixelformat;
+	uint32_t            rmask;
+	uint32_t            gmask;
+	uint32_t            bmask;
+	uint32_t            amask;
+	int                 bpp = 0;
+	SDL_RendererInfo    rendererinfo;
+	const char          *displayname = SDL_GetDisplayName( ( displayindex = vid_display - 1 ) );
+
+	if( displayindex < 0 || displayindex >= numdisplays )
+	{
+		if( output )
+		{
+			//C_Warning( 1, "Unable to find display %i.", vid_display );
+			loge( "Unable to find display %i.\n", vid_display );
+		}
+			
+
+		displayname = SDL_GetDisplayName( ( displayindex = vid_display_default - 1 ) );
+	}
+
+	if( output )
+	{
+		if( displayname )
+		{
+			if( numdisplays == 1 )
+			{
+				//C_Output( "Using the \"%s\" display.", displayname );
+				logd( "Using the \"%s\" display.\n", displayname );
+			}
+			else
+			{
+				//C_Output( "Using \"%s\" (display %i of %i).", displayname, displayindex + 1, numdisplays );
+				logd( "Using \"%s\" (display %i of %i).\n", displayname, displayindex + 1, numdisplays );
+			}
+				
+		}
+		else
+		{
+			if( numdisplays != 1 )
+			{
+				//C_Output( "Using display %i of %i.", displayindex + 1, numdisplays );
+				logd( "Using display %i of %i.\n", displayindex + 1, numdisplays );
+			}
+		}
+	}
+
+	if( vid_vsync )
+		rendererflags |= SDL_RENDERER_PRESENTVSYNC;
+
+	if( M_StringCompare( vid_scalefilter, vid_scalefilter_nearest_linear ) )
+		nearestlinear = true;
+	else
+	{
+		nearestlinear = false;
+
+		if( !M_StringCompare( vid_scalefilter, vid_scalefilter_linear )
+			&& !M_StringCompare( vid_scalefilter, vid_scalefilter_nearest ) )
+		{
+			vid_scalefilter = vid_scalefilter_default;
+			M_SaveCVARs();
+		}
+
+		if( !( SDL_SetHintWithPriority( SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter, SDL_HINT_OVERRIDE ) ) )
+			I_SDLError( SDL_SetHintWithPriority );
+	}
+
+	if( !( SDL_SetHintWithPriority( SDL_HINT_RENDER_DRIVER, vid_scaleapi, SDL_HINT_OVERRIDE ) ) )
+		I_SDLError( SDL_SetHintWithPriority );
+
+	software = M_StringCompare( vid_scaleapi, vid_scaleapi_software );
+
+	GetWindowPosition();
+	GetWindowSize();
+	GetScreenResolution();
+
+	if( M_StringStartsWith( vid_scaleapi, "opengl" ) )
+		windowflags |= SDL_WINDOW_OPENGL;
+
+	if( vid_fullscreen )
+	{
+		if( !screenwidth && !screenheight )
+		{
+			width = displays[ displayindex ].w;
+			height = displays[ displayindex ].h;
+
+			if( !width || !height )
+				I_Error( "Graphics couldn't be initialized." );
+
+			if( !( window = SDL_CreateWindow( PACKAGE_NAME, SDL_WINDOWPOS_UNDEFINED_DISPLAY( displayindex ),
+				SDL_WINDOWPOS_UNDEFINED_DISPLAY( displayindex ), width, height,
+				( windowflags | ( vid_borderlesswindow ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN ) ) ) ) )
+				I_SDLError( SDL_CreateWindow );
+
+			if( output )
+			{
+				char    *temp1 = commify( width );
+				char    *temp2 = commify( height );
+
+				//C_Output( "Staying at the native desktop resolution of %sx%s with a %s aspect ratio.",
+					//temp1, temp2, getaspectratio( width, height ) );
+				logd( "Staying at the native desktop resolution of %sx%s with a %s aspect ratio.\n",
+					temp1, temp2, getaspectratio( width, height ) );
+
+				free( temp1 );
+				free( temp2 );
+			}
+		}
+		else
+		{
+			width = screenwidth;
+			height = screenheight;
+
+			if( !( window = SDL_CreateWindow( PACKAGE_NAME, SDL_WINDOWPOS_UNDEFINED_DISPLAY( displayindex ),
+				SDL_WINDOWPOS_UNDEFINED_DISPLAY( displayindex ), width, height,
+				( windowflags | ( vid_borderlesswindow ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN ) ) ) ) )
+				I_SDLError( SDL_CreateWindow );
+
+			if( output )
+			{
+				char    *temp1 = commify( width );
+				char    *temp2 = commify( height );
+
+				//C_Output( "Switched to a resolution of %sx%s with a %s aspect ratio.", temp1, temp2, getaspectratio( width, height ) );
+				logd( "Switched to a resolution of %sx%s with a %s aspect ratio.\n", temp1, temp2, getaspectratio( width, height ) );
+
+				free( temp1 );
+				free( temp2 );
+			}
+		}
+	}
+	else
+	{
+		if( windowheight > displays[ displayindex ].h )
+		{
+			windowheight = displays[ displayindex ].h - windowborderheight;
+			windowwidth = windowheight * 4 / 3;
+			M_SaveCVARs();
+		}
+
+		width = windowwidth;
+		height = windowheight;
+
+		if( !windowx && !windowy )
+		{
+			if( !( window = SDL_CreateWindow( PACKAGE_NAME, SDL_WINDOWPOS_CENTERED_DISPLAY( displayindex ),
+				SDL_WINDOWPOS_CENTERED_DISPLAY( displayindex ), width, height, windowflags ) ) )
+				I_SDLError( SDL_CreateWindow );
+
+			if( output )
+			{
+				char    *temp1 = commify( width );
+				char    *temp2 = commify( height );
+
+				//C_Output( "Created a %sx%s resizable window centered on the screen.", temp1, temp2 );
+				logd ( "Created a %sx%s resizable window centered on the screen.\n", temp1, temp2 );
+
+				free( temp1 );
+				free( temp2 );
+			}
+		}
+		else
+		{
+			if( !( window = SDL_CreateWindow( PACKAGE_NAME, windowx, windowy, width, height, windowflags ) ) )
+				I_SDLError( SDL_CreateWindow );
+
+			if( output )
+			{
+				char    *temp1 = commify( width );
+				char    *temp2 = commify( height );
+
+				//C_Output( "Created a %sx%s resizable window at (%i,%i).", temp1, temp2, windowx, windowy );
+				logd( "Created a %sx%s resizable window at (%i,%i).\n", temp1, temp2, windowx, windowy );
+
+				free( temp1 );
+				free( temp2 );
+			}
+		}
+	}
+
+	GetUpscaledTextureSize( width, height );
+
+	windowid = SDL_GetWindowID( window );
+
+	SDL_GetWindowSize( window, &displaywidth, &displayheight );
+	displaycenterx = displaywidth / 2;
+	displaycentery = displayheight / 2;
+
+	if( !( renderer = SDL_CreateRenderer( window, -1, rendererflags ) ) && !software )
+	{
+		if( !( renderer = SDL_CreateRenderer( window, -1, ( SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE ) ) ) )
+			I_SDLError( SDL_CreateRenderer );
+		else
+		{
+			//C_Warning( 1, "The <b>vid_scaleapi</b> CVAR was changed from <b>%s</b> to <b>\"software\"</b>.", vid_scaleapi );
+			loge( "The <b>vid_scaleapi</b> CVAR was changed from <b>%s</b> to <b>\"software\"</b>.\n", vid_scaleapi );
+			vid_scaleapi = vid_scaleapi_software;
+			M_SaveCVARs();
+		}
+	}
+
+	if( SDL_RenderSetLogicalSize( renderer, SCREENWIDTH, SCREENWIDTH * 3 / 4 ) < 0 )
+		I_SDLError( SDL_RenderSetLogicalSize );
+
+	if( output )
+	{
+		char    *temp1 = commify( height * 4 / 3 );
+		char    *temp2 = commify( height );
+
+		//C_Output( "A software renderer is used to render each frame." );
+		logd( "A software renderer is used to render each frame.\n" );
+
+		if( nearestlinear )
+		{
+			char    *temp3 = commify( ( int64_t ) upscaledwidth * SCREENWIDTH );
+			char    *temp4 = commify( ( int64_t ) upscaledheight * SCREENHEIGHT );
+
+			//C_Output( "Each frame is scaled up from %ix%i to %sx%s using nearest-neighbor interpolation.",
+			//	SCREENWIDTH, SCREENHEIGHT, temp3, temp4 );
+			//C_Output( "Each frame is then scaled down to %sx%s using linear filtering.", temp1, temp2 );
+
+			logd( "Each frame is scaled up from %ix%i to %sx%s using nearest-neighbor interpolation.\n",
+				SCREENWIDTH, SCREENHEIGHT, temp3, temp4 );
+			logd( "Each frame is then scaled down to %sx%s using linear filtering.\n", temp1, temp2 );
+
+			free( temp3 );
+			free( temp4 );
+		}
+		else if( M_StringCompare( vid_scalefilter, vid_scalefilter_linear ) && !software )
+		{
+		//	C_Output( "Each frame is scaled up from %ix%i to %sx%s using linear filtering.", SCREENWIDTH, SCREENHEIGHT, temp1, temp2 );
+			logd( "Each frame is scaled up from %ix%i to %sx%s using linear filtering.\n", SCREENWIDTH, SCREENHEIGHT, temp1, temp2 );
+		}
+			
+		else
+		{
+			//C_Output( "Each frame is scaled up from %ix%i to %sx%s using nearest-neighbor interpolation.",
+				//SCREENWIDTH, SCREENHEIGHT, temp1, temp2 );
+			logd( "Each frame is scaled up from %ix%i to %sx%s using nearest-neighbor interpolation.\n",
+				SCREENWIDTH, SCREENHEIGHT, temp1, temp2 );
+		}
+
+		free( temp1 );
+		free( temp2 );
+	}
+
+	if( !SDL_GetRendererInfo( renderer, &rendererinfo ) )
+	{
+		if( M_StringCompare( rendererinfo.name, vid_scaleapi_opengl ) )
+		{
+			int major;
+			int minor;
+
+			SDL_GL_GetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, &major );
+			SDL_GL_GetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, &minor );
+
+			if( major * 10 + minor < 21 )
+			{
+				//C_Warning( 1, "<i>" PACKAGE_NAME "</i> requires at least <i>OpenGL v2.1</i>." );
+				loge( "<i>" PACKAGE_NAME "</i> requires at least <i>OpenGL v2.1</i>.\n" );
+
+#if defined(_WIN32)
+				vid_scaleapi = vid_scaleapi_direct3d;
+				M_SaveCVARs();
+
+				if( !( SDL_SetHintWithPriority( SDL_HINT_RENDER_DRIVER, vid_scaleapi, SDL_HINT_OVERRIDE ) ) )
+					I_SDLError( SDL_SetHintWithPriority );
+
+				if( output )
+				{
+					//C_Output( "This scaling is now done in hardware using <i><b>Direct3D %s.</b></i>",
+						//( SDL_VIDEO_RENDER_D3D11 ? "v11.0" : "v9.0" ) );
+					logd( "This scaling is now done in hardware using <i><b>Direct3D %s.</b></i>\n",
+						( SDL_VIDEO_RENDER_D3D11 ? "v11.0" : "v9.0" ) );
+				}
+				
+#endif
+			}
+			else
+			{
+				if( output )
+				{
+					//C_Output( "This scaling is done in hardware using <i><b>OpenGL v%i.%i.</b></i>", major, minor );
+					logd( "This scaling is done in hardware using <i><b>OpenGL v%i.%i.</b></i>\n", major, minor );
+				}
+
+				if( !M_StringCompare( vid_scaleapi, vid_scaleapi_opengl ) )
+				{
+					vid_scaleapi = vid_scaleapi_opengl;
+					M_SaveCVARs();
+				}
+			}
+		}
+#if defined(_WIN32)
+		else if( M_StringCompare( rendererinfo.name, vid_scaleapi_direct3d ) )
+		{
+			if( output )
+			{
+				//C_Output( "This scaling is done in hardware using <i><b>Direct3D %s.</b></i>",
+					//( SDL_VIDEO_RENDER_D3D11 ? "v11.0" : "v9.0" ) );
+				logd( "This scaling is done in hardware using <i><b>Direct3D %s.</b></i>",
+					( SDL_VIDEO_RENDER_D3D11 ? "v11.0" : "v9.0" ) );
+			}
+				
+
+			if( !M_StringCompare( vid_scaleapi, vid_scaleapi_direct3d ) )
+			{
+				vid_scaleapi = vid_scaleapi_direct3d;
+				M_SaveCVARs();
+			}
+		}
+#elif defined(__APPLE__)
+		else if( M_StringCompare( rendererinfo.name, vid_scaleapi_metal ) )
+		{
+			if( output )
+				C_Output( "This scaling is done in hardware using <i><b>Metal.</b></i>" );
+		}
+#endif
+#if !defined(_WIN32)
+		else if( M_StringCompare( rendererinfo.name, vid_scaleapi_opengles ) )
+		{
+			if( output )
+				C_Output( "This scaling is done in hardware using <i><b>OpenGL ES.</b></i>" );
+		}
+		else if( M_StringCompare( rendererinfo.name, vid_scaleapi_opengles2 ) )
+		{
+			if( output )
+				C_Output( "This scaling is done in hardware using <i><b>OpenGL ES 2.</b></i>" );
+		}
+#endif
+		else if( M_StringCompare( rendererinfo.name, vid_scaleapi_software ) )
+		{
+			software = true;
+			nearestlinear = false;
+
+			if( !( SDL_SetHintWithPriority( SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_nearest, SDL_HINT_OVERRIDE ) ) )
+				I_SDLError( SDL_SetHintWithPriority );
+
+			if( output )
+			{
+				//C_Output( "This scaling is also done in software." );
+				logd( "This scaling is also done in software.\n" );
+			}
+
+			if( !M_StringCompare( vid_scaleapi, vid_scaleapi_software ) )
+			{
+				vid_scaleapi = vid_scaleapi_software;
+				M_SaveCVARs();
+			}
+
+			if( output && ( M_StringCompare( vid_scalefilter, vid_scalefilter_linear )
+				|| M_StringCompare( vid_scalefilter, vid_scalefilter_nearest_linear ) ) )
+			{
+				//C_Warning( 1, "Linear filtering can't be used in software." );
+				loge( "Linear filtering can't be used in software.\n" );
+			}
+				
+		}
+
+		if( output )
+		{
+			typedef const GLubyte   *( APIENTRY *glStringFn_t )( GLenum );
+			glStringFn_t            pglGetString = ( glStringFn_t ) SDL_GL_GetProcAddress( "glGetString" );
+
+			if( pglGetString )
+			{
+				const char  *graphicscard = ( const char * ) pglGetString( GL_RENDERER );
+				const char  *vendor = ( const char * ) pglGetString( GL_VENDOR );
+
+				if( graphicscard && vendor )
+				{
+					//C_Output( "Using %s <i><b>%s</b></i> graphics card from <i><b>%s.</b></i>",
+						//( isvowel( graphicscard[ 0 ] ) ? "an" : "a" ), graphicscard, vendor );
+					logd( "Using %s <i><b>%s</b></i> graphics card from <i><b>%s.</b></i>\n",
+						( isvowel( graphicscard[ 0 ] ) ? "an" : "a" ), graphicscard, vendor );
+				}
+			}
+		}
+
+		I_CapFPS( 0 );
+
+		refreshrate = 0;
+
+		if( rendererinfo.flags & SDL_RENDERER_PRESENTVSYNC )
+		{
+			SDL_DisplayMode displaymode;
+
+			if( !SDL_GetWindowDisplayMode( window, &displaymode ) )
+			{
+				refreshrate = displaymode.refresh_rate;
+
+				if( vid_vsync == vid_vsync_adaptive && M_StringStartsWith( vid_scaleapi, "opengl" ) )
+					SDL_GL_SetSwapInterval( -1 );
+
+				if( refreshrate < vid_capfps || !vid_capfps )
+				{
+					if( output )
+					{
+						//C_Output( "The framerate is synced with the display's refresh rate of %iHz.", refreshrate );
+						logd( "The framerate is synced with the display's refresh rate of %iHz.\n", refreshrate );
+					}
+				}
+				else
+				{
+					I_CapFPS( vid_capfps );
+
+					if( output )
+					{
+						char    *temp = commify( vid_capfps );
+
+						//C_Output( "The framerate is capped at %s FPS.", temp );
+						logd( "The framerate is capped at %s FPS.\n", temp );
+						free( temp );
+					}
+				}
+			}
+		}
+		else
+		{
+			if( vid_capfps < vid_capfps_max )
+				I_CapFPS( vid_capfps );
+
+			if( output )
+			{
+				if( vid_vsync )
+				{
+					if( M_StringCompare( rendererinfo.name, vid_scaleapi_software ) )
+					{
+						//C_Warning( 1, "The framerate can't be synced with the display's refresh rate in software." );
+						loge( "The framerate can't be synced with the display's refresh rate in software.\n" );
+					}
+					else
+					{
+						//C_Warning( 1, "The framerate can't be synced with the display's refresh rate using this graphics card." );
+						loge( "The framerate can't be synced with the display's refresh rate using this graphics card.\n" );
+					}
+				}
+
+				if( vid_capfps )
+				{
+					char    *temp = commify( vid_capfps );
+
+					//C_Output( "The framerate is capped at %s FPS.", temp );
+					logd( "The framerate is capped at %s FPS.\n", temp );
+					free( temp );
+				}
+				else
+				{
+					//C_Output( "The framerate is uncapped." );
+					logd( "The framerate is uncapped.\n" );
+				}
+			}
+		}
+	}
+
+	if( output )
+	{
+		wadfile_t   *playpalwad = lumpinfo[ W_CheckNumForName( "PLAYPAL" ) ]->wadfile;
+
+		//C_Output( "Using the 256-color palette from the <b>PLAYPAL</b> lump in %s <b>%s</b>.",
+			//( playpalwad->type == IWAD ? "IWAD" : "PWAD" ), playpalwad->path );
+		logd( "Using the 256-color palette from the <b>PLAYPAL</b> lump in %s <b>%s</b>.\n",
+			( playpalwad->type == IWAD ? "IWAD" : "PWAD" ), playpalwad->path );
+
+		if( gammaindex == 10 )
+		{
+			//C_Output( "Gamma correction is off." );
+			logd( "Gamma correction is off.\n" );
+		}
+		else
+		{
+			char    text[ 128 ];
+			int     len;
+
+			M_snprintf( text, sizeof( text ), "The gamma correction level is %.2f.", r_gamma );
+			len = ( int ) strlen( text );
+
+			if( text[ len - 2 ] == '0' && text[ len - 3 ] == '0' )
+			{
+				text[ len - 2 ] = '.';
+				text[ len - 1 ] = '\0';
+			}
+
+			//C_Output( text );
+			logd( "%d\n", text );
+		}
+	}
+
+	if( !( surface = SDL_CreateRGBSurface( 0, SCREENWIDTH, SCREENHEIGHT, 8, 0, 0, 0, 0 ) ) )
+		I_SDLError( SDL_CreateRGBSurface );
+
+	screens[ 0 ] = surface->pixels;
+
+	pixelformat = SDL_GetWindowPixelFormat( window );
+
+	if( !( SDL_PixelFormatEnumToMasks( pixelformat, &bpp, &rmask, &gmask, &bmask, &amask ) ) )
+		I_SDLError( SDL_PixelFormatEnumToMasks );
+
+	if( !( buffer = SDL_CreateRGBSurface( 0, SCREENWIDTH, SCREENHEIGHT, bpp, rmask, gmask, bmask, amask ) ) )
+		I_SDLError( SDL_CreateRGBSurface );
+
+	pitch = buffer->pitch;
+	pixels = buffer->pixels;
+
+	SDL_FillRect( buffer, NULL, 0 );
+
+	if( nearestlinear && !( SDL_SetHintWithPriority( SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_nearest, SDL_HINT_OVERRIDE ) ) )
+		I_SDLError( SDL_SetHintWithPriority );
+
+	if( !( texture = SDL_CreateTexture( renderer, pixelformat, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT ) ) )
+		I_SDLError( SDL_CreateTexture );
+
+	if( nearestlinear )
+	{
+		if( !( SDL_SetHintWithPriority( SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_linear, SDL_HINT_OVERRIDE ) ) )
+			I_SDLError( SDL_SetHintWithPriority );
+
+		if( !( texture_upscaled = SDL_CreateTexture( renderer, pixelformat, SDL_TEXTUREACCESS_TARGET,
+			upscaledwidth * SCREENWIDTH, upscaledheight * SCREENHEIGHT ) ) )
+			I_SDLError( SDL_CreateTexture );
+	}
+
+	if( !( palette = SDL_AllocPalette( 256 ) ) )
+		I_SDLError( SDL_AllocPalette );
+
+	if( SDL_SetSurfacePalette( surface, palette ) < 0 )
+		I_SDLError( SDL_SetSurfacePalette );
+
+	I_SetPalette( &PLAYPAL[ st_palette * 768 ] );
+
+	src_rect.w = SCREENWIDTH;
+	src_rect.h = SCREENHEIGHT - SBARHEIGHT * vid_widescreen;
+}
 
 //void I_ToggleWidescreen(dboolean toggle)
 //{
@@ -1941,12 +2020,12 @@ void I_ToggleFullscreen( void )
 //        SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 //}
 //
-//static void I_InitGammaTables(void)
-//{
-//    for (int i = 0; i < GAMMALEVELS; i++)
-//        for (int j = 0; j < 256; j++)
-//            gammatable[i][j] = (byte)(pow(j / 255.0, 1.0 / gammalevels[i]) * 255.0 + 0.5);
-//}
+static void I_InitGammaTables( void )
+{
+	for( int i = 0; i < GAMMALEVELS; i++ )
+		for( int j = 0; j < 256; j++ )
+			gammatable[ i ][ j ] = ( byte ) ( pow( j / 255.0, 1.0 / gammalevels[ i ] ) * 255.0 + 0.5 );
+}
 
 void I_SetGamma( float value )
 {
@@ -1976,7 +2055,7 @@ void I_SetGamma( float value )
 //
 void I_InitGraphics( void )
 {
-	/*SDL_Event   dummy;
+	//SDL_Event   dummy;
 	SDL_version linked;
 	SDL_version compiled;
 
@@ -1988,9 +2067,13 @@ void I_InitGraphics( void )
 			SDL_FILENAME, PACKAGE_NAME, compiled.major, compiled.minor, compiled.patch );
 
 	if( linked.patch != compiled.patch )
-		C_Warning( 1, "The wrong version of <b>%s</b> was found. <i>%s</i> requires v%i.%i.%i.",
+	{
+		//C_Warning( 1, "The wrong version of <b>%s</b> was found. <i>%s</i> requires v%i.%i.%i.",
+		//	SDL_FILENAME, PACKAGE_NAME, compiled.major, compiled.minor, compiled.patch );
+		loge( "The wrong version of <b>%s</b> was found. <i>%s</i> requires v%i.%i.%i.\n",
 			SDL_FILENAME, PACKAGE_NAME, compiled.major, compiled.minor, compiled.patch );
-
+	}
+		
 	performancefrequency = SDL_GetPerformanceFrequency();
 
 	for( int i = 0; i < UCHAR_MAX; i++ )
@@ -2017,31 +2100,31 @@ void I_InitGraphics( void )
 	SDL_InitSubSystem( SDL_INIT_VIDEO );
 	GetDisplays();
 
-#if defined(_DEBUG)
-	vid_fullscreen = false;
-#endif
-
-	SetVideoMode( true );
-
-	if( vid_fullscreen )
-		SetShowCursor( false );
-
-	mapscreen = oscreen = malloc( SCREENAREA );
-	I_CreateExternalAutomap( 2 );
-
-#if defined(_WIN32)
-	I_InitWindows32();
-#endif
-
-	SDL_SetWindowTitle( window, PACKAGE_NAME );
-
-	I_UpdateBlitFunc( false );
-	memset( screens[ 0 ], nearestblack, SCREENAREA );
-	blitfunc();
-
-	I_Sleep( 500 );
-
-	while( SDL_PollEvent( &dummy ) );*/
+//#if defined(_DEBUG)
+//	vid_fullscreen = false;
+//#endif
+//
+//	SetVideoMode( true );
+//
+//	if( vid_fullscreen )
+//		SetShowCursor( false );
+//
+//	mapscreen = oscreen = malloc( SCREENAREA );
+//	I_CreateExternalAutomap( 2 );
+//
+//#if defined(_WIN32)
+//	I_InitWindows32();
+//#endif
+//
+//	SDL_SetWindowTitle( window, PACKAGE_NAME );
+//
+//	I_UpdateBlitFunc( false );
+//	memset( screens[ 0 ], nearestblack, SCREENAREA );
+//	blitfunc();
+//
+//	I_Sleep( 500 );
+//
+//	while( SDL_PollEvent( &dummy ) );
 }
 
 

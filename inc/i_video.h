@@ -21,14 +21,14 @@ dboolean GetCapsLockState(void);
 void I_InitGraphics(void);
 //void I_RestartGraphics(void);
 void I_ShutdownGraphics(void);
-//void I_CapFPS(int cap);
-//
-//void GetWindowPosition(void);
-//void GetWindowSize(void);
-//void GetScreenResolution(void);
+void I_CapFPS(int cap);
+
+void GetWindowPosition(void);
+void GetWindowSize(void);
+void GetScreenResolution(void);
 //
 //// Takes full 8 bit values.
-//void I_SetPalette(byte *playpal);
+void I_SetPalette(byte *playpal);
 //void I_SetExternalAutomapPalette(void);
 //void I_SetSimplePalette(byte *playpal);
 //void I_SetPaletteWithBrightness(byte *playpal, double brightness);
