@@ -901,4 +901,28 @@
 #define FF_FRAMEMASK    0x7FFF
 
 
+// m_cheat.h
+//
+// CHEAT SEQUENCE PACKAGE
+//
+
+// declaring a cheat
+#define CHEAT(value, parameters)    { value, parameters, 0, 0, "", 0 }
+
+#define CHEATTIMEOUT                (2 * TICRATE)
+
+
+// r_defs.h
+// Silhouette, needed for clipping Segs (mainly)
+// and sprites representing things.
+#define SIL_NONE    0
+#define SIL_BOTTOM  1
+#define SIL_TOP     2
+#define SIL_BOTH    3
+
+#define MAXDRAWSEGS 1280
+#define MAXOPENINGS 16384
+
+
+
 #endif

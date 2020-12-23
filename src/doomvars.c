@@ -279,9 +279,20 @@ int             savegame = savegame_default;
 int             skilllevel = skilllevel_default;
 
 // st_stuff.c
-int                         facebackcolor = facebackcolor_default;
-int                         r_berserkintensity = r_berserkintensity_default;
-uint64_t                    stat_cheated = 0;
+patch_t                     *grnrock;
+patch_t                     *brdr_t;
+patch_t                     *brdr_b;
+patch_t                     *brdr_l;
+patch_t                     *brdr_r;
+patch_t                     *brdr_tl;
+patch_t                     *brdr_tr;
+patch_t                     *brdr_bl;
+patch_t                     *brdr_br;
+
+int                         facebackcolor;// = facebackcolor_default;
+int                         r_berserkintensity;// = r_berserkintensity_default;
+uint64_t                    stat_cheated;// = 0;
+int                         st_palette;// = 0;
 
 
 // i_gamepad.c

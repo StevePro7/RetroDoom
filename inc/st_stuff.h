@@ -1,6 +1,10 @@
 #if !defined(__ST_STUFF_H__)
 #define __ST_STUFF_H__
 
+#include "doomenum.h"
+#include "doomtype.h"
+#include "doomvars.h"
+
 // Palette indices.
 // For damage/bonus red-/gold-shifts
 #define STARTREDPALS            1
@@ -32,35 +36,35 @@
 // STATUS BAR
 //
 
-// Called by main loop.
-dboolean ST_Responder(event_t *ev);
+//// Called by main loop.
+//dboolean ST_Responder(event_t *ev);
+//
+//// Called by main loop.
+//void ST_Ticker(void);
+//
+//// Called by main loop.
+//void ST_Drawer(dboolean fullscreen, dboolean refresh);
+//
+//// Called when the console player is spawned on each level.
+//void ST_Start(void);
+//
+//// Called by startup code.
+//void ST_Init(void);
 
-// Called by main loop.
-void ST_Ticker(void);
-
-// Called by main loop.
-void ST_Drawer(dboolean fullscreen, dboolean refresh);
-
-// Called when the console player is spawned on each level.
-void ST_Start(void);
-
-// Called by startup code.
-void ST_Init(void);
-
-extern dboolean idclev;
-extern int      idclevtics;
-extern dboolean idmus;
-extern int      st_palette;
-extern dboolean oldweaponsowned[NUMWEAPONS];
-
-extern patch_t  *grnrock;
-extern patch_t  *brdr_t;
-extern patch_t  *brdr_b;
-extern patch_t  *brdr_l;
-extern patch_t  *brdr_r;
-extern patch_t  *brdr_tl;
-extern patch_t  *brdr_tr;
-extern patch_t  *brdr_bl;
-extern patch_t  *brdr_br;
+//extern dboolean idclev;
+//extern int      idclevtics;
+//extern dboolean idmus;
+//extern int      st_palette;
+//extern dboolean oldweaponsowned[NUMWEAPONS];
+//
+//extern patch_t  *grnrock;
+//extern patch_t  *brdr_t;
+//extern patch_t  *brdr_b;
+//extern patch_t  *brdr_l;
+//extern patch_t  *brdr_r;
+//extern patch_t  *brdr_tl;
+//extern patch_t  *brdr_tr;
+//extern patch_t  *brdr_bl;
+//extern patch_t  *brdr_br;
 
 #endif

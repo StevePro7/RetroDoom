@@ -67,6 +67,7 @@
     <ClCompile Include="..\src\sounds.c" />
     <ClCompile Include="..\src\sprites.c" />
     <ClCompile Include="..\src\states.c" />
+    <ClCompile Include="..\src\st_stuff.c" />
     <ClCompile Include="..\src\tables.c" />
     <ClCompile Include="..\src\version.c" />
     <ClCompile Include="..\src\v_data.c" />
@@ -128,6 +129,7 @@
     <ClInclude Include="..\inc\sounds.h" />
     <ClInclude Include="..\inc\sprites.h" />
     <ClInclude Include="..\inc\states.h" />
+    <ClInclude Include="..\inc\st_stuff.h" />
     <ClInclude Include="..\inc\tables.h" />
     <ClInclude Include="..\inc\version.h" />
     <ClInclude Include="..\inc\v_data.h" />

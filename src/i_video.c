@@ -208,12 +208,12 @@ dboolean MouseShouldBeGrabbed( void )
 //    return (gamestate == GS_LEVEL);
 //}
 //
-//static void SetShowCursor(dboolean show)
-//{
-//    SDL_SetRelativeMouseMode(!show);
-//    SDL_GetRelativeMouseState(NULL, NULL);
-//}
-//
+static void SetShowCursor( dboolean show )
+{
+	SDL_SetRelativeMouseMode( !show );
+	SDL_GetRelativeMouseState( NULL, NULL );
+}
+
 //static const int translatekey[] =
 //{
 //    0, 0, 0, 0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
@@ -2100,15 +2100,15 @@ void I_InitGraphics( void )
 	SDL_InitSubSystem( SDL_INIT_VIDEO );
 	GetDisplays();
 
-//#if defined(_DEBUG)
-//	vid_fullscreen = false;
-//#endif
-//
-//	SetVideoMode( true );
-//
-//	if( vid_fullscreen )
-//		SetShowCursor( false );
-//
+#if defined(_DEBUG)
+	vid_fullscreen = false;
+#endif
+
+	SetVideoMode( true );
+
+	if( vid_fullscreen )
+		SetShowCursor( false );
+
 //	mapscreen = oscreen = malloc( SCREENAREA );
 //	I_CreateExternalAutomap( 2 );
 //

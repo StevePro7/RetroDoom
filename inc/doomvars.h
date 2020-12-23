@@ -7,6 +7,7 @@
 #include "doomstruct.h"
 #include "d_event.h"
 #include "d_ticcmd.h"
+#include "r_defs.h"
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -981,15 +982,15 @@ extern dboolean idmus;
 extern int      st_palette;
 extern dboolean oldweaponsowned[ NUMWEAPONS ];
 
-//extern patch_t  *grnrock;
-//extern patch_t  *brdr_t;
-//extern patch_t  *brdr_b;
-//extern patch_t  *brdr_l;
-//extern patch_t  *brdr_r;
-//extern patch_t  *brdr_tl;
-//extern patch_t  *brdr_tr;
-//extern patch_t  *brdr_bl;
-//extern patch_t  *brdr_br;
+extern patch_t  *grnrock;
+extern patch_t  *brdr_t;
+extern patch_t  *brdr_b;
+extern patch_t  *brdr_l;
+extern patch_t  *brdr_r;
+extern patch_t  *brdr_tl;
+extern patch_t  *brdr_tr;
+extern patch_t  *brdr_bl;
+extern patch_t  *brdr_br;
 
 
 #endif
