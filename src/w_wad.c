@@ -38,8 +38,8 @@ typedef struct
 #endif
 
 // Location of each lump on disk.
-lumpinfo_t  **lumpinfo;
-int         numlumps;
+//lumpinfo_t  **lumpinfo;
+//int         numlumps;
 
 extern char *packagewad;
 
@@ -313,6 +313,8 @@ dboolean W_AddFile(char *filename, dboolean automatic)
 		( numlumps - startlump == 1 ? "" : "s" ), ( wadfile->type == IWAD ? "IWAD" : "PWAD" ), wadfile->path );
     free(temp);
 
+	W_DumpLumpInfo();
+
     if (M_StringEndsWith(filename, "SIGIL_v1_21.wad")
         || M_StringEndsWith(filename, "SIGIL_v1_2.wad")
         || M_StringEndsWith(filename, "SIGIL_v1_1.wad")
@@ -489,6 +491,15 @@ int W_CheckNumForName(const char *name)
     return i;
 }
 
+// stevepro
+void W_DumpLumpInfo()
+{
+	for( int i = 0; i < numlumps; i++ )
+	{
+		logd( "Lump: %d is '%s'\n", i, lumpinfo[ i ]->name );
+	}
+}
+
 //
 // W_CheckMultipleLumps
 // Check if there's more than one of the same lump.
@@ -500,7 +511,7 @@ int W_CheckMultipleLumps(const char *name)
     if (FREEDOOM || hacx)
         return 3;
 
-    for (int i = numlumps - 1; i >= 0; i--)
+	for( int i = numlumps - 1; i >= 0; i-- )
         if (!strncasecmp(lumpinfo[i]->name, name, 8))
             count++;
 

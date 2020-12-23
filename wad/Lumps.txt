@@ -1,0 +1,28 @@
+Lumps
+23-Dec-2020
+
+iwad
+doom1.wad
+1264 lumps
+
+pwad
+doomretro.wad
+ 296 lumps
+
+numlumps
+1560
+
+
+but when go to log there are
+
+numLumps
+1554
+
+I "guess" there are 6x duplicates?
+so they are removed
+
+
+Checkout Ordering.xls
+there are duplicates
+e.g.
+BLOCKMAP

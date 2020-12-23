@@ -13,8 +13,8 @@
 // WADFILE I/O related stuff.
 //
 
-#define IWAD 1
-#define PWAD 2
+//#define IWAD 1
+//#define PWAD 2
 
 //typedef struct lumpinfo_s lumpinfo_t;
 //
@@ -33,8 +33,8 @@
 //    wadfile_t   *wadfile;
 //};
 
-extern lumpinfo_t   **lumpinfo;
-extern int          numlumps;
+//extern lumpinfo_t   **lumpinfo;
+//extern int          numlumps;
 
 dboolean IsUltimateDOOM(const char *iwadname);
 
@@ -54,6 +54,7 @@ int W_GetNumForName(const char *name);
 int W_GetLastNumForName(const char *name);
 int W_GetSecondNumForName(const char *name);
 
+void W_DumpLumpInfo();
 int W_CheckMultipleLumps(const char *name);
 
 int W_LumpLength(int lump);
