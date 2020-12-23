@@ -958,28 +958,28 @@ void I_WindowResizeBlit( void )
 //    SDL_RenderCopy(renderer, texture_upscaled, NULL, NULL);
 //    SDL_RenderPresent(renderer);
 //}
-//
-//static void I_Blit_Automap(void)
-//{
-//    SDL_LowerBlit(mapsurface, &map_rect, mapbuffer, &map_rect);
-//    SDL_UpdateTexture(maptexture, &map_rect, mappixels, mappitch);
-//    SDL_RenderClear(maprenderer);
-//    SDL_RenderCopy(maprenderer, maptexture, &map_rect, NULL);
-//    SDL_RenderPresent(maprenderer);
-//}
-//
-//static void I_Blit_Automap_NearestLinear(void)
-//{
-//    SDL_LowerBlit(mapsurface, &map_rect, mapbuffer, &map_rect);
-//    SDL_UpdateTexture(maptexture, &map_rect, mappixels, mappitch);
-//    SDL_RenderClear(maprenderer);
-//    SDL_SetRenderTarget(maprenderer, maptexture_upscaled);
-//    SDL_RenderCopy(maprenderer, maptexture, &map_rect, NULL);
-//    SDL_SetRenderTarget(maprenderer, NULL);
-//    SDL_RenderCopy(maprenderer, maptexture_upscaled, NULL, NULL);
-//    SDL_RenderPresent(maprenderer);
-//}
-//
+
+static void I_Blit_Automap( void )
+{
+	SDL_LowerBlit( mapsurface, &map_rect, mapbuffer, &map_rect );
+	SDL_UpdateTexture( maptexture, &map_rect, mappixels, mappitch );
+	SDL_RenderClear( maprenderer );
+	SDL_RenderCopy( maprenderer, maptexture, &map_rect, NULL );
+	SDL_RenderPresent( maprenderer );
+}
+
+static void I_Blit_Automap_NearestLinear( void )
+{
+	SDL_LowerBlit( mapsurface, &map_rect, mapbuffer, &map_rect );
+	SDL_UpdateTexture( maptexture, &map_rect, mappixels, mappitch );
+	SDL_RenderClear( maprenderer );
+	SDL_SetRenderTarget( maprenderer, maptexture_upscaled );
+	SDL_RenderCopy( maprenderer, maptexture, &map_rect, NULL );
+	SDL_SetRenderTarget( maprenderer, NULL );
+	SDL_RenderCopy( maprenderer, maptexture_upscaled, NULL, NULL );
+	SDL_RenderPresent( maprenderer );
+}
+
 //void I_UpdateBlitFunc(dboolean shake)
 //{
 //    dboolean    override = (vid_fullscreen && !(displayheight % VANILLAHEIGHT));
@@ -1086,17 +1086,17 @@ void I_SetPalette(byte *playpal)
 //        SDL_SetRenderDrawColor(renderer, colors[0].r, colors[0].g, colors[0].b, SDL_ALPHA_OPAQUE);
 //}
 
-//static void I_RestoreFocus(void)
-//{
-//#if defined(_WIN32)
-//    SDL_SysWMinfo   info;
-//
-//    SDL_VERSION(&info.version);
-//
-//    if (SDL_GetWindowWMInfo(window, &info))
-//        SetFocus(info.info.win.window);
-//#endif
-//}
+static void I_RestoreFocus( void )
+{
+#if defined(_WIN32)
+	SDL_SysWMinfo   info;
+
+	SDL_VERSION( &info.version );
+
+	if( SDL_GetWindowWMInfo( window, &info ) )
+		SetFocus( info.info.win.window );
+#endif
+}
 
 static void GetDisplays( void )
 {
@@ -1107,122 +1107,133 @@ static void GetDisplays( void )
 			I_SDLError( SDL_GetDisplayBounds );
 }
 
-//void I_CreateExternalAutomap(int outputlevel)
-//{
-//    uint32_t    pixelformat;
-//    uint32_t    rmask;
-//    uint32_t    gmask;
-//    uint32_t    bmask;
-//    uint32_t    amask;
-//    int         bpp;
-//    int         am_displayindex = !displayindex;
-//
-//    mapscreen = *screens;
-//    mapblitfunc = &nullfunc;
-//
-//    if (!am_external)
-//        return;
-//
-//    GetDisplays();
-//
-//    if (numdisplays == 1)
-//    {
-//        if (outputlevel >= 1)
-//            C_Warning(1, "An external automap couldn't be created. Only one display was found.");
-//
-//        return;
-//    }
-//
-//    if (!(SDL_SetHintWithPriority(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0", SDL_HINT_OVERRIDE)))
-//        I_SDLError(SDL_SetHintWithPriority);
-//
-//    if (!(mapwindow = SDL_CreateWindow("Automap", SDL_WINDOWPOS_UNDEFINED_DISPLAY(am_displayindex),
-//        SDL_WINDOWPOS_UNDEFINED_DISPLAY(am_displayindex), 0, 0,
-//        (vid_borderlesswindow ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN))))
-//        I_SDLError(SDL_CreateWindow);
-//
-//    if (!(maprenderer = SDL_CreateRenderer(mapwindow, -1, SDL_RENDERER_TARGETTEXTURE)))
-//        I_SDLError(SDL_CreateRenderer);
-//
-//    if (SDL_RenderSetLogicalSize(maprenderer, SCREENWIDTH, SCREENWIDTH * 10 / 16) < 0)
-//        I_SDLError(SDL_RenderSetLogicalSize);
-//
-//    if (!(mapsurface = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 8, 0, 0, 0, 0)))
-//        I_SDLError(SDL_CreateRGBSurface);
-//
-//    pixelformat = SDL_GetWindowPixelFormat(mapwindow);
-//
-//    if (!(SDL_PixelFormatEnumToMasks(pixelformat, &bpp, &rmask, &gmask, &bmask, &amask)))
-//        I_SDLError(SDL_PixelFormatEnumToMasks);
-//
-//    if (!(mapbuffer = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, bpp, rmask, gmask, bmask, amask)))
-//        I_SDLError(SDL_CreateRGBSurface);
-//
-//    mappitch = mapbuffer->pitch;
-//    mappixels = mapbuffer->pixels;
-//
-//    SDL_FillRect(mapbuffer, NULL, 0);
-//
-//    if (nearestlinear && !(SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_nearest, SDL_HINT_OVERRIDE)))
-//        I_SDLError(SDL_SetHintWithPriority);
-//
-//    if (!(maptexture = SDL_CreateTexture(maprenderer, pixelformat, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT)))
-//        I_SDLError(SDL_CreateTexture);
-//
-//    if (nearestlinear)
-//    {
-//        if (!(SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_linear, SDL_HINT_OVERRIDE)))
-//            I_SDLError(SDL_SetHintWithPriority);
-//
-//        if (!(maptexture_upscaled = SDL_CreateTexture(maprenderer, pixelformat, SDL_TEXTUREACCESS_TARGET,
-//            upscaledwidth * SCREENWIDTH, upscaledheight * SCREENHEIGHT)))
-//            I_SDLError(SDL_CreateTexture);
-//
-//        mapblitfunc = &I_Blit_Automap_NearestLinear;
-//    }
-//    else
-//        mapblitfunc = &I_Blit_Automap;
-//
-//    if (!(mappalette = SDL_AllocPalette(256)))
-//        I_SDLError(SDL_AllocPalette);
-//
-//    if (SDL_SetSurfacePalette(mapsurface, mappalette) < 0)
-//        I_SDLError(SDL_SetSurfacePalette);
-//
-//    if (SDL_SetPaletteColors(mappalette, colors, 0, 256) < 0)
-//        I_SDLError(SDL_SetPaletteColors);
-//
-//    mapscreen = mapsurface->pixels;
-//    map_rect.w = SCREENWIDTH;
-//    map_rect.h = SCREENHEIGHT - SBARHEIGHT;
-//
-//    I_RestoreFocus();
-//
-//    if (outputlevel == 2)
-//    {
-//        const char  *displayname = SDL_GetDisplayName(am_displayindex);
-//
-//        if (*displayname)
-//            C_Output("Created an external automap on \"%s\" (display %i).", displayname, am_displayindex + 1);
-//        else
-//            C_Output("Created an external automap on display %i.", am_displayindex + 1);
-//    }
-//}
-//
-//void I_DestroyExternalAutomap(void)
-//{
-//    SDL_FreePalette(mappalette);
-//    SDL_FreeSurface(mapsurface);
-//    SDL_FreeSurface(mapbuffer);
-//    SDL_DestroyTexture(maptexture);
-//    SDL_DestroyTexture(maptexture_upscaled);
-//    SDL_DestroyRenderer(maprenderer);
-//    SDL_DestroyWindow(mapwindow);
-//    mapwindow = NULL;
-//    mapscreen = NULL;
-//    mapblitfunc = &nullfunc;
-//}
-//
+void I_CreateExternalAutomap(int outputlevel)
+{
+    uint32_t    pixelformat;
+    uint32_t    rmask;
+    uint32_t    gmask;
+    uint32_t    bmask;
+    uint32_t    amask;
+    int         bpp;
+    int         am_displayindex = !displayindex;
+
+    mapscreen = *screens;
+    mapblitfunc = &nullfunc;
+
+    if (!am_external)
+        return;
+
+    GetDisplays();
+
+    if (numdisplays == 1)
+    {
+		if( outputlevel >= 1 )
+		{
+			//C_Warning( 1, "An external automap couldn't be created. Only one display was found." );
+			loge( "An external automap couldn't be created. Only one display was found.\n" );
+		}
+            
+
+        return;
+    }
+
+    if (!(SDL_SetHintWithPriority(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0", SDL_HINT_OVERRIDE)))
+        I_SDLError(SDL_SetHintWithPriority);
+
+    if (!(mapwindow = SDL_CreateWindow("Automap", SDL_WINDOWPOS_UNDEFINED_DISPLAY(am_displayindex),
+        SDL_WINDOWPOS_UNDEFINED_DISPLAY(am_displayindex), 0, 0,
+        (vid_borderlesswindow ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN))))
+        I_SDLError(SDL_CreateWindow);
+
+    if (!(maprenderer = SDL_CreateRenderer(mapwindow, -1, SDL_RENDERER_TARGETTEXTURE)))
+        I_SDLError(SDL_CreateRenderer);
+
+    if (SDL_RenderSetLogicalSize(maprenderer, SCREENWIDTH, SCREENWIDTH * 10 / 16) < 0)
+        I_SDLError(SDL_RenderSetLogicalSize);
+
+    if (!(mapsurface = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, 8, 0, 0, 0, 0)))
+        I_SDLError(SDL_CreateRGBSurface);
+
+    pixelformat = SDL_GetWindowPixelFormat(mapwindow);
+
+    if (!(SDL_PixelFormatEnumToMasks(pixelformat, &bpp, &rmask, &gmask, &bmask, &amask)))
+        I_SDLError(SDL_PixelFormatEnumToMasks);
+
+    if (!(mapbuffer = SDL_CreateRGBSurface(0, SCREENWIDTH, SCREENHEIGHT, bpp, rmask, gmask, bmask, amask)))
+        I_SDLError(SDL_CreateRGBSurface);
+
+    mappitch = mapbuffer->pitch;
+    mappixels = mapbuffer->pixels;
+
+    SDL_FillRect(mapbuffer, NULL, 0);
+
+    if (nearestlinear && !(SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_nearest, SDL_HINT_OVERRIDE)))
+        I_SDLError(SDL_SetHintWithPriority);
+
+    if (!(maptexture = SDL_CreateTexture(maprenderer, pixelformat, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT)))
+        I_SDLError(SDL_CreateTexture);
+
+    if (nearestlinear)
+    {
+        if (!(SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, vid_scalefilter_linear, SDL_HINT_OVERRIDE)))
+            I_SDLError(SDL_SetHintWithPriority);
+
+        if (!(maptexture_upscaled = SDL_CreateTexture(maprenderer, pixelformat, SDL_TEXTUREACCESS_TARGET,
+            upscaledwidth * SCREENWIDTH, upscaledheight * SCREENHEIGHT)))
+            I_SDLError(SDL_CreateTexture);
+
+        mapblitfunc = &I_Blit_Automap_NearestLinear;
+    }
+    else
+        mapblitfunc = &I_Blit_Automap;
+
+    if (!(mappalette = SDL_AllocPalette(256)))
+        I_SDLError(SDL_AllocPalette);
+
+    if (SDL_SetSurfacePalette(mapsurface, mappalette) < 0)
+        I_SDLError(SDL_SetSurfacePalette);
+
+    if (SDL_SetPaletteColors(mappalette, colors, 0, 256) < 0)
+        I_SDLError(SDL_SetPaletteColors);
+
+    mapscreen = mapsurface->pixels;
+    map_rect.w = SCREENWIDTH;
+    map_rect.h = SCREENHEIGHT - SBARHEIGHT;
+
+    I_RestoreFocus();
+
+    if (outputlevel == 2)
+    {
+        const char  *displayname = SDL_GetDisplayName(am_displayindex);
+
+		if( *displayname )
+		{
+			//C_Output( "Created an external automap on \"%s\" (display %i).", displayname, am_displayindex + 1 );
+			logd( "Created an external automap on \"%s\" (display %i).\n", displayname, am_displayindex + 1 );
+		}
+		else
+		{
+			//C_Output( "Created an external automap on display %i.", am_displayindex + 1 );
+			logd( "Created an external automap on display %i.\n", am_displayindex + 1 );
+		}
+            
+    }
+}
+
+void I_DestroyExternalAutomap(void)
+{
+    SDL_FreePalette(mappalette);
+    SDL_FreeSurface(mapsurface);
+    SDL_FreeSurface(mapbuffer);
+    SDL_DestroyTexture(maptexture);
+    SDL_DestroyTexture(maptexture_upscaled);
+    SDL_DestroyRenderer(maprenderer);
+    SDL_DestroyWindow(mapwindow);
+    mapwindow = NULL;
+    mapscreen = NULL;
+    mapblitfunc = &nullfunc;
+}
+
 void GetWindowPosition( void )
 {
 	int x = 0;
@@ -2109,8 +2120,8 @@ void I_InitGraphics( void )
 	if( vid_fullscreen )
 		SetShowCursor( false );
 
-//	mapscreen = oscreen = malloc( SCREENAREA );
-//	I_CreateExternalAutomap( 2 );
+	mapscreen = oscreen = malloc( SCREENAREA );
+	I_CreateExternalAutomap( 2 );
 //
 //#if defined(_WIN32)
 //	I_InitWindows32();
