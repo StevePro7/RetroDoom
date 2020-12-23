@@ -49,7 +49,7 @@
 #define SBARHEIGHT          (VANILLASBARHEIGHT * SCREENSCALE)
 
 // State updates, number of tics/second.
-#define TICRATE             35
+//#define TICRATE             35
 
 #define CARETBLINKTIME      350
 

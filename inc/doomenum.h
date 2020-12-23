@@ -1,6 +1,8 @@
 #if !defined(__DOOMENUM_H__)
 #define __DOOMENUM_H__
 
+#include "doomtype.h"
+
 // Game mode handling - identify IWAD version
 //  to handle IWAD dependent animations etc.
 typedef enum
@@ -113,10 +115,10 @@ enum
 //
 enum
 {
-	INVULNTICS = 30 * 35, // TICRATE,		// steveproTODO hardcode TICRATE so no dependency on doomenum.h
-	INVISTICS = 60 * 35, //TICRATE,			// redefine here for duplicate or extract into lower level
-	INFRATICS = 120 * 35, //TICRATE,
-	IRONTICS = 60 * 35 //TICRATE
+	INVULNTICS = 30 * TICRATE,
+	INVISTICS = 60 * TICRATE,
+	INFRATICS = 120 * TICRATE,
+	IRONTICS = 60 * TICRATE
 };
 
 

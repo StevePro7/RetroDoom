@@ -26,4 +26,7 @@ typedef uint8_t byte;
 
 #define arrlen(array)   (sizeof(array) / sizeof(*array))
 
+// State updates, number of tics/second.
+#define TICRATE             35
+
 #endif
