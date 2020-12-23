@@ -240,8 +240,6 @@ void I_Quit(dboolean shutdown)
 //
 // I_Error
 //
-
-
 void I_Error(const char *error, ...)
 {
     va_list         argptr;

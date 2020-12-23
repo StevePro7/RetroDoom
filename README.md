@@ -1,4 +1,27 @@
 # RetroDoom
+23/12/2020
+
+Read the WAD file:
+wadinfo_t       header;		12x bytes
+04:	IWAD
+04:	F0 04 00 00	000004F0	1264	numlumps
+04: B4 B7 3F 00	003FB7B4	4175796	infotableofs
+
+
+int	4x bytes
+filelump_t		16x bytes
+length			16x bytes * numlumps	20224
+
+lumpinfo_t
+
+
+003FB7B4	4175796	infotableofs
+this is the start of file_lump_t
+PLAYPAL
+COLORMAP
+ENDDOOM
+
+
 22/12/2020
 
 I *found* out why the extern is in one central header file but the implementations

@@ -11,6 +11,7 @@
 #include "m_misc.h"
 #include "sprites.h"
 #include "version.h"
+#include "w_wad.h"			// infinite loop	cyclical dependency
 #include "z_zone.h"
 #include <ctype.h>
 
@@ -492,8 +493,8 @@ dboolean W_MergeFile(char *filename, dboolean automatic)
 
 	// stevepro	potential infinite loop
     // Load PWAD
-    //if (!W_AddFile(filename, automatic))
-    //    return false;
+	if( !W_AddFile( filename, automatic ) )
+		return false;
 
     // IWAD is at the start, PWAD was appended to the end
     iwad.lumps = lumpinfo;

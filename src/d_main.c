@@ -17,6 +17,7 @@
 #include "doomtype.h"
 #include "doomvars.h"
 #include "g_game.h"
+#include "i_system.h"
 #include "i_timer.h"
 #include "m_argv.h"
 #include "m_config.h"
@@ -24,6 +25,9 @@
 #include "m_misc.h"
 #include "v_video.h"
 #include "version.h"
+#include "w_wad.h"
+
+#include "SDL_messagebox.h"
 
 #if !defined(_WIN32)
 #include <dirent.h>
@@ -168,6 +172,85 @@ static dboolean D_CheckParms( void )
 	return result;
 }
 
+static dboolean D_IsDOOMIWAD( char *filename )
+{
+	return ( M_StringEndsWith( filename, "DOOM.WAD" ) || M_StringEndsWith( filename, "DOOM1.WAD" )
+		|| M_StringEndsWith( filename, "DOOM2.WAD" ) || M_StringEndsWith( filename, "PLUTONIA.WAD" )
+		|| M_StringEndsWith( filename, "TNT.WAD" ) || ( hacx = M_StringEndsWith( filename, "HACX.WAD" ) ) );
+}
+
+static dboolean D_IsUnsupportedIWAD( char *filename )
+{
+	const struct
+	{
+		char    *iwad;
+		char    *title;
+	} unsupported[] = {
+		{ "heretic.wad",  "Heretic" },
+		{ "heretic1.wad", "Heretic" },
+		{ "hexen.wad",    "Hexen" },
+		{ "hexdd.wad",    "Hexen" },
+		{ "strife0.wad",  "Strife" },
+		{ "strife1.wad",  "Strife" },
+		{ "voices.wad",   "Strife" }
+	};
+
+	for( int i = 0; i < arrlen( unsupported ); i++ )
+		if( M_StringEndsWith( filename, unsupported[ i ].iwad ) )
+		{
+			char    buffer[ 1024 ];
+
+			M_snprintf( buffer, sizeof( buffer ), PACKAGE_NAME " doesn't support %s.", unsupported[ i ].title );
+			SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_WARNING, PACKAGE_NAME, buffer, NULL );
+
+#if defined(_WIN32)
+			if( previouswad )
+				wad = M_StringDuplicate( previouswad );
+#endif
+
+			error = true;
+			return true;
+		}
+
+	return false;
+}
+
+
+#if defined(_WIN32) || defined(__APPLE__)
+static int D_OpenWADLauncher( void )
+{
+	int             iwadfound = -1;
+
+	char    *file = wad;
+	dboolean test1;
+	dboolean test2;
+	dboolean test3;
+
+	if( M_FileExists( file ) )
+	{
+		logd( "File : '%s' exists\n", file );
+	}
+
+	// check if it's a valid and supported IWAD
+	test1 = D_IsDOOMIWAD( file );
+	test2 = ( W_WadType(file) == IWAD );
+	test3 = D_IsUnsupportedIWAD( file );
+
+	// check if it's a valid and supported IWAD
+	//if( D_IsDOOMIWAD( myargv[ 1 ] ) || ( W_WadType( myargv[ 1 ] ) == IWAD && !D_IsUnsupportedIWAD( myargv[ 1 ] ) ) )
+	if( test1 || test2 && !test3 )
+	{
+		D_IdentifyIWADByName( file );
+
+		if( W_AddFile( file, false ) )
+		{
+			iwadfound = 1;
+		}
+	}
+
+	return iwadfound;
+}
+#endif
 
 //
 // D_DoomLoop
@@ -343,6 +426,14 @@ static void D_DoomMainSetup( void )
 //#if defined(_WIN32) || defined(__APPLE__)
 //			do
 //			{
+
+	// default load doom1.wad
+	if( ( choseniwad = D_OpenWADLauncher() ) == -1 )
+	{
+		I_Quit( false );
+	}
+
+		
 //				if( ( choseniwad = D_OpenWADLauncher() ) == -1 )
 //					I_Quit( false );
 //#if defined(_WIN32)
@@ -475,7 +566,7 @@ static void D_DoomMainSetup( void )
 //			I_Error( PACKAGE_NAME " couldn't find any IWADs." );
 
 	
-//W_Init();
+	W_Init();
 }
 
 //

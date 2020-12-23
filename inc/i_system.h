@@ -1,6 +1,7 @@
 #if !defined(__I_SYSTEM_H__)
 #define __I_SYSTEM_H__
 
+#include "doomtype.h"
 #include "stdlib.h"
 
 #if defined(_WIN32)
@@ -21,11 +22,11 @@
 //// Quick synchronous operations are performed here.
 //// Can call D_PostEvent.
 //void I_StartTic(void);
-//
-//// Called by M_Responder when quit is selected.
-//// Clean exit, displays sell blurb.
-//void I_Quit(dboolean shutdown);
-//
+
+// Called by M_Responder when quit is selected.
+// Clean exit, displays sell blurb.
+void I_Quit(dboolean shutdown);
+
 void I_Error(const char *error, ...);
 //
 //void I_PrintWindowsVersion(void);
