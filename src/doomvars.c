@@ -11,14 +11,14 @@ char                *packagewad;
 dboolean            advancetitle;
 
 // g_game.c
-int             gametime = 0;
+int             gametime;// = 0;
 
 
 // m_menu.h
 extern dboolean         menuactive;     // Menu overlaid?
 
 // m_config.c
-int                 vid_capfps = vid_capfps_default;
+int                 vid_capfps;// = vid_capfps_default;
 
 
 // doomstat.c
@@ -27,8 +27,8 @@ dboolean        modifiedgame;
 
 // c_cmds.c
 alias_t             aliases[ MAXALIASES ];
-dboolean            togglingvanilla = false;
-dboolean            vanilla = false;
+dboolean            togglingvanilla;// = false;
+dboolean            vanilla;// = false;
 
 dboolean            devparm;                // started game with -devparm
 dboolean            fastparm;               // checkparm of -fast

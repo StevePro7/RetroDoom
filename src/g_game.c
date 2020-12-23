@@ -53,7 +53,7 @@
 //
 //dboolean        viewactive;
 //
-//int             gametime = 0;
+int             gametime = 0;
 //int             totalkills;                         // for intermission
 //int             totalitems;
 //int             totalsecret;

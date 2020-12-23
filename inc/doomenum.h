@@ -2474,4 +2474,33 @@ enum
 	BTS_SAVESHIFT = 2
 };
 
+
+// c_cmds.h
+typedef enum
+{
+	keyboardcontrol = 1,
+	mousecontrol = 2,
+	gamepadcontrol = 3
+} controltype_t;
+
+typedef enum
+{
+	CT_CCMD = 1,
+	CT_CVAR = 2,
+	CT_CHEAT = 3
+} cmdtype_t;
+
+enum
+{
+	CF_NONE = 0,
+	CF_BOOLEAN = 1,
+	CF_FLOAT = 2,
+	CF_INTEGER = 4,
+	CF_PERCENT = 8,
+	CF_STRING = 16,
+	CF_TIME = 32,
+	CF_OTHER = 64,
+	CF_READONLY = 128
+};
+
 #endif

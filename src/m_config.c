@@ -34,7 +34,7 @@ static dboolean cvarsloaded;
 //int                 r_color = r_color_default;
 //float               r_gamma = r_gamma_default;
 //dboolean            vid_borderlesswindow = vid_borderlesswindow_default;
-////int                 vid_capfps = vid_capfps_default;
+int                 vid_capfps = vid_capfps_default;
 //int                 vid_display = vid_display_default;
 //#if !defined(_WIN32)
 //char                *vid_driver = vid_driver_default;

@@ -156,13 +156,13 @@
     <ClCompile Include="..\src\d_loop.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\c_console2.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\g_game.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\v_video.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\c_cmds.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -313,13 +313,13 @@
     <ClInclude Include="..\inc\d_loop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\inc\c_console2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\inc\g_game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\v_video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\c_cmds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
