@@ -35,8 +35,107 @@
 #endif
 #endif
 
+#if defined(__APPLE__)
+#import <Cocoa/Cocoa.h>
+#endif
+
+#define FADETICS    40
+
+char **episodes[] =
+{
+	&s_M_EPISODE1,
+	&s_M_EPISODE2,
+	&s_M_EPISODE3,
+	&s_M_EPISODE4,
+	&s_M_EPISODE5
+};
+
+char **expansions[] =
+{
+	&s_M_EXPANSION1,
+	&s_M_EXPANSION2
+};
+
+char **skilllevels[] =
+{
+	&s_M_SKILLLEVEL1,
+	&s_M_SKILLLEVEL2,
+	&s_M_SKILLLEVEL3,
+	&s_M_SKILLLEVEL4,
+	&s_M_SKILLLEVEL5
+};
+
+static char *iwadsrequired[] =
+{
+	"doom.wad",
+	"doom2.wad",
+	"tnt.wad",
+	"plutonia.wad",
+	"nerve.wad",
+	"doom2.wad"
+};
+
+// Location where savegames are stored
+//char                *savegamefolder;
+
+char                *pwadfile = "";
+
+dboolean            fade = fade_default;
+char                *iwadfolder = iwadfolder_default;
+dboolean            melt = melt_default;
+int                 turbo = turbo_default;
+int                 units = units_default;
+
+#if defined(_WIN32)
+char                *wad = wad_default;
+#endif
+
+//char                *packageconfig;
+//char                *packagewad;
+
+//static char         dehwarning[ 256 ] = "";
+
+//#if defined(_WIN32)
+//char                *previouswad;
+//#endif
+//
+//dboolean            devparm;                // started game with -devparm
+//dboolean            fastparm;               // checkparm of -fast
+//dboolean            freeze;
+//dboolean            nomonsters;             // checkparm of -nomonsters
+//dboolean            pistolstart;            // [BH] checkparm of -pistolstart
+//dboolean            regenhealth;
+//dboolean            respawnitems;
+//dboolean            respawnmonsters;        // checkparm of -respawn
+
 uint64_t            stat_runs = 0;
 
+//skill_t             startskill;
+//int                 startepisode;
+static int          startmap;
+//dboolean            autostart;
+
+//dboolean            advancetitle;
+//dboolean            dowipe;
+static dboolean     forcewipe;
+
+//static byte         fadescreen[ SCREENWIDTH * SCREENHEIGHT ];
+//static int          fadeheight;
+int                 fadecount = 0;
+
+dboolean            splashscreen = true;
+
+static int          startuptimer;
+
+//dboolean            realframe;
+static dboolean     error;
+static dboolean     guess;
+
+struct tm           gamestarttime;
+
+#if defined(_WIN32)
+extern HANDLE       CapFPSEvent;
+#endif
 
 static void D_ProcessDehCommandLine( void )
 {

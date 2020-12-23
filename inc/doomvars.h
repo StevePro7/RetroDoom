@@ -6,9 +6,42 @@
 #include "doomtype.h"
 #include "doomstruct.h"
 
+#if defined(_WIN32)
+#include <Windows.h>
+#endif
+
 // d_main.h
+// Location where savegames are stored
+extern char             *savegamefolder;
+extern char     *pwadfile;
+
+extern dboolean     fade;
+extern char         *iwadfolder;
+extern dboolean     melt;
+extern int          turbo;
+extern int          units;
+
+#if defined(_WIN32)
+extern char         *wad;
+#endif
+
 extern char     *packageconfig;
+extern char *packagewad;
+
+#if defined(_WIN32)
+extern char *previouswad;
+#endif
+
 extern dboolean advancetitle;
+
+
+
+#if defined(_WIN32)
+extern HANDLE       CapFPSEvent;
+#endif
+
+
+
 
 // w_wad.c
 extern char *packagewad;
@@ -51,13 +84,7 @@ extern dboolean         devparm;                // DEBUG: launched with -devparm
 extern dboolean     returntowidescreen;
 //extern dboolean     vid_widescreen;
 
-// d_main.h
-#if defined(_WIN32)
-extern char *previouswad;
-#endif
-//#if defined(_WIN32)
-//extern char         *wad;
-//#endif
+
 
 
 // m_config.h

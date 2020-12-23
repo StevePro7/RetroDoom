@@ -189,15 +189,14 @@ int                 vid_capfps = vid_capfps_default;
 //int                         facebackcolor = facebackcolor_default;
 //int                         r_berserkintensity = r_berserkintensity_default;
 //uint64_t                    stat_cheated = 0;
-//
-//// d_main.c
+
+// d_main.c
 //dboolean            fade = fade_default;
 //char                *iwadfolder = iwadfolder_default;
 //dboolean            melt = melt_default;
 //int                 turbo = turbo_default;
 //int                 units = units_default;
-//uint64_t            stat_runs = 0;
-//
+
 //#if defined(_WIN32)
 //char                *wad = wad_default;
 //#endif
