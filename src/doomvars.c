@@ -250,6 +250,7 @@ int                     con_edgecolor;// = con_edgecolor_default;
 int                     warninglevel;// = warninglevel_default;
 
 dboolean                scrollbardrawn;
+const kern_t altkern[];
 
 
 // p_inter.c
@@ -1846,3 +1847,7 @@ byte        *black25;
 byte        *black40;
 byte        *yellow15;
 byte        *white25;
+
+
+// hu_lib.
+const kern_t kern[];
