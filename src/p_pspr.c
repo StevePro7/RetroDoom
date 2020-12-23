@@ -1,4 +1,5 @@
 #include "p_pspr.h"
+#include "m_fixed.h"
 //#include "doomstat.h"
 //#include "g_game.h"
 //#include "hu_stuff.h"
@@ -11,10 +12,10 @@
 //#include "p_local.h"
 //#include "p_tick.h"
 //#include "s_sound.h"
-//
-//#define LOWERSPEED  (6 * FRACUNIT)
-//#define RAISESPEED  (6 * FRACUNIT)
-//
+
+#define LOWERSPEED  (6 * FRACUNIT)
+#define RAISESPEED  (6 * FRACUNIT)
+
 //dboolean        autoaim = autoaim_default;
 //dboolean        centerweapon = centerweapon_default;
 //int             weaponbob = weaponbob_default;
@@ -37,7 +38,7 @@
 //uint64_t        stat_shotssuccessful_bfg9000 = 0;
 //
 //dboolean        successfulshot;
-//dboolean        skippsprinterp;
+////dboolean        skippsprinterp;
 //
 //extern dboolean hitwall;
 //

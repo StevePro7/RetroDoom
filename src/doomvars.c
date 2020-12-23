@@ -1750,3 +1750,7 @@ char **endmsg[] =
 
 // states.h
 state_t  states[ NUMSTATES ];
+
+
+// p_pspr.c
+dboolean        skippsprinterp;

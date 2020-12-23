@@ -40,6 +40,9 @@ extern gameaction_t loadaction;
 extern char *previouswad;
 #endif
 
+
+
+
 extern dboolean advancetitle;
 
 
@@ -917,5 +920,8 @@ extern ticcmd_t         localcmds[ BACKUPTICS ];
 // states.h
 extern state_t  states[ NUMSTATES ];
 
+
+// p_pspr.h
+extern dboolean skippsprinterp;
 
 #endif
