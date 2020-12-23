@@ -4,6 +4,7 @@
 #include "doomdef.h"
 #include "doomenum.h"
 #include "doomtype.h"
+#include "d_think.h"
 #include <stdio.h>
 
 // d_player.h
@@ -120,6 +121,22 @@ struct lumpinfo_s
 
 	wadfile_t   *wadfile;
 };
+
+
+// states.h
+typedef struct
+{
+	spritenum_t sprite;
+	long        frame;
+	long        tics;
+	actionf_t   action;
+	statenum_t  nextstate;
+	long        misc1;
+	long        misc2;
+	dboolean    translucent;
+	dboolean    dehacked;
+} state_t;
+
 
 
 #endif

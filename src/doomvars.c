@@ -1746,3 +1746,7 @@ char **endmsg[] =
 	&s_DOOM2_ENDMSG6,
 	&s_DOOM2_ENDMSG7
 };
+
+
+// states.h
+state_t  states[ NUMSTATES ];

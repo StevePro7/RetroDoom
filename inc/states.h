@@ -2,6 +2,7 @@
 #define __STATES_H__
 
 #include "doomenum.h"
+#include "doomstruct.h"
 #include "doomtype.h"
 #include "d_think.h"
 #include "sprites.h"
@@ -1120,18 +1121,18 @@
 //    NUMSTATES = 4000
 //} statenum_t;
 
-typedef struct
-{
-	spritenum_t sprite;
-	long        frame;
-	long        tics;
-	actionf_t   action;
-	statenum_t  nextstate;
-	long        misc1;
-	long        misc2;
-	dboolean    translucent;
-	dboolean    dehacked;
-} state_t;
+//typedef struct
+//{
+//	spritenum_t sprite;
+//	long        frame;
+//	long        tics;
+//	actionf_t   action;
+//	statenum_t  nextstate;
+//	long        misc1;
+//	long        misc2;
+//	dboolean    translucent;
+//	dboolean    dehacked;
+//} state_t;
 
 extern state_t  states[ NUMSTATES ];
 #endif

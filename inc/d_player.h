@@ -1,243 +1,244 @@
-#if !defined(__D_PLAYER_H__)
-#define __D_PLAYER_H__
-
-//stevepro
-#include "d_player.h"
-#include "d_ticcmd.h"
-//#include "doomdef.h"
-#include "doomenum.h"
-#include "doomtype.h"
-#include "info.h"
-#include "m_fixed.h"
-#include "p_mobj.h"
-#include "p_pspr.h"
-#include "tables.h"
-
-// The player data structure depends on a number
-// of other structs: items (internal inventory),
-// animation states (closely tied to the sprites
-// used to represent them, unfortunately).
-//#include "d_items.h"
-//#include "p_pspr.h"
-
-// In addition, the player is just a special
-// case of the generic moving object/actor.
-//#include "p_mobj.h"
-
-// Finally, for odd reasons, the player input
-// is buffered within the player data struct,
-// as commands per game tic.
+//#if !defined(__D_PLAYER_H__)
+//#define __D_PLAYER_H__
+//
+////stevepro
+//#include "d_player.h"
 //#include "d_ticcmd.h"
-
-//typedef enum
+////#include "doomdef.h"
+//#include "doomenum.h"
+//#include "doomstruct.h"
+//#include "doomtype.h"
+//#include "info.h"
+//#include "m_fixed.h"
+//#include "p_mobj.h"
+//#include "p_pspr.h"
+//#include "tables.h"
+//
+//// The player data structure depends on a number
+//// of other structs: items (internal inventory),
+//// animation states (closely tied to the sprites
+//// used to represent them, unfortunately).
+////#include "d_items.h"
+////#include "p_pspr.h"
+//
+//// In addition, the player is just a special
+//// case of the generic moving object/actor.
+////#include "p_mobj.h"
+//
+//// Finally, for odd reasons, the player input
+//// is buffered within the player data struct,
+//// as commands per game tic.
+////#include "d_ticcmd.h"
+//
+////typedef enum
+////{
+////    armortype_none,
+////    armortype_green,
+////    armortype_blue
+////} armortype_t;
+//
+////
+//// Player states.
+////
+////typedef enum
+////{
+////    // Playing or camping.
+////    PST_LIVE,
+////
+////    // Dead on the ground, view follows killer.
+////    PST_DEAD,
+////
+////    // Ready to restart/respawn???
+////    PST_REBORN
+////} playerstate_t;
+//
+////
+//// Player internal flags, for cheats and debug.
+////
+////enum
+////{
+////    // No clipping, walk through barriers.
+////    CF_NOCLIP        = 1,
+////
+////    // No damage, no health loss.
+////    CF_GODMODE       = 2,
+////
+////    CF_NOTARGET      = 4,
+////
+////    CF_MYPOS         = 8,
+////
+////    CF_ALLMAP        = 16,
+////
+////    CF_ALLMAP_THINGS = 32,
+////
+////    CF_CHOPPERS      = 64,
+////
+////    CF_BUDDHA        = 128
+////};
+//
+////
+//// Extended player object info: player_t
+////
+//typedef struct player_s
 //{
-//    armortype_none,
-//    armortype_green,
-//    armortype_blue
-//} armortype_t;
-
+//	// stevepro
+//    //mobj_t          *mo;
+//	struct mobj_s *mo;
 //
-// Player states.
+//    playerstate_t   playerstate;
+//    ticcmd_t        cmd;
 //
-//typedef enum
-//{
-//    // Playing or camping.
-//    PST_LIVE,
+//    // Determine POV,
+//    //  including viewpoint bobbing during movement.
+//    // Focal origin above r.z
+//    fixed_t         viewz;
 //
-//    // Dead on the ground, view follows killer.
-//    PST_DEAD,
+//    // Base height above floor for viewz.
+//    fixed_t         viewheight;
 //
-//    // Ready to restart/respawn???
-//    PST_REBORN
-//} playerstate_t;
-
+//    // Bob/squat speed.
+//    fixed_t         deltaviewheight;
 //
-// Player internal flags, for cheats and debug.
+//    // killough 10/98: used for realistic bobbing (i.e. not simply overall speed)
+//    // mo->momx and mo->momy represent true momenta experienced by player.
+//    // This only represents the thrust that the player applies himself.
+//    // This avoids anomalies with such things as BOOM ice and conveyors.
+//    fixed_t         momx, momy;     // killough 10/98
 //
-//enum
-//{
-//    // No clipping, walk through barriers.
-//    CF_NOCLIP        = 1,
+//    // This is only used between levels,
+//    // mo->health is used during levels.
+//    int             health;
 //
-//    // No damage, no health loss.
-//    CF_GODMODE       = 2,
+//    int             armorpoints;
 //
-//    CF_NOTARGET      = 4,
+//    // Armor type is 0-2.
+//    armortype_t     armortype;
 //
-//    CF_MYPOS         = 8,
+//    // Power ups. invinc and invis are tic counters.
+//    int             powers[NUMPOWERS];
 //
-//    CF_ALLMAP        = 16,
+//    int             cards[NUMCARDS];
+//    int             neededcard;
+//    int             neededcardflash;
+//    dboolean        backpack;
 //
-//    CF_ALLMAP_THINGS = 32,
+//    weapontype_t    readyweapon;
 //
-//    CF_CHOPPERS      = 64,
+//    // Is wp_nochange if not changing.
+//    weapontype_t    pendingweapon;
 //
-//    CF_BUDDHA        = 128
-//};
-
+//    int             weaponowned[NUMWEAPONS];
+//    int             ammo[NUMAMMO];
+//    int             maxammo[NUMAMMO];
 //
-// Extended player object info: player_t
+//    // True if button down last tic.
+//    dboolean        attackdown;
+//    dboolean        usedown;
 //
-typedef struct player_s
-{
-	// stevepro
-    //mobj_t          *mo;
-	struct mobj_s *mo;
-
-    playerstate_t   playerstate;
-    ticcmd_t        cmd;
-
-    // Determine POV,
-    //  including viewpoint bobbing during movement.
-    // Focal origin above r.z
-    fixed_t         viewz;
-
-    // Base height above floor for viewz.
-    fixed_t         viewheight;
-
-    // Bob/squat speed.
-    fixed_t         deltaviewheight;
-
-    // killough 10/98: used for realistic bobbing (i.e. not simply overall speed)
-    // mo->momx and mo->momy represent true momenta experienced by player.
-    // This only represents the thrust that the player applies himself.
-    // This avoids anomalies with such things as BOOM ice and conveyors.
-    fixed_t         momx, momy;     // killough 10/98
-
-    // This is only used between levels,
-    // mo->health is used during levels.
-    int             health;
-
-    int             armorpoints;
-
-    // Armor type is 0-2.
-    armortype_t     armortype;
-
-    // Power ups. invinc and invis are tic counters.
-    int             powers[NUMPOWERS];
-
-    int             cards[NUMCARDS];
-    int             neededcard;
-    int             neededcardflash;
-    dboolean        backpack;
-
-    weapontype_t    readyweapon;
-
-    // Is wp_nochange if not changing.
-    weapontype_t    pendingweapon;
-
-    int             weaponowned[NUMWEAPONS];
-    int             ammo[NUMAMMO];
-    int             maxammo[NUMAMMO];
-
-    // True if button down last tic.
-    dboolean        attackdown;
-    dboolean        usedown;
-
-    // Bit flags, for cheats and debug.
-    // See cheat_t, above.
-    int             cheats;
-
-    // Refired shots are less accurate.
-    int             refire;
-
-    // For intermission stats.
-    int             killcount;
-    int             itemcount;
-    int             secretcount;
-
-    // Hint messages.
-    char            *message;
-    char            prevmessage[133];
-
-    // For screen flashing (red or bright).
-    int             damagecount;
-    int             bonuscount;
-
-    // Who did damage (NULL for floors/ceilings).
-	//stevepro
-    //mobj_t          *attacker;
-	struct mobj_s     *attacker;
-
-    // So gun flashes light up areas.
-    int             extralight;
-
-    // Current PLAYPAL, ???
-    //  can be set to REDCOLORMAP for pain, etc.
-    int             fixedcolormap;
-
-    // Overlay view sprites (gun, etc).
-    pspdef_t        psprites[NUMPSPRITES];
-
-    // True if secret level has been done.
-    dboolean        didsecret;
-
-    weapontype_t    preferredshotgun;
-    weapontype_t    fistorchainsaw;
-    dboolean        invulnbeforechoppers;
-    dboolean        chainsawbeforechoppers;
-    weapontype_t    weaponbeforechoppers;
-
-    // [AM] Previous position of viewz before think.
-    //      Used to interpolate between camera positions.
-    angle_t         oldviewz;
-
-    int             lookdir;
-    int             oldlookdir;
-
-    unsigned int    jumptics;
-
-    fixed_t         recoil;
-    fixed_t         oldrecoil;
-
-    fixed_t         bounce;
-    fixed_t         bouncemax;
-
-    // For playerstats CCMD
-    int             damageinflicted;
-    int             damagereceived;
-    int             cheated;
-    int             shotssuccessful[NUMWEAPONS];
-    int             shotsfired[NUMWEAPONS];
-    int             deaths;
-    int             suicides;
-    int             mobjcount[NUMMOBJTYPES];
-    int             distancetraveled;
-    int             gamessaved;
-    int             itemspickedup_ammo_bullets;
-    int             itemspickedup_ammo_cells;
-    int             itemspickedup_ammo_rockets;
-    int             itemspickedup_ammo_shells;
-    int             itemspickedup_armor;
-    int             itemspickedup_health;
-} player_t;
-
+//    // Bit flags, for cheats and debug.
+//    // See cheat_t, above.
+//    int             cheats;
 //
-// INTERMISSION
-// Structure passed e.g. to WI_Start(wb)
+//    // Refired shots are less accurate.
+//    int             refire;
 //
-typedef struct
-{
-    int             epsd;           // episode # (0-2)
-
-    // if true, splash the secret level
-    dboolean        didsecret;
-
-    // previous and next levels, origin 0
-    int             last;
-    int             next;
-
-    int             maxkills;
-    int             maxitems;
-    int             maxsecret;
-
-    // the par time
-    int             partime;
-
-    int             skills;
-    int             sitems;
-    int             ssecret;
-    int             stime;
-} wbstartstruct_t;
-
-#endif
+//    // For intermission stats.
+//    int             killcount;
+//    int             itemcount;
+//    int             secretcount;
+//
+//    // Hint messages.
+//    char            *message;
+//    char            prevmessage[133];
+//
+//    // For screen flashing (red or bright).
+//    int             damagecount;
+//    int             bonuscount;
+//
+//    // Who did damage (NULL for floors/ceilings).
+//	//stevepro
+//    //mobj_t          *attacker;
+//	struct mobj_s     *attacker;
+//
+//    // So gun flashes light up areas.
+//    int             extralight;
+//
+//    // Current PLAYPAL, ???
+//    //  can be set to REDCOLORMAP for pain, etc.
+//    int             fixedcolormap;
+//
+//    // Overlay view sprites (gun, etc).
+//    pspdef_t        psprites[NUMPSPRITES];
+//
+//    // True if secret level has been done.
+//    dboolean        didsecret;
+//
+//    weapontype_t    preferredshotgun;
+//    weapontype_t    fistorchainsaw;
+//    dboolean        invulnbeforechoppers;
+//    dboolean        chainsawbeforechoppers;
+//    weapontype_t    weaponbeforechoppers;
+//
+//    // [AM] Previous position of viewz before think.
+//    //      Used to interpolate between camera positions.
+//    angle_t         oldviewz;
+//
+//    int             lookdir;
+//    int             oldlookdir;
+//
+//    unsigned int    jumptics;
+//
+//    fixed_t         recoil;
+//    fixed_t         oldrecoil;
+//
+//    fixed_t         bounce;
+//    fixed_t         bouncemax;
+//
+//    // For playerstats CCMD
+//    int             damageinflicted;
+//    int             damagereceived;
+//    int             cheated;
+//    int             shotssuccessful[NUMWEAPONS];
+//    int             shotsfired[NUMWEAPONS];
+//    int             deaths;
+//    int             suicides;
+//    int             mobjcount[NUMMOBJTYPES];
+//    int             distancetraveled;
+//    int             gamessaved;
+//    int             itemspickedup_ammo_bullets;
+//    int             itemspickedup_ammo_cells;
+//    int             itemspickedup_ammo_rockets;
+//    int             itemspickedup_ammo_shells;
+//    int             itemspickedup_armor;
+//    int             itemspickedup_health;
+//} player_t;
+//
+//////
+////// INTERMISSION
+////// Structure passed e.g. to WI_Start(wb)
+//////
+////typedef struct
+////{
+////    int             epsd;           // episode # (0-2)
+////
+////    // if true, splash the secret level
+////    dboolean        didsecret;
+////
+////    // previous and next levels, origin 0
+////    int             last;
+////    int             next;
+////
+////    int             maxkills;
+////    int             maxitems;
+////    int             maxsecret;
+////
+////    // the par time
+////    int             partime;
+////
+////    int             skills;
+////    int             sitems;
+////    int             ssecret;
+////    int             stime;
+////} wbstartstruct_t;
+//
+//#endif

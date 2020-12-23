@@ -914,4 +914,8 @@ extern int              skyflatnum;
 extern ticcmd_t         localcmds[ BACKUPTICS ];
 
 
+// states.h
+extern state_t  states[ NUMSTATES ];
+
+
 #endif
