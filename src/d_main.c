@@ -1103,8 +1103,46 @@ static dboolean D_CheckParms(void)
     return result;
 }
 
+// stevepro	automate loading of doom1.wad
 #if defined(_WIN32) || defined(__APPLE__)
-static int D_OpenWADLauncher(void)
+static int D_OpenWADLauncher( void )
+{
+	int             iwadfound = -1;
+
+	char    *file = wad;
+	dboolean test1;
+	dboolean test2;
+	dboolean test3;
+
+	//if( M_FileExists( file ) )
+	//{
+	//	logd( "File : '%s' exists\n", file );
+	//}
+
+	// check if it's a valid and supported IWAD
+	test1 = D_IsDOOMIWAD( file );
+	test2 = ( W_WadType( file ) == IWAD );
+	test3 = D_IsUnsupportedIWAD( file );
+
+	// check if it's a valid and supported IWAD
+	//if( D_IsDOOMIWAD( myargv[ 1 ] ) || ( W_WadType( myargv[ 1 ] ) == IWAD && !D_IsUnsupportedIWAD( myargv[ 1 ] ) ) )
+	if( test1 || test2 && !test3 )
+	{
+		D_IdentifyIWADByName( file );
+
+		if( W_AddFile( file, false ) )
+		{
+			iwadfound = 1;
+		}
+	}
+
+	return iwadfound;
+}
+#endif
+
+
+#if defined(_WIN32) || defined(__APPLE__)
+static int D_OpenWADLauncherOLD(void)
 {
     int             iwadfound = -1;
     dboolean        fileopenedok;
@@ -1935,47 +1973,49 @@ static void D_DoomMainSetup(void)
 
     p = M_CheckParmsWithArgs("-file", "-pwad", "-merge", 1, 1);
 
-    if (!(choseniwad = D_CheckParms()))
-    {
-        if (iwadfile)
-        {
-            startuptimer = I_GetTimeMS();
+	// stevepro	automate loading of doom1.wad
 
-            if (W_AddFile(iwadfile, false))
-                stat_runs = SafeAdd(stat_runs, 1);
-        }
-        else if (!p)
-        {
-#if defined(_WIN32) || defined(__APPLE__)
-            do
-            {
+//    if (!(choseniwad = D_CheckParms()))
+//    {
+//        if (iwadfile)
+//        {
+//            startuptimer = I_GetTimeMS();
+//
+//            if (W_AddFile(iwadfile, false))
+//                stat_runs = SafeAdd(stat_runs, 1);
+//        }
+//        else if (!p)
+//        {
+//#if defined(_WIN32) || defined(__APPLE__)
+//            do
+//            {
                 if ((choseniwad = D_OpenWADLauncher()) == -1)
                     I_Quit(false);
-#if defined(_WIN32)
-                else if (!choseniwad && !error && (!*wad || M_StringEndsWith(wad, ".wad")))
-#else
-                else if (!choseniwad && !error)
-#endif
-                {
-                    char    buffer[256];
-
-#if defined(_WIN32)
-                    M_snprintf(buffer, sizeof(buffer), PACKAGE_NAME " couldn't find %s.", (*wad ? wad : "any IWADs"));
-
-                    if (previouswad)
-                        wad = M_StringDuplicate(previouswad);
-#else
-                    M_snprintf(buffer, sizeof(buffer), PACKAGE_NAME " couldn't find any IWADs.");
-#endif
-
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, PACKAGE_NAME, buffer, NULL);
-                }
-            } while (!choseniwad);
-#endif
+//#if defined(_WIN32)
+//                else if (!choseniwad && !error && (!*wad || M_StringEndsWith(wad, ".wad")))
+//#else
+//                else if (!choseniwad && !error)
+//#endif
+//                {
+//                    char    buffer[256];
+//
+//#if defined(_WIN32)
+//                    M_snprintf(buffer, sizeof(buffer), PACKAGE_NAME " couldn't find %s.", (*wad ? wad : "any IWADs"));
+//
+//                    if (previouswad)
+//                        wad = M_StringDuplicate(previouswad);
+//#else
+//                    M_snprintf(buffer, sizeof(buffer), PACKAGE_NAME " couldn't find any IWADs.");
+//#endif
+//
+//                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, PACKAGE_NAME, buffer, NULL);
+//                }
+//            } while (!choseniwad);
+//#endif
 
             stat_runs = SafeAdd(stat_runs, 1);
-        }
-    }
+        //}
+    //}
 
     M_SaveCVARs();
 
