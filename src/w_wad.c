@@ -313,7 +313,8 @@ dboolean W_AddFile(char *filename, dboolean automatic)
 		( numlumps - startlump == 1 ? "" : "s" ), ( wadfile->type == IWAD ? "IWAD" : "PWAD" ), wadfile->path );
     free(temp);
 
-	W_DumpLumpInfo();
+	//stevepro
+	//W_DumpLumpInfo();
 
     if (M_StringEndsWith(filename, "SIGIL_v1_21.wad")
         || M_StringEndsWith(filename, "SIGIL_v1_2.wad")
