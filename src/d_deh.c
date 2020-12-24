@@ -3,7 +3,9 @@
 #include "d_englsh.h"
 #include "d_think.h"
 #include "doomtype.h"
+#include "doomvars.h"
 #include "dstrings.h"
+#include "logger.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -14,15 +16,15 @@
 //#include "dstrings.h"
 //#include "i_system.h"
 //#include "m_cheat.h"
-//#include "m_misc.h"
+#include "m_misc.h"
 //#include "p_local.h"
 //#include "sounds.h"
-//#include "w_wad.h"
-//#include "z_zone.h"
-//
-//// killough 10/98: new functions, to allow processing DEH files in-memory
-//// (e.g. from wads)
-//
+#include "w_wad.h"
+#include "z_zone.h"
+
+// killough 10/98: new functions, to allow processing DEH files in-memory
+// (e.g. from wads)
+
 typedef struct
 {
 	byte    *inp;
@@ -1443,20 +1445,20 @@ static char *dehReformatStr(char *string);
 
 // Prototypes for block processing functions
 // Pointers to these functions are used as the blocks are encountered.
-//static void deh_procThing(DEHFILE *fpin, char *line);
-//static void deh_procFrame( DEHFILE *fpin, char *line );
-//static void deh_procPointer( DEHFILE *fpin, char *line );
-//static void deh_procSounds( DEHFILE *fpin, char *line );
-//static void deh_procAmmo( DEHFILE *fpin, char *line );
-//static void deh_procWeapon( DEHFILE *fpin, char *line );
-//static void deh_procSprite( DEHFILE *fpin, char *line );
-//static void deh_procCheat( DEHFILE *fpin, char *line );
-//static void deh_procMisc( DEHFILE *fpin, char *line );
-//static void deh_procText( DEHFILE *fpin, char *line );
-//static void deh_procPars( DEHFILE *fpin, char *line );
-//static void deh_procStrings( DEHFILE *fpin, char *line );
-//static void deh_procError( DEHFILE *fpin, char *line );
-//static void deh_procBexCodePointers( DEHFILE *fpin, char *line );
+static void deh_procThing( DEHFILE *fpin, char *line ) {}
+static void deh_procFrame( DEHFILE *fpin, char *line ) {}
+static void deh_procPointer( DEHFILE *fpin, char *line ) {}
+static void deh_procSounds( DEHFILE *fpin, char *line ) {}
+static void deh_procAmmo( DEHFILE *fpin, char *line ) {}
+static void deh_procWeapon( DEHFILE *fpin, char *line ) {}
+static void deh_procSprite( DEHFILE *fpin, char *line ) {}
+static void deh_procCheat( DEHFILE *fpin, char *line ) {}
+static void deh_procMisc( DEHFILE *fpin, char *line ) {}
+static void deh_procText( DEHFILE *fpin, char *line ) {}
+static void deh_procPars( DEHFILE *fpin, char *line ) {}
+static void deh_procStrings( DEHFILE *fpin, char *line ) {}
+static void deh_procError( DEHFILE *fpin, char *line ) {}
+static void deh_procBexCodePointers( DEHFILE *fpin, char *line ) {}
 
 // Structure deh_block is used to hold the block names that can
 // be encountered, and the routines to use to decipher them
@@ -1474,29 +1476,29 @@ typedef struct
 
 // Put all the block header values, and the function to be called when that
 // one is encountered, in this array:
-//static const deh_block deh_blocks[] =
-//{
-//    /*  0 */ { "Thing",     deh_procThing           },
-//    /*  1 */ { "Frame",     deh_procFrame           },
-//    /*  2 */ { "Pointer",   deh_procPointer         },
-//    /*  3 */ { "Sound",     deh_procSounds          },  // Ty 03/16/98 corrected from "Sounds"
-//    /*  4 */ { "Ammo",      deh_procAmmo            },
-//    /*  5 */ { "Weapon",    deh_procWeapon          },
-//    /*  6 */ { "Sprite",    deh_procSprite          },
-//    /*  7 */ { "Cheat",     deh_procCheat           },
-//    /*  8 */ { "Misc",      deh_procMisc            },
-//    /*  9 */ { "Text",      deh_procText            },  // --  end of standard "deh" entries,
-//
-//    //     begin BOOM Extensions (BEX)
-//    /* 10 */ { "[STRINGS]", deh_procStrings         },  // new string changes
-//    /* 11 */ { "[PARS]",    deh_procPars            },  // alternative block marker
-//    /* 12 */ { "[CODEPTR]", deh_procBexCodePointers },  // bex codepointers by mnemonic
-//    /* 13 */ { "",          deh_procError           }   // dummy to handle anything else
-//};
+static const deh_block deh_blocks[] =
+{
+    /*  0 */ { "Thing",     deh_procThing           },
+    /*  1 */ { "Frame",     deh_procFrame           },
+    /*  2 */ { "Pointer",   deh_procPointer         },
+    /*  3 */ { "Sound",     deh_procSounds          },  // Ty 03/16/98 corrected from "Sounds"
+    /*  4 */ { "Ammo",      deh_procAmmo            },
+    /*  5 */ { "Weapon",    deh_procWeapon          },
+    /*  6 */ { "Sprite",    deh_procSprite          },
+    /*  7 */ { "Cheat",     deh_procCheat           },
+    /*  8 */ { "Misc",      deh_procMisc            },
+    /*  9 */ { "Text",      deh_procText            },  // --  end of standard "deh" entries,
 
-//// flag to skip included deh-style text, used with INCLUDE NOTEXT directive
-//static dboolean includenotext;
-//
+    //     begin BOOM Extensions (BEX)
+    /* 10 */ { "[STRINGS]", deh_procStrings         },  // new string changes
+    /* 11 */ { "[PARS]",    deh_procPars            },  // alternative block marker
+    /* 12 */ { "[CODEPTR]", deh_procBexCodePointers },  // bex codepointers by mnemonic
+    /* 13 */ { "",          deh_procError           }   // dummy to handle anything else
+};
+
+// flag to skip included deh-style text, used with INCLUDE NOTEXT directive
+static dboolean includenotext;
+
 //// MOBJINFO - Dehacked block name = "Thing"
 //// Usage: Thing nn (name)
 //// These are for mobjinfo_t types. Each is an integer
@@ -1950,187 +1952,209 @@ static const char *deh_misc[] =
 //    { NULL,              "A_NULL"            }    // Ty 05/16/98
 //};
 //
-//// to hold startup code pointers from INFO.C
-//static actionf_t deh_codeptr[NUMSTATES];
+// to hold startup code pointers from INFO.C
+static actionf_t deh_codeptr[NUMSTATES];
+
+// ====================================================================
+// ProcessDehFile
+// Purpose: Read and process a DEH or BEX file
+// Args:    filename    -- name of the DEH/BEX file
+// Returns: void
 //
-//// ====================================================================
-//// ProcessDehFile
-//// Purpose: Read and process a DEH or BEX file
-//// Args:    filename    -- name of the DEH/BEX file
-//// Returns: void
-////
-//// killough 10/98:
-//// substantially modified to allow input from wad lumps instead of .deh files.
-//void ProcessDehFile(char *filename, int lumpnum, dboolean automatic)
-//{
-//    DEHFILE infile;
-//    DEHFILE *filein = &infile;              // killough 10/98
-//    char    inbuffer[DEH_BUFFERMAX];        // Place to put the primary infostring
-//
-//    linecount = 0;
-//    addtocount = false;
-//
-//    // killough 10/98: allow DEH files to come from wad lumps
-//    if (filename)
-//    {
-//        if (!(infile.f = fopen(filename, "rt")))
-//            return;                         // should be checked up front anyway
-//
-//        infile.lump = NULL;
-//    }
-//    else
-//    {
-//        // DEH file comes from lump indicated by second argument
-//        if (!(infile.size = W_LumpLength(lumpnum)))
-//            return;
-//
-//        infile.inp = infile.lump = W_CacheLumpNum(lumpnum);
-//        filename = lumpinfo[lumpnum]->wadfile->path;
-//    }
-//
-//    {
-//        static int  i;                      // killough 10/98: only run once, by keeping index static
-//
-//        // remember what they start as for deh xref
-//        for (; i < EXTRASTATES; i++)
-//            deh_codeptr[i] = states[i].action;
-//
-//        // [BH] Initialize extra DeHackEd states 1089 to 3999
-//        for (; i < NUMSTATES; i++)
-//        {
-//            states[i].sprite = SPR_TNT1;
-//            states[i].frame = 0;
-//            states[i].tics = -1;
-//            states[i].action = NULL;
-//            states[i].nextstate = i;
-//            states[i].misc1 = 0;
-//            states[i].misc2 = 0;
-//            states[i].dehacked = false;
-//            deh_codeptr[i] = states[i].action;
-//        }
-//    }
-//
-//    // loop until end of file
-//    while (dehfgets(inbuffer, sizeof(inbuffer), filein))
-//    {
-//        dboolean            match = false;
-//        unsigned int        i;
-//        static unsigned int last_i = DEH_BLOCKMAX - 1;
-//        static long         filepos = 0;
-//
-//        lfstrip(inbuffer);
-//
-//        if (devparm)
-//            C_Output("Line = \"%s\"", inbuffer);
-//
-//        if (!*inbuffer || *inbuffer == '#' || *inbuffer == ' ' || (*inbuffer == '/' && *(inbuffer + 1) == '/'))
-//            continue;   // Blank line or comment line
-//
-//        // -- If DEH_BLOCKMAX is set right, the processing is independently
-//        // -- handled based on data in the deh_blocks[] structure array
-//
-//        // killough 10/98: INCLUDE code rewritten to allow arbitrary nesting,
-//        // and to greatly simplify code, fix memory leaks, other bugs
-//        if (!strncasecmp(inbuffer, "INCLUDE", 7))  // include a file
-//        {
-//            // preserve state while including a file
-//            // killough 10/98: moved to here
-//
-//            char        *nextfile;
-//            dboolean    oldnotext = includenotext;              // killough 10/98
-//
-//            // killough 10/98: exclude if inside wads (only to discourage
-//            // the practice, since the code could otherwise handle it)
-//            if (infile.lump)
-//            {
-//                C_Warning(1, "No files may be included from wads: \"%s\".", inbuffer);
-//                continue;
-//            }
-//
-//            // check for no-text directive, used when including a DEH
-//            // file but using the BEX format to handle strings
-//            if (!strncasecmp((nextfile = ptr_lstrip(inbuffer + 7)), "NOTEXT", 6))
-//            {
-//                includenotext = true;
-//                nextfile = ptr_lstrip(nextfile + 6);
-//            }
-//
-//            if (devparm)
-//                C_Output("Branching to include file <b>%s</b>...", nextfile);
-//
-//            ProcessDehFile(nextfile, 0, false);                 // do the included file
-//
-//            includenotext = oldnotext;
-//
-//            if (devparm)
-//                C_Output("...continuing with <b>%s</b>", filename);
-//
-//            continue;
-//        }
-//
-//        for (i = 0; i < DEH_BLOCKMAX; i++)
-//            if (!strncasecmp(inbuffer, deh_blocks[i].key, strlen(deh_blocks[i].key)))
-//            {
-//                if (i < DEH_BLOCKMAX - 1)
-//                    match = true;
-//
-//                break;                                          // we got one, that's enough for this block
-//            }
-//
-//        if (match)                                              // inbuffer matches a valid block code name
-//            last_i = i;
-//        else if (last_i >= 10 && last_i < DEH_BLOCKMAX - 1)     // restrict to BEX style lumps
-//        {
-//            // process that same line again with the last valid block code handler
-//            i = last_i;
-//
-//            if (!filein->lump)
-//                fseek(filein->f, filepos, SEEK_SET);
-//        }
-//
-//        if (i < DEH_BLOCKMAX)
-//        {
-//            if (devparm)
-//                C_Output("Processing function [%i] for %s", i, deh_blocks[i].key);
-//
-//            deh_blocks[i].fptr(filein, inbuffer);               // call function
-//        }
-//
-//        if (!filein->lump)                                      // back up line start
-//            filepos = ftell(filein->f);
-//    }
-//
-//    if (infile.lump)
-//        Z_ChangeTag(infile.lump, PU_CACHE);                     // mark purgeable
-//    else
-//        fclose(infile.f);                                       // close real file
-//
-//    if (addtocount)
-//        dehcount++;
-//
-//    if (infile.lump)
-//    {
-//        char    *temp1 = commify(linecount);
-//        char    *temp2 = uppercase(lumpinfo[lumpnum]->name);
-//
-//        C_Output("Parsed %s line%s from the <b>%s</b> lump in %s <b>%s</b>.",
-//            temp1, (linecount > 1 ? "s" : ""), temp2, (W_WadType(filename) == IWAD ? "IWAD" : "PWAD"), filename);
-//
-//        free(temp1);
-//        free(temp2);
-//    }
-//    else
-//    {
-//        char    *temp = commify(linecount);
-//
-//        C_Output("%s %s line%s from the <i><b>DeHackEd</b></i>%s file <b>%s</b>.",
-//            (automatic ? "Automatically parsed" : "Parsed"), temp, (linecount > 1 ? "s" : ""),
-//            (M_StringEndsWith(filename, "BEX") ? " with <i><b>BOOM</b></i> extensions" : ""), GetCorrectCase(filename));
-//
-//        free(temp);
-//    }
-//}
-//
+// killough 10/98:
+// substantially modified to allow input from wad lumps instead of .deh files.
+void ProcessDehFile(char *filename, int lumpnum, dboolean automatic)
+{
+    DEHFILE infile;
+    DEHFILE *filein = &infile;              // killough 10/98
+    char    inbuffer[DEH_BUFFERMAX];        // Place to put the primary infostring
+
+    linecount = 0;
+    addtocount = false;
+
+    // killough 10/98: allow DEH files to come from wad lumps
+    if (filename)
+    {
+        if (!(infile.f = fopen(filename, "rt")))
+            return;                         // should be checked up front anyway
+
+        infile.lump = NULL;
+    }
+    else
+    {
+        // DEH file comes from lump indicated by second argument
+        if (!(infile.size = W_LumpLength(lumpnum)))
+            return;
+
+        infile.inp = infile.lump = W_CacheLumpNum(lumpnum);
+        filename = lumpinfo[lumpnum]->wadfile->path;
+    }
+
+    {
+        static int  i;                      // killough 10/98: only run once, by keeping index static
+
+        // remember what they start as for deh xref
+        for (; i < EXTRASTATES; i++)
+            deh_codeptr[i] = states[i].action;
+
+        // [BH] Initialize extra DeHackEd states 1089 to 3999
+        for (; i < NUMSTATES; i++)
+        {
+            states[i].sprite = SPR_TNT1;
+            states[i].frame = 0;
+            states[i].tics = -1;
+            states[i].action = NULL;
+            states[i].nextstate = i;
+            states[i].misc1 = 0;
+            states[i].misc2 = 0;
+            states[i].dehacked = false;
+            deh_codeptr[i] = states[i].action;
+        }
+    }
+
+    // loop until end of file
+    while (dehfgets(inbuffer, sizeof(inbuffer), filein))
+    {
+        dboolean            match = false;
+        unsigned int        i;
+        static unsigned int last_i = DEH_BLOCKMAX - 1;
+        static long         filepos = 0;
+
+        lfstrip(inbuffer);
+
+		if( devparm )
+		{
+			//C_Output( "Line = \"%s\"", inbuffer );
+			logd( "Line = \"%s\"\n", inbuffer );
+		}
+            
+
+        if (!*inbuffer || *inbuffer == '#' || *inbuffer == ' ' || (*inbuffer == '/' && *(inbuffer + 1) == '/'))
+            continue;   // Blank line or comment line
+
+        // -- If DEH_BLOCKMAX is set right, the processing is independently
+        // -- handled based on data in the deh_blocks[] structure array
+
+        // killough 10/98: INCLUDE code rewritten to allow arbitrary nesting,
+        // and to greatly simplify code, fix memory leaks, other bugs
+        if (!strncasecmp(inbuffer, "INCLUDE", 7))  // include a file
+        {
+            // preserve state while including a file
+            // killough 10/98: moved to here
+
+            char        *nextfile;
+            dboolean    oldnotext = includenotext;              // killough 10/98
+
+            // killough 10/98: exclude if inside wads (only to discourage
+            // the practice, since the code could otherwise handle it)
+            if (infile.lump)
+            {
+                //C_Warning(1, "No files may be included from wads: \"%s\".", inbuffer);
+				loge( "No files may be included from wads: \"%s\".\n", inbuffer );
+                continue;
+            }
+
+            // check for no-text directive, used when including a DEH
+            // file but using the BEX format to handle strings
+            if (!strncasecmp((nextfile = ptr_lstrip(inbuffer + 7)), "NOTEXT", 6))
+            {
+                includenotext = true;
+                nextfile = ptr_lstrip(nextfile + 6);
+            }
+
+			if( devparm )
+			{
+				//C_Output( "Branching to include file <b>%s</b>...", nextfile );
+				logd( "Branching to include file <b>%s</b>...\n", nextfile );
+			}
+                
+
+            ProcessDehFile(nextfile, 0, false);                 // do the included file
+
+            includenotext = oldnotext;
+
+			if( devparm )
+			{
+				//C_Output( "...continuing with <b>%s</b>", filename );
+				logd( "...continuing with <b>%s</b>\n", filename );
+			}
+
+            continue;
+        }
+
+        for (i = 0; i < DEH_BLOCKMAX; i++)
+            if (!strncasecmp(inbuffer, deh_blocks[i].key, strlen(deh_blocks[i].key)))
+            {
+                if (i < DEH_BLOCKMAX - 1)
+                    match = true;
+
+                break;                                          // we got one, that's enough for this block
+            }
+
+        if (match)                                              // inbuffer matches a valid block code name
+            last_i = i;
+        else if (last_i >= 10 && last_i < DEH_BLOCKMAX - 1)     // restrict to BEX style lumps
+        {
+            // process that same line again with the last valid block code handler
+            i = last_i;
+
+            if (!filein->lump)
+                fseek(filein->f, filepos, SEEK_SET);
+        }
+
+        if (i < DEH_BLOCKMAX)
+        {
+			if( devparm )
+			{
+				//C_Output( "Processing function [%i] for %s", i, deh_blocks[ i ].key );
+				logd( "Processing function [%i] for %s\n", i, deh_blocks[ i ].key );
+			}
+
+            deh_blocks[i].fptr(filein, inbuffer);               // call function
+        }
+
+        if (!filein->lump)                                      // back up line start
+            filepos = ftell(filein->f);
+    }
+
+    if (infile.lump)
+        Z_ChangeTag(infile.lump, PU_CACHE);                     // mark purgeable
+    else
+        fclose(infile.f);                                       // close real file
+
+    if (addtocount)
+        dehcount++;
+
+    if (infile.lump)
+    {
+        char    *temp1 = commify(linecount);
+        char    *temp2 = uppercase(lumpinfo[lumpnum]->name);
+
+		//C_Output( "Parsed %s line%s from the <b>%s</b> lump in %s <b>%s</b>.",
+			//temp1, ( linecount > 1 ? "s" : "" ), temp2, ( W_WadType( filename ) == IWAD ? "IWAD" : "PWAD" ), filename );
+
+        logd("Parsed %s line%s from the <b>%s</b> lump in %s <b>%s</b>.\n",
+            temp1, (linecount > 1 ? "s" : ""), temp2, (W_WadType(filename) == IWAD ? "IWAD" : "PWAD"), filename);
+
+        free(temp1);
+        free(temp2);
+    }
+    else
+    {
+        char    *temp = commify(linecount);
+
+		//C_Output( "%s %s line%s from the <i><b>DeHackEd</b></i>%s file <b>%s</b>.",
+		//	( automatic ? "Automatically parsed" : "Parsed" ), temp, ( linecount > 1 ? "s" : "" ),
+		//	( M_StringEndsWith( filename, "BEX" ) ? " with <i><b>BOOM</b></i> extensions" : "" ), GetCorrectCase( filename ) );
+
+        logd("%s %s line%s from the <i><b>DeHackEd</b></i>%s file <b>%s</b>.\n",
+            (automatic ? "Automatically parsed" : "Parsed"), temp, (linecount > 1 ? "s" : ""),
+            (M_StringEndsWith(filename, "BEX") ? " with <i><b>BOOM</b></i> extensions" : ""), GetCorrectCase(filename));
+
+        free(temp);
+    }
+}
+
 //// ====================================================================
 //// deh_procBexCodePointers
 //// Purpose: Handle [CODEPTR] block, BOOM Extension

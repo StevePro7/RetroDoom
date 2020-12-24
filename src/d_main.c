@@ -11,6 +11,7 @@
 #endif
 
 #include "logger.h"
+#include "d_deh.h"
 #include "d_iwad.h"
 #include "d_main.h"
 #include "doomdef.h"
@@ -80,6 +81,25 @@ static char *iwadsrequired[] =
 	"doom2.wad"
 };
 
+typedef struct
+{
+	char        filename[ MAX_PATH ];
+	dboolean    present;
+} loaddehlast_t;
+
+// [BH] A list of DeHackEd files to load last
+static loaddehlast_t loaddehlast[ 8 ] =
+{
+	{ "VORTEX_DoomRetro.deh" },
+	{ "2_MARKV.deh" },
+	{ "3_HELLST.deh" },
+	{ "3_REAPER.deh" },
+	{ "4_HAR.deh" },
+	{ "5_GRNADE.deh" },
+	{ "6_LIGHT.deh" },
+	{ "7_GAUSS.deh" }
+};
+
 // Location where savegames are stored
 //char                *savegamefolder;
 
@@ -98,7 +118,7 @@ char                *wad = wad_default;
 //char                *packageconfig;
 //char                *packagewad;
 
-//static char         dehwarning[ 256 ] = "";
+static char         dehwarning[ 256 ] = "";
 
 //#if defined(_WIN32)
 //char                *previouswad;
@@ -141,6 +161,59 @@ struct tm           gamestarttime;
 #if defined(_WIN32)
 extern HANDLE       CapFPSEvent;
 #endif
+
+static void D_ProcessDehInWad( void )
+{
+	dboolean    process = ( !M_CheckParm( "-nodeh" ) && !M_CheckParm( "-nobex" ) );
+
+	if( *dehwarning )
+	{
+		//C_Warning( 1, dehwarning );
+		loge( "%s\n", dehwarning );
+	}
+
+	if( doom4vanilla )
+	{
+		for( int i = 0; i < numlumps; i++ )
+			if( M_StringCompare( lumpinfo[ i ]->name, "DEHACKED" )
+				&& process
+				&& !M_StringEndsWith( lumpinfo[ i ]->wadfile->path, PACKAGE_WAD )
+				&& !M_StringEndsWith( lumpinfo[ i ]->wadfile->path, "D4V.WAD" ) )
+				ProcessDehFile( NULL, i, false );
+
+		for( int i = 0; i < numlumps; i++ )
+			if( M_StringCompare( lumpinfo[ i ]->name, "DEHACKED" )
+				&& M_StringEndsWith( lumpinfo[ i ]->wadfile->path, "D4V.WAD" ) )
+				ProcessDehFile( NULL, i, false );
+
+		for( int i = 0; i < numlumps; i++ )
+			if( M_StringCompare( lumpinfo[ i ]->name, "DEHACKED" )
+				&& M_StringEndsWith( lumpinfo[ i ]->wadfile->path, PACKAGE_WAD ) )
+				ProcessDehFile( NULL, i, false );
+	}
+	else if( hacx || FREEDOOM )
+	{
+		for( int i = 0; i < numlumps; i++ )
+			if( M_StringCompare( lumpinfo[ i ]->name, "DEHACKED" )
+				&& ( process || M_StringEndsWith( lumpinfo[ i ]->wadfile->path, PACKAGE_WAD ) ) )
+				ProcessDehFile( NULL, i, false );
+	}
+	else
+	{
+		if( chex1 )
+			ProcessDehFile( NULL, W_GetNumForName( "CHEXBEX" ), true );
+
+		for( int i = numlumps - 1; i >= 0; i-- )
+			if( M_StringCompare( lumpinfo[ i ]->name, "DEHACKED" )
+				&& !M_StringEndsWith( lumpinfo[ i ]->wadfile->path, "SIGIL_v1_2.wad" )
+				&& ( process || M_StringEndsWith( lumpinfo[ i ]->wadfile->path, PACKAGE_WAD ) ) )
+				ProcessDehFile( NULL, i, false );
+	}
+
+	for( int i = 0; i < 8; i++ )
+		if( loaddehlast[ i ].present )
+			ProcessDehFile( loaddehlast[ i ].filename, 0, false );
+}
 
 static void D_ProcessDehCommandLine( void )
 {
@@ -602,6 +675,7 @@ static void D_DoomMainSetup( void )
 	//I_InitGamepad();
 
 	D_IdentifyVersion();
+	D_ProcessDehInWad();
 }
 
 //

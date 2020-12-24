@@ -1,6 +1,7 @@
 #if !defined(__D_DEH_H__)
 #define __D_DEH_H__
 
+#include "doomstruct.h"
 #include "doomtype.h"
 
 //enum
@@ -14,12 +15,12 @@
 //    p_PD_BLUEK, p_PD_REDK, p_PD_YELLOWK
 //};
 
-typedef struct
-{
-    char    **ppstr;        // doubly indirect pointer to string
-    char    *lookup;        // pointer to lookup string name
-    int     assigned;       // [BH] counter indicating string has been assigned
-} deh_strs;
+//typedef struct
+//{
+//    char    **ppstr;        // doubly indirect pointer to string
+//    char    *lookup;        // pointer to lookup string name
+//    int     assigned;       // [BH] counter indicating string has been assigned
+//} deh_strs;
 
 //extern dboolean dehacked;
 //extern deh_strs deh_strlookup[];
@@ -467,7 +468,7 @@ typedef struct
 //
 //extern int      dehcount;
 
-//void ProcessDehFile(char *filename, int lumpnum, dboolean automatic);
+void ProcessDehFile(char *filename, int lumpnum, dboolean automatic);
 
 // stevepro	was dstrings.h
 extern char **endmsg[];
