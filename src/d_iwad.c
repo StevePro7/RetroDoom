@@ -16,7 +16,7 @@
 //#include "m_menu.h"
 #include "m_misc.h"
 //#include "version.h"
-//#include "w_wad.h"
+#include "w_wad.h"
 
 #include "SDL_stdinc.h"
 
@@ -761,53 +761,53 @@ char *D_FindIWAD(void)
 //            C_Output("There are %i savegames in <b>%s</b>.", numsavegames, savegamefolder);
 //    }
 //}
+
 //
-////
-//// Find out what version of DOOM is playing.
-////
-//void D_IdentifyVersion(void)
-//{
-//    // gamemission is set up by the D_FindIWAD() function. But if
-//    // we specify '-iwad', we have to identify using
-//    // D_IdentifyIWADByName(). However, if the iwad does not match
-//    // any known IWAD name, we may have a dilemma. Try to
-//    // identify by its contents.
-//    if (gamemission == none)
-//    {
-//        for (int i = 0; i < numlumps; i++)
-//            if (!strncasecmp(lumpinfo[i]->name, "MAP01", 8))
-//            {
-//                gamemission = doom2;
-//                break;
-//            }
-//            else if (!strncasecmp(lumpinfo[i]->name, "E1M1", 8))
-//            {
-//                gamemission = doom;
-//                break;
-//            }
+// Find out what version of DOOM is playing.
 //
-//        if (gamemission == none)
-//            // Still no idea. I don't think this is going to work.
-//            I_Error("Unknown or invalid IWAD file.");
-//    }
-//
-//    // Make sure gamemode is set up correctly
-//    if (gamemission == doom)
-//    {
-//        // DOOM 1. But which version?
-//        if (W_CheckNumForName("E4M1") >= 0)
-//            // Ultimate DOOM
-//            gamemode = retail;
-//        else if (W_CheckNumForName("E3M1") >= 0)
-//            gamemode = registered;
-//        else
-//            gamemode = shareware;
-//    }
-//    else
-//        // DOOM 2 of some kind.
-//        gamemode = commercial;
-//}
-//
+void D_IdentifyVersion(void)
+{
+    // gamemission is set up by the D_FindIWAD() function. But if
+    // we specify '-iwad', we have to identify using
+    // D_IdentifyIWADByName(). However, if the iwad does not match
+    // any known IWAD name, we may have a dilemma. Try to
+    // identify by its contents.
+    if (gamemission == none)
+    {
+        for (int i = 0; i < numlumps; i++)
+            if (!strncasecmp(lumpinfo[i]->name, "MAP01", 8))
+            {
+                gamemission = doom2;
+                break;
+            }
+            else if (!strncasecmp(lumpinfo[i]->name, "E1M1", 8))
+            {
+                gamemission = doom;
+                break;
+            }
+
+        if (gamemission == none)
+            // Still no idea. I don't think this is going to work.
+            I_Error("Unknown or invalid IWAD file.");
+    }
+
+    // Make sure gamemode is set up correctly
+    if (gamemission == doom)
+    {
+        // DOOM 1. But which version?
+        if (W_CheckNumForName("E4M1") >= 0)
+            // Ultimate DOOM
+            gamemode = retail;
+        else if (W_CheckNumForName("E3M1") >= 0)
+            gamemode = registered;
+        else
+            gamemode = shareware;
+    }
+    else
+        // DOOM 2 of some kind.
+        gamemode = commercial;
+}
+
 //// Set the gamedescription string
 //void D_SetGameDescription(void)
 //{

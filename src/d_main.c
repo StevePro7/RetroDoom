@@ -598,6 +598,10 @@ static void D_DoomMainSetup( void )
 	DSSECRET = ( W_CheckNumForName( "DSSECRET" ) >= 0 );
 
 	I_InitGraphics();
+
+	//I_InitGamepad();
+
+	D_IdentifyVersion();
 }
 
 //
