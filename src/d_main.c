@@ -683,6 +683,14 @@ static void D_DoomMainSetup( void )
 		I_Error( "The wrong version of %s was found.", packagewad );
 
 	D_SetGameDescription();
+
+	if( nerve && expansion == 2 )
+		gamemission = pack_nerve;
+	else if( gamemission == doom && !sigil && episode == 5 )
+	{
+		episode = 1;
+		M_SaveCVARs();
+	}
 }
 
 //

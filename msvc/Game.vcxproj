@@ -59,6 +59,7 @@
     <ClCompile Include="..\src\m_config.c" />
     <ClCompile Include="..\src\m_controls.c" />
     <ClCompile Include="..\src\m_fixed.c" />
+    <ClCompile Include="..\src\m_menu.c" />
     <ClCompile Include="..\src\m_misc.c" />
     <ClCompile Include="..\src\m_random.c" />
     <ClCompile Include="..\src\p_local.c" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\inc\m_config.h" />
     <ClInclude Include="..\inc\m_controls.h" />
     <ClInclude Include="..\inc\m_fixed.h" />
+    <ClInclude Include="..\inc\m_menu.h" />
     <ClInclude Include="..\inc\m_misc.h" />
     <ClInclude Include="..\inc\m_random.h" />
     <ClInclude Include="..\inc\p_local.h" />

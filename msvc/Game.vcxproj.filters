@@ -192,6 +192,9 @@
     <ClCompile Include="..\src\hu_lib.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\m_menu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -374,6 +377,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\hu_lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\m_menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

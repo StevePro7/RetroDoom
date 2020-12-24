@@ -60,9 +60,6 @@ extern char *packagewad;
 
 
 
-// m_menu.c
-dboolean        menuactive;
-
 
 
 

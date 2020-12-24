@@ -304,14 +304,15 @@ dboolean                r_hud = r_hud_default;
 dboolean                r_hud_translucency = r_hud_translucency_default;
 
 // m_menu.c
-int             episode = episode_default;
-int             expansion = expansion_default;
-int             m_sensitivity = m_sensitivity_default;
-dboolean        messages = messages_default;
-int             r_detail = r_detail_default;
-int             r_screensize = r_screensize_default;
-int             savegame = savegame_default;
-int             skilllevel = skilllevel_default;
+int             episode;// = episode_default;
+int             expansion;// = expansion_default;
+int             m_sensitivity;// = m_sensitivity_default;
+dboolean        messages;// = messages_default;
+int             r_detail;// = r_detail_default;
+int             r_screensize;// = r_screensize_default;
+int             savegame;// = savegame_default;
+int             skilllevel;// = skilllevel_default;
+dboolean        menuactive;
 
 // st_stuff.c
 patch_t                     *grnrock;
