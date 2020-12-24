@@ -670,7 +670,9 @@ static void D_DoomMainSetup( void )
 	WISCRT2 = ( W_CheckMultipleLumps( "WISCRT2" ) > 1 );
 	DSSECRET = ( W_CheckNumForName( "DSSECRET" ) >= 0 );
 
-	I_InitGraphics();
+	// steveproTODO	complete all the code then switch to Windows mode instead of Console
+	// does this work now i.e. NOT get the linker error "unresolved external symbol _SDL_main referenced in function _main_getcmdline"
+	//I_InitGraphics();
 
 	//I_InitGamepad();
 
