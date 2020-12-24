@@ -11,6 +11,7 @@
 #include "doomtype.h"
 #include "doomvars.h"
 #include "i_system.h"
+#include "logger.h"
 #include "m_argv.h"
 //#include "m_config.h"
 //#include "m_menu.h"
@@ -808,75 +809,93 @@ void D_IdentifyVersion(void)
         gamemode = commercial;
 }
 
-//// Set the gamedescription string
-//void D_SetGameDescription(void)
-//{
-//    M_StringCopy(gamedescription, PACKAGE_NAME, sizeof(gamedescription));
-//
-//    if (chex1)
-//        M_StringCopy(gamedescription, s_CAPTION_CHEX, sizeof(gamedescription));
-//    else if (chex2)
-//        M_StringCopy(gamedescription, s_CAPTION_CHEX2, sizeof(gamedescription));
-//    else if (hacx)
-//        M_StringCopy(gamedescription, s_CAPTION_HACX, sizeof(gamedescription));
-//    else if (BTSXE1)
-//        M_StringCopy(gamedescription, s_CAPTION_BTSXE1, sizeof(gamedescription));
-//    else if (BTSXE2)
-//        M_StringCopy(gamedescription, s_CAPTION_BTSXE2, sizeof(gamedescription));
-//    else if (BTSXE3)
-//        M_StringCopy(gamedescription, s_CAPTION_BTSXE3, sizeof(gamedescription));
-//    else if (gamemission == doom)
-//    {
-//        // DOOM 1. But which version?
-//        if (modifiedgame && *pwadfile)
-//            M_StringCopy(gamedescription, pwadfile, sizeof(gamedescription));
-//        else if (FREEDOOM)
-//            M_StringCopy(gamedescription, s_CAPTION_FREEDOOM1, sizeof(gamedescription));
-//        else if (gamemode == retail)
-//            M_StringCopy(gamedescription, s_CAPTION_ULTIMATE, sizeof(gamedescription));
-//        else if (gamemode == registered)
-//            M_StringCopy(gamedescription, s_CAPTION_REGISTERED, sizeof(gamedescription));
-//        else if (gamemode == shareware)
-//            M_StringCopy(gamedescription, s_CAPTION_SHAREWARE, sizeof(gamedescription));
-//    }
-//    else
-//    {
-//        // DOOM 2 of some kind. But which mission?
-//        if (modifiedgame && *pwadfile)
-//        {
-//            if (M_StringCompare(pwadfile, "nerve.wad"))
-//                M_StringCopy(gamedescription, s_CAPTION_DOOM2, sizeof(gamedescription));
-//            else
-//                M_StringCopy(gamedescription, pwadfile, sizeof(gamedescription));
-//        }
-//        else if (FREEDOOM)
-//            M_StringCopy(gamedescription, (FREEDM ? s_CAPTION_FREEDM : s_CAPTION_FREEDOOM2), sizeof(gamedescription));
-//        else if (nerve)
-//            M_StringCopy(gamedescription, s_CAPTION_DOOM2, sizeof(gamedescription));
-//        else if (gamemission == doom2)
-//            M_snprintf(gamedescription, sizeof(gamedescription), "%s: %s", s_CAPTION_DOOM2, s_CAPTION_HELLONEARTH);
-//        else if (gamemission == pack_plut)
-//            M_StringCopy(gamedescription, s_CAPTION_PLUTONIA, sizeof(gamedescription));
-//        else if (gamemission == pack_tnt)
-//            M_StringCopy(gamedescription, s_CAPTION_TNT, sizeof(gamedescription));
-//    }
-//
-//    if (nerve)
-//    {
-//        if (bfgedition)
-//            C_Output("Playing <i><b>%s: %s (%s)</b></i> and <i><b>%s: %s (%s).</b></i>", s_CAPTION_DOOM2, s_CAPTION_HELLONEARTH,
-//                s_CAPTION_BFGEDITION, s_CAPTION_DOOM2, s_CAPTION_NERVE, s_CAPTION_BFGEDITION);
-//        else
-//            C_Output("Playing <i><b>%s: %s</b></i> and <i><b>%s: %s.</b></i>", s_CAPTION_DOOM2, s_CAPTION_HELLONEARTH,
-//                s_CAPTION_DOOM2, s_CAPTION_NERVE);
-//    }
-//    else if (modifiedgame && !sigil && !chex && !BTSX)
-//        C_Output("Playing <b>%s</b>.", gamedescription);
-//    else
-//    {
-//        if (bfgedition)
-//            C_Output("Playing <i><b>%s (%s).</b></i>", gamedescription, s_CAPTION_BFGEDITION);
-//        else
-//            C_Output("Playing <i><b>%s.</b></i>", gamedescription);
-//    }
-//}
+// Set the gamedescription string
+void D_SetGameDescription(void)
+{
+    M_StringCopy(gamedescription, PACKAGE_NAME, sizeof(gamedescription));
+
+    if (chex1)
+        M_StringCopy(gamedescription, s_CAPTION_CHEX, sizeof(gamedescription));
+    else if (chex2)
+        M_StringCopy(gamedescription, s_CAPTION_CHEX2, sizeof(gamedescription));
+    else if (hacx)
+        M_StringCopy(gamedescription, s_CAPTION_HACX, sizeof(gamedescription));
+    else if (BTSXE1)
+        M_StringCopy(gamedescription, s_CAPTION_BTSXE1, sizeof(gamedescription));
+    else if (BTSXE2)
+        M_StringCopy(gamedescription, s_CAPTION_BTSXE2, sizeof(gamedescription));
+    else if (BTSXE3)
+        M_StringCopy(gamedescription, s_CAPTION_BTSXE3, sizeof(gamedescription));
+    else if (gamemission == doom)
+    {
+        // DOOM 1. But which version?
+        if (modifiedgame && *pwadfile)
+            M_StringCopy(gamedescription, pwadfile, sizeof(gamedescription));
+        else if (FREEDOOM)
+            M_StringCopy(gamedescription, s_CAPTION_FREEDOOM1, sizeof(gamedescription));
+        else if (gamemode == retail)
+            M_StringCopy(gamedescription, s_CAPTION_ULTIMATE, sizeof(gamedescription));
+        else if (gamemode == registered)
+            M_StringCopy(gamedescription, s_CAPTION_REGISTERED, sizeof(gamedescription));
+        else if (gamemode == shareware)
+            M_StringCopy(gamedescription, s_CAPTION_SHAREWARE, sizeof(gamedescription));
+    }
+    else
+    {
+        // DOOM 2 of some kind. But which mission?
+        if (modifiedgame && *pwadfile)
+        {
+            if (M_StringCompare(pwadfile, "nerve.wad"))
+                M_StringCopy(gamedescription, s_CAPTION_DOOM2, sizeof(gamedescription));
+            else
+                M_StringCopy(gamedescription, pwadfile, sizeof(gamedescription));
+        }
+        else if (FREEDOOM)
+            M_StringCopy(gamedescription, (FREEDM ? s_CAPTION_FREEDM : s_CAPTION_FREEDOOM2), sizeof(gamedescription));
+        else if (nerve)
+            M_StringCopy(gamedescription, s_CAPTION_DOOM2, sizeof(gamedescription));
+        else if (gamemission == doom2)
+            M_snprintf(gamedescription, sizeof(gamedescription), "%s: %s", s_CAPTION_DOOM2, s_CAPTION_HELLONEARTH);
+        else if (gamemission == pack_plut)
+            M_StringCopy(gamedescription, s_CAPTION_PLUTONIA, sizeof(gamedescription));
+        else if (gamemission == pack_tnt)
+            M_StringCopy(gamedescription, s_CAPTION_TNT, sizeof(gamedescription));
+    }
+
+    if (nerve)
+    {
+		if( bfgedition )
+		{
+			//C_Output( "Playing <i><b>%s: %s (%s)</b></i> and <i><b>%s: %s (%s).</b></i>", s_CAPTION_DOOM2, s_CAPTION_HELLONEARTH,
+				//s_CAPTION_BFGEDITION, s_CAPTION_DOOM2, s_CAPTION_NERVE, s_CAPTION_BFGEDITION );
+			logd( "Playing <i><b>%s: %s (%s)</b></i> and <i><b>%s: %s (%s).</b></i>\n", s_CAPTION_DOOM2, s_CAPTION_HELLONEARTH,
+				s_CAPTION_BFGEDITION, s_CAPTION_DOOM2, s_CAPTION_NERVE, s_CAPTION_BFGEDITION );
+		}
+		else
+		{
+			//C_Output( "Playing <i><b>%s: %s</b></i> and <i><b>%s: %s.</b></i>", s_CAPTION_DOOM2, s_CAPTION_HELLONEARTH,
+				//s_CAPTION_DOOM2, s_CAPTION_NERVE );
+			logd( "Playing <i><b>%s: %s</b></i> and <i><b>%s: %s.</b></i>\n", s_CAPTION_DOOM2, s_CAPTION_HELLONEARTH,
+				s_CAPTION_DOOM2, s_CAPTION_NERVE );
+		}
+            
+    }
+	else if( modifiedgame && !sigil && !chex && !BTSX )
+	{
+		//C_Output( "Playing <b>%s</b>.", gamedescription );
+		logd( "Playing <b>%s</b>.\n", gamedescription );
+	}
+    else
+    {
+		if( bfgedition )
+		{
+			//C_Output( "Playing <i><b>%s (%s).</b></i>", gamedescription, s_CAPTION_BFGEDITION );
+			logd( "Playing <i><b>%s (%s).</b></i>\n", gamedescription, s_CAPTION_BFGEDITION );
+		}
+		else
+		{
+			//C_Output( "Playing <i><b>%s.</b></i>", gamedescription );
+			logd( "Playing <i><b>%s.</b></i>\n", gamedescription );
+		}
+    }
+}

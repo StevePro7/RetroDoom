@@ -678,6 +678,11 @@ static void D_DoomMainSetup( void )
 
 	D_IdentifyVersion();
 	D_ProcessDehInWad();
+
+	if( !M_StringCompare( s_VERSION, PACKAGE_NAMEANDVERSIONSTRING ) )
+		I_Error( "The wrong version of %s was found.", packagewad );
+
+	D_SetGameDescription();
 }
 
 //
