@@ -343,7 +343,7 @@ static void D_DoomMainSetup( void )
 {
 	int     p = M_CheckParmWithArgs( "-config", 1, 1 );
 	int     choseniwad = 0;
-	//char    lumpname[ 6 ];
+	char    lumpname[ 6 ];
 	char    *appdatafolder = M_GetAppDataFolder();
 	char    *iwadfile;
 	//int     startloadgame;
@@ -696,6 +696,154 @@ static void D_DoomMainSetup( void )
 
 	//C_Output( "Screenshots will be saved in <b>%s</b>.", screenshotfolder );
 	logd( "Screenshots will be saved in <b>%s</b>.\n", screenshotfolder );
+
+	// Check for -file in shareware
+	if( modifiedgame )
+	{
+		if( gamemode == shareware )
+			I_Error( "You can't load PWADs with DOOM1.WAD." );
+
+		// Check for fake IWAD with right name,
+		// but w/o all the lumps of the registered version.
+		if( gamemode == registered )
+		{
+			// These are the lumps that will be checked in IWAD,
+			// if any one is not present, execution will be aborted.
+			char name[ 23 ][ 9 ] =
+			{
+				"E2M1", "E2M2", "E2M3", "E2M4", "E2M5", "E2M6", "E2M7", "E2M8", "E2M9",
+				"E3M1", "E3M3", "E3M3", "E3M4", "E3M5", "E3M6", "E3M7", "E3M8", "E3M9",
+				"DPHOOF", "BFGGA0", "HEADA1", "CYBRA1", "SPIDA1D1"
+			};
+
+			for( int i = 0; i < 23; i++ )
+				if( W_CheckNumForName( name[ i ] ) < 0 )
+					I_Error( "This is not the registered version of DOOM.WAD." );
+		}
+	}
+
+	// get skill/episode/map from parms
+	startskill = sk_medium;
+	startepisode = 1;
+	startmap = 1;
+	autostart = false;
+
+	if( ( p = M_CheckParmsWithArgs( "-skill", "-skilllevel", "", 1, 1 ) ) )
+	{
+		int temp = myargv[ p + 1 ][ 0 ] - '1';
+
+		if( temp >= sk_baby && temp <= sk_nightmare )
+		{
+			char    *string = titlecase( *skilllevels[ temp ] );
+
+			startskill = ( skill_t ) temp;
+			skilllevel = startskill + 1;
+			M_SaveCVARs();
+
+			strreplace( string, ".", "" );
+			strreplace( string, "!", "" );
+
+			//C_Output( "A <b>-%s</b> parameter was found on the command-line. The skill level is now <i><b>%s.</b></i>",
+				//myargv[ p ], string );
+			logd( "A <b>-%s</b> parameter was found on the command-line. The skill level is now <i><b>%s.</b></i>\n",
+				myargv[ p ], string );
+			free( string );
+		}
+	}
+
+	if( ( p = M_CheckParmWithArgs( "-episode", 1, 1 ) ) && gamemode != commercial )
+	{
+		int temp = myargv[ p + 1 ][ 0 ] - '0';
+
+		if( ( gamemode == shareware && temp == 1 ) || ( temp >= 1 && ( ( gamemode == registered && temp <= 3 )
+			|| ( gamemode == retail && temp <= 4 ) || ( sigil && temp <= 5 ) ) ) )
+		{
+			startepisode = temp;
+			episode = temp;
+			M_SaveCVARs();
+
+			if( gamemode == commercial )
+				M_snprintf( lumpname, sizeof( lumpname ), "MAP%02i", startmap );
+			else
+				M_snprintf( lumpname, sizeof( lumpname ), "E%iM%i", startepisode, startmap );
+
+			autostart = true;
+			//C_Output( "An <b>-episode</b> parameter was found on the command-line. The episode is now <i><b>%s.</b></i>",
+			//	*episodes[ episode - 1 ] );
+			logd( "An <b>-episode</b> parameter was found on the command-line. The episode is now <i><b>%s.</b></i>\n",
+				*episodes[ episode - 1 ] );
+		}
+	}
+
+	if( ( p = M_CheckParmWithArgs( "-expansion", 1, 1 ) ) && gamemode == commercial )
+	{
+		int temp = myargv[ p + 1 ][ 0 ] - '0';
+
+		if( temp <= ( nerve ? 2 : 1 ) )
+		{
+			gamemission = ( temp == 1 ? doom2 : pack_nerve );
+			expansion = temp;
+			M_SaveCVARs();
+			M_snprintf( lumpname, sizeof( lumpname ), "MAP%02i", startmap );
+			autostart = true;
+			//C_Output( "An <b>-expansion</b> parameter was found on the command-line. The expansion is now <i><b>%s.</b></i>",
+			//	*expansions[ expansion - 1 ] );
+			logd( "An <b>-expansion</b> parameter was found on the command-line. The expansion is now <i><b>%s.</b></i>\n",
+				*expansions[ expansion - 1 ] );
+		}
+	}
+
+	if( ( p = M_CheckParmWithArgs( "-warp", 1, 1 ) ) )
+	{
+		//C_Output( "A <b>-warp</b> parameter was found on the command-line." );
+		logd( "A <b>-warp</b> parameter was found on the command-line.\n" );
+	}
+	else if( ( p = M_CheckParmWithArgs( "+map", 1, 1 ) ) )
+	{
+		//C_Output( "A <b>+map</b> parameter was found on the command-line." );
+		logd( "A <b>+map</b> parameter was found on the command-line.\n" );
+	}
+		
+	if( p )
+	{
+		if( gamemode == commercial )
+		{
+			if( strlen( myargv[ p + 1 ] ) == 5 && toupper( myargv[ p + 1 ][ 0 ] ) == 'M' && toupper( myargv[ p + 1 ][ 1 ] ) == 'A'
+				&& toupper( myargv[ p + 1 ][ 2 ] ) == 'P' && isdigit( ( int ) myargv[ p + 1 ][ 3 ] ) && isdigit( ( int ) myargv[ p + 1 ][ 4 ] ) )
+				startmap = ( myargv[ p + 1 ][ 3 ] - '0' ) * 10 + myargv[ p + 1 ][ 4 ] - '0';
+			else
+				startmap = atoi( myargv[ p + 1 ] );
+
+			M_snprintf( lumpname, sizeof( lumpname ), "MAP%02i", startmap );
+		}
+		else
+		{
+			if( strlen( myargv[ p + 1 ] ) == 4 && toupper( myargv[ p + 1 ][ 0 ] ) == 'E' && isdigit( ( int ) myargv[ p + 1 ][ 1 ] )
+				&& toupper( myargv[ p + 1 ][ 2 ] ) == 'M' && isdigit( ( int ) myargv[ p + 1 ][ 3 ] ) )
+			{
+				startepisode = myargv[ p + 1 ][ 1 ] - '0';
+				startmap = myargv[ p + 1 ][ 3 ] - '0';
+			}
+			else
+			{
+				startepisode = myargv[ p + 1 ][ 0 ] - '0';
+
+				if( p + 2 < myargc )
+					startmap = myargv[ p + 2 ][ 0 ] - '0';
+			}
+
+			M_snprintf( lumpname, sizeof( lumpname ), "E%iM%i", startepisode, startmap );
+		}
+
+		if( ( BTSX && W_CheckMultipleLumps( lumpname ) > 1 ) || W_CheckNumForName( lumpname ) >= 0 )
+		{
+			autostart = true;
+
+			stat_cheated = SafeAdd( stat_cheated, 1 );
+			M_SaveCVARs();
+		}
+	}
+
 }
 
 //
