@@ -131,9 +131,9 @@ extern dboolean         WISCRT2;
 // Status flags for refresh.
 //
 
-extern dboolean         automapactive;  // In automap mode?
-extern dboolean         menuactive;     // Menu overlaid?
-extern dboolean         paused;         // Game Pause?
+//extern dboolean         automapactive;  // In automap mode?
+//extern dboolean         menuactive;     // Menu overlaid?
+//extern dboolean         paused;         // Game Pause?
 
 extern dboolean         viewactive;
 
@@ -152,7 +152,7 @@ extern int              barrelcount;
 extern int              leveltime;      // tics in game play for par
 
 //?
-extern gamestate_t      gamestate;
+//extern gamestate_t      gamestate;
 
 //-----------------------------
 // Internal parameters, fixed.

@@ -1,5 +1,6 @@
 #include "g_game.h"
 
+#include "doomenum.h"
 #include "d_event.h"
 #include "m_fixed.h"
 
@@ -41,7 +42,7 @@
 //static void G_DoSaveGame(void);
 //
 //gameaction_t    gameaction;
-//gamestate_t     gamestate = GS_TITLESCREEN;
+gamestate_t     gamestate = GS_TITLESCREEN;
 //skill_t         gameskill;
 //int             pendinggameskill;
 //int             gameepisode;

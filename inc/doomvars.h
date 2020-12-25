@@ -42,9 +42,6 @@ extern gameaction_t loadaction;
 extern char *previouswad;
 #endif
 
-
-
-
 extern dboolean advancetitle;
 
 
@@ -89,9 +86,10 @@ extern dboolean         devparm;                // DEBUG: launched with -devparm
 
 
 // i_video.h
+extern dboolean     quitting;
 extern dboolean     returntowidescreen;
 //extern dboolean     vid_widescreen;
-
+extern byte         *PLAYPAL;
 
 
 
@@ -848,13 +846,18 @@ extern dboolean         STYSNUM0;
 extern dboolean         TITLEPIC;
 extern dboolean         WISCRT2;
 
+// -------------------------
+// Internal parameters for sound rendering.
+// These have been taken from the DOS version,
+//  but are not (yet) supported with Linux
+//  (e.g. no sound volume adjustment with menu.
+
 // From m_menu.c:
 //  Sound FX volume has default, 0 - 31
 //  Music volume has default, 0 - 31
 // These are multiplied by 4.
 extern int              sfxVolume;
 extern int              musicVolume;
-
 // -------------------------
 // Status flags for refresh.
 //
@@ -879,7 +882,7 @@ extern int              barrelcount;
 // Timer, for scores.
 extern int              leveltime;      // tics in game play for par
 
-										//?
+//?
 extern gamestate_t      gamestate;
 
 //-----------------------------
@@ -912,7 +915,6 @@ extern gamestate_t      wipegamestate;
 // Used for rendering,
 //  as well as tracking projectiles etc.
 extern int              skyflatnum;
-
 extern ticcmd_t         localcmds[ BACKUPTICS ];
 
 
@@ -1040,6 +1042,8 @@ extern dboolean     blockmaprebuilt;
 extern dboolean     nojump;
 extern dboolean     nomouselook;
 
+extern player_t     *viewplayer;
+
 
 // dstrings.h
 extern char **endmsg[];
@@ -1047,6 +1051,35 @@ extern char **endmsg[];
 
 // p_saveg.h
 extern FILE *save_stream;
+
+
+
+// m_menu.h
+extern dboolean messagetoprint;
+
+extern dboolean nomusic;
+//extern dboolean nosound;
+extern dboolean nosfx;
+extern dboolean firstevent;
+extern dboolean savegames;
+extern dboolean inhelpscreens;
+extern int      spindirection;
+extern char     savegamestrings[ 6 ][ SAVESTRINGSIZE ];
+//extern menu_t   EpiDef;
+//extern menu_t   ExpDef;
+//extern menu_t   LoadDef;
+//extern menu_t   MainDef;
+//extern menu_t   NewDef;
+//extern menu_t   SaveDef;
+extern dboolean EpiCustom;
+
+// m_menu.c
+extern dboolean waspaused;
+
+
+
+// g_game.h
+extern int      quickSaveSlot;
 
 
 #endif

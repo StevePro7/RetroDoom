@@ -1050,4 +1050,26 @@ typedef struct
 } autocomplete_t;
 
 
+// m_menu.h
+typedef struct
+{
+	short           status;
+	char            name[ 10 ];
+	void( *routine )( int choice );
+	char            **text;
+} menuitem_t;
+
+typedef struct menu_s
+{
+	short           numitems;
+	struct menu_s   *prevMenu;
+	menuitem_t      *menuitems;
+	void( *routine )( void );
+	short           x;
+	short           y;
+	int             lastOn;
+	dboolean        change;
+} menu_t;
+
+
 #endif

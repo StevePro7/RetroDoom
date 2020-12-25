@@ -25,6 +25,7 @@
 #include "m_config.h"
 #include "m_fixed.h"
 #include "m_misc.h"
+#include "m_menu.h"
 #include "v_video.h"
 #include "version.h"
 #include "w_wad.h"
@@ -843,6 +844,8 @@ static void D_DoomMainSetup( void )
 			M_SaveCVARs();
 		}
 	}
+
+	M_Init();
 
 }
 

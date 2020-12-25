@@ -70,10 +70,11 @@ HANDLE       CapFPSEvent;
 
 
 // g_game.c
+gamestate_t     gamestate;// = GS_TITLESCREEN;
+dboolean        paused;
 int             gametime;// = 0;
 
-// m_menu.h
-extern dboolean         menuactive;     // Menu overlaid?
+
 
 // m_config.c
 int                 vid_capfps;// = vid_capfps_default;
@@ -116,7 +117,7 @@ int                 framespersecond;
 int                 refreshrate;
 uint64_t        starttime;
 int             frames;// = -1;
-
+byte                *PLAYPAL;
 
 
 
@@ -167,6 +168,9 @@ dboolean            am_grid = am_grid_default;
 char                *am_gridsize = am_gridsize_default;
 dboolean            am_path = am_path_default;
 dboolean            am_rotatemode = am_rotatemode_default;
+
+dboolean            automapactive;
+
 
 // p_pspr.c
 dboolean        autoaim = autoaim_default;
@@ -312,7 +316,24 @@ int             r_detail;// = r_detail_default;
 int             r_screensize;// = r_screensize_default;
 int             savegame;// = savegame_default;
 int             skilllevel;// = skilllevel_default;
+
+// -1 = no quicksave slot picked!
+int             quickSaveSlot;
+
+// true = message to be printed
+dboolean        messagetoprint;
+
+dboolean        inhelpscreens;
 dboolean        menuactive;
+dboolean        savegames;
+
+int             spindirection;
+char            savegamestrings[ 6 ][ SAVESTRINGSIZE ];
+dboolean        EpiCustom;
+
+dboolean        quitting;
+dboolean    waspaused; // = false;
+
 
 // st_stuff.c
 patch_t                     *grnrock;
@@ -377,11 +398,17 @@ int                 r_skycolor = r_skycolor_default;
 dboolean            r_textures = r_textures_default;
 dboolean            r_translucency = r_translucency_default;
 
+player_t            *viewplayer;// = NULL;
+
+
 // v_video.c
 char        *r_lowpixelsize;// = r_lowpixelsize_default;
 dboolean    r_supersampling;// = r_supersampling_default;
 
 // s_sounds.c
+dboolean            nomusic;
+dboolean            nosfx;
+
 int                 s_channels = s_channels_default;
 int                 s_musicvolume = s_musicvolume_default;
 dboolean            s_randommusic = s_randommusic_default;
@@ -1865,3 +1892,7 @@ dboolean        blockmaprebuilt;
 
 // p_saveg.c
 FILE *save_stream;
+
+
+// f_finale.c
+dboolean        firstevent;

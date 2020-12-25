@@ -398,7 +398,7 @@ void I_ShutdownKeyboard( void )
 //}
 //
 //dboolean    altdown = false;
-//dboolean    waspaused = false;
+dboolean    waspaused = false;
 //
 //static const SDL_Scancode keypad[] =
 //{

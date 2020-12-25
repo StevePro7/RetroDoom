@@ -122,7 +122,7 @@ static unsigned int mapheight;
 static unsigned int maparea;
 static unsigned int mapbottom;
 
-dboolean            automapactive;
+//dboolean            automapactive;
 
 static mpoint_t     m_paninc;       // how far the window pans each tic (map coords)
 static fixed_t      mtof_zoommul;   // how far the window zooms in each tic (map coords)

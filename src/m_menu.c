@@ -1,6 +1,9 @@
 #include "m_menu.h"
 #include "doomdef.h"
+#include "doomenum.h"
 #include "doomtype.h"
+#include "doomvars.h"
+#include "dstrings.h"
 
 //#include <ctype.h>
 //
@@ -15,22 +18,26 @@
 //#include "i_colors.h"
 //#include "i_gamepad.h"
 //#include "i_swap.h"
-//#include "i_system.h"
-//#include "i_timer.h"
-//#include "m_config.h"
+#include "i_system.h"
+#include "i_timer.h"
+#include "i_video.h"
+#include "m_config.h"
 //#include "m_menu.h"
 #include "m_misc.h"
-//#include "m_random.h"
+#include "m_random.h"
 //#include "p_local.h"
 #include "p_saveg.h"
 //#include "p_setup.h"
-//#include "s_sound.h"
+#include "s_sound.h"
 //#include "st_lib.h"
 //#include "st_stuff.h"
 //#include "v_data.h"
 //#include "v_video.h"
-//#include "w_wad.h"
+#include "w_wad.h"
 //#include "z_zone.h"
+
+#include "SDL_mixer.h"
+#include <time.h>
 
 //#define LINEHEIGHT  17
 //#define OFFSET      (vid_widescreen ? 0 : 17)
@@ -49,311 +56,311 @@ int             skilllevel = skilllevel_default;
 //
 //// true = message to be printed
 //dboolean        messagetoprint;
-//// ...and here is the message string!
-//static char     *messageString;
-//
-//static int      messageLastMenuActive;
-//
-//// timed message = no input from user
-//static dboolean messageNeedsInput;
-//
-//static void (*messageRoutine)(int response);
-//
-//// we are going to be entering a savegame string
-//static dboolean saveStringEnter;
-//static int      saveSlot;               // which slot to save in
-//static int      saveCharIndex;          // which char we're editing
-//
-//// old save description before edit
-//static char     saveOldString[SAVESTRINGSIZE];
-//
+// ...and here is the message string!
+static char     *messageString;
+
+static int      messageLastMenuActive;
+
+// timed message = no input from user
+static dboolean messageNeedsInput;
+
+static void (*messageRoutine)(int response);
+
+// we are going to be entering a savegame string
+static dboolean saveStringEnter;
+static int      saveSlot;               // which slot to save in
+static int      saveCharIndex;          // which char we're editing
+
+// old save description before edit
+static char     saveOldString[SAVESTRINGSIZE];
+
 //dboolean        inhelpscreens;
 //dboolean        menuactive;
 //dboolean        savegames;
-//
-//char            savegamestrings[6][SAVESTRINGSIZE];
-//
-//static short    itemOn;                 // menu item skull is on
-//static short    skullAnimCounter;       // skull animation counter
-//static short    whichSkull;             // which skull to draw
-//
-//static int      functionkey;
-//
-//static dboolean usinggamepad;
-//
-//// current menudef
-//static menu_t   *currentMenu;
-//
+
+char            savegamestrings[6][SAVESTRINGSIZE];
+
+static short    itemOn;                 // menu item skull is on
+static short    skullAnimCounter;       // skull animation counter
+static short    whichSkull;             // which skull to draw
+
+static int      functionkey;
+
+static dboolean usinggamepad;
+
+// current menudef
+static menu_t   *currentMenu;
+
 //int             spindirection;
-//static angle_t  playerangle;
+static angle_t  playerangle;
+
 //
-////
-//// PROTOTYPES
-////
-//static void M_NewGame(int choice);
-//static void M_Episode(int choice);
-//static void M_Expansion(int choice);
-//static void M_ChooseSkill(int choice);
-//static void M_LoadGame(int choice);
-//static void M_SaveGame(int choice);
-//static void M_Options(int choice);
-//static void M_EndGame(int choice);
+// PROTOTYPES
 //
-//static void M_ChangeMessages(int choice);
-//static void M_ChangeSensitivity(int choice);
-//static void M_SfxVol(int choice);
-//static void M_MusicVol(int choice);
-//static void M_ChangeDetail(int choice);
-//static void M_SizeDisplay(int choice);
-//static void M_Sound(int choice);
+static void M_NewGame(int choice) {}
+static void M_Episode(int choice) {}
+static void M_Expansion(int choice) {}
+static void M_ChooseSkill(int choice) {}
+static void M_LoadGame(int choice) {}
+static void M_SaveGame(int choice) {}
+static void M_Options(int choice) {}
+static void M_EndGame(int choice) {}
+
+static void M_ChangeMessages( int choice ) {}
+static void M_ChangeSensitivity( int choice ) {}
+static void M_SfxVol( int choice ) {}
+static void M_MusicVol( int choice ) {}
+static void M_ChangeDetail( int choice ) {}
+static void M_SizeDisplay( int choice ) {}
+static void M_Sound( int choice ) {}
+
+static void M_FinishReadThis( int choice ) {}
+static void M_LoadSelect( int choice ) {}
+static void M_SaveSelect( int choice ) {}
+static void M_ReadSaveStrings( void ) {}
+static void M_QuickSave( void ) {}
+static void M_QuickLoad( void ) {}
+
+static void M_DrawMainMenu( void ) {}
+static void M_DrawReadThis( void ) {}
+static void M_DrawNewGame( void ) {}
+static void M_DrawEpisode( void ) {}
+static void M_DrawExpansion( void ) {}
+static void M_DrawOptions( void ) {}
+static void M_DrawSound( void ) {}
+static void M_DrawLoad( void ) {}
+static void M_DrawSave( void ) {}
+
+static void M_DrawSaveLoadBorder( int x, int y ) {}
+static void M_SetupNextMenu( menu_t *menudef ) {}
+static void M_DrawThermo( int x, int y, int thermWidth, float thermDot, float factor, int offset ) {}
+static void M_WriteText( int x, int y, char *string, dboolean shadow ) {}
+static int M_StringHeight( char *string ) {}
+
 //
-//static void M_FinishReadThis(int choice);
-//static void M_LoadSelect(int choice);
-//static void M_SaveSelect(int choice);
-//static void M_ReadSaveStrings(void);
-//static void M_QuickSave(void);
-//static void M_QuickLoad(void);
+// DOOM MENU
 //
-//static void M_DrawMainMenu(void);
-//static void M_DrawReadThis(void);
-//static void M_DrawNewGame(void);
-//static void M_DrawEpisode(void);
-//static void M_DrawExpansion(void);
-//static void M_DrawOptions(void);
-//static void M_DrawSound(void);
-//static void M_DrawLoad(void);
-//static void M_DrawSave(void);
+
+enum
+{
+    new_game,
+    options,
+    load_game,
+    save_game,
+    quit_doom,
+    main_end
+};
+
+static menuitem_t MainMenu[] =
+{
+    { 1, "M_NGAME",  M_NewGame,  &s_M_NEWGAME  },
+    { 1, "M_OPTION", M_Options,  &s_M_OPTIONS  },
+    { 1, "M_LOADG",  M_LoadGame, &s_M_LOADGAME },
+    { 1, "M_SAVEG",  M_SaveGame, &s_M_SAVEGAME },
+    { 1, "M_QUITG",  M_QuitDOOM, &s_M_QUITGAME }
+};
+
+menu_t MainDef =
+{
+	5,
+	NULL,
+	MainMenu,
+	M_DrawMainMenu,
+	98, 77,
+	new_game
+};
+
 //
-//static void M_DrawSaveLoadBorder(int x, int y);
-//static void M_SetupNextMenu(menu_t *menudef);
-//static void M_DrawThermo(int x, int y, int thermWidth, float thermDot, float factor, int offset);
-//static void M_WriteText(int x, int y, char *string, dboolean shadow);
-//static int M_StringHeight(char *string);
+// EPISODE SELECT
 //
-////
-//// DOOM MENU
-////
+
+enum
+{
+    ep1,
+    ep2,
+    ep3,
+    ep4,
+    ep5,
+    ep6,
+    ep7,
+    ep8,
+    ep_end
+};
+
+static menuitem_t EpisodeMenu[] =
+{
+    { 1, "M_EPI1", M_Episode, &s_M_EPISODE1 },
+    { 1, "M_EPI2", M_Episode, &s_M_EPISODE2 },
+    { 1, "M_EPI3", M_Episode, &s_M_EPISODE3 },
+    { 1, "M_EPI4", M_Episode, &s_M_EPISODE4 },
+    { 1, "M_EPI5", M_Episode, &s_M_EPISODE5 },
+
+    // Some extra empty episodes for extensibility through UMAPINFO
+    { 1, "M_EPI6", M_Episode, &s_M_EPISODE6 },
+    { 1, "M_EPI7", M_Episode, &s_M_EPISODE7 },
+    { 1, "M_EPI8", M_Episode, &s_M_EPISODE8 }
+};
+
+menu_t EpiDef =
+{
+	ep_end,
+	&MainDef,
+	EpisodeMenu,
+	M_DrawEpisode,
+	41, 69,
+	ep1
+};
+
 //
-//enum
-//{
-//    new_game,
-//    options,
-//    load_game,
-//    save_game,
-//    quit_doom,
-//    main_end
-//};
+// EXPANSION SELECT
 //
-//static menuitem_t MainMenu[] =
-//{
-//    { 1, "M_NGAME",  M_NewGame,  &s_M_NEWGAME  },
-//    { 1, "M_OPTION", M_Options,  &s_M_OPTIONS  },
-//    { 1, "M_LOADG",  M_LoadGame, &s_M_LOADGAME },
-//    { 1, "M_SAVEG",  M_SaveGame, &s_M_SAVEGAME },
-//    { 1, "M_QUITG",  M_QuitDOOM, &s_M_QUITGAME }
-//};
+
+enum
+{
+    ex1,
+    ex2,
+    ex_end
+};
+
+static menuitem_t ExpansionMenu[] =
+{
+    { 1, "M_EPI1", M_Expansion, &s_M_EXPANSION1 },
+    { 1, "M_EPI2", M_Expansion, &s_M_EXPANSION2 }
+};
+
+menu_t ExpDef =
+{
+    ex_end,
+    &MainDef,
+    ExpansionMenu,
+    M_DrawExpansion,
+    41, 69,
+    ex1
+};
+
 //
-//menu_t MainDef =
-//{
-//    5,
-//    NULL,
-//    MainMenu,
-//    M_DrawMainMenu,
-//    98, 77,
-//    new_game
-//};
+// NEW GAME
 //
-////
-//// EPISODE SELECT
-////
+
+enum
+{
+    killthings,
+    toorough,
+    hurtme,
+    violence,
+    nightmare,
+    newg_end
+};
+
+static menuitem_t NewGameMenu[] =
+{
+    { 1, "M_JKILL", M_ChooseSkill, &s_M_SKILLLEVEL1 },
+    { 1, "M_ROUGH", M_ChooseSkill, &s_M_SKILLLEVEL2 },
+    { 1, "M_HURT",  M_ChooseSkill, &s_M_SKILLLEVEL3 },
+    { 1, "M_ULTRA", M_ChooseSkill, &s_M_SKILLLEVEL4 },
+    { 1, "M_NMARE", M_ChooseSkill, &s_M_SKILLLEVEL5 }
+};
+
+menu_t NewDef =
+{
+    newg_end,
+    &EpiDef,
+    NewGameMenu,
+    M_DrawNewGame,
+    45, 69,
+    hurtme
+};
+
 //
-//enum
-//{
-//    ep1,
-//    ep2,
-//    ep3,
-//    ep4,
-//    ep5,
-//    ep6,
-//    ep7,
-//    ep8,
-//    ep_end
-//};
+// OPTIONS MENU
 //
-//static menuitem_t EpisodeMenu[] =
-//{
-//    { 1, "M_EPI1", M_Episode, &s_M_EPISODE1 },
-//    { 1, "M_EPI2", M_Episode, &s_M_EPISODE2 },
-//    { 1, "M_EPI3", M_Episode, &s_M_EPISODE3 },
-//    { 1, "M_EPI4", M_Episode, &s_M_EPISODE4 },
-//    { 1, "M_EPI5", M_Episode, &s_M_EPISODE5 },
+
+enum
+{
+    endgame,
+    msgs,
+    detail,
+    scrnsize,
+    option_empty1,
+    mousesens,
+    option_empty2,
+    soundvol,
+    opt_end
+};
+
+static menuitem_t OptionsMenu[] =
+{
+    {  1, "M_ENDGAM", M_EndGame,           &s_M_ENDGAME          },
+    {  1, "M_MESSG",  M_ChangeMessages,    &s_M_MESSAGES         },
+    {  1, "M_DETAIL", M_ChangeDetail,      &s_M_GRAPHICDETAIL    },
+    {  2, "M_SCRNSZ", M_SizeDisplay,       &s_M_SCREENSIZE       },
+    { -1, "",         0,                   NULL                  },
+    {  2, "M_MSENS",  M_ChangeSensitivity, &s_M_MOUSESENSITIVITY },
+    { -1, "",         0,                   NULL                  },
+    {  1, "M_SVOL",   M_Sound,             &s_M_SOUNDVOLUME      }
+};
+
+static menu_t OptionsDef =
+{
+    opt_end,
+    &MainDef,
+    OptionsMenu,
+    M_DrawOptions,
+    56, 33,
+    endgame
+};
+
+enum
+{
+    rdthsempty,
+    read_end
+};
+
+static menuitem_t ReadMenu[] =
+{
+    { 1, "", M_FinishReadThis, NULL }
+};
+
+static menu_t ReadDef =
+{
+    read_end,
+    &ReadDef,
+    ReadMenu,
+    M_DrawReadThis,
+    330, 175,
+    rdthsempty
+};
+
 //
-//    // Some extra empty episodes for extensibility through UMAPINFO
-//    { 1, "M_EPI6", M_Episode, &s_M_EPISODE6 },
-//    { 1, "M_EPI7", M_Episode, &s_M_EPISODE7 },
-//    { 1, "M_EPI8", M_Episode, &s_M_EPISODE8 }
-//};
+// SOUND VOLUME MENU
 //
-//menu_t EpiDef =
-//{
-//    ep_end,
-//    &MainDef,
-//    EpisodeMenu,
-//    M_DrawEpisode,
-//    41, 69,
-//    ep1
-//};
-//
-////
-//// EXPANSION SELECT
-////
-//
-//enum
-//{
-//    ex1,
-//    ex2,
-//    ex_end
-//};
-//
-//static menuitem_t ExpansionMenu[] =
-//{
-//    { 1, "M_EPI1", M_Expansion, &s_M_EXPANSION1 },
-//    { 1, "M_EPI2", M_Expansion, &s_M_EXPANSION2 }
-//};
-//
-//menu_t ExpDef =
-//{
-//    ex_end,
-//    &MainDef,
-//    ExpansionMenu,
-//    M_DrawExpansion,
-//    41, 69,
-//    ex1
-//};
-//
-////
-//// NEW GAME
-////
-//
-//enum
-//{
-//    killthings,
-//    toorough,
-//    hurtme,
-//    violence,
-//    nightmare,
-//    newg_end
-//};
-//
-//static menuitem_t NewGameMenu[] =
-//{
-//    { 1, "M_JKILL", M_ChooseSkill, &s_M_SKILLLEVEL1 },
-//    { 1, "M_ROUGH", M_ChooseSkill, &s_M_SKILLLEVEL2 },
-//    { 1, "M_HURT",  M_ChooseSkill, &s_M_SKILLLEVEL3 },
-//    { 1, "M_ULTRA", M_ChooseSkill, &s_M_SKILLLEVEL4 },
-//    { 1, "M_NMARE", M_ChooseSkill, &s_M_SKILLLEVEL5 }
-//};
-//
-//menu_t NewDef =
-//{
-//    newg_end,
-//    &EpiDef,
-//    NewGameMenu,
-//    M_DrawNewGame,
-//    45, 69,
-//    hurtme
-//};
-//
-////
-//// OPTIONS MENU
-////
-//
-//enum
-//{
-//    endgame,
-//    msgs,
-//    detail,
-//    scrnsize,
-//    option_empty1,
-//    mousesens,
-//    option_empty2,
-//    soundvol,
-//    opt_end
-//};
-//
-//static menuitem_t OptionsMenu[] =
-//{
-//    {  1, "M_ENDGAM", M_EndGame,           &s_M_ENDGAME          },
-//    {  1, "M_MESSG",  M_ChangeMessages,    &s_M_MESSAGES         },
-//    {  1, "M_DETAIL", M_ChangeDetail,      &s_M_GRAPHICDETAIL    },
-//    {  2, "M_SCRNSZ", M_SizeDisplay,       &s_M_SCREENSIZE       },
-//    { -1, "",         0,                   NULL                  },
-//    {  2, "M_MSENS",  M_ChangeSensitivity, &s_M_MOUSESENSITIVITY },
-//    { -1, "",         0,                   NULL                  },
-//    {  1, "M_SVOL",   M_Sound,             &s_M_SOUNDVOLUME      }
-//};
-//
-//static menu_t OptionsDef =
-//{
-//    opt_end,
-//    &MainDef,
-//    OptionsMenu,
-//    M_DrawOptions,
-//    56, 33,
-//    endgame
-//};
-//
-//enum
-//{
-//    rdthsempty,
-//    read_end
-//};
-//
-//static menuitem_t ReadMenu[] =
-//{
-//    { 1, "", M_FinishReadThis, NULL }
-//};
-//
-//static menu_t ReadDef =
-//{
-//    read_end,
-//    &ReadDef,
-//    ReadMenu,
-//    M_DrawReadThis,
-//    330, 175,
-//    rdthsempty
-//};
-//
-////
-//// SOUND VOLUME MENU
-////
-//
-//enum
-//{
-//    sfx_vol,
-//    sfx_empty1,
-//    music_vol,
-//    sfx_empty2,
-//    sound_end
-//};
-//
-//static menuitem_t SoundMenu[] =
-//{
-//    {  2, "M_SFXVOL", M_SfxVol,   &s_M_SFXVOLUME   },
-//    { -1, "",         0,          NULL             },
-//    {  2, "M_MUSVOL", M_MusicVol, &s_M_MUSICVOLUME },
-//    { -1, "",         0,          NULL             }
-//};
-//
-//static menu_t SoundDef =
-//{
-//    sound_end,
-//    &OptionsDef,
-//    SoundMenu,
-//    M_DrawSound,
-//    89, 64,
-//    sfx_vol
-//};
+
+enum
+{
+    sfx_vol,
+    sfx_empty1,
+    music_vol,
+    sfx_empty2,
+    sound_end
+};
+
+static menuitem_t SoundMenu[] =
+{
+    {  2, "M_SFXVOL", M_SfxVol,   &s_M_SFXVOLUME   },
+    { -1, "",         0,          NULL             },
+    {  2, "M_MUSVOL", M_MusicVol, &s_M_MUSICVOLUME },
+    { -1, "",         0,          NULL             }
+};
+
+static menu_t SoundDef =
+{
+    sound_end,
+    &OptionsDef,
+    SoundMenu,
+    M_DrawSound,
+    89, 64,
+    sfx_vol
+};
 
 //
 // LOAD GAME MENU
@@ -370,50 +377,50 @@ enum
     load_end
 };
 
-//static menuitem_t LoadGameMenu[] =
-//{
-//    { 1, "", M_LoadSelect, NULL },
-//    { 1, "", M_LoadSelect, NULL },
-//    { 1, "", M_LoadSelect, NULL },
-//    { 1, "", M_LoadSelect, NULL },
-//    { 1, "", M_LoadSelect, NULL },
-//    { 1, "", M_LoadSelect, NULL }
-//};
+static menuitem_t LoadGameMenu[] =
+{
+	{ 1, "", M_LoadSelect, NULL },
+	{ 1, "", M_LoadSelect, NULL },
+	{ 1, "", M_LoadSelect, NULL },
+	{ 1, "", M_LoadSelect, NULL },
+	{ 1, "", M_LoadSelect, NULL },
+	{ 1, "", M_LoadSelect, NULL }
+};
+
+menu_t LoadDef =
+{
+	load_end,
+	&MainDef,
+	LoadGameMenu,
+	M_DrawLoad,
+	67, 51,
+	load1
+};
+
 //
-//menu_t LoadDef =
-//{
-//    load_end,
-//    &MainDef,
-//    LoadGameMenu,
-//    M_DrawLoad,
-//    67, 51,
-//    load1
-//};
+// SAVE GAME MENU
 //
-////
-//// SAVE GAME MENU
-////
-//
-//static menuitem_t SaveGameMenu[] =
-//{
-//    { 1, "", M_SaveSelect, NULL },
-//    { 1, "", M_SaveSelect, NULL },
-//    { 1, "", M_SaveSelect, NULL },
-//    { 1, "", M_SaveSelect, NULL },
-//    { 1, "", M_SaveSelect, NULL },
-//    { 1, "", M_SaveSelect, NULL }
-//};
-//
-//menu_t SaveDef =
-//{
-//    load_end,
-//    &MainDef,
-//    SaveGameMenu,
-//    M_DrawSave,
-//    67, 51,
-//    load1
-//};
-//
+
+static menuitem_t SaveGameMenu[] =
+{
+    { 1, "", M_SaveSelect, NULL },
+    { 1, "", M_SaveSelect, NULL },
+    { 1, "", M_SaveSelect, NULL },
+    { 1, "", M_SaveSelect, NULL },
+    { 1, "", M_SaveSelect, NULL },
+    { 1, "", M_SaveSelect, NULL }
+};
+
+menu_t SaveDef =
+{
+    load_end,
+    &MainDef,
+    SaveGameMenu,
+    M_DrawSave,
+    67, 51,
+    load1
+};
+
 //static void BlurScreen(byte *screen, byte *blurscreen, int height)
 //{
 //    for (int i = 0; i < height; i++)
@@ -452,9 +459,9 @@ enum
 //        for (int x = y; x <= y + SCREENWIDTH - 2; x++)
 //            blurscreen[x] = tinttab50[(blurscreen[x - SCREENWIDTH + 1] << 8) + blurscreen[x]];
 //}
-//
-//static int  blurtic = -1;
-//
+
+static int  blurtic = -1;
+
 ////
 //// M_DarkBackground
 ////  darken and blur background while menu is displayed
@@ -1948,95 +1955,95 @@ int M_CountSaveGames( void )
 //{
 //    M_SetupNextMenu(&MainDef);
 //}
+
 //
-////
-//// M_QuitDOOM
-////
-//static const int quitsounds[8] =
-//{
-//    sfx_pldeth,
-//    sfx_dmpain,
-//    sfx_popain,
-//    sfx_slop,
-//    sfx_telept,
-//    sfx_posit1,
-//    sfx_posit3,
-//    sfx_sgtatk
-//};
+// M_QuitDOOM
 //
-//static const int quitsounds2[8] =
-//{
-//    sfx_vilact,
-//    sfx_getpow,
-//    sfx_boscub,
-//    sfx_slop,
-//    sfx_skeswg,
-//    sfx_kntdth,
-//    sfx_bspact,
-//    sfx_sgtatk
-//};
-//
+static const int quitsounds[8] =
+{
+    sfx_pldeth,
+    sfx_dmpain,
+    sfx_popain,
+    sfx_slop,
+    sfx_telept,
+    sfx_posit1,
+    sfx_posit3,
+    sfx_sgtatk
+};
+
+static const int quitsounds2[ 8 ] =
+{
+	sfx_vilact,
+	sfx_getpow,
+	sfx_boscub,
+	sfx_slop,
+	sfx_skeswg,
+	sfx_kntdth,
+	sfx_bspact,
+	sfx_sgtatk
+};
+
 //dboolean        quitting;
-//
-//extern dboolean waspaused;
-//
-//static void M_QuitResponse(int key)
-//{
-//    messagetoprint = false;
-//
-//    if (key != 'y')
-//    {
-//        quitting = false;
-//
-//        if (waspaused)
-//        {
-//            waspaused = false;
-//            paused = true;
-//        }
-//
-//        if (functionkey == KEY_F10)
-//            M_ClearMenus();
-//        else
-//            M_SetupNextMenu(&MainDef);
-//
-//        return;
-//    }
-//
-//    if (!nosfx && sfxVolume > 0)
-//    {
-//        int i = 30;
-//
-//        if (gamemode == commercial)
-//            S_StartSound(NULL, quitsounds2[M_Random() & 7]);
-//        else
-//            S_StartSound(NULL, quitsounds[M_Random() & 7]);
-//
-//        // wait until all sounds stopped or 3 seconds has passed
-//        while (i-- > 0 && I_AnySoundStillPlaying())
-//            I_Sleep(100);
-//    }
-//
-//    I_Quit(true);
-//}
-//
-//void M_QuitDOOM(int choice)
-//{
-//    static char endstring[320];
-//    static char line1[160];
-//    static char line2[160];
-//
-//    quitting = true;
-//
-//    if (deh_strlookup[p_QUITMSG].assigned == 2)
-//        M_StringCopy(line1, s_QUITMSG, sizeof(line1));
-//    else
-//        M_snprintf(line1, sizeof(line1), *endmsg[M_Random() % NUM_QUITMESSAGES + (gamemission != doom) * NUM_QUITMESSAGES], WINDOWS);
-//
-//    M_snprintf(line2, sizeof(line2), (usinggamepad ? s_DOSA : s_DOSY), WINDOWS);
-//    M_snprintf(endstring, sizeof(endstring), "%s\n\n%s", line1, line2);
-//    M_StartMessage(endstring, &M_QuitResponse, true);
-//}
-//
+
+extern dboolean waspaused;
+
+static void M_QuitResponse(int key)
+{
+    messagetoprint = false;
+
+    if (key != 'y')
+    {
+        quitting = false;
+
+        if (waspaused)
+        {
+            waspaused = false;
+            paused = true;
+        }
+
+        if (functionkey == KEY_F10)
+            M_ClearMenus();
+        else
+            M_SetupNextMenu(&MainDef);
+
+        return;
+    }
+
+    if (!nosfx && sfxVolume > 0)
+    {
+        int i = 30;
+
+        if (gamemode == commercial)
+            S_StartSound(NULL, quitsounds2[M_Random() & 7]);
+        else
+            S_StartSound(NULL, quitsounds[M_Random() & 7]);
+
+        // wait until all sounds stopped or 3 seconds has passed
+        while (i-- > 0 && I_AnySoundStillPlaying())
+            I_Sleep(100);
+    }
+
+    I_Quit(true);
+}
+
+void M_QuitDOOM( int choice )
+{
+	static char endstring[ 320 ];
+	static char line1[ 160 ];
+	static char line2[ 160 ];
+
+	quitting = true;
+
+	if( deh_strlookup[ p_QUITMSG ].assigned == 2 )
+		M_StringCopy( line1, s_QUITMSG, sizeof( line1 ) );
+	else
+		M_snprintf( line1, sizeof( line1 ), *endmsg[ M_Random() % NUM_QUITMESSAGES + ( gamemission != doom ) * NUM_QUITMESSAGES ], WINDOWS );
+
+	M_snprintf( line2, sizeof( line2 ), ( usinggamepad ? s_DOSA : s_DOSY ), WINDOWS );
+	M_snprintf( endstring, sizeof( endstring ), "%s\n\n%s", line1, line2 );
+	M_StartMessage( endstring, &M_QuitResponse, true );
+}
+
 //static void M_SliderSound(void)
 //{
 //    static int  wait;
@@ -3744,40 +3751,40 @@ int M_CountSaveGames( void )
 //        }
 //    }
 //}
+
 //
-////
-//// M_ClearMenus
-////
-//void M_ClearMenus(void)
-//{
-//    if (!menuactive)
-//        return;
+// M_ClearMenus
 //
-//    menuactive = false;
-//    blurtic = -1;
-//
-//    if (gp_vibrate_barrels || gp_vibrate_damage || gp_vibrate_weapons)
-//    {
-//        idlevibrationstrength = restorevibrationstrength;
-//        I_GamepadVibration(idlevibrationstrength);
-//    }
-//
-//    if (gamestate == GS_LEVEL)
-//    {
-//        I_SetPalette(&PLAYPAL[st_palette * 768]);
-//
-//        viewplayer->mo->angle = playerangle;
-//
-//        if (!vid_widescreen && !automapactive && !inhelpscreens)
-//            R_SetViewSize(r_screensize);
-//
-//        if (automapactive)
-//            AM_SetAutomapSize();
-//
-//        S_SetMusicVolume(musicVolume * MIX_MAX_VOLUME / 31);
-//    }
-//}
-//
+void M_ClearMenus(void)
+{
+    if (!menuactive)
+        return;
+
+    menuactive = false;
+    blurtic = -1;
+
+    //if (gp_vibrate_barrels || gp_vibrate_damage || gp_vibrate_weapons)
+    //{
+    //    idlevibrationstrength = restorevibrationstrength;
+    //    I_GamepadVibration(idlevibrationstrength);
+    //}
+
+    if (gamestate == GS_LEVEL)
+    {
+        I_SetPalette(&PLAYPAL[st_palette * 768]);
+
+        viewplayer->mo->angle = playerangle;
+
+        if (!vid_widescreen && !automapactive && !inhelpscreens)
+            R_SetViewSize(r_screensize);
+
+        if (automapactive)
+            AM_SetAutomapSize();
+
+        S_SetMusicVolume(musicVolume * MIX_MAX_VOLUME / 31);
+    }
+}
+
 ////
 //// M_SetupNextMenu
 ////
@@ -3799,65 +3806,65 @@ int M_CountSaveGames( void )
 //        skullAnimCounter = 8;
 //    }
 //}
+
 //
-////
-//// M_Init
-////
-//void M_Init(void)
-//{
-//    currentMenu = &MainDef;
-//    menuactive = false;
-//    itemOn = currentMenu->lastOn;
-//    skullAnimCounter = 10;
-//    messagetoprint = false;
-//    messageString = NULL;
-//    messageLastMenuActive = false;
-//    quickSaveSlot = -1;
-//    spindirection = ((M_Random() & 1) ? 1 : -1);
+// M_Init
 //
-//    M_BigSeed((unsigned int)time(NULL));
-//
-//    if (autostart)
-//    {
-//        episode = startepisode;
-//        skilllevel = startskill + 1;
-//    }
-//
-//    if (gamemode != shareware)
-//        EpiDef.lastOn = episode - 1;
-//
-//    ExpDef.lastOn = expansion - 1;
-//    NewDef.lastOn = skilllevel - 1;
-//    SaveDef.lastOn = LoadDef.lastOn = savegame - 1;
-//
-//    if (!*savegamestrings[SaveDef.lastOn])
-//        while (SaveDef.lastOn && !*savegamestrings[SaveDef.lastOn])
-//            SaveDef.lastOn--;
-//
-//    OptionsDef.lastOn = msgs;
-//    M_ReadSaveStrings();
-//
-//    if (chex)
-//    {
-//        MainDef.x += 20;
-//        NewDef.prevMenu = &MainDef;
-//    }
-//    else if (gamemode == commercial)
-//        NewDef.prevMenu = (nerve ? &ExpDef : &MainDef);
-//    else if (gamemode == registered || W_CheckNumForName("E4M1") < 0)
-//        EpiDef.numitems = 3;
-//    else if (gamemode == retail && sigil)
-//        EpiDef.numitems = 5;
-//    else
-//        EpiDef.numitems = 4;
-//
-//    if (EpiDef.lastOn > EpiDef.numitems)
-//    {
-//        EpiDef.lastOn = 0;
-//        episode = 1;
-//        M_SaveCVARs();
-//    }
-//
-//    if (M_StringCompare(s_EMPTYSTRING, "null data"))
-//        s_EMPTYSTRING = "-";
-//}
+void M_Init(void)
+{
+    currentMenu = &MainDef;
+    menuactive = false;
+    itemOn = currentMenu->lastOn;
+    skullAnimCounter = 10;
+    messagetoprint = false;
+    messageString = NULL;
+    messageLastMenuActive = false;
+    quickSaveSlot = -1;
+    spindirection = ((M_Random() & 1) ? 1 : -1);
+
+    M_BigSeed((unsigned int)time(NULL));
+
+    if (autostart)
+    {
+        episode = startepisode;
+        skilllevel = startskill + 1;
+    }
+
+    if (gamemode != shareware)
+        EpiDef.lastOn = episode - 1;
+
+    ExpDef.lastOn = expansion - 1;
+    NewDef.lastOn = skilllevel - 1;
+    SaveDef.lastOn = LoadDef.lastOn = savegame - 1;
+
+    if (!*savegamestrings[SaveDef.lastOn])
+        while (SaveDef.lastOn && !*savegamestrings[SaveDef.lastOn])
+            SaveDef.lastOn--;
+
+    OptionsDef.lastOn = msgs;
+    M_ReadSaveStrings();
+
+    if (chex)
+    {
+        MainDef.x += 20;
+        NewDef.prevMenu = &MainDef;
+    }
+    else if (gamemode == commercial)
+        NewDef.prevMenu = (nerve ? &ExpDef : &MainDef);
+    else if (gamemode == registered || W_CheckNumForName("E4M1") < 0)
+        EpiDef.numitems = 3;
+    else if (gamemode == retail && sigil)
+        EpiDef.numitems = 5;
+    else
+        EpiDef.numitems = 4;
+
+    if (EpiDef.lastOn > EpiDef.numitems)
+    {
+        EpiDef.lastOn = 0;
+        episode = 1;
+        M_SaveCVARs();
+    }
+
+    if (M_StringCompare(s_EMPTYSTRING, "null data"))
+        s_EMPTYSTRING = "-";
+}
