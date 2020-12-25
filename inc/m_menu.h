@@ -109,7 +109,7 @@ void M_AddEpisode(int map, int ep, const char *lumpname, const char *string);
 extern dboolean messagetoprint;
 
 extern dboolean nomusic;
-extern dboolean nosound;
+//extern dboolean nosound;
 extern dboolean nosfx;
 extern dboolean firstevent;
 extern dboolean savegames;
