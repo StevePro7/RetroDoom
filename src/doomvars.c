@@ -398,6 +398,15 @@ int                 r_skycolor = r_skycolor_default;
 dboolean            r_textures = r_textures_default;
 dboolean            r_translucency = r_translucency_default;
 
+fixed_t             viewx;
+fixed_t             viewy;
+fixed_t             viewz;
+
+angle_t             viewangle;
+
+fixed_t             viewcos;
+fixed_t             viewsin;
+
 player_t            *viewplayer;// = NULL;
 
 
@@ -411,8 +420,8 @@ dboolean            nosfx;
 
 int                 s_channels = s_channels_default;
 int                 s_musicvolume = s_musicvolume_default;
-dboolean            s_randommusic = s_randommusic_default;
-dboolean            s_randompitch = s_randompitch_default;
+dboolean            s_randommusic;// = s_randommusic_default;
+dboolean            s_randompitch;// = s_randompitch_default;
 int                 s_sfxvolume = s_sfxvolume_default;
 dboolean            s_stereo = s_stereo_default;
 
@@ -443,6 +452,14 @@ dboolean            r_brightmaps = r_brightmaps_default;
 
 
 // s_sound.c
+//int                 s_channels; //= s_channels_default;
+//int                 s_musicvolume; //= s_musicvolume_default;
+//dboolean            s_randommusic; //= s_randommusic_default;
+dboolean            s_randompitch; //= s_randompitch_default;
+//int                 s_sfxvolume; //= s_sfxvolume_default;
+//dboolean            s_stereo; //= s_stereo_default;
+
+
 // Maximum volume of a sound effect.
 // Internal default is max out of 0-31.
 int                 sfxVolume;
@@ -1896,3 +1913,7 @@ FILE *save_stream;
 
 // f_finale.c
 dboolean        firstevent;
+
+
+// r_main.c
+dboolean    setsizeneeded;

@@ -3,15 +3,18 @@
 
 #include <ctype.h>
 
+#include "doomdef.h"
+#include "doomvars.h"
+
 //#include "c_console.h"
 //#include "doomstat.h"
 //#include "m_argv.h"
 //#include "m_config.h"
 //#include "m_misc.h"
+#include "m_fixed.h"
 //#include "m_random.h"
-//#include "p_local.h"
-//#include "p_setup.h"
-//
+//#include "r_main.h"
+#include "s_sound.h"
 //#include "sc_man.h"
 //#include "w_wad.h"
 //#include "z_zone.h"
@@ -63,7 +66,7 @@ static sobj_t       *sobjs;
 //int                 s_channels = s_channels_default;
 //int                 s_musicvolume = s_musicvolume_default;
 //dboolean            s_randommusic = s_randommusic_default;
-//dboolean            s_randompitch = s_randompitch_default;
+dboolean            s_randompitch = s_randompitch_default;
 //int                 s_sfxvolume = s_sfxvolume_default;
 //dboolean            s_stereo = s_stereo_default;
 
@@ -73,10 +76,10 @@ static sobj_t       *sobjs;
 //
 //// Maximum volume of music.
 //int                 musicVolume;
-//
-//// Internal volume level, ranging from 0-MIX_MAX_VOLUME
-//static int          snd_SfxVolume;
-//
+
+// Internal volume level, ranging from 0-MIX_MAX_VOLUME
+static int          snd_SfxVolume;
+
 //// Whether songs are mus_paused
 //static dboolean     mus_paused;
 //
@@ -219,27 +222,27 @@ static sobj_t       *sobjs;
 //    I_ShutdownSound();
 //    I_ShutdownMusic();
 //}
-//
-//static void S_StopChannel(int cnum)
-//{
-//    channel_t   *c = &channels[cnum];
-//
-//    if (c->sfxinfo)
-//    {
-//        // stop the sound playing
-//        if (I_SoundIsPlaying(c->handle))
-//            I_StopSound(c->handle);
-//
-//        // check to see if other channels are playing the sound
-//        for (int i = 0; i < s_channels; i++)
-//            if (cnum != i && c->sfxinfo == channels[i].sfxinfo)
-//                break;
-//
-//        c->sfxinfo = NULL;
-//        c->origin = NULL;
-//    }
-//}
-//
+
+static void S_StopChannel(int cnum)
+{
+    channel_t   *c = &channels[cnum];
+
+    if (c->sfxinfo)
+    {
+        // stop the sound playing
+        if (I_SoundIsPlaying(c->handle))
+            I_StopSound(c->handle);
+
+        // check to see if other channels are playing the sound
+        for (int i = 0; i < s_channels; i++)
+            if (cnum != i && c->sfxinfo == channels[i].sfxinfo)
+                break;
+
+        c->sfxinfo = NULL;
+        c->origin = NULL;
+    }
+}
+
 //static int S_GetMusicNum(void)
 //{
 //    int mnum;
@@ -333,150 +336,150 @@ static sobj_t       *sobjs;
 //            break;
 //        }
 //}
+
 //
-////
-//// S_GetChannel :
-////   If none available, return -1. Otherwise channel #.
-////
-//static int S_GetChannel(mobj_t *origin, sfxinfo_t *sfxinfo)
-//{
-//    // channel number to use
-//    int         cnum = 0;
-//    channel_t   *c;
+// S_GetChannel :
+//   If none available, return -1. Otherwise channel #.
 //
-//    // Find an open channel
-//    if (origin)
-//        for (; cnum < s_channels && channels[cnum].sfxinfo; cnum++)
-//            if (channels[cnum].origin == origin
-//                && channels[cnum].sfxinfo->singularity == sfxinfo->singularity)
-//            {
-//                S_StopChannel(cnum);
-//                break;
-//            }
-//
-//    // None available
-//    if (cnum == s_channels)
-//    {
-//        // Look for lower priority
-//        for (cnum = 0; cnum < s_channels; cnum++)
-//            if (channels[cnum].sfxinfo->priority >= sfxinfo->priority)
-//                break;
-//
-//        if (cnum == s_channels)
-//            return -1;                  // FUCK! No lower priority. Sorry, Charlie.
-//        else
-//            S_StopChannel(cnum);        // Otherwise, kick out lower priority.
-//    }
-//
-//    c = &channels[cnum];
-//
-//    // channel is decided to be cnum.
-//    c->sfxinfo = sfxinfo;
-//    c->origin = origin;
-//
-//    return cnum;
-//}
-//
-//// Changes volume and stereo-separation variables from the norm of a sound
-//// effect to be played. If the sound is not audible, returns false. Otherwise,
-//// modifies parameters and returns true.
-//static dboolean S_AdjustSoundParms(mobj_t *origin, int *vol, int *sep)
-//{
-//    fixed_t     dist = 0;
-//    fixed_t     adx, ady;
-//    dboolean    boss = origin->flags2 & MF2_BOSS;
-//    fixed_t     x = origin->x;
-//    fixed_t     y = origin->y;
-//
-//    // calculate the distance to sound origin and clip it if necessary
-//    // killough 11/98: scale coordinates down before calculations start
-//    // killough 12/98: use exact distance formula instead of approximation
-//    adx = ABS((viewx >> FRACBITS) - (x >> FRACBITS));
-//    ady = ABS((viewy >> FRACBITS) - (y >> FRACBITS));
-//
-//    if (ady > adx)
-//        SWAP(adx, ady);
-//
-//    if (adx)
-//        dist = FixedDiv(adx, finesine[(tantoangle[FixedDiv(ady, adx) >> DBITS] + ANG90) >> ANGLETOFINESHIFT]);
-//
-//    // killough 11/98: handle zero-distance as special case
-//    if (!dist)
-//    {
-//        *sep = NORM_SEP;
-//        *vol = snd_SfxVolume;
-//
-//        return (*vol > 0);
-//    }
-//
-//    if (!boss && dist > S_CLIPPING_DIST)
-//        return false;
-//
-//    // stereo separation
-//    if (s_stereo)
-//    {
-//        // angle of source to player
-//        angle_t angle = R_PointToAngle(x, y);
-//
-//        if (angle <= viewangle)
-//            angle += 0xFFFFFFFF;
-//
-//        *sep = NORM_SEP - FixedMul(S_STEREO_SWING, finesine[(angle - viewangle) >> ANGLETOFINESHIFT]);
-//    }
-//
-//    // volume calculation
-//    *vol = (dist < S_CLOSE_DIST || boss ? snd_SfxVolume : snd_SfxVolume * (S_CLIPPING_DIST - dist) / S_ATTENUATOR);
-//
-//    return (*vol > 0);
-//}
-//
-//static void S_StartSoundAtVolume(mobj_t *origin, int sfx_id, int pitch)
-//{
-//    sfxinfo_t   *sfx = &S_sfx[sfx_id];
-//    int         sep = NORM_SEP;
-//    int         cnum;
-//    int         handle;
-//    int         volume = snd_SfxVolume;
-//
-//    if (sfx->lumpnum == -1 || nosfx)
-//        return;
-//
-//    // Check to see if it is audible, and if not, modify the parms
-//    if (origin && origin != viewplayer->mo && !S_AdjustSoundParms(origin, &volume, &sep))
-//        return;
-//
-//    // kill old sound
-//    if (origin || (gamestate == GS_FINALE && sfx_id == sfx_dshtgn))
-//        for (cnum = 0; cnum < s_channels; cnum++)
-//            if (channels[cnum].sfxinfo
-//                && channels[cnum].sfxinfo->singularity == sfx->singularity
-//                && channels[cnum].origin == origin)
-//            {
-//                S_StopChannel(cnum);
-//                break;
-//            }
-//
-//    // try to find a channel
-//    if ((cnum = S_GetChannel(origin, sfx)) < 0)
-//        return;
-//
-//    // Assigns the handle to one of the channels in the mix/output buffer.
-//    // e6y: [Fix] Crash with zero-length sounds.
-//    if ((handle = I_StartSound(sfx, cnum, volume, sep, pitch)) != -1)
-//        channels[cnum].handle = handle;
-//}
-//
-//void S_StartSound(mobj_t *mobj, int sfx_id)
-//{
-//    if (mobj)
-//    {
-//        mobj->madesound = true;
-//        S_StartSoundAtVolume(mobj, sfx_id, mobj->pitch);
-//    }
-//    else
-//        S_StartSoundAtVolume(NULL, sfx_id, NORM_PITCH);
-//}
-//
+static int S_GetChannel(mobj_t *origin, sfxinfo_t *sfxinfo)
+{
+    // channel number to use
+    int         cnum = 0;
+    channel_t   *c;
+
+    // Find an open channel
+    if (origin)
+        for (; cnum < s_channels && channels[cnum].sfxinfo; cnum++)
+            if (channels[cnum].origin == origin
+                && channels[cnum].sfxinfo->singularity == sfxinfo->singularity)
+            {
+                S_StopChannel(cnum);
+                break;
+            }
+
+    // None available
+    if (cnum == s_channels)
+    {
+        // Look for lower priority
+        for (cnum = 0; cnum < s_channels; cnum++)
+            if (channels[cnum].sfxinfo->priority >= sfxinfo->priority)
+                break;
+
+        if (cnum == s_channels)
+            return -1;                  // FUCK! No lower priority. Sorry, Charlie.
+        else
+            S_StopChannel(cnum);        // Otherwise, kick out lower priority.
+    }
+
+    c = &channels[cnum];
+
+    // channel is decided to be cnum.
+    c->sfxinfo = sfxinfo;
+    c->origin = origin;
+
+    return cnum;
+}
+
+// Changes volume and stereo-separation variables from the norm of a sound
+// effect to be played. If the sound is not audible, returns false. Otherwise,
+// modifies parameters and returns true.
+static dboolean S_AdjustSoundParms(mobj_t *origin, int *vol, int *sep)
+{
+    fixed_t     dist = 0;
+    fixed_t     adx, ady;
+    dboolean    boss = origin->flags2 & MF2_BOSS;
+    fixed_t     x = origin->x;
+    fixed_t     y = origin->y;
+
+    // calculate the distance to sound origin and clip it if necessary
+    // killough 11/98: scale coordinates down before calculations start
+    // killough 12/98: use exact distance formula instead of approximation
+    adx = ABS((viewx >> FRACBITS) - (x >> FRACBITS));
+    ady = ABS((viewy >> FRACBITS) - (y >> FRACBITS));
+
+    if (ady > adx)
+        SWAP(adx, ady);
+
+    if (adx)
+        dist = FixedDiv(adx, finesine[(tantoangle[FixedDiv(ady, adx) >> DBITS] + ANG90) >> ANGLETOFINESHIFT]);
+
+    // killough 11/98: handle zero-distance as special case
+    if (!dist)
+    {
+        *sep = NORM_SEP;
+        *vol = snd_SfxVolume;
+
+        return (*vol > 0);
+    }
+
+    if (!boss && dist > S_CLIPPING_DIST)
+        return false;
+
+    // stereo separation
+    if (s_stereo)
+    {
+        // angle of source to player
+        angle_t angle = R_PointToAngle(x, y);
+
+        if (angle <= viewangle)
+            angle += 0xFFFFFFFF;
+
+        *sep = NORM_SEP - FixedMul(S_STEREO_SWING, finesine[(angle - viewangle) >> ANGLETOFINESHIFT]);
+    }
+
+    // volume calculation
+    *vol = (dist < S_CLOSE_DIST || boss ? snd_SfxVolume : snd_SfxVolume * (S_CLIPPING_DIST - dist) / S_ATTENUATOR);
+
+    return (*vol > 0);
+}
+
+static void S_StartSoundAtVolume(mobj_t *origin, int sfx_id, int pitch)
+{
+    sfxinfo_t   *sfx = &S_sfx[sfx_id];
+    int         sep = NORM_SEP;
+    int         cnum;
+    int         handle;
+    int         volume = snd_SfxVolume;
+
+    if (sfx->lumpnum == -1 || nosfx)
+        return;
+
+    // Check to see if it is audible, and if not, modify the parms
+    if (origin && origin != viewplayer->mo && !S_AdjustSoundParms(origin, &volume, &sep))
+        return;
+
+    // kill old sound
+    if (origin || (gamestate == GS_FINALE && sfx_id == sfx_dshtgn))
+        for (cnum = 0; cnum < s_channels; cnum++)
+            if (channels[cnum].sfxinfo
+                && channels[cnum].sfxinfo->singularity == sfx->singularity
+                && channels[cnum].origin == origin)
+            {
+                S_StopChannel(cnum);
+                break;
+            }
+
+    // try to find a channel
+    if ((cnum = S_GetChannel(origin, sfx)) < 0)
+        return;
+
+    // Assigns the handle to one of the channels in the mix/output buffer.
+    // e6y: [Fix] Crash with zero-length sounds.
+    if ((handle = I_StartSound(sfx, cnum, volume, sep, pitch)) != -1)
+        channels[cnum].handle = handle;
+}
+
+void S_StartSound( mobj_t *mobj, int sfx_id )
+{
+	if( mobj )
+	{
+		mobj->madesound = true;
+		S_StartSoundAtVolume( mobj, sfx_id, mobj->pitch );
+	}
+	else
+		S_StartSoundAtVolume( NULL, sfx_id, NORM_PITCH );
+}
+
 //void S_StartSectorSound(degenmobj_t *degenmobj, int sfx_id)
 //{
 //    S_StartSoundAtVolume((mobj_t *)degenmobj, sfx_id, NORM_PITCH);

@@ -28,6 +28,7 @@
 //#include "p_local.h"
 #include "p_saveg.h"
 //#include "p_setup.h"
+#include "r_main.h"
 #include "s_sound.h"
 //#include "st_lib.h"
 //#include "st_stuff.h"

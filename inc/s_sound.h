@@ -1,11 +1,13 @@
 #if !defined(__S_SOUND_H__)
 #define __S_SOUND_H__
 
+#include "doomstruct.h"
+#include "sounds.h"
+
 #include "SDL_mixer.h"
 //
 //#include "r_defs.h"
-#include "sounds.h"
-//
+
 #define CHUNKSIZE                   1024
 #define SAMPLERATE                  44100
 
@@ -21,22 +23,22 @@
 //dboolean I_InitSound(void);
 //void I_ShutdownSound(void);
 //dboolean CacheSFX(sfxinfo_t *sfxinfo);
-//void I_UpdateSoundParms(int channel, int vol, int sep);
-//int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch);
-//void I_StopSound(int channel);
-//dboolean I_SoundIsPlaying(int channel);
-//
+void I_UpdateSoundParms(int channel, int vol, int sep);
+int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch);
+void I_StopSound(int channel);
+dboolean I_SoundIsPlaying(int channel);
+
 //dboolean I_InitMusic(void);
 //void I_ShutdownMusic(void);
-//void I_SetMusicVolume(int volume);
+void I_SetMusicVolume(int volume);
 //void I_PauseSong(void);
 //void I_ResumeSong(void);
 //void *I_RegisterSong(void *data, int size);
 //void I_UnRegisterSong(void *handle);
 //void I_PlaySong(void *handle, dboolean looping);
 //void I_StopSong(void);
-//dboolean I_AnySoundStillPlaying(void);
-//
+dboolean I_AnySoundStillPlaying(void);
+
 ////
 //// Initializes sound stuff, including volume
 //// Sets channels, SFX and music volume,
@@ -58,7 +60,7 @@
 //// Start sound for thing at <origin_p>
 ////  using <sfx_id> from sounds.h
 ////
-//void S_StartSound(mobj_t *mobj, int sfx_id);
+void S_StartSound(mobj_t *mobj, int sfx_id);
 //void S_StartSectorSound(degenmobj_t *degenmobj, int sfx_id);
 //void S_StartSoundOnce(void *origin, int sfx_id);
 //

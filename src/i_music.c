@@ -10,6 +10,7 @@ musicinfo_t  *mus_playing;
 #include "i_midirpc.h"
 ////#include "m_config.h"
 //#include "mmus2mid.h"
+#include "s_sound.h"
 
 //
 #include "SDL.h"

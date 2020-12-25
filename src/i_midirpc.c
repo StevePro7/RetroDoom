@@ -110,24 +110,24 @@ dboolean I_MidiRPCStopSong(void)
     return true;
 }
 
-////
-//// I_MidiRPCSetVolume
-//// Change the volume level of music played by the RPC midi server.
-////
-//dboolean I_MidiRPCSetVolume(int volume)
-//{
-//    if (!serverInit || !clientInit)
-//        return false;
 //
-//    RpcTryExcept
-//        //MidiRPC_ChangeVolume(volume);
-//    RpcExcept(1)
-//        return false;
-//    RpcEndExcept
+// I_MidiRPCSetVolume
+// Change the volume level of music played by the RPC midi server.
 //
-//    return true;
-//}
-//
+dboolean I_MidiRPCSetVolume(int volume)
+{
+    if (!serverInit || !clientInit)
+        return false;
+
+    RpcTryExcept
+        //MidiRPC_ChangeVolume(volume);
+    RpcExcept(1)
+        return false;
+    RpcEndExcept
+
+    return true;
+}
+
 ////
 //// I_MidiRPCPauseSong
 //// Pause the music being played by the server.

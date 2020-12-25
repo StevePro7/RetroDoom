@@ -2500,4 +2500,13 @@ typedef enum
 } stringtype_t;
 
 
+// r_state.h
+typedef enum
+{
+	DOOMBSP,
+	DEEPBSP,
+	ZDBSPX
+} mapformat_t;
+
+
 #endif

@@ -1,209 +1,211 @@
 #include "i_sound.h"
 #include "doomtype.h"
+#include "doomvars.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
 
 //#include "c_console.h"
 //#include "i_system.h"
 //#include "m_config.h"
-//#include "s_sound.h"
+#include "sounds.h"
+#include "s_sound.h"
 //#include "version.h"
 //#include "w_wad.h"
 ////#include <stdio.h>
 //#include <string.h>
 
-//typedef struct allocated_sound_s allocated_sound_t;
-//
-//struct allocated_sound_s
-//{
-//    sfxinfo_t               *sfxinfo;
-//    Mix_Chunk               chunk;
-//    int                     use_count;
-//    int                     pitch;
-//    allocated_sound_t       *prev;
-//    allocated_sound_t       *next;
-//};
+typedef struct allocated_sound_s allocated_sound_t;
+
+struct allocated_sound_s
+{
+	sfxinfo_t               *sfxinfo;
+	Mix_Chunk               chunk;
+	int                     use_count;
+	int                     pitch;
+	allocated_sound_t       *prev;
+	allocated_sound_t       *next;
+};
 
 static dboolean             sound_initialized;
 
-//static allocated_sound_t    *channels_playing[s_channels_max];
-//
-//static int                  mixer_freq = MIX_DEFAULT_FREQUENCY;
-//
-//// Doubly-linked list of allocated sounds.
-//// When a sound is played, it is moved to the head, so that the oldest sounds not used recently are at the tail.
-//static allocated_sound_t    *allocated_sounds_head;
-//static allocated_sound_t    *allocated_sounds_tail;
-//
-//// Hook a sound into the linked list at the head.
-//static void AllocatedSoundLink(allocated_sound_t *snd)
-//{
-//    snd->prev = NULL;
-//
-//    snd->next = allocated_sounds_head;
-//    allocated_sounds_head = snd;
-//
-//    if (!allocated_sounds_tail)
-//        allocated_sounds_tail = snd;
-//    else
-//        snd->next->prev = snd;
-//}
-//
-//// Unlink a sound from the linked list.
-//static void AllocatedSoundUnlink(allocated_sound_t *snd)
-//{
-//    if (!snd->prev)
-//        allocated_sounds_head = snd->next;
-//    else
-//        snd->prev->next = snd->next;
-//
-//    if (!snd->next)
-//        allocated_sounds_tail = snd->prev;
-//    else
-//        snd->next->prev = snd->prev;
-//}
-//
-//static void FreeAllocatedSound(allocated_sound_t *snd)
-//{
-//    // Unlink from linked list.
-//    AllocatedSoundUnlink(snd);
-//    free(snd);
-//}
-//
-//// Search from the tail backwards along the allocated sounds list, find and free a sound that is
-//// not in use, to free up memory. Return true for success.
-//static dboolean FindAndFreeSound(void)
-//{
-//    allocated_sound_t   *snd = allocated_sounds_tail;
-//
-//    while (snd)
-//    {
-//        if (!snd->use_count)
-//        {
-//            FreeAllocatedSound(snd);
-//            return true;
-//        }
-//
-//        snd = snd->prev;
-//    }
-//
-//    // No available sounds to free...
-//    return false;
-//}
-//
-//// Allocate a block for a new sound effect.
-//static allocated_sound_t *AllocateSound(sfxinfo_t *sfxinfo, int len)
-//{
-//    allocated_sound_t   *snd;
-//
-//    // Allocate the sound structure and data. The data will immediately follow the structure, which
-//    // acts as a header.
-//    do
-//    {
-//        // Out of memory? Try to free an old sound, then loop round and try again.
-//        if (!(snd = calloc(1, sizeof(allocated_sound_t) + len)) && !FindAndFreeSound())
-//            return NULL;
-//    } while (!snd);
-//
-//    // Skip past the chunk structure for the audio buffer
-//    snd->chunk.abuf = (uint8_t *)(snd + 1);
-//    snd->chunk.alen = len;
-//    snd->chunk.allocated = 1;
-//    snd->chunk.volume = MIX_MAX_VOLUME;
-//    snd->pitch = NORM_PITCH;
-//    snd->sfxinfo = sfxinfo;
-//    snd->use_count = 0;
-//
-//    AllocatedSoundLink(snd);
-//
-//    return snd;
-//}
-//
-//// Lock a sound, to indicate that it may not be freed.
-//static void LockAllocatedSound(allocated_sound_t *snd)
-//{
-//    // Increase use count, to stop the sound being freed.
-//    snd->use_count++;
-//
-//    // When we use a sound, re-link it into the list at the head, so that the oldest sounds fall to
-//    // the end of the list for freeing.
-//    AllocatedSoundUnlink(snd);
-//    AllocatedSoundLink(snd);
-//}
-//
-//// Unlock a sound to indicate that it may now be freed.
-//static void UnlockAllocatedSound(allocated_sound_t *snd)
-//{
-//    snd->use_count--;
-//}
-//
-//static allocated_sound_t *GetAllocatedSoundBySfxInfoAndPitch(sfxinfo_t *sfxinfo, int pitch)
-//{
-//    allocated_sound_t   *p = allocated_sounds_head;
-//
-//    while (p)
-//    {
-//        if (p->sfxinfo == sfxinfo && p->pitch == pitch)
-//            return p;
-//
-//        p = p->next;
-//    }
-//
-//    return NULL;
-//}
-//
-//// Allocate a new sound chunk and pitch-shift an existing sound up-or-down into it.
-//static allocated_sound_t *PitchShift(allocated_sound_t *insnd, int pitch)
-//{
-//    allocated_sound_t   *outsnd;
-//    int16_t             *srcbuf;
-//    int16_t             *dstbuf;
-//    const uint32_t      srclen = insnd->chunk.alen;
-//
-//    // determine ratio pitch:NORM_PITCH and apply to srclen, then invert.
-//    // This is an approximation of vanilla behavior based on measurements
-//    uint32_t            dstlen = (uint32_t)((1 + (1 - (float)pitch / NORM_PITCH)) * srclen);
-//
-//    // ensure that the new buffer is an even length
-//    if (!(dstlen % 2))
-//        dstlen++;
-//
-//    if (!(outsnd = AllocateSound(insnd->sfxinfo, dstlen)))
-//        return NULL;
-//
-//    outsnd->pitch = pitch;
-//    srcbuf = (int16_t *)insnd->chunk.abuf;
-//    dstbuf = (int16_t *)outsnd->chunk.abuf;
-//
-//    // loop over output buffer. find corresponding input cell, copy over
-//    for (int16_t *inp, *outp = dstbuf; outp < dstbuf + dstlen / 2; outp++)
-//    {
-//        inp = &srcbuf[(int)((float)(outp - dstbuf) / dstlen * srclen)];
-//        *outp = *inp;
-//    }
-//
-//    return outsnd;
-//}
-//
-//// When a sound stops, check if it is still playing. If it is not, we can mark the sound data as
-//// CACHE to be freed back for other means.
-//static void ReleaseSoundOnChannel(int channel)
-//{
-//    allocated_sound_t   *snd = channels_playing[channel];
-//
-//    if (!snd)
-//        return;
-//
-//    Mix_HaltChannel(channel);
-//
-//    channels_playing[channel] = NULL;
-//    UnlockAllocatedSound(snd);
-//
-//    // if the sound is a pitch-shift and it's not in use, immediately free it
-//    if (snd->pitch != NORM_PITCH && snd->use_count <= 0)
-//        FreeAllocatedSound(snd);
-//}
-//
+static allocated_sound_t    *channels_playing[s_channels_max];
+
+static int                  mixer_freq = MIX_DEFAULT_FREQUENCY;
+
+// Doubly-linked list of allocated sounds.
+// When a sound is played, it is moved to the head, so that the oldest sounds not used recently are at the tail.
+static allocated_sound_t    *allocated_sounds_head;
+static allocated_sound_t    *allocated_sounds_tail;
+
+// Hook a sound into the linked list at the head.
+static void AllocatedSoundLink(allocated_sound_t *snd)
+{
+    snd->prev = NULL;
+
+    snd->next = allocated_sounds_head;
+    allocated_sounds_head = snd;
+
+    if (!allocated_sounds_tail)
+        allocated_sounds_tail = snd;
+    else
+        snd->next->prev = snd;
+}
+
+// Unlink a sound from the linked list.
+static void AllocatedSoundUnlink(allocated_sound_t *snd)
+{
+    if (!snd->prev)
+        allocated_sounds_head = snd->next;
+    else
+        snd->prev->next = snd->next;
+
+    if (!snd->next)
+        allocated_sounds_tail = snd->prev;
+    else
+        snd->next->prev = snd->prev;
+}
+
+static void FreeAllocatedSound(allocated_sound_t *snd)
+{
+    // Unlink from linked list.
+    AllocatedSoundUnlink(snd);
+    free(snd);
+}
+
+// Search from the tail backwards along the allocated sounds list, find and free a sound that is
+// not in use, to free up memory. Return true for success.
+static dboolean FindAndFreeSound(void)
+{
+    allocated_sound_t   *snd = allocated_sounds_tail;
+
+    while (snd)
+    {
+        if (!snd->use_count)
+        {
+            FreeAllocatedSound(snd);
+            return true;
+        }
+
+        snd = snd->prev;
+    }
+
+    // No available sounds to free...
+    return false;
+}
+
+// Allocate a block for a new sound effect.
+static allocated_sound_t *AllocateSound(sfxinfo_t *sfxinfo, int len)
+{
+    allocated_sound_t   *snd;
+
+    // Allocate the sound structure and data. The data will immediately follow the structure, which
+    // acts as a header.
+    do
+    {
+        // Out of memory? Try to free an old sound, then loop round and try again.
+        if (!(snd = calloc(1, sizeof(allocated_sound_t) + len)) && !FindAndFreeSound())
+            return NULL;
+    } while (!snd);
+
+    // Skip past the chunk structure for the audio buffer
+    snd->chunk.abuf = (uint8_t *)(snd + 1);
+    snd->chunk.alen = len;
+    snd->chunk.allocated = 1;
+    snd->chunk.volume = MIX_MAX_VOLUME;
+    snd->pitch = NORM_PITCH;
+    snd->sfxinfo = sfxinfo;
+    snd->use_count = 0;
+
+    AllocatedSoundLink(snd);
+
+    return snd;
+}
+
+// Lock a sound, to indicate that it may not be freed.
+static void LockAllocatedSound(allocated_sound_t *snd)
+{
+    // Increase use count, to stop the sound being freed.
+    snd->use_count++;
+
+    // When we use a sound, re-link it into the list at the head, so that the oldest sounds fall to
+    // the end of the list for freeing.
+    AllocatedSoundUnlink(snd);
+    AllocatedSoundLink(snd);
+}
+
+// Unlock a sound to indicate that it may now be freed.
+static void UnlockAllocatedSound(allocated_sound_t *snd)
+{
+    snd->use_count--;
+}
+
+static allocated_sound_t *GetAllocatedSoundBySfxInfoAndPitch( sfxinfo_t *sfxinfo, int pitch )
+{
+	allocated_sound_t   *p = allocated_sounds_head;
+
+	while( p )
+	{
+		if( p->sfxinfo == sfxinfo && p->pitch == pitch )
+			return p;
+
+		p = p->next;
+	}
+
+	return NULL;
+}
+
+// Allocate a new sound chunk and pitch-shift an existing sound up-or-down into it.
+static allocated_sound_t *PitchShift(allocated_sound_t *insnd, int pitch)
+{
+    allocated_sound_t   *outsnd;
+    int16_t             *srcbuf;
+    int16_t             *dstbuf;
+    const uint32_t      srclen = insnd->chunk.alen;
+
+    // determine ratio pitch:NORM_PITCH and apply to srclen, then invert.
+    // This is an approximation of vanilla behavior based on measurements
+    uint32_t            dstlen = (uint32_t)((1 + (1 - (float)pitch / NORM_PITCH)) * srclen);
+
+    // ensure that the new buffer is an even length
+    if (!(dstlen % 2))
+        dstlen++;
+
+    if (!(outsnd = AllocateSound(insnd->sfxinfo, dstlen)))
+        return NULL;
+
+    outsnd->pitch = pitch;
+    srcbuf = (int16_t *)insnd->chunk.abuf;
+    dstbuf = (int16_t *)outsnd->chunk.abuf;
+
+    // loop over output buffer. find corresponding input cell, copy over
+    for (int16_t *inp, *outp = dstbuf; outp < dstbuf + dstlen / 2; outp++)
+    {
+        inp = &srcbuf[(int)((float)(outp - dstbuf) / dstlen * srclen)];
+        *outp = *inp;
+    }
+
+    return outsnd;
+}
+
+// When a sound stops, check if it is still playing. If it is not, we can mark the sound data as
+// CACHE to be freed back for other means.
+static void ReleaseSoundOnChannel(int channel)
+{
+    allocated_sound_t   *snd = channels_playing[channel];
+
+    if (!snd)
+        return;
+
+    Mix_HaltChannel(channel);
+
+    channels_playing[channel] = NULL;
+    UnlockAllocatedSound(snd);
+
+    // if the sound is a pitch-shift and it's not in use, immediately free it
+    if (snd->pitch != NORM_PITCH && snd->use_count <= 0)
+        FreeAllocatedSound(snd);
+}
+
 //// Generic sound expansion function for any sample rate.
 //static void ExpandSoundData(sfxinfo_t *sfxinfo, byte *data, int samplerate, int bits, int length)
 //{
@@ -292,72 +294,72 @@ static dboolean             sound_initialized;
 //    else
 //        return false;
 //}
+
+void I_UpdateSoundParms(int channel, int vol, int sep)
+{
+    Mix_SetPanning(channel, (254 - sep) * vol / MIX_MAX_VOLUME, sep * vol / MIX_MAX_VOLUME);
+}
+
 //
-//void I_UpdateSoundParms(int channel, int vol, int sep)
-//{
-//    Mix_SetPanning(channel, (254 - sep) * vol / MIX_MAX_VOLUME, sep * vol / MIX_MAX_VOLUME);
-//}
+// Starting a sound means adding it to the current list of active sounds in the internal channels.
+// As the SFX info struct contains e.g. a pointer to the raw data, it is ignored.
+// As our sound handling does not handle priority, it is ignored.
+// Pitching (that is, increased speed of playback) is set, but currently not used by mixing.
 //
-////
-//// Starting a sound means adding it to the current list of active sounds in the internal channels.
-//// As the SFX info struct contains e.g. a pointer to the raw data, it is ignored.
-//// As our sound handling does not handle priority, it is ignored.
-//// Pitching (that is, increased speed of playback) is set, but currently not used by mixing.
-////
-//int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
-//{
-//    allocated_sound_t   *snd;
-//
-//    // Release a sound effect if there is already one playing on this channel
-//    ReleaseSoundOnChannel(channel);
-//
-//    if (!(snd = GetAllocatedSoundBySfxInfoAndPitch(sfxinfo, pitch)))
-//    {
-//        // fetch the base sound effect, un-pitch-shifted
-//        if (!(snd = GetAllocatedSoundBySfxInfoAndPitch(sfxinfo, NORM_PITCH)))
-//            return -1;
-//
-//        if (pitch != NORM_PITCH && s_randompitch)
-//        {
-//            allocated_sound_t   *newsnd = PitchShift(snd, pitch);
-//
-//            if (newsnd)
-//            {
-//                LockAllocatedSound(newsnd);
-//                UnlockAllocatedSound(snd);
-//                snd = newsnd;
-//            }
-//        }
-//    }
-//    else
-//        LockAllocatedSound(snd);
-//
-//    // play sound
-//    Mix_PlayChannel(channel, &snd->chunk, 0);
-//
-//    channels_playing[channel] = snd;
-//
-//    // set separation, etc.
-//    I_UpdateSoundParms(channel, vol, sep);
-//
-//    return channel;
-//}
-//
-//void I_StopSound(int channel)
-//{
-//    // Sound data is no longer needed; release the sound data being used for this channel
-//    ReleaseSoundOnChannel(channel);
-//}
-//
-//dboolean I_SoundIsPlaying(int channel)
-//{
-//    return Mix_Playing(channel);
-//}
-//
-//dboolean I_AnySoundStillPlaying(void)
-//{
-//    return Mix_Playing(-1);
-//}
+int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
+{
+    allocated_sound_t   *snd;
+
+    // Release a sound effect if there is already one playing on this channel
+    ReleaseSoundOnChannel(channel);
+
+    if (!(snd = GetAllocatedSoundBySfxInfoAndPitch(sfxinfo, pitch)))
+    {
+        // fetch the base sound effect, un-pitch-shifted
+        if (!(snd = GetAllocatedSoundBySfxInfoAndPitch(sfxinfo, NORM_PITCH)))
+            return -1;
+
+        if (pitch != NORM_PITCH && s_randompitch)
+        {
+            allocated_sound_t   *newsnd = PitchShift(snd, pitch);
+
+            if (newsnd)
+            {
+                LockAllocatedSound(newsnd);
+                UnlockAllocatedSound(snd);
+                snd = newsnd;
+            }
+        }
+    }
+    else
+        LockAllocatedSound(snd);
+
+    // play sound
+    Mix_PlayChannel(channel, &snd->chunk, 0);
+
+    channels_playing[channel] = snd;
+
+    // set separation, etc.
+    I_UpdateSoundParms(channel, vol, sep);
+
+    return channel;
+}
+
+void I_StopSound(int channel)
+{
+    // Sound data is no longer needed; release the sound data being used for this channel
+    ReleaseSoundOnChannel(channel);
+}
+
+dboolean I_SoundIsPlaying( int channel )
+{
+	return Mix_Playing( channel );
+}
+
+dboolean I_AnySoundStillPlaying( void )
+{
+	return Mix_Playing( -1 );
+}
 
 void I_ShutdownSound(void)
 {
