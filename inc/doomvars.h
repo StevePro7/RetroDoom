@@ -1032,4 +1032,16 @@ extern uint64_t starttime;
 extern int      frames;
 
 
+// r_state.h
+extern dboolean     boomcompatible;
+extern dboolean     mbfcompatible;
+extern dboolean     blockmaprebuilt;
+extern dboolean     nojump;
+extern dboolean     nomouselook;
+
+
+// dstrings.h
+extern char **endmsg[];
+
+
 #endif

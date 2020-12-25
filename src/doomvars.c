@@ -1771,7 +1771,7 @@ char **mapnamesn[] =    // Nerve WAD map names.
 	&s_NHUSTR_9
 };
 
-// stevepro	was dstrings.c
+// dstrings.c
 char **endmsg[] =
 {
 	// DOOM1
@@ -1852,3 +1852,12 @@ byte        *white25;
 
 // hu_lib.
 const kern_t kern[];
+
+
+// P_steup.c
+dboolean        boomcompatible;
+dboolean        mbfcompatible;
+dboolean        blockmaprebuilt;
+// steveproTODO
+//dboolean        nojump = false;
+//dboolean        nomouselook = false;

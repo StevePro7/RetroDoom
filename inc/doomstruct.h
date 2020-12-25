@@ -94,6 +94,8 @@ typedef struct
 } alias_t;
 
 
+
+
 // w_file.h
 typedef struct wadfile_s wadfile_t;
 

@@ -16,6 +16,7 @@
 //#include "dstrings.h"
 //#include "i_system.h"
 //#include "m_cheat.h"
+#include "logger.h"
 #include "m_misc.h"
 //#include "p_local.h"
 //#include "sounds.h"
@@ -32,7 +33,7 @@ typedef struct
 	long    size;
 	FILE    *f;
 } DEHFILE;
-//
+
 static dboolean addtocount;
 static int      linecount;
 
@@ -1439,13 +1440,13 @@ static int dehfgetc( DEHFILE *fp )
 static void lfstrip(char *s);       // strip the \r and/or \n off of a line
 static void rstrip(char *s);        // strip trailing whitespace
 static char *ptr_lstrip(char *p);   // point past leading whitespace
-//static int deh_GetData(char *s, char *k, long *l, char **strval);
+static int deh_GetData(char *s, char *k, long *l, char **strval);
 //static dboolean deh_procStringSub(char *key, char *lookfor, char *newstring);
 static char *dehReformatStr(char *string);
 
 // Prototypes for block processing functions
 // Pointers to these functions are used as the blocks are encountered.
-static void deh_procThing( DEHFILE *fpin, char *line ) {}
+static void deh_procThing( DEHFILE *fpin, char *line );
 static void deh_procFrame( DEHFILE *fpin, char *line ) {}
 static void deh_procPointer( DEHFILE *fpin, char *line ) {}
 static void deh_procSounds( DEHFILE *fpin, char *line ) {}
@@ -1458,7 +1459,7 @@ static void deh_procText( DEHFILE *fpin, char *line ) {}
 static void deh_procPars( DEHFILE *fpin, char *line ) {}
 static void deh_procStrings( DEHFILE *fpin, char *line ) {}
 static void deh_procError( DEHFILE *fpin, char *line ) {}
-static void deh_procBexCodePointers( DEHFILE *fpin, char *line ) {}
+static void deh_procBexCodePointers( DEHFILE *fpin, char *line );
 
 // Structure deh_block is used to hold the block names that can
 // be encountered, and the routines to use to decipher them
@@ -1499,59 +1500,59 @@ static const deh_block deh_blocks[] =
 // flag to skip included deh-style text, used with INCLUDE NOTEXT directive
 static dboolean includenotext;
 
-//// MOBJINFO - Dehacked block name = "Thing"
-//// Usage: Thing nn (name)
-//// These are for mobjinfo_t types. Each is an integer
-//// within the structure, so we can use index of the string in this
-//// array to offset by sizeof(int) into the mobjinfo_t array at [nn]
-//// * things are base zero but dehacked considers them to start at #1.
-//static const char *deh_mobjinfo[DEH_MOBJINFOMAX] =
-//{
-//    "ID #",                     // .doomednum
-//    "Initial frame",            // .spawnstate
-//    "Hit points",               // .spawnhealth
-//    "Gib health",               // .gibhealth
-//    "First moving frame",       // .seestate
-//    "Alert sound",              // .seesound
-//    "Reaction time",            // .reactiontime
-//    "Attack sound",             // .attacksound
-//    "Injury frame",             // .painstate
-//    "Pain chance",              // .painchance
-//    "Pain sound",               // .painsound
-//    "Close attack frame",       // .meleestate
-//    "Far attack frame",         // .missilestate
-//    "Death frame",              // .deathstate
-//    "Exploding frame",          // .xdeathstate
-//    "Death sound",              // .deathsound
-//    "Dropped item",             // .droppeditem
-//    "Melee threshold",          // .meleethreshold
-//    "Max target range",         // .maxattackrange
-//    "Min missile chance",       // .minmissilechance
-//    "Speed",                    // .speed
-//    "Width",                    // .radius
-//    "Pickup width",             // .pickupradius
-//    "Height",                   // .height
-//    "Projectile pass height",   // .projectilepassheight
-//    "Mass",                     // .mass
-//    "Missile damage",           // .damage
-//    "Action sound",             // .activesound
-//    "Bits",                     // .flags
-//    "Retro bits",               // .flags2
-//    "Respawn frame",            // .raisestate
-//    "Frames",                   // .frames
-//    "Fullbright",               // .fullbright
-//    "Blood",                    // .blood
-//    "Shadow offset"             // .shadowoffset
-//};
+// MOBJINFO - Dehacked block name = "Thing"
+// Usage: Thing nn (name)
+// These are for mobjinfo_t types. Each is an integer
+// within the structure, so we can use index of the string in this
+// array to offset by sizeof(int) into the mobjinfo_t array at [nn]
+// * things are base zero but dehacked considers them to start at #1.
+static const char *deh_mobjinfo[DEH_MOBJINFOMAX] =
+{
+    "ID #",                     // .doomednum
+    "Initial frame",            // .spawnstate
+    "Hit points",               // .spawnhealth
+    "Gib health",               // .gibhealth
+    "First moving frame",       // .seestate
+    "Alert sound",              // .seesound
+    "Reaction time",            // .reactiontime
+    "Attack sound",             // .attacksound
+    "Injury frame",             // .painstate
+    "Pain chance",              // .painchance
+    "Pain sound",               // .painsound
+    "Close attack frame",       // .meleestate
+    "Far attack frame",         // .missilestate
+    "Death frame",              // .deathstate
+    "Exploding frame",          // .xdeathstate
+    "Death sound",              // .deathsound
+    "Dropped item",             // .droppeditem
+    "Melee threshold",          // .meleethreshold
+    "Max target range",         // .maxattackrange
+    "Min missile chance",       // .minmissilechance
+    "Speed",                    // .speed
+    "Width",                    // .radius
+    "Pickup width",             // .pickupradius
+    "Height",                   // .height
+    "Projectile pass height",   // .projectilepassheight
+    "Mass",                     // .mass
+    "Missile damage",           // .damage
+    "Action sound",             // .activesound
+    "Bits",                     // .flags
+    "Retro bits",               // .flags2
+    "Respawn frame",            // .raisestate
+    "Frames",                   // .frames
+    "Fullbright",               // .fullbright
+    "Blood",                    // .blood
+    "Shadow offset"             // .shadowoffset
+};
+
+// Strings that are used to indicate flags ("Bits" in mobjinfo)
+// This is an array of bit masks that are related to p_mobj.h
+// values, using the same names without the MF_ in front.
+// Ty 08/27/98 new code
 //
-//// Strings that are used to indicate flags ("Bits" in mobjinfo)
-//// This is an array of bit masks that are related to p_mobj.h
-//// values, using the same names without the MF_ in front.
-//// Ty 08/27/98 new code
-////
-//// killough 10/98:
-////
-//// Convert array to struct to allow multiple values, make array size variable
+// killough 10/98:
+//
+// Convert array to struct to allow multiple values, make array size variable
 #define DEH_MOBJFLAGMAX     arrlen(deh_mobjflags)
 #define DEH_MOBJFLAG2MAX    arrlen(deh_mobjflags2)
 
@@ -1561,85 +1562,85 @@ struct deh_mobjflags_s
 	long    value;
 };
 
-//static const struct deh_mobjflags_s deh_mobjflags[] =
-//{
-//    { "SPECIAL",      MF_SPECIAL      },    // call P_Specialthing when touched
-//    { "SOLID",        MF_SOLID        },    // block movement
-//    { "SHOOTABLE",    MF_SHOOTABLE    },    // can be hit
-//    { "NOSECTOR",     MF_NOSECTOR     },    // invisible but touchable
-//    { "NOBLOCKMAP",   MF_NOBLOCKMAP   },    // inert but displayable
-//    { "AMBUSH",       MF_AMBUSH       },    // deaf monster
-//    { "JUSTHIT",      MF_JUSTHIT      },    // will try to attack right back
-//    { "JUSTATTACKED", MF_JUSTATTACKED },    // take at least 1 step before attacking
-//    { "SPAWNCEILING", MF_SPAWNCEILING },    // initially hang from ceiling
-//    { "NOGRAVITY",    MF_NOGRAVITY    },    // don't apply gravity during play
-//    { "DROPOFF",      MF_DROPOFF      },    // can jump from high places
-//    { "PICKUP",       MF_PICKUP       },    // will pick up items
-//    { "NOCLIP",       MF_NOCLIP       },    // goes through walls
-//    { "SLIDE",        MF_SLIDE        },    // keep info about sliding along walls
-//    { "FLOAT",        MF_FLOAT        },    // allow movement to any height
-//    { "TELEPORT",     MF_TELEPORT     },    // don't cross lines or look at heights
-//    { "MISSILE",      MF_MISSILE      },    // don't hit same species, explode on block
-//    { "DROPPED",      MF_DROPPED      },    // dropped, not spawned (like ammo clip)
-//    { "SHADOW",       MF_FUZZ         },    // use fuzzy draw like spectres
-//    { "NOBLOOD",      MF_NOBLOOD      },    // puffs instead of blood when shot
-//    { "CORPSE",       MF_CORPSE       },    // so it will slide down steps when dead
-//    { "INFLOAT",      MF_INFLOAT      },    // float but not to target height
-//    { "COUNTKILL",    MF_COUNTKILL    },    // count toward the kills total
-//    { "COUNTITEM",    MF_COUNTITEM    },    // count toward the items total
-//    { "SKULLFLY",     MF_SKULLFLY     },    // special handling for flying skulls
-//    { "NOTDMATCH",    MF_NOTDMATCH    },    // do not spawn in deathmatch
-//
-//    // killough 10/98: TRANSLATION consists of 2 bits, not 1:
-//    { "TRANSLATION",  0x04000000      },    // for BOOM bug-compatibility
-//    { "TRANSLATION1", 0x04000000      },    // use translation table for color (players)
-//    { "TRANSLATION2", 0x08000000      },    // use translation table for color (players)
-//
-//    { "UNUSED1",      0x08000000      },    // unused bit # 1 -- For BOOM bug-compatibility
-//    { "UNUSED2",      0x10000000      },    // unused bit # 2 -- For BOOM compatibility
-//    { "UNUSED3",      0x20000000      },    // unused bit # 3 -- For BOOM compatibility
-//    { "UNUSED4",      0x40000000      },    // unused bit # 4 -- For BOOM compatibility
-//
-//    { "TOUCHY",       MF_TOUCHY       },    // dies on contact with solid objects (MBF)
-//    { "BOUNCES",      MF_BOUNCES      },    // bounces off floors, ceilings and maybe walls
-//    { "FRIEND",       MF_FRIEND       },    // a friend of the player(s) (MBF)
-//    { "TRANSLUCENT",  MF_TRANSLUCENT  }     // apply translucency to sprite (BOOM)
-//};
-//
-//static const struct deh_mobjflags_s deh_mobjflags2[] =
-//{
-//    { "TRANSLUCENT",               MF2_TRANSLUCENT               },
-//    { "TRANSLUCENT_REDONLY",       MF2_TRANSLUCENT_REDONLY       },
-//    { "TRANSLUCENT_GREENONLY",     MF2_TRANSLUCENT_GREENONLY     },
-//    { "TRANSLUCENT_BLUEONLY",      MF2_TRANSLUCENT_BLUEONLY      },
-//    { "TRANSLUCENT_33",            MF2_TRANSLUCENT_33            },
-//    { "TRANSLUCENT_50",            MF2_TRANSLUCENT_50            },
-//    { "TRANSLUCENT_REDWHITEONLY",  MF2_TRANSLUCENT_REDWHITEONLY  },
-//    { "TRANSLUCENT_REDTOGREEN_33", MF2_TRANSLUCENT_REDTOGREEN_33 },
-//    { "TRANSLUCENT_REDTOBLUE_33",  MF2_TRANSLUCENT_REDTOBLUE_33  },
-//    { "TRANSLUCENT_BLUE_25",       MF2_TRANSLUCENT_BLUE_25       },
-//    { "REDTOGREEN",                MF2_TRANSLUCENT               },
-//    { "GREENTORED",                MF2_GREENTORED                },
-//    { "REDTOBLUE",                 MF2_REDTOBLUE                 },
-//    { "FLOATBOB",                  MF2_FLOATBOB                  },
-//    { "MIRRORED",                  MF2_MIRRORED                  },
-//    { "FALLING",                   MF2_FALLING                   },
-//    { "ONMOBJ",                    MF2_ONMOBJ                    },
-//    { "PASSMOBJ",                  MF2_PASSMOBJ                  },
-//    { "RESURRECTING",              MF2_RESURRECTING              },
-//    { "FOOTCLIP",                  MF2_FOOTCLIP                  },
-//    { "NOLIQUIDBOB",               MF2_NOLIQUIDBOB               },
-//    { "FEETARECLIPPED",            MF2_FEETARECLIPPED            },
-//    { "CASTSHADOW",                MF2_CASTSHADOW                },
-//    { "BLOOD",                     MF2_BLOOD                     },
-//    { "DONTMAP",                   MF2_DONTMAP                   },
-//    { "SMOKETRAIL",                MF2_SMOKETRAIL                },
-//    { "CRUSHABLE",                 MF2_CRUSHABLE                 },
-//    { "MASSACRE",                  MF2_MASSACRE                  },
-//    { "DECORATION",                MF2_DECORATION                },
-//    { "MONSTERMISSILE",            MF2_MONSTERMISSILE            },
-//    { "BOSS",                      MF2_BOSS                      }
-//};
+static const struct deh_mobjflags_s deh_mobjflags[] =
+{
+    { "SPECIAL",      MF_SPECIAL      },    // call P_Specialthing when touched
+    { "SOLID",        MF_SOLID        },    // block movement
+    { "SHOOTABLE",    MF_SHOOTABLE    },    // can be hit
+    { "NOSECTOR",     MF_NOSECTOR     },    // invisible but touchable
+    { "NOBLOCKMAP",   MF_NOBLOCKMAP   },    // inert but displayable
+    { "AMBUSH",       MF_AMBUSH       },    // deaf monster
+    { "JUSTHIT",      MF_JUSTHIT      },    // will try to attack right back
+    { "JUSTATTACKED", MF_JUSTATTACKED },    // take at least 1 step before attacking
+    { "SPAWNCEILING", MF_SPAWNCEILING },    // initially hang from ceiling
+    { "NOGRAVITY",    MF_NOGRAVITY    },    // don't apply gravity during play
+    { "DROPOFF",      MF_DROPOFF      },    // can jump from high places
+    { "PICKUP",       MF_PICKUP       },    // will pick up items
+    { "NOCLIP",       MF_NOCLIP       },    // goes through walls
+    { "SLIDE",        MF_SLIDE        },    // keep info about sliding along walls
+    { "FLOAT",        MF_FLOAT        },    // allow movement to any height
+    { "TELEPORT",     MF_TELEPORT     },    // don't cross lines or look at heights
+    { "MISSILE",      MF_MISSILE      },    // don't hit same species, explode on block
+    { "DROPPED",      MF_DROPPED      },    // dropped, not spawned (like ammo clip)
+    { "SHADOW",       MF_FUZZ         },    // use fuzzy draw like spectres
+    { "NOBLOOD",      MF_NOBLOOD      },    // puffs instead of blood when shot
+    { "CORPSE",       MF_CORPSE       },    // so it will slide down steps when dead
+    { "INFLOAT",      MF_INFLOAT      },    // float but not to target height
+    { "COUNTKILL",    MF_COUNTKILL    },    // count toward the kills total
+    { "COUNTITEM",    MF_COUNTITEM    },    // count toward the items total
+    { "SKULLFLY",     MF_SKULLFLY     },    // special handling for flying skulls
+    { "NOTDMATCH",    MF_NOTDMATCH    },    // do not spawn in deathmatch
+
+    // killough 10/98: TRANSLATION consists of 2 bits, not 1:
+    { "TRANSLATION",  0x04000000      },    // for BOOM bug-compatibility
+    { "TRANSLATION1", 0x04000000      },    // use translation table for color (players)
+    { "TRANSLATION2", 0x08000000      },    // use translation table for color (players)
+
+    { "UNUSED1",      0x08000000      },    // unused bit # 1 -- For BOOM bug-compatibility
+    { "UNUSED2",      0x10000000      },    // unused bit # 2 -- For BOOM compatibility
+    { "UNUSED3",      0x20000000      },    // unused bit # 3 -- For BOOM compatibility
+    { "UNUSED4",      0x40000000      },    // unused bit # 4 -- For BOOM compatibility
+
+    { "TOUCHY",       MF_TOUCHY       },    // dies on contact with solid objects (MBF)
+    { "BOUNCES",      MF_BOUNCES      },    // bounces off floors, ceilings and maybe walls
+    { "FRIEND",       MF_FRIEND       },    // a friend of the player(s) (MBF)
+    { "TRANSLUCENT",  MF_TRANSLUCENT  }     // apply translucency to sprite (BOOM)
+};
+
+static const struct deh_mobjflags_s deh_mobjflags2[] =
+{
+    { "TRANSLUCENT",               MF2_TRANSLUCENT               },
+    { "TRANSLUCENT_REDONLY",       MF2_TRANSLUCENT_REDONLY       },
+    { "TRANSLUCENT_GREENONLY",     MF2_TRANSLUCENT_GREENONLY     },
+    { "TRANSLUCENT_BLUEONLY",      MF2_TRANSLUCENT_BLUEONLY      },
+    { "TRANSLUCENT_33",            MF2_TRANSLUCENT_33            },
+    { "TRANSLUCENT_50",            MF2_TRANSLUCENT_50            },
+    { "TRANSLUCENT_REDWHITEONLY",  MF2_TRANSLUCENT_REDWHITEONLY  },
+    { "TRANSLUCENT_REDTOGREEN_33", MF2_TRANSLUCENT_REDTOGREEN_33 },
+    { "TRANSLUCENT_REDTOBLUE_33",  MF2_TRANSLUCENT_REDTOBLUE_33  },
+    { "TRANSLUCENT_BLUE_25",       MF2_TRANSLUCENT_BLUE_25       },
+    { "REDTOGREEN",                MF2_TRANSLUCENT               },
+    { "GREENTORED",                MF2_GREENTORED                },
+    { "REDTOBLUE",                 MF2_REDTOBLUE                 },
+    { "FLOATBOB",                  MF2_FLOATBOB                  },
+    { "MIRRORED",                  MF2_MIRRORED                  },
+    { "FALLING",                   MF2_FALLING                   },
+    { "ONMOBJ",                    MF2_ONMOBJ                    },
+    { "PASSMOBJ",                  MF2_PASSMOBJ                  },
+    { "RESURRECTING",              MF2_RESURRECTING              },
+    { "FOOTCLIP",                  MF2_FOOTCLIP                  },
+    { "NOLIQUIDBOB",               MF2_NOLIQUIDBOB               },
+    { "FEETARECLIPPED",            MF2_FEETARECLIPPED            },
+    { "CASTSHADOW",                MF2_CASTSHADOW                },
+    { "BLOOD",                     MF2_BLOOD                     },
+    { "DONTMAP",                   MF2_DONTMAP                   },
+    { "SMOKETRAIL",                MF2_SMOKETRAIL                },
+    { "CRUSHABLE",                 MF2_CRUSHABLE                 },
+    { "MASSACRE",                  MF2_MASSACRE                  },
+    { "DECORATION",                MF2_DECORATION                },
+    { "MONSTERMISSILE",            MF2_MONSTERMISSILE            },
+    { "BOSS",                      MF2_BOSS                      }
+};
 
 // STATE - Dehacked block name = "Frame" and "Pointer"
 // Usage: Frame nn
@@ -1761,197 +1762,197 @@ static const char *deh_misc[] =
 // FRAME nnn = PointerMnemonic
 
 // External references to action functions scattered about the code
-//void A_BabyMetal(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BetaSkullAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BFGSound(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BFGSpray(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BossDeath(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BrainAwake(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BrainDie(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BrainExplode(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BrainPain(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BrainScream(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BrainSpit(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BruisAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_BspiAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_CheckReload(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_CloseShotgun2(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_CPosAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_CPosRefire(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_CyberAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Detonate(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Die(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Explode(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Face(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FaceTarget(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Fall(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FatAttack1(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FatAttack2(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FatAttack3(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FatRaise(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Fire(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FireBFG(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FireCGun(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FireCrackle(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FireMissile(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FireOldBFG(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FirePistol(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FirePlasma(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FireShotgun(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_FireShotgun2(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_GunFlash(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_HeadAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Hoof(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_KeenDie(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Light0(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Light1(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Light2(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_LineEffect(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_LoadShotgun2(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Look(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Lower(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Metal(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Mushroom(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_OpenShotgun2(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Pain(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_PainAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_PainDie(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_PlayerScream(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_PlaySound(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_PosAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Punch(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Raise(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_RandomJump(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_ReFire(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SargAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Saw(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Scratch(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Scream(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SkelFist(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SkelMissile(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SkelWhoosh(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SkullAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SkullPop(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Spawn(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SpawnFly(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SpawnSound(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SpidRefire(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_SPosAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_StartFire(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Stop(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Tracer(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_TroopAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_Turn(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_VileAttack(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_VileChase(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_VileStart(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_VileTarget(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_WeaponReady(mobj_t *actor, player_t *player, pspdef_t *psp);
-//void A_XScream(mobj_t *actor, player_t *player, pspdef_t *psp);
-//
-//typedef struct
-//{
-//    actionf_t   cptr;           // actual pointer to the subroutine
-//    const char  *lookup;        // mnemonic lookup string to be specified in BEX
-//} deh_bexptr;
-//
-//static const deh_bexptr deh_bexptrs[] =
-//{
-//    { A_Light0,          "A_Light0"          },
-//    { A_WeaponReady,     "A_WeaponReady"     },
-//    { A_Lower,           "A_Lower"           },
-//    { A_Raise,           "A_Raise"           },
-//    { A_Punch,           "A_Punch"           },
-//    { A_ReFire,          "A_ReFire"          },
-//    { A_FirePistol,      "A_FirePistol"      },
-//    { A_Light1,          "A_Light1"          },
-//    { A_FireShotgun,     "A_FireShotgun"     },
-//    { A_Light2,          "A_Light2"          },
-//    { A_FireShotgun2,    "A_FireShotgun2"    },
-//    { A_CheckReload,     "A_CheckReload"     },
-//    { A_OpenShotgun2,    "A_OpenShotgun2"    },
-//    { A_LoadShotgun2,    "A_LoadShotgun2"    },
-//    { A_CloseShotgun2,   "A_CloseShotgun2"   },
-//    { A_FireCGun,        "A_FireCGun"        },
-//    { A_GunFlash,        "A_GunFlash"        },
-//    { A_FireMissile,     "A_FireMissile"     },
-//    { A_Saw,             "A_Saw"             },
-//    { A_FirePlasma,      "A_FirePlasma"      },
-//    { A_BFGSound,        "A_BFGSound"        },
-//    { A_FireBFG,         "A_FireBFG"         },
-//    { A_BFGSpray,        "A_BFGSpray"        },
-//    { A_Explode,         "A_Explode"         },
-//    { A_Pain,            "A_Pain"            },
-//    { A_PlayerScream,    "A_PlayerScream"    },
-//    { A_Fall,            "A_Fall"            },
-//    { A_XScream,         "A_XScream"         },
-//    { A_Look,            "A_Look"            },
-//    { A_Chase,           "A_Chase"           },
-//    { A_FaceTarget,      "A_FaceTarget"      },
-//    { A_PosAttack,       "A_PosAttack"       },
-//    { A_Scream,          "A_Scream"          },
-//    { A_SPosAttack,      "A_SPosAttack"      },
-//    { A_VileChase,       "A_VileChase"       },
-//    { A_VileStart,       "A_VileStart"       },
-//    { A_VileTarget,      "A_VileTarget"      },
-//    { A_VileAttack,      "A_VileAttack"      },
-//    { A_StartFire,       "A_StartFire"       },
-//    { A_Fire,            "A_Fire"            },
-//    { A_FireCrackle,     "A_FireCrackle"     },
-//    { A_Tracer,          "A_Tracer"          },
-//    { A_SkelWhoosh,      "A_SkelWhoosh"      },
-//    { A_SkelFist,        "A_SkelFist"        },
-//    { A_SkelMissile,     "A_SkelMissile"     },
-//    { A_FatRaise,        "A_FatRaise"        },
-//    { A_FatAttack1,      "A_FatAttack1"      },
-//    { A_FatAttack2,      "A_FatAttack2"      },
-//    { A_FatAttack3,      "A_FatAttack3"      },
-//    { A_BossDeath,       "A_BossDeath"       },
-//    { A_CPosAttack,      "A_CPosAttack"      },
-//    { A_CPosRefire,      "A_CPosRefire"      },
-//    { A_TroopAttack,     "A_TroopAttack"     },
-//    { A_SargAttack,      "A_SargAttack"      },
-//    { A_HeadAttack,      "A_HeadAttack"      },
-//    { A_BruisAttack,     "A_BruisAttack"     },
-//    { A_SkullAttack,     "A_SkullAttack"     },
-//    { A_Metal,           "A_Metal"           },
-//    { A_SpidRefire,      "A_SpidRefire"      },
-//    { A_BabyMetal,       "A_BabyMetal"       },
-//    { A_BspiAttack,      "A_BspiAttack"      },
-//    { A_Hoof,            "A_Hoof"            },
-//    { A_CyberAttack,     "A_CyberAttack"     },
-//    { A_PainAttack,      "A_PainAttack"      },
-//    { A_PainDie,         "A_PainDie"         },
-//    { A_KeenDie,         "A_KeenDie"         },
-//    { A_BrainPain,       "A_BrainPain"       },
-//    { A_BrainScream,     "A_BrainScream"     },
-//    { A_BrainDie,        "A_BrainDie"        },
-//    { A_BrainAwake,      "A_BrainAwake"      },
-//    { A_BrainSpit,       "A_BrainSpit"       },
-//    { A_SpawnSound,      "A_SpawnSound"      },
-//    { A_SpawnFly,        "A_SpawnFly"        },
-//    { A_BrainExplode,    "A_BrainExplode"    },
-//    { A_Detonate,        "A_Detonate"        },   // killough 08/09/98
-//    { A_Mushroom,        "A_Mushroom"        },   // killough 10/98
-//    { A_SkullPop,        "A_SkullPop"        },
-//    { A_Die,             "A_Die"             },   // killough 11/98
-//    { A_Spawn,           "A_Spawn"           },   // killough 11/98
-//    { A_Turn,            "A_Turn"            },   // killough 11/98
-//    { A_Face,            "A_Face"            },   // killough 11/98
-//    { A_Scratch,         "A_Scratch"         },   // killough 11/98
-//    { A_PlaySound,       "A_PlaySound"       },   // killough 11/98
-//    { A_RandomJump,      "A_RandomJump"      },   // killough 11/98
-//    { A_LineEffect,      "A_LineEffect"      },   // killough 11/98
-//
-//    { A_FireOldBFG,      "A_FireOldBFG"      },   // killough 07/19/98: classic BFG firing function
-//    { A_BetaSkullAttack, "A_BetaSkullAttack" },   // killough 10/98: beta lost souls attacked different
-//    { A_Stop,            "A_Stop"            },
-//
-//    // This NULL entry must be the last in the list
-//    { NULL,              "A_NULL"            }    // Ty 05/16/98
-//};
-//
+void A_BabyMetal(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BetaSkullAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BFGSound(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BFGSpray(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BossDeath(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BrainAwake(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BrainDie(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BrainExplode(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BrainPain(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BrainScream(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BrainSpit(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BruisAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_BspiAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Chase(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_CheckReload(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_CloseShotgun2(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_CPosAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_CPosRefire(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_CyberAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Detonate(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Die(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Explode(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Face(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FaceTarget(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Fall(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FatAttack1(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FatAttack2(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FatAttack3(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FatRaise(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Fire(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FireBFG(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FireCGun(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FireCrackle(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FireMissile(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FireOldBFG(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FirePistol(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FirePlasma(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FireShotgun(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_FireShotgun2(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_GunFlash(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_HeadAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Hoof(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_KeenDie(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Light0(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Light1(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Light2(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_LineEffect(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_LoadShotgun2(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Look(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Lower(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Metal(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Mushroom(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_OpenShotgun2(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Pain(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_PainAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_PainDie(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_PlayerScream(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_PlaySound(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_PosAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Punch(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Raise(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_RandomJump(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_ReFire(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SargAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Saw(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Scratch(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Scream(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SkelFist(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SkelMissile(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SkelWhoosh(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SkullAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SkullPop(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Spawn(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SpawnFly(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SpawnSound(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SpidRefire(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_SPosAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_StartFire(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Stop(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Tracer(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_TroopAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_Turn(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_VileAttack(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_VileChase(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_VileStart(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_VileTarget(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_WeaponReady(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+void A_XScream(mobj_t *actor, player_t *player, pspdef_t *psp) {}
+
+typedef struct
+{
+    actionf_t   cptr;           // actual pointer to the subroutine
+    const char  *lookup;        // mnemonic lookup string to be specified in BEX
+} deh_bexptr;
+
+static const deh_bexptr deh_bexptrs[] =
+{
+    { A_Light0,          "A_Light0"          },
+    { A_WeaponReady,     "A_WeaponReady"     },
+    { A_Lower,           "A_Lower"           },
+    { A_Raise,           "A_Raise"           },
+    { A_Punch,           "A_Punch"           },
+    { A_ReFire,          "A_ReFire"          },
+    { A_FirePistol,      "A_FirePistol"      },
+    { A_Light1,          "A_Light1"          },
+    { A_FireShotgun,     "A_FireShotgun"     },
+    { A_Light2,          "A_Light2"          },
+    { A_FireShotgun2,    "A_FireShotgun2"    },
+    { A_CheckReload,     "A_CheckReload"     },
+    { A_OpenShotgun2,    "A_OpenShotgun2"    },
+    { A_LoadShotgun2,    "A_LoadShotgun2"    },
+    { A_CloseShotgun2,   "A_CloseShotgun2"   },
+    { A_FireCGun,        "A_FireCGun"        },
+    { A_GunFlash,        "A_GunFlash"        },
+    { A_FireMissile,     "A_FireMissile"     },
+    { A_Saw,             "A_Saw"             },
+    { A_FirePlasma,      "A_FirePlasma"      },
+    { A_BFGSound,        "A_BFGSound"        },
+    { A_FireBFG,         "A_FireBFG"         },
+    { A_BFGSpray,        "A_BFGSpray"        },
+    { A_Explode,         "A_Explode"         },
+    { A_Pain,            "A_Pain"            },
+    { A_PlayerScream,    "A_PlayerScream"    },
+    { A_Fall,            "A_Fall"            },
+    { A_XScream,         "A_XScream"         },
+    { A_Look,            "A_Look"            },
+    { A_Chase,           "A_Chase"           },
+    { A_FaceTarget,      "A_FaceTarget"      },
+    { A_PosAttack,       "A_PosAttack"       },
+    { A_Scream,          "A_Scream"          },
+    { A_SPosAttack,      "A_SPosAttack"      },
+    { A_VileChase,       "A_VileChase"       },
+    { A_VileStart,       "A_VileStart"       },
+    { A_VileTarget,      "A_VileTarget"      },
+    { A_VileAttack,      "A_VileAttack"      },
+    { A_StartFire,       "A_StartFire"       },
+    { A_Fire,            "A_Fire"            },
+    { A_FireCrackle,     "A_FireCrackle"     },
+    { A_Tracer,          "A_Tracer"          },
+    { A_SkelWhoosh,      "A_SkelWhoosh"      },
+    { A_SkelFist,        "A_SkelFist"        },
+    { A_SkelMissile,     "A_SkelMissile"     },
+    { A_FatRaise,        "A_FatRaise"        },
+    { A_FatAttack1,      "A_FatAttack1"      },
+    { A_FatAttack2,      "A_FatAttack2"      },
+    { A_FatAttack3,      "A_FatAttack3"      },
+    { A_BossDeath,       "A_BossDeath"       },
+    { A_CPosAttack,      "A_CPosAttack"      },
+    { A_CPosRefire,      "A_CPosRefire"      },
+    { A_TroopAttack,     "A_TroopAttack"     },
+    { A_SargAttack,      "A_SargAttack"      },
+    { A_HeadAttack,      "A_HeadAttack"      },
+    { A_BruisAttack,     "A_BruisAttack"     },
+    { A_SkullAttack,     "A_SkullAttack"     },
+    { A_Metal,           "A_Metal"           },
+    { A_SpidRefire,      "A_SpidRefire"      },
+    { A_BabyMetal,       "A_BabyMetal"       },
+    { A_BspiAttack,      "A_BspiAttack"      },
+    { A_Hoof,            "A_Hoof"            },
+    { A_CyberAttack,     "A_CyberAttack"     },
+    { A_PainAttack,      "A_PainAttack"      },
+    { A_PainDie,         "A_PainDie"         },
+    { A_KeenDie,         "A_KeenDie"         },
+    { A_BrainPain,       "A_BrainPain"       },
+    { A_BrainScream,     "A_BrainScream"     },
+    { A_BrainDie,        "A_BrainDie"        },
+    { A_BrainAwake,      "A_BrainAwake"      },
+    { A_BrainSpit,       "A_BrainSpit"       },
+    { A_SpawnSound,      "A_SpawnSound"      },
+    { A_SpawnFly,        "A_SpawnFly"        },
+    { A_BrainExplode,    "A_BrainExplode"    },
+    { A_Detonate,        "A_Detonate"        },   // killough 08/09/98
+    { A_Mushroom,        "A_Mushroom"        },   // killough 10/98
+    { A_SkullPop,        "A_SkullPop"        },
+    { A_Die,             "A_Die"             },   // killough 11/98
+    { A_Spawn,           "A_Spawn"           },   // killough 11/98
+    { A_Turn,            "A_Turn"            },   // killough 11/98
+    { A_Face,            "A_Face"            },   // killough 11/98
+    { A_Scratch,         "A_Scratch"         },   // killough 11/98
+    { A_PlaySound,       "A_PlaySound"       },   // killough 11/98
+    { A_RandomJump,      "A_RandomJump"      },   // killough 11/98
+    { A_LineEffect,      "A_LineEffect"      },   // killough 11/98
+
+    { A_FireOldBFG,      "A_FireOldBFG"      },   // killough 07/19/98: classic BFG firing function
+    { A_BetaSkullAttack, "A_BetaSkullAttack" },   // killough 10/98: beta lost souls attacked different
+    { A_Stop,            "A_Stop"            },
+
+    // This NULL entry must be the last in the list
+    { NULL,              "A_NULL"            }    // Ty 05/16/98
+};
+
 // to hold startup code pointers from INFO.C
 static actionf_t deh_codeptr[NUMSTATES];
 
@@ -2155,305 +2156,349 @@ void ProcessDehFile(char *filename, int lumpnum, dboolean automatic)
     }
 }
 
-//// ====================================================================
-//// deh_procBexCodePointers
-//// Purpose: Handle [CODEPTR] block, BOOM Extension
-//// Args:    fpin  -- input file stream
-////          line  -- current line in file to process
-//// Returns: void
-////
-//static void deh_procBexCodePointers(DEHFILE *fpin, char *line)
-//{
-//    char    key[DEH_MAXKEYLEN] = "";
-//    char    inbuffer[DEH_BUFFERMAX] = "";
-//    int     indexnum;
-//    char    mnemonic[DEH_MAXKEYLEN] = "";   // to hold the codepointer mnemonic
+// ====================================================================
+// deh_procBexCodePointers
+// Purpose: Handle [CODEPTR] block, BOOM Extension
+// Args:    fpin  -- input file stream
+//          line  -- current line in file to process
+// Returns: void
 //
-//    boomcompatible = true;
+static void deh_procBexCodePointers(DEHFILE *fpin, char *line)
+{
+    char    key[DEH_MAXKEYLEN] = "";
+    char    inbuffer[DEH_BUFFERMAX] = "";
+    int     indexnum;
+    char    mnemonic[DEH_MAXKEYLEN] = "";   // to hold the codepointer mnemonic
+
+    boomcompatible = true;
+
+    // Ty 05/16/98 - initialize it to something, dummy!
+    strncpy(inbuffer, line, DEH_BUFFERMAX);
+
+    // for this one, we just read 'em until we hit a blank line
+    while (!dehfeof(fpin) && *inbuffer && *inbuffer != ' ')
+    {
+        int         i = -1;                 // looper
+        dboolean    found = false;          // know if we found this one during lookup or not
+
+        if (!dehfgets(inbuffer, sizeof(inbuffer), fpin))
+            break;
+
+        lfstrip(inbuffer);
+
+        if (!*inbuffer)
+            break;      // killough 11/98: really exit on blank line
+
+        // killough 08/98: allow hex numbers in input:
+        if ((sscanf(inbuffer, "%31s %10i = %31s", key, &indexnum, mnemonic) != 3)
+            || !M_StringCompare(key, "FRAME"))        // NOTE: different format from normal
+        {
+            //C_Warning(1, "Invalid BEX codepointer line - must start with \"FRAME\": \"%s\".", inbuffer);
+			loge ( "Invalid BEX codepointer line - must start with \"FRAME\": \"%s\".\n", inbuffer );
+            return;     // early return
+        }
+
+		if( devparm )
+		{
+			//C_Output( "Processing pointer at index %i: %s", indexnum, mnemonic );
+			logd( "Processing pointer at index %i: %s\n", indexnum, mnemonic );
+		}
+            
+
+        if (indexnum < 0 || indexnum >= NUMSTATES)
+        {
+            //C_Warning(1, "Bad pointer number %i of %i.", indexnum, NUMSTATES);
+			loge( "Bad pointer number %i of %i.\n", indexnum, NUMSTATES );
+            return;     // killough 10/98: fix SegViol
+        }
+
+        strcpy(key, "A_");      // reusing the key area to prefix the mnemonic
+        strcat(key, ptr_lstrip(mnemonic));
+
+        do
+        {
+            i++;
+
+            if (M_StringCompare(key, deh_bexptrs[i].lookup))
+            {
+                states[indexnum].action = deh_bexptrs[i].cptr;
+
+				if( devparm )
+				{
+					//C_Output( " - applied %s from codeptr[%i] to states[%i]", deh_bexptrs[ i ].lookup, i, indexnum );
+					logd( " - applied %s from codeptr[%i] to states[%i]\n", deh_bexptrs[ i ].lookup, i, indexnum );
+				}
+                    
+
+                if (M_StringCompare(key, "A_Spawn")
+                    || M_StringCompare(key, "A_Turn")
+                    || M_StringCompare(key, "A_Face")
+                    || M_StringCompare(key, "A_Scratch")
+                    || M_StringCompare(key, "A_PlaySound")
+                    || M_StringCompare(key, "A_RandomJump")
+                    || M_StringCompare(key, "A_LineEffect"))
+                    mbfcompatible = true;
+
+                found = true;
+            }
+        } while (!found && deh_bexptrs[i].cptr);
+
+		if( !found && !M_StringCompare( mnemonic, "NULL" ) )
+		{
+			//C_Warning( 1, "Invalid frame pointer mnemonic \"%s\" at %i.", mnemonic, indexnum );
+			loge( "Invalid frame pointer mnemonic \"%s\" at %i.\n", mnemonic, indexnum );
+		}
+    }
+}
+
+// ====================================================================
+// deh_procThing
+// Purpose: Handle DEH Thing block
+// Args:    fpin  -- input file stream
+//          line  -- current line in file to process
+// Returns: void
 //
-//    // Ty 05/16/98 - initialize it to something, dummy!
-//    strncpy(inbuffer, line, DEH_BUFFERMAX);
+// Ty 8/27/98 - revised to also allow mnemonics for
+// bit masks for monster attributes
 //
-//    // for this one, we just read 'em until we hit a blank line
-//    while (!dehfeof(fpin) && *inbuffer && *inbuffer != ' ')
-//    {
-//        int         i = -1;                 // looper
-//        dboolean    found = false;          // know if we found this one during lookup or not
-//
-//        if (!dehfgets(inbuffer, sizeof(inbuffer), fpin))
-//            break;
-//
-//        lfstrip(inbuffer);
-//
-//        if (!*inbuffer)
-//            break;      // killough 11/98: really exit on blank line
-//
-//        // killough 08/98: allow hex numbers in input:
-//        if ((sscanf(inbuffer, "%31s %10i = %31s", key, &indexnum, mnemonic) != 3)
-//            || !M_StringCompare(key, "FRAME"))        // NOTE: different format from normal
-//        {
-//            C_Warning(1, "Invalid BEX codepointer line - must start with \"FRAME\": \"%s\".", inbuffer);
-//            return;     // early return
-//        }
-//
-//        if (devparm)
-//            C_Output("Processing pointer at index %i: %s", indexnum, mnemonic);
-//
-//        if (indexnum < 0 || indexnum >= NUMSTATES)
-//        {
-//            C_Warning(1, "Bad pointer number %i of %i.", indexnum, NUMSTATES);
-//            return;     // killough 10/98: fix SegViol
-//        }
-//
-//        strcpy(key, "A_");      // reusing the key area to prefix the mnemonic
-//        strcat(key, ptr_lstrip(mnemonic));
-//
-//        do
-//        {
-//            i++;
-//
-//            if (M_StringCompare(key, deh_bexptrs[i].lookup))
-//            {
-//                states[indexnum].action = deh_bexptrs[i].cptr;
-//
-//                if (devparm)
-//                    C_Output(" - applied %s from codeptr[%i] to states[%i]", deh_bexptrs[i].lookup, i, indexnum);
-//
-//                if (M_StringCompare(key, "A_Spawn")
-//                    || M_StringCompare(key, "A_Turn")
-//                    || M_StringCompare(key, "A_Face")
-//                    || M_StringCompare(key, "A_Scratch")
-//                    || M_StringCompare(key, "A_PlaySound")
-//                    || M_StringCompare(key, "A_RandomJump")
-//                    || M_StringCompare(key, "A_LineEffect"))
-//                    mbfcompatible = true;
-//
-//                found = true;
-//            }
-//        } while (!found && deh_bexptrs[i].cptr);
-//
-//        if (!found && !M_StringCompare(mnemonic, "NULL"))
-//            C_Warning(1, "Invalid frame pointer mnemonic \"%s\" at %i.", mnemonic, indexnum);
-//    }
-//}
-//
-//// ====================================================================
-//// deh_procThing
-//// Purpose: Handle DEH Thing block
-//// Args:    fpin  -- input file stream
-////          line  -- current line in file to process
-//// Returns: void
-////
-//// Ty 8/27/98 - revised to also allow mnemonics for
-//// bit masks for monster attributes
-////
-//static void deh_procThing(DEHFILE *fpin, char *line)
-//{
-//    char    key[DEH_MAXKEYLEN];
-//    char    inbuffer[DEH_BUFFERMAX];
-//    long    value;          // All deh values are ints or longs
-//    int     indexnum;
-//    int     ix;
-//    int     *pix;           // Ptr to int, since all Thing structure entries are ints
-//    char    *strval;
-//
-//    strncpy(inbuffer, line, DEH_BUFFERMAX);
-//
-//    if (devparm)
-//        C_Output("Thing line: \"%s\"", inbuffer);
-//
-//    // killough 08/98: allow hex numbers in input:
-//    ix = sscanf(inbuffer, "%31s %10i", key, &indexnum);
-//
-//    if (devparm)
-//        C_Output("count = %i, Thing %i", ix, indexnum);
-//
-//    // Note that the mobjinfo[] array is base zero, but object numbers
-//    // in the dehacked file start with one. Grumble.
-//    indexnum--;
-//
-//    // now process the stuff
-//    // Note that for Things we can look up the key and use its offset
-//    // in the array of key strings as an int offset in the structure
-//
-//    // get a line until a blank or end of file -- it's not
-//    // blank now because it has our incoming key in it
-//    while (!dehfeof(fpin) && *inbuffer && *inbuffer != ' ')
-//    {
-//        // e6y: Correction of wrong processing of Bits parameter if its value is equal to zero
-//        int         bGetData;
-//        dboolean    gibhealth = false;
-//        dboolean    string = false;
-//
-//        if (!dehfgets(inbuffer, sizeof(inbuffer), fpin))
-//            break;
-//
-//        lfstrip(inbuffer);      // toss the end of line
-//
-//        // killough 11/98: really bail out on blank lines (break != continue)
-//        if (!*inbuffer)
-//            break;              // bail out with blank line between sections
-//
-//        // e6y: Correction of wrong processing of Bits parameter if its value is equal to zero
-//        bGetData = deh_GetData(inbuffer, key, &value, &strval);
-//
-//        if (!bGetData)
-//        {
-//            C_Warning(1, "Bad data pair in \"%s\".", inbuffer);
-//            continue;
-//        }
-//
-//        for (ix = 0; ix < DEH_MOBJINFOMAX; ix++)
-//        {
-//            if (!M_StringCompare(key, deh_mobjinfo[ix]))
-//                continue;
-//
-//            if (M_StringCompare(key, "Bits"))
-//            {
-//                // bit set
-//                // e6y: Correction of wrong processing of Bits parameter if its value is equal to zero
-//                if (bGetData == 1)
-//                    mobjinfo[indexnum].flags = value;
-//                else
-//                {
-//                    // figure out what the bits are
-//                    value = 0;
-//
-//                    // killough 10/98: replace '+' kludge with strtok() loop
-//                    // Fix error-handling case ('found' var wasn't being reset)
-//                    //
-//                    // Use OR logic instead of addition, to allow repetition
-//                    for (; (strval = strtok(strval, ",+| \t\f\r")); strval = NULL)
-//                    {
-//                        int iy;
-//
-//                        for (iy = 0; iy < DEH_MOBJFLAGMAX; iy++)
-//                        {
-//                            if (!M_StringCompare(strval, deh_mobjflags[iy].name))
-//                                continue;
-//
-//                            if (devparm)
-//                                C_Output("ORed value 0x%08lX %s.", deh_mobjflags[iy].value, strval);
-//
-//                            value |= deh_mobjflags[iy].value;
-//
-//                            // [BH] no blood splats if thing is dehacked...
-//                            mobjinfo[indexnum].blood = 0;
-//                            break;
-//                        }
-//
-//                        if (iy >= DEH_MOBJFLAGMAX)
-//                            C_Warning(1, "Could not find bit mnemonic \"%s\".", strval);
-//                    }
-//
-//                    // Don't worry about conversion -- simply print values
-//                    if (devparm)
-//                        C_Output("Bits = 0x%08lX = %ld.", value, value);
-//
-//                    mobjinfo[indexnum].flags = value; // e6y
-//                }
-//
-//                // [BH] correct blood color as necessary
-//                if (value & MF_SHOOTABLE)
-//                {
-//                    if (!(value & MF_FUZZ) && mobjinfo[indexnum].blood == MT_FUZZYBLOOD)
-//                        mobjinfo[indexnum].blood = MT_BLOOD;
-//                    else if ((value & MF_FUZZ) && mobjinfo[indexnum].blood != MT_FUZZYBLOOD)
-//                        mobjinfo[indexnum].blood = MT_FUZZYBLOOD;
-//                    else if (mobjinfo[indexnum].blood != MT_GREENBLOOD && mobjinfo[indexnum].blood != MT_BLUEBLOOD)
-//                        mobjinfo[indexnum].blood = MT_BLOOD;
-//                }
-//            }
-//            else if (M_StringCompare(key, "Retro bits"))
-//            {
-//                // bit set
-//                if (bGetData == 1)
-//                    mobjinfo[indexnum].flags2 = value;
-//                else
-//                {
-//                    // figure out what the bits are
-//                    value = 0;
-//
-//                    for (; (strval = strtok(strval, ",+| \t\f\r")); strval = NULL)
-//                    {
-//                        int iy;
-//
-//                        for (iy = 0; iy < DEH_MOBJFLAG2MAX; iy++)
-//                        {
-//                            if (!M_StringCompare(strval, deh_mobjflags2[iy].name))
-//                                continue;
-//
-//                            if (devparm)
-//                                C_Output("ORed value 0x%08lX %s.", deh_mobjflags2[iy].value, strval);
-//
-//                            if (M_StringCompare(key, "TRANSLUCENT"))
-//                                boomcompatible = true;
-//                            else if (M_StringCompare(key, "TOUCHY") || M_StringCompare(key, "BOUNCES") || M_StringCompare(key, "FRIEND"))
-//                                mbfcompatible = true;
-//
-//                            value |= deh_mobjflags[iy].value;
-//                            break;
-//                        }
-//
-//                        if (iy >= DEH_MOBJFLAG2MAX)
-//                            C_Warning(1, "Could not find bit mnemonic \"%s\".", strval);
-//                    }
-//
-//                    // Don't worry about conversion -- simply print values
-//                    if (devparm)
-//                        C_Output("Bits = 0x%08lX = %ld.", value, value);
-//
-//                    mobjinfo[indexnum].flags2 = value;
-//                }
-//            }
-//            else if (M_StringCompare(key, "Dropped item"))
-//                mobjinfo[indexnum].droppeditem = (int)value - 1;
-//            else
-//            {
-//                pix = (int *)&mobjinfo[indexnum];
-//                pix[ix] = (int)value;
-//
-//                if (M_StringCompare(key, "Height"))
-//                    mobjinfo[indexnum].projectilepassheight = 0;
-//                else if (M_StringCompare(key, "Width"))
-//                    mobjinfo[indexnum].pickupradius = (int)value;
-//                else if (M_StringCompare(key, "Gib health"))
-//                    gibhealth = true;
-//            }
-//
-//            if (devparm)
-//                C_Output("Assigned %i to %s (%i) at index %i.", (int)value, key, indexnum, ix);
-//        }
-//
-//        if ((string = M_StringCompare(key, "Name1")))
-//            M_StringCopy(mobjinfo[indexnum].name1, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].name1));
-//        else if ((string = M_StringCompare(key, "Plural1")))
-//            M_StringCopy(mobjinfo[indexnum].plural1, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].plural1));
-//        else if ((string = M_StringCompare(key, "Name2")))
-//            M_StringCopy(mobjinfo[indexnum].name2, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].name2));
-//        else if ((string = M_StringCompare(key, "Plural2")))
-//            M_StringCopy(mobjinfo[indexnum].plural2, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].plural2));
-//        else if ((string = M_StringCompare(key, "Name3")))
-//            M_StringCopy(mobjinfo[indexnum].name3, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].name3));
-//        else if ((string = M_StringCompare(key, "Plural3")))
-//            M_StringCopy(mobjinfo[indexnum].plural3, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].plural3));
-//
-//        if (string && devparm)
-//            C_Output("Assigned %s to %s (%i) at index %i.", lowercase(trimwhitespace(strval)), key, indexnum, ix);
-//
-//        if (!gibhealth && mobjinfo[indexnum].spawnhealth && !mobjinfo[indexnum].gibhealth)
-//            mobjinfo[indexnum].gibhealth = -mobjinfo[indexnum].spawnhealth;
-//    }
-//
-//    // [BH] Disable bobbing and translucency if thing no longer a pickup
-//    if ((mobjinfo[indexnum].flags2 & MF2_FLOATBOB) && !(mobjinfo[indexnum].flags & MF_SPECIAL))
-//    {
-//        mobjinfo[indexnum].flags2 &= ~MF2_FLOATBOB;
-//        mobjinfo[indexnum].flags2 &= ~MF2_TRANSLUCENT_33;
-//        mobjinfo[indexnum].flags2 &= ~MF2_TRANSLUCENT_BLUE_25;
-//    }
-//}
-//
+static void deh_procThing( DEHFILE *fpin, char *line )
+{
+    char    key[DEH_MAXKEYLEN];
+    char    inbuffer[DEH_BUFFERMAX];
+    long    value;          // All deh values are ints or longs
+    int     indexnum;
+    int     ix;
+    int     *pix;           // Ptr to int, since all Thing structure entries are ints
+    char    *strval;
+
+    strncpy(inbuffer, line, DEH_BUFFERMAX);
+
+	if( devparm )
+	{
+		//C_Output( "Thing line: \"%s\"", inbuffer );
+		logd( "Thing line: \"%s\"\n", inbuffer );
+	}
+
+    // killough 08/98: allow hex numbers in input:
+    ix = sscanf(inbuffer, "%31s %10i", key, &indexnum);
+
+	if( devparm )
+	{
+		//C_Output( "count = %i, Thing %i", ix, indexnum );
+		logd( "count = %i, Thing %i\n", ix, indexnum );
+	}
+
+    // Note that the mobjinfo[] array is base zero, but object numbers
+    // in the dehacked file start with one. Grumble.
+    indexnum--;
+
+    // now process the stuff
+    // Note that for Things we can look up the key and use its offset
+    // in the array of key strings as an int offset in the structure
+
+    // get a line until a blank or end of file -- it's not
+    // blank now because it has our incoming key in it
+    while (!dehfeof(fpin) && *inbuffer && *inbuffer != ' ')
+    {
+        // e6y: Correction of wrong processing of Bits parameter if its value is equal to zero
+        int         bGetData;
+        dboolean    gibhealth = false;
+        dboolean    string = false;
+
+        if (!dehfgets(inbuffer, sizeof(inbuffer), fpin))
+            break;
+
+        lfstrip(inbuffer);      // toss the end of line
+
+        // killough 11/98: really bail out on blank lines (break != continue)
+        if (!*inbuffer)
+            break;              // bail out with blank line between sections
+
+        // e6y: Correction of wrong processing of Bits parameter if its value is equal to zero
+        bGetData = deh_GetData(inbuffer, key, &value, &strval);
+
+        if (!bGetData)
+        {
+            //C_Warning(1, "Bad data pair in \"%s\".", inbuffer);
+			loge( "Bad data pair in \"%s\".\n", inbuffer );
+            continue;
+        }
+
+        for (ix = 0; ix < DEH_MOBJINFOMAX; ix++)
+        {
+            if (!M_StringCompare(key, deh_mobjinfo[ix]))
+                continue;
+
+            if (M_StringCompare(key, "Bits"))
+            {
+                // bit set
+                // e6y: Correction of wrong processing of Bits parameter if its value is equal to zero
+                if (bGetData == 1)
+                    mobjinfo[indexnum].flags = value;
+                else
+                {
+                    // figure out what the bits are
+                    value = 0;
+
+                    // killough 10/98: replace '+' kludge with strtok() loop
+                    // Fix error-handling case ('found' var wasn't being reset)
+                    //
+                    // Use OR logic instead of addition, to allow repetition
+                    for (; (strval = strtok(strval, ",+| \t\f\r")); strval = NULL)
+                    {
+                        int iy;
+
+                        for (iy = 0; iy < DEH_MOBJFLAGMAX; iy++)
+                        {
+                            if (!M_StringCompare(strval, deh_mobjflags[iy].name))
+                                continue;
+
+							if( devparm )
+							{
+								//C_Output( "ORed value 0x%08lX %s.", deh_mobjflags[ iy ].value, strval );
+								logd( "ORed value 0x%08lX %s.\n", deh_mobjflags[ iy ].value, strval );
+							}
+
+                            value |= deh_mobjflags[iy].value;
+
+                            // [BH] no blood splats if thing is dehacked...
+                            mobjinfo[indexnum].blood = 0;
+                            break;
+                        }
+
+						if( iy >= DEH_MOBJFLAGMAX )
+						{
+							//C_Warning( 1, "Could not find bit mnemonic \"%s\".", strval );
+							loge( "Could not find bit mnemonic \"%s\".\n", strval );
+						}
+                    }
+
+                    // Don't worry about conversion -- simply print values
+					if( devparm )
+					{
+						//C_Output( "Bits = 0x%08lX = %ld.", value, value );
+						logd( "Bits = 0x%08lX = %ld.\n", value, value );
+					}
+
+                    mobjinfo[indexnum].flags = value; // e6y
+                }
+
+                // [BH] correct blood color as necessary
+                if (value & MF_SHOOTABLE)
+                {
+                    if (!(value & MF_FUZZ) && mobjinfo[indexnum].blood == MT_FUZZYBLOOD)
+                        mobjinfo[indexnum].blood = MT_BLOOD;
+                    else if ((value & MF_FUZZ) && mobjinfo[indexnum].blood != MT_FUZZYBLOOD)
+                        mobjinfo[indexnum].blood = MT_FUZZYBLOOD;
+                    else if (mobjinfo[indexnum].blood != MT_GREENBLOOD && mobjinfo[indexnum].blood != MT_BLUEBLOOD)
+                        mobjinfo[indexnum].blood = MT_BLOOD;
+                }
+            }
+            else if (M_StringCompare(key, "Retro bits"))
+            {
+                // bit set
+                if (bGetData == 1)
+                    mobjinfo[indexnum].flags2 = value;
+                else
+                {
+                    // figure out what the bits are
+                    value = 0;
+
+                    for (; (strval = strtok(strval, ",+| \t\f\r")); strval = NULL)
+                    {
+                        int iy;
+
+                        for (iy = 0; iy < DEH_MOBJFLAG2MAX; iy++)
+                        {
+                            if (!M_StringCompare(strval, deh_mobjflags2[iy].name))
+                                continue;
+
+							if( devparm )
+							{
+								//C_Output( "ORed value 0x%08lX %s.", deh_mobjflags2[ iy ].value, strval );
+								logd( "ORed value 0x%08lX %s.\n", deh_mobjflags2[ iy ].value, strval );
+							}
+
+                            if (M_StringCompare(key, "TRANSLUCENT"))
+                                boomcompatible = true;
+                            else if (M_StringCompare(key, "TOUCHY") || M_StringCompare(key, "BOUNCES") || M_StringCompare(key, "FRIEND"))
+                                mbfcompatible = true;
+
+                            value |= deh_mobjflags[iy].value;
+                            break;
+                        }
+
+						if( iy >= DEH_MOBJFLAG2MAX )
+						{
+							//C_Warning( 1, "Could not find bit mnemonic \"%s\".", strval );
+							loge( "Could not find bit mnemonic \"%s\".\n", strval );
+						}
+                    }
+
+                    // Don't worry about conversion -- simply print values
+					if( devparm )
+					{
+						//C_Output( "Bits = 0x%08lX = %ld.", value, value );
+						logd( "Bits = 0x%08lX = %ld.\n", value, value );
+					}
+
+                    mobjinfo[indexnum].flags2 = value;
+                }
+            }
+            else if (M_StringCompare(key, "Dropped item"))
+                mobjinfo[indexnum].droppeditem = (int)value - 1;
+            else
+            {
+                pix = (int *)&mobjinfo[indexnum];
+                pix[ix] = (int)value;
+
+                if (M_StringCompare(key, "Height"))
+                    mobjinfo[indexnum].projectilepassheight = 0;
+                else if (M_StringCompare(key, "Width"))
+                    mobjinfo[indexnum].pickupradius = (int)value;
+                else if (M_StringCompare(key, "Gib health"))
+                    gibhealth = true;
+            }
+
+			if( devparm )
+			{
+				//C_Output( "Assigned %i to %s (%i) at index %i.", ( int ) value, key, indexnum, ix );
+				logd( "Assigned %i to %s (%i) at index %i.\n", ( int ) value, key, indexnum, ix );
+			}
+        }
+
+        if ((string = M_StringCompare(key, "Name1")))
+            M_StringCopy(mobjinfo[indexnum].name1, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].name1));
+        else if ((string = M_StringCompare(key, "Plural1")))
+            M_StringCopy(mobjinfo[indexnum].plural1, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].plural1));
+        else if ((string = M_StringCompare(key, "Name2")))
+            M_StringCopy(mobjinfo[indexnum].name2, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].name2));
+        else if ((string = M_StringCompare(key, "Plural2")))
+            M_StringCopy(mobjinfo[indexnum].plural2, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].plural2));
+        else if ((string = M_StringCompare(key, "Name3")))
+            M_StringCopy(mobjinfo[indexnum].name3, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].name3));
+        else if ((string = M_StringCompare(key, "Plural3")))
+            M_StringCopy(mobjinfo[indexnum].plural3, lowercase(trimwhitespace(strval)), sizeof(mobjinfo[indexnum].plural3));
+
+		if( string && devparm )
+		{
+			//C_Output( "Assigned %s to %s (%i) at index %i.", lowercase( trimwhitespace( strval ) ), key, indexnum, ix );
+			logd( "Assigned %s to %s (%i) at index %i.\n", lowercase( trimwhitespace( strval ) ), key, indexnum, ix );
+		}
+
+        if (!gibhealth && mobjinfo[indexnum].spawnhealth && !mobjinfo[indexnum].gibhealth)
+            mobjinfo[indexnum].gibhealth = -mobjinfo[indexnum].spawnhealth;
+    }
+
+    // [BH] Disable bobbing and translucency if thing no longer a pickup
+    if ((mobjinfo[indexnum].flags2 & MF2_FLOATBOB) && !(mobjinfo[indexnum].flags & MF_SPECIAL))
+    {
+        mobjinfo[indexnum].flags2 &= ~MF2_FLOATBOB;
+        mobjinfo[indexnum].flags2 &= ~MF2_TRANSLUCENT_33;
+        mobjinfo[indexnum].flags2 &= ~MF2_TRANSLUCENT_BLUE_25;
+    }
+}
+
 //// ====================================================================
 //// deh_procFrame
 //// Purpose: Handle DEH Frame block
@@ -3735,56 +3780,56 @@ static char *ptr_lstrip(char *p)    // point past leading whitespace
 //          as a long just in case. The passed pointer to hold
 //          the key must be DEH_MAXKEYLEN in size.
 //
-//static int deh_GetData(char *s, char *k, long *l, char **strval)
-//{
-//    char            *t;                     // current char
-//    unsigned int    val;                    // to hold value of pair
-//    char            buffer[DEH_MAXKEYLEN];  // to hold key in progress
-//    int             okrc = 1;               // assume good unless we have problems
-//    int             i;                      // iterator
-//
-//    *buffer = '\0';
-//    val = 0;                                // defaults in case not otherwise set
-//
-//    for (i = 0, t = s; *t && i < DEH_MAXKEYLEN; t++, i++)
-//    {
-//        if (*t == '=')
-//            break;
-//
-//        buffer[i] = *t;                     // copy it
-//    }
-//
-//    if (i >= 1 && isspace((unsigned char)buffer[i - 1]))
-//        i--;
-//
-//    buffer[i] = '\0';                       // terminate the key before the '='
-//
-//    if (!*t)                                // end of string with no equal sign
-//        okrc = 0;
-//    else
-//    {
-//        if (!*++t)
-//            okrc = 0;                       // in case "thiskey =" with no value
-//
-//        // we've incremented t
-//        if (!M_StrToInt(t, &val))
-//        {
-//            val = 0;
-//            okrc = 2;
-//        }
-//    }
-//
-//    // go put the results in the passed pointers
-//    *l = val;                           // may be a faked zero
-//
-//    // if spaces between key and equal sign, strip them
-//    strcpy(k, ptr_lstrip(buffer));      // could be a zero-length string
-//
-//    if (strval)                         // pass NULL if you don't want this back
-//        *strval = t;                    // pointer, has to be somewhere in s,
-//                                        // even if pointing at the zero byte.
-//    return okrc;
-//}
+static int deh_GetData(char *s, char *k, long *l, char **strval)
+{
+    char            *t;                     // current char
+    unsigned int    val;                    // to hold value of pair
+    char            buffer[DEH_MAXKEYLEN];  // to hold key in progress
+    int             okrc = 1;               // assume good unless we have problems
+    int             i;                      // iterator
+
+    *buffer = '\0';
+    val = 0;                                // defaults in case not otherwise set
+
+    for (i = 0, t = s; *t && i < DEH_MAXKEYLEN; t++, i++)
+    {
+        if (*t == '=')
+            break;
+
+        buffer[i] = *t;                     // copy it
+    }
+
+    if (i >= 1 && isspace((unsigned char)buffer[i - 1]))
+        i--;
+
+    buffer[i] = '\0';                       // terminate the key before the '='
+
+    if (!*t)                                // end of string with no equal sign
+        okrc = 0;
+    else
+    {
+        if (!*++t)
+            okrc = 0;                       // in case "thiskey =" with no value
+
+        // we've incremented t
+        if (!M_StrToInt(t, &val))
+        {
+            val = 0;
+            okrc = 2;
+        }
+    }
+
+    // go put the results in the passed pointers
+    *l = val;                           // may be a faked zero
+
+    // if spaces between key and equal sign, strip them
+    strcpy(k, ptr_lstrip(buffer));      // could be a zero-length string
+
+    if (strval)                         // pass NULL if you don't want this back
+        *strval = t;                    // pointer, has to be somewhere in s,
+                                        // even if pointing at the zero byte.
+    return okrc;
+}
 
 // stevepro	was dstrings.c
 //char **endmsg[] =
