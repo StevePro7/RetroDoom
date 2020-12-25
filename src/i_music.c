@@ -21,9 +21,9 @@ musicinfo_t  *mus_playing;
 //dboolean        musmusictype;
 //
 static dboolean music_initialized;
-//
-//static int      current_music_volume;
-//static int      paused_midi_volume;
+
+static int      current_music_volume;
+static int      paused_midi_volume;
 
 #if defined(_WIN32)
 static dboolean midirpc;
@@ -85,44 +85,44 @@ void I_ShutdownMusic(void)
 //
 //    return music_initialized;
 //}
-//
-//// Set music volume (0 - MIX_MAX_VOLUME)
-//void I_SetMusicVolume(int volume)
-//{
-//    // Internal state variable.
-//    current_music_volume = volume;
-//
-//#if defined(_WIN32)
-//    // adjust server volume
-//    if (serverMidiPlaying)
-//    {
-//        I_MidiRPCSetVolume(current_music_volume);
-//        return;
-//    }
-//#endif
-//
-//    Mix_VolumeMusic(current_music_volume);
-//}
-//
-//// Start playing a mid
-//void I_PlaySong(void *handle, dboolean looping)
-//{
-//    if (!music_initialized)
-//        return;
-//
-//#if defined(_WIN32)
-//    if (serverMidiPlaying)
-//    {
-//        I_MidiRPCPlaySong(looping);
-//        I_MidiRPCSetVolume(current_music_volume);
-//        return;
-//    }
-//#endif
-//
-//    if (handle)
-//        Mix_PlayMusic(handle, (looping ? -1 : 1));
-//}
-//
+
+// Set music volume (0 - MIX_MAX_VOLUME)
+void I_SetMusicVolume(int volume)
+{
+    // Internal state variable.
+    current_music_volume = volume;
+
+#if defined(_WIN32)
+    // adjust server volume
+    if (serverMidiPlaying)
+    {
+        I_MidiRPCSetVolume(current_music_volume);
+        return;
+    }
+#endif
+
+    Mix_VolumeMusic(current_music_volume);
+}
+
+// Start playing a mid
+void I_PlaySong(void *handle, dboolean looping)
+{
+    if (!music_initialized)
+        return;
+
+#if defined(_WIN32)
+    if (serverMidiPlaying)
+    {
+        I_MidiRPCPlaySong(looping);
+        I_MidiRPCSetVolume(current_music_volume);
+        return;
+    }
+#endif
+
+    if (handle)
+        Mix_PlayMusic(handle, (looping ? -1 : 1));
+}
+
 //void I_PauseSong(void)
 //{
 //    if (!music_initialized)

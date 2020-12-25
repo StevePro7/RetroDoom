@@ -42,9 +42,9 @@ void M_ClearMenus(void);
 //
 //void M_UpdateSaveGameName(int i);
 int M_CountSaveGames(void);
-//
-//void M_StartMessage(char *string, void *routine, dboolean input);
-//
+
+void M_StartMessage(char *string, void *routine, dboolean input);
+
 //void M_ShowHelp(int choice);
 void M_QuitDOOM(int choice);
 //

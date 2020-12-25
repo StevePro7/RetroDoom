@@ -1072,4 +1072,69 @@ typedef struct menu_s
 } menu_t;
 
 
+// sounds.h
+//
+// SFX struct.
+//
+typedef struct sfxinfo_s sfxinfo_t;
+
+struct sfxinfo_s
+{
+	// up to 6-character name
+	char            name1[ 9 ];
+	char            name2[ 9 ];
+
+	// SFX singularity (only one at a time)
+	int             singularity;
+
+	// SFX priority
+	int             priority;
+
+	// SFX lumpnum
+	int             lumpnum;
+};
+
+//
+// music struct
+//
+typedef struct
+{
+	// up to 6-character name
+	char            name1[ 9 ];
+	char            name2[ 9 ];
+
+	char            title1[ 32 ];
+	char            title2[ 32 ];
+
+	// lump number of music
+	int             lumpnum;
+
+	// music data
+	void            *data;
+
+	// music handle once registered
+	void            *handle;
+} musicinfo_t;
+
+// s_sound.c
+typedef struct
+{
+	// sound information (if null, channel avail.)
+	sfxinfo_t       *sfxinfo;
+
+	// origin of sound
+	mobj_t          *origin;
+
+	// handle of the sound being played
+	int             handle;
+} channel_t;
+
+// [crispy] "sound objects" hold the coordinates of removed map objects
+typedef struct
+{
+	thinker_t       dummy;
+	fixed_t         x, y, z;
+} sobj_t;
+
+
 #endif

@@ -1,23 +1,23 @@
-//#if !defined(__S_SOUND_H__)
-//#define __S_SOUND_H__
-//
-//#include "SDL_mixer.h"
+#if !defined(__S_SOUND_H__)
+#define __S_SOUND_H__
+
+#include "SDL_mixer.h"
 //
 //#include "r_defs.h"
-//#include "sounds.h"
+#include "sounds.h"
 //
-//#define CHUNKSIZE                   1024
-//#define SAMPLERATE                  44100
-//
-//#if !defined(__HAIKU__)
-//#define DEFAULT_DEVICE              NULL
-//#else
-//// Triggers a segfault if no name is provided even though the default device is empty
-//#define DEFAULT_DEVICE              ""
-//#endif
-//
-//#define LOWER_MUSIC_VOLUME_FACTOR   3
-//
+#define CHUNKSIZE                   1024
+#define SAMPLERATE                  44100
+
+#if !defined(__HAIKU__)
+#define DEFAULT_DEVICE              NULL
+#else
+// Triggers a segfault if no name is provided even though the default device is empty
+#define DEFAULT_DEVICE              ""
+#endif
+
+#define LOWER_MUSIC_VOLUME_FACTOR   3
+
 //dboolean I_InitSound(void);
 //void I_ShutdownSound(void);
 //dboolean CacheSFX(sfxinfo_t *sfxinfo);
@@ -83,7 +83,7 @@
 ////
 //void S_UpdateSounds(void);
 //
-//void S_SetMusicVolume(int volume);
+void S_SetMusicVolume(int volume);
 //void S_LowerMusicVolume(void);
 //void S_SetSfxVolume(int volume);
 //
@@ -104,5 +104,5 @@
 //void S_ParseMusInfo(char *mapid);
 //void MusInfoThinker(mobj_t *thing);
 //void T_MAPMusic(void);
-//
-//#endif
+
+#endif

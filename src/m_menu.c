@@ -2276,20 +2276,20 @@ void M_QuitDOOM( int choice )
 //
 //    V_DrawPatch(x + offset + (int)(thermDot * factor), y, 0, W_CacheLumpName("M_THERMO"));
 //}
-//
-//void M_StartMessage(char *string, void *routine, dboolean input)
-//{
-//    messageLastMenuActive = menuactive;
-//    messagetoprint = true;
-//    messageString = string;
-//    messageRoutine = (void (*)(int))routine;
-//    messageNeedsInput = input;
-//    menuactive = true;
-//
-//    I_SetPalette(PLAYPAL);
-//    I_UpdateBlitFunc(false);
-//}
-//
+
+void M_StartMessage( char *string, void *routine, dboolean input )
+{
+	messageLastMenuActive = menuactive;
+	messagetoprint = true;
+	messageString = string;
+	messageRoutine = ( void( *)( int ) )routine;
+	messageNeedsInput = input;
+	menuactive = true;
+
+	I_SetPalette( PLAYPAL );
+	I_UpdateBlitFunc( false );
+}
+
 ////
 //// Find character width
 ////
