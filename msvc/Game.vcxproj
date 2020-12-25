@@ -65,6 +65,7 @@
     <ClCompile Include="..\src\p_local.c" />
     <ClCompile Include="..\src\p_mobj.c" />
     <ClCompile Include="..\src\p_pspr.c" />
+    <ClCompile Include="..\src\p_saveg.c" />
     <ClCompile Include="..\src\p_tick.c" />
     <ClCompile Include="..\src\r_defs.c" />
     <ClCompile Include="..\src\sounds.c" />
@@ -130,6 +131,7 @@
     <ClInclude Include="..\inc\p_local.h" />
     <ClInclude Include="..\inc\p_mobj.h" />
     <ClInclude Include="..\inc\p_pspr.h" />
+    <ClInclude Include="..\inc\p_saveg.h" />
     <ClInclude Include="..\inc\p_tick.h" />
     <ClInclude Include="..\inc\r_defs.h" />
     <ClInclude Include="..\inc\sounds.h" />

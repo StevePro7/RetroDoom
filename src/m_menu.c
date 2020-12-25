@@ -19,10 +19,10 @@
 //#include "i_timer.h"
 //#include "m_config.h"
 //#include "m_menu.h"
-//#include "m_misc.h"
+#include "m_misc.h"
 //#include "m_random.h"
 //#include "p_local.h"
-//#include "p_saveg.h"
+#include "p_saveg.h"
 //#include "p_setup.h"
 //#include "s_sound.h"
 //#include "st_lib.h"
@@ -354,22 +354,22 @@ int             skilllevel = skilllevel_default;
 //    89, 64,
 //    sfx_vol
 //};
+
 //
-////
-//// LOAD GAME MENU
-////
+// LOAD GAME MENU
 //
-//enum
-//{
-//    load1,
-//    load2,
-//    load3,
-//    load4,
-//    load5,
-//    load6,
-//    load_end
-//};
-//
+
+enum
+{
+    load1,
+    load2,
+    load3,
+    load4,
+    load5,
+    load6,
+    load_end
+};
+
 //static menuitem_t LoadGameMenu[] =
 //{
 //    { 1, "", M_LoadSelect, NULL },
@@ -887,18 +887,18 @@ int             skilllevel = skilllevel_default;
 //
 //    return true;
 //}
-//
-//int M_CountSaveGames(void)
-//{
-//    int count = 0;
-//
-//    for (int i = 0; i < load_end; i++)
-//        if (M_FileExists(P_SaveGameFile(i)))
-//            count++;
-//
-//    return count;
-//}
-//
+
+int M_CountSaveGames( void )
+{
+	int count = 0;
+
+	for( int i = 0; i < load_end; i++ )
+		if( M_FileExists( P_SaveGameFile( i ) ) )
+			count++;
+
+	return count;
+}
+
 ////
 //// M_LoadGame
 ////

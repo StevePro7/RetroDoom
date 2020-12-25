@@ -11,6 +11,7 @@
 
 #if defined(_WIN32)
 #include <Windows.h>
+#include <stdio.h>
 #endif
 
 // d_main.h
@@ -1042,6 +1043,10 @@ extern dboolean     nomouselook;
 
 // dstrings.h
 extern char **endmsg[];
+
+
+// p_saveg.h
+extern FILE *save_stream;
 
 
 #endif

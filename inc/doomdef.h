@@ -959,5 +959,10 @@
 #define MAXOPENINGS 16384
 
 
+// p_saveg.h
+// maximum size of a savegame description
+#define SAVESTRINGSIZE          256
+#define SAVESTRINGPIXELWIDTH    186
+#define VERSIONSIZE             24
 
 #endif

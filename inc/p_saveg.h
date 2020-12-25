@@ -2,9 +2,12 @@
 #define __P_SAVEG_H__
 
 // maximum size of a savegame description
-#define SAVESTRINGSIZE          256
-#define SAVESTRINGPIXELWIDTH    186
-#define VERSIONSIZE             24
+//#define SAVESTRINGSIZE          256
+//#define SAVESTRINGPIXELWIDTH    186
+//#define VERSIONSIZE             24
+
+#include "doomdef.h"
+#include "doomvars.h"
 
 enum
 {
@@ -31,34 +34,34 @@ enum
 };
 
 // temporary filename to use while saving.
-char *P_TempSaveGameFile(void);
+//char *P_TempSaveGameFile(void);
 
 // filename to use for a savegame slot
 char *P_SaveGameFile(int slot);
 
-// Savegame file header read/write functions
-dboolean P_ReadSaveGameHeader(char *description);
-void P_WriteSaveGameHeader(char *description);
+//// Savegame file header read/write functions
+//dboolean P_ReadSaveGameHeader(char *description);
+//void P_WriteSaveGameHeader(char *description);
+//
+//// Savegame end-of-file read/write functions
+//dboolean P_ReadSaveGameEOF(void);
+//void P_WriteSaveGameEOF(void);
+//
+//// Persistent storage/archiving.
+//// These are the load/save game routines.
+//void P_ArchivePlayer(void);
+//void P_UnArchivePlayer(void);
+//void P_ArchiveWorld(void);
+//void P_UnArchiveWorld(void);
+//void P_ArchiveThinkers(void);
+//void P_UnArchiveThinkers(void);
+//void P_ArchiveSpecials(void);
+//void P_UnArchiveSpecials(void);
+//void P_ArchiveMap(void);
+//void P_UnArchiveMap(void);
+//
+//void P_RestoreTargets(void);
 
-// Savegame end-of-file read/write functions
-dboolean P_ReadSaveGameEOF(void);
-void P_WriteSaveGameEOF(void);
-
-// Persistent storage/archiving.
-// These are the load/save game routines.
-void P_ArchivePlayer(void);
-void P_UnArchivePlayer(void);
-void P_ArchiveWorld(void);
-void P_UnArchiveWorld(void);
-void P_ArchiveThinkers(void);
-void P_UnArchiveThinkers(void);
-void P_ArchiveSpecials(void);
-void P_UnArchiveSpecials(void);
-void P_ArchiveMap(void);
-void P_UnArchiveMap(void);
-
-void P_RestoreTargets(void);
-
-extern FILE *save_stream;
+//extern FILE *save_stream;
 
 #endif

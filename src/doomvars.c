@@ -1861,3 +1861,7 @@ dboolean        blockmaprebuilt;
 // steveproTODO
 //dboolean        nojump = false;
 //dboolean        nomouselook = false;
+
+
+// p_saveg.c
+FILE *save_stream;

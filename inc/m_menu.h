@@ -59,7 +59,7 @@
 //void M_SetWindowCaption(void);
 //
 //void M_UpdateSaveGameName(int i);
-//int M_CountSaveGames(void);
+int M_CountSaveGames(void);
 //
 //void M_StartMessage(char *string, void *routine, dboolean input);
 //

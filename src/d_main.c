@@ -691,6 +691,11 @@ static void D_DoomMainSetup( void )
 		episode = 1;
 		M_SaveCVARs();
 	}
+
+	D_SetSaveGameFolder( true );
+
+	//C_Output( "Screenshots will be saved in <b>%s</b>.", screenshotfolder );
+	logd( "Screenshots will be saved in <b>%s</b>.\n", screenshotfolder );
 }
 
 //

@@ -14,7 +14,7 @@
 #include "logger.h"
 #include "m_argv.h"
 //#include "m_config.h"
-//#include "m_menu.h"
+#include "m_menu.h"
 #include "m_misc.h"
 //#include "version.h"
 #include "w_wad.h"
@@ -682,86 +682,95 @@ char *D_FindIWAD(void)
     return result;
 }
 
-////
-//// Get the IWAD name used for savegames.
-////
-//static char *SaveGameIWADName(void)
-//{
-//    // Find what subdirectory to use for savegames
-//    //
-//    // The directory depends on the IWAD, so that savegames for
-//    // different IWADs are kept separate.
-//    //
-//    // Note that we match on gamemission rather than on IWAD name.
-//    // This ensures that doom1.wad and doom.wad saves are stored
-//    // in the same place.
-//    if (FREEDOOM)
-//        return (gamemode == commercial ? "freedoom2" : "freedoom");
-//    else if (hacx)
-//        return "hacx";
 //
-//    for (size_t i = 0; iwads[i].name[0]; i++)
-//        if (gamemission == iwads[i].mission)
-//            return iwads[i].name;
+// Get the IWAD name used for savegames.
 //
-//    return "unknown";
-//}
+static char *SaveGameIWADName(void)
+{
+    // Find what subdirectory to use for savegames
+    //
+    // The directory depends on the IWAD, so that savegames for
+    // different IWADs are kept separate.
+    //
+    // Note that we match on gamemission rather than on IWAD name.
+    // This ensures that doom1.wad and doom.wad saves are stored
+    // in the same place.
+    if (FREEDOOM)
+        return (gamemode == commercial ? "freedoom2" : "freedoom");
+    else if (hacx)
+        return "hacx";
+
+    for (size_t i = 0; iwads[i].name[0]; i++)
+        if (gamemission == iwads[i].mission)
+            return iwads[i].name;
+
+    return "unknown";
+}
 //
-////
-//// SetSaveGameFolder
-////
-//// Chooses the directory used to store saved games.
-////
-//void D_SetSaveGameFolder(dboolean output)
-//{
-//    int p = M_CheckParmsWithArgs("-save", "-savedir", "", 1, 1);
 //
-//    if (p)
-//    {
-//        if (myargv[p + 1][strlen(myargv[p + 1]) - 1] != DIR_SEPARATOR)
-//            savegamefolder = M_StringJoin(myargv[p + 1], DIR_SEPARATOR_S, NULL);
-//    }
-//    else
-//    {
-//        char    *appdatafolder = M_GetAppDataFolder();
-//        char    *savegamefolder_free;
+// SetSaveGameFolder
 //
-//        M_MakeDirectory(appdatafolder);
-//        savegamefolder = M_StringJoin(appdatafolder, DIR_SEPARATOR_S, "savegames", DIR_SEPARATOR_S, NULL);
-//        M_MakeDirectory(savegamefolder);
-//        savegamefolder_free = savegamefolder;
+// Chooses the directory used to store saved games.
 //
-//        if (*pwadfile)
-//        {
-//            char    *temp = removeext(pwadfile);
-//
-//            savegamefolder = M_StringJoin(savegamefolder, temp, DIR_SEPARATOR_S, NULL);
-//            free(temp);
-//        }
-//        else
-//            savegamefolder = M_StringJoin(savegamefolder, SaveGameIWADName(), DIR_SEPARATOR_S, NULL);
-//
-//#if !defined(__APPLE__)
-//        free(appdatafolder);
-//#endif
-//
-//        free(savegamefolder_free);
-//    }
-//
-//    M_MakeDirectory(savegamefolder);
-//
-//    if (output)
-//    {
-//        int numsavegames = M_CountSaveGames();
-//
-//        if (!numsavegames)
-//            C_Output("Savegames will be saved in <b>%s</b>.", savegamefolder);
-//        else if (numsavegames == 1)
-//            C_Output("There is 1 savegame in <b>%s</b>.", savegamefolder);
-//        else
-//            C_Output("There are %i savegames in <b>%s</b>.", numsavegames, savegamefolder);
-//    }
-//}
+void D_SetSaveGameFolder(dboolean output)
+{
+    int p = M_CheckParmsWithArgs("-save", "-savedir", "", 1, 1);
+
+    if (p)
+    {
+        if (myargv[p + 1][strlen(myargv[p + 1]) - 1] != DIR_SEPARATOR)
+            savegamefolder = M_StringJoin(myargv[p + 1], DIR_SEPARATOR_S, NULL);
+    }
+    else
+    {
+        char    *appdatafolder = M_GetAppDataFolder();
+        char    *savegamefolder_free;
+
+        M_MakeDirectory(appdatafolder);
+        savegamefolder = M_StringJoin(appdatafolder, DIR_SEPARATOR_S, "savegames", DIR_SEPARATOR_S, NULL);
+        M_MakeDirectory(savegamefolder);
+        savegamefolder_free = savegamefolder;
+
+        if (*pwadfile)
+        {
+            char    *temp = removeext(pwadfile);
+
+            savegamefolder = M_StringJoin(savegamefolder, temp, DIR_SEPARATOR_S, NULL);
+            free(temp);
+        }
+        else
+            savegamefolder = M_StringJoin(savegamefolder, SaveGameIWADName(), DIR_SEPARATOR_S, NULL);
+
+#if !defined(__APPLE__)
+        free(appdatafolder);
+#endif
+
+        free(savegamefolder_free);
+    }
+
+    M_MakeDirectory(savegamefolder);
+
+    if (output)
+    {
+        int numsavegames = M_CountSaveGames();
+
+		if( !numsavegames )
+		{
+			//C_Output( "Savegames will be saved in <b>%s</b>.", savegamefolder );
+			logd( "Savegames will be saved in <b>%s</b>.\n", savegamefolder );
+		}
+		else if( numsavegames == 1 )
+		{
+			//C_Output( "There is 1 savegame in <b>%s</b>.", savegamefolder );
+			logd( "There is 1 savegame in <b>%s</b>.\n", savegamefolder );
+		}
+		else
+		{
+			//C_Output( "There are %i savegames in <b>%s</b>.", numsavegames, savegamefolder );
+			logd( "There are %i savegames in <b>%s</b>.\n", numsavegames, savegamefolder );
+		}
+    }
+}
 
 //
 // Find out what version of DOOM is playing.
