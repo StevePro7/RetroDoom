@@ -409,6 +409,9 @@ fixed_t             viewsin;
 
 player_t            *viewplayer;// = NULL;
 
+angle_t             tantoangle[ SLOPERANGE + 1 ];
+
+
 
 // v_video.c
 char        *r_lowpixelsize;// = r_lowpixelsize_default;

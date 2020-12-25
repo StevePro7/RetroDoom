@@ -7,7 +7,7 @@
 #include "doomstruct.h"
 #include "d_event.h"
 #include "d_ticcmd.h"
-#include "r_defs.h"
+//#include "r_defs.h"
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -1173,5 +1173,6 @@ extern int      quickSaveSlot;
 
 // r_main.h
 extern dboolean     setsizeneeded;
+
 
 #endif

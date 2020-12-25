@@ -1,5 +1,5 @@
 #include "st_stuff.h"
-#include "r_defs.h"
+//#include "r_defs.h"
 
 //#include "am_map.h"
 //#include "c_console.h"
