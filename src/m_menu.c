@@ -1,13 +1,19 @@
 #include "m_menu.h"
+#include "am_map.h"
 #include "doomdef.h"
 #include "doomenum.h"
 #include "doomtype.h"
 #include "doomvars.h"
 #include "dstrings.h"
 
-//#include <ctype.h>
-//
-//#include "am_map.h"
+#include "i_system.h"
+#include "i_timer.h"
+#include "i_video.h"
+#include "m_config.h"
+#include "m_misc.h"
+#include "m_random.h"
+
+#include <ctype.h>
 //#include "c_console.h"
 //#include "d_deh.h"
 //#include "d_iwad.h"
@@ -18,13 +24,7 @@
 //#include "i_colors.h"
 //#include "i_gamepad.h"
 //#include "i_swap.h"
-#include "i_system.h"
-#include "i_timer.h"
-#include "i_video.h"
-#include "m_config.h"
-//#include "m_menu.h"
-#include "m_misc.h"
-#include "m_random.h"
+
 //#include "p_local.h"
 #include "p_saveg.h"
 //#include "p_setup.h"

@@ -4,10 +4,10 @@
 #include "doomdef.h"
 #include "doomtype.h"
 
-#undef ABS
-#undef MIN
-#undef MAX
-#undef SWAP
+//#undef ABS
+//#undef MIN
+//#undef MAX
+//#undef SWAP
 
 ////
 //// Fixed point, 32bit as 16.16.

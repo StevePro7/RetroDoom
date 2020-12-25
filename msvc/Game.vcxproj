@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\am_map.c" />
     <ClCompile Include="..\src\a_game.c" />
     <ClCompile Include="..\src\c_cmds.c" />
     <ClCompile Include="..\src\c_console.c" />
@@ -87,6 +88,7 @@
     <ResourceCompile Include="..\res\win32.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\inc\am_map.h" />
     <ClInclude Include="..\inc\a_game.h" />
     <ClInclude Include="..\inc\c_cmds.h" />
     <ClInclude Include="..\inc\c_console.h" />

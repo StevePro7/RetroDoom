@@ -108,6 +108,11 @@
 //
 // Fixed point, 32bit as 16.16.
 //
+#undef ABS
+#undef MIN
+#undef MAX
+#undef SWAP
+
 #define FRACBITS        16
 #define FRACUNIT        65536
 #define FIXED2DOUBLE(a) ((a) / (double)FRACUNIT)
@@ -115,6 +120,7 @@
 #define FIXED_MAX       INT32_MAX
 #define SWAP(a, b)      (((a) ^= (b)), ((b) ^= (a)), ((a) ^= (b)))
 
+typedef int32_t fixed_t;
 
 
 // m_config.h
