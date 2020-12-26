@@ -1204,4 +1204,23 @@ extern texture_t    **textures;
 extern int          numflats;
 
 
+// sc_main.h
+extern char *sc_String;
+extern int  sc_Number;
+extern int  sc_Line;
+
+
+// p_map.c
+extern dboolean successfulshot;
+extern dboolean telefragonmap30;
+
+
+// r_patch.c
+extern int      numspritelumps;
+
+
+// sprites.h
+//extern char     *sprnames[];
+//extern offset_t sproffsets[];
+
 #endif

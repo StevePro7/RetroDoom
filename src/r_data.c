@@ -3,6 +3,8 @@
 #include "doomstruct.h"
 #include "doomtype.h"
 #include "doomvars.h"
+#include "d_items.h"
+#include "info.h"
 //#include "c_console.h"
 //#include "doomstat.h"
 //#include "i_colors.h"
@@ -13,7 +15,8 @@
 #include "m_misc.h"
 //#include "p_local.h"
 //#include "r_sky.h"
-//#include "sc_man.h"
+#include "sc_man.h"
+#include "sprites.h"
 #include "w_wad.h"
 #include "z_zone.h"
 
@@ -36,9 +39,9 @@ static int  missingflatnum;
 //int         firstspritelump;
 //int         lastspritelump;
 //int         numspritelumps;
-//
-//dboolean    telefragonmap30 = false;
-//
+
+dboolean    telefragonmap30 = false;
+
 //int         numtextures;
 //texture_t   **textures;
 //
@@ -426,209 +429,209 @@ static void R_InitFlats(void)
     missingflatnum = R_FlatNumForName("-N0_TEX-");
 }
 
-////
-//// R_InitSpriteLumps
-//// Finds the width and hoffset of all sprites in the wad,
-////  so the sprite does not need to be cached completely
-////  just for having the header info ready during rendering.
-////
-//static void R_InitSpriteLumps(void)
-//{
-//    dboolean    fixspriteoffsets = false;
 //
-//    SC_Open("DRCOMPAT");
+// R_InitSpriteLumps
+// Finds the width and hoffset of all sprites in the wad,
+//  so the sprite does not need to be cached completely
+//  just for having the header info ready during rendering.
 //
-//    while (SC_GetString())
-//    {
-//        if (M_StringCompare(sc_String, "FIXSPRITEOFFSETS"))
-//        {
-//            SC_MustGetString();
-//
-//            if (M_StringCompare(pwadfile, sc_String))
-//            {
-//                fixspriteoffsets = true;
-//                M_SKULL1 = false;
-//            }
-//        }
-//        else if (M_StringCompare(sc_String, "NOBLUEGREENBLOOD"))
-//        {
-//            SC_MustGetString();
-//
-//            if (M_StringCompare(pwadfile, sc_String))
-//            {
-//                mobjinfo[MT_HEAD].blood = MT_BLOOD;
-//                mobjinfo[MT_BRUISER].blood = MT_BLOOD;
-//                mobjinfo[MT_KNIGHT].blood = MT_BLOOD;
-//            }
-//        }
-//        else if (M_StringCompare(sc_String, "TELEFRAGONMAP30"))
-//        {
-//            SC_MustGetString();
-//
-//            if (M_StringCompare(pwadfile, sc_String))
-//                telefragonmap30 = true;
-//        }
-//    }
-//
-//    SC_Close();
-//
-//    firstspritelump = W_GetNumForName("S_START") + 1;
-//    lastspritelump = W_GetNumForName("S_END") - 1;
-//
-//    numspritelumps = lastspritelump - firstspritelump + 1;
-//    spritewidth = Z_Malloc(numspritelumps * sizeof(*spritewidth), PU_STATIC, NULL);
-//    spriteheight = Z_Malloc(numspritelumps * sizeof(*spriteheight), PU_STATIC, NULL);
-//    spriteoffset = Z_Malloc(numspritelumps * sizeof(*spriteoffset), PU_STATIC, NULL);
-//    spritetopoffset = Z_Malloc(numspritelumps * sizeof(*spritetopoffset), PU_STATIC, NULL);
-//
-//    newspriteoffset = Z_Malloc(numspritelumps * sizeof(*newspriteoffset), PU_STATIC, NULL);
-//    newspritetopoffset = Z_Malloc(numspritelumps * sizeof(*newspritetopoffset), PU_STATIC, NULL);
-//
-//    for (int i = 0; i < numspritelumps; i++)
-//    {
-//        patch_t *patch = W_CacheLumpNum(firstspritelump + i);
-//
-//        if (patch)
-//        {
-//            spritewidth[i] = SHORT(patch->width) << FRACBITS;
-//            spriteheight[i] = SHORT(patch->height) << FRACBITS;
-//            spriteoffset[i] = newspriteoffset[i] = SHORT(patch->leftoffset) << FRACBITS;
-//            spritetopoffset[i] = newspritetopoffset[i] = SHORT(patch->topoffset) << FRACBITS;
-//
-//            // [BH] override sprite offsets in WAD with those in sproffsets[] in info.c
-//            if (!FREEDOOM && !hacx)
-//            {
-//                int j = 0;
-//
-//                while (*sproffsets[j].name)
-//                {
-//                    if (i == W_CheckNumForName(sproffsets[j].name) - firstspritelump
-//                        && spritewidth[i] == (SHORT(sproffsets[j].width) << FRACBITS)
-//                        && spriteheight[i] == (SHORT(sproffsets[j].height) << FRACBITS)
-//                        && ((!BTSX && !sprfix18) || sproffsets[j].sprfix18)
-//                        && (BTSX || fixspriteoffsets || lumpinfo[firstspritelump + i]->wadfile->type != PWAD))
-//                    {
-//                        newspriteoffset[i] = SHORT(sproffsets[j].x) << FRACBITS;
-//                        newspritetopoffset[i] = SHORT(sproffsets[j].y) << FRACBITS;
-//                        break;
-//                    }
-//
-//                    j++;
-//                }
-//            }
-//        }
-//    }
-//
-//    // [BH] compatibility fixes
-//    if (FREEDOOM)
-//    {
-//        states[S_BAR3].nextstate = S_BAR2;
-//        mobjinfo[MT_BARREL].frames = 2;
-//        mobjinfo[MT_HEAD].blood = MT_BLOOD;
-//        mobjinfo[MT_BRUISER].blood = MT_BLOOD;
-//        mobjinfo[MT_KNIGHT].blood = MT_BLOOD;
-//
-//        M_StringCopy(weaponinfo[wp_pistol].description, "handgun", sizeof(weaponinfo[wp_pistol].description));
-//        M_StringCopy(weaponinfo[wp_shotgun].description, "pump-action shotgun", sizeof(weaponinfo[wp_shotgun].description));
-//        M_StringCopy(weaponinfo[wp_chaingun].description, "minigun", sizeof(weaponinfo[wp_chaingun].description));
-//        M_StringCopy(weaponinfo[wp_missile].description, "missile launcher", sizeof(weaponinfo[wp_missile].description));
-//        M_StringCopy(weaponinfo[wp_plasma].description, "polaric energy cannon", sizeof(weaponinfo[wp_plasma].description));
-//        M_StringCopy(weaponinfo[wp_bfg].description, "SKAG 1337", sizeof(weaponinfo[wp_bfg].description));
-//        M_StringCopy(weaponinfo[wp_chainsaw].description, "angle grinder", sizeof(weaponinfo[wp_chainsaw].description));
-//        M_StringCopy(weaponinfo[wp_supershotgun].description, "double-barreled shotgun", sizeof(weaponinfo[wp_supershotgun].description));
-//
-//        M_StringCopy(mobjinfo[MT_POSSESSED].name1, "zombie", sizeof(mobjinfo[MT_POSSESSED].name1));
-//        M_StringCopy(mobjinfo[MT_POSSESSED].plural1, "zombies", sizeof(mobjinfo[MT_POSSESSED].plural1));
-//        M_StringCopy(mobjinfo[MT_SHOTGUY].name1, "shotgun zombie", sizeof(mobjinfo[MT_SHOTGUY].name1));
-//        M_StringCopy(mobjinfo[MT_SHOTGUY].plural1, "shotgun zombies", sizeof(mobjinfo[MT_SHOTGUY].plural1));
-//        M_StringCopy(mobjinfo[MT_VILE].name1, "necromancer", sizeof(mobjinfo[MT_VILE].name1));
-//        M_StringCopy(mobjinfo[MT_VILE].plural1, "necromancers", sizeof(mobjinfo[MT_VILE].plural1));
-//        M_StringCopy(mobjinfo[MT_UNDEAD].name1, "dark soldier", sizeof(mobjinfo[MT_UNDEAD].name1));
-//        M_StringCopy(mobjinfo[MT_UNDEAD].plural1, "dark soldiers", sizeof(mobjinfo[MT_UNDEAD].plural1));
-//        M_StringCopy(mobjinfo[MT_FATSO].name1, "combat slug", sizeof(mobjinfo[MT_FATSO].name1));
-//        M_StringCopy(mobjinfo[MT_FATSO].plural1, "combat slugs", sizeof(mobjinfo[MT_FATSO].plural1));
-//        M_StringCopy(mobjinfo[MT_CHAINGUY].name1, "minigun zombie", sizeof(mobjinfo[MT_CHAINGUY].name1));
-//        M_StringCopy(mobjinfo[MT_CHAINGUY].plural1, "minigun zombies", sizeof(mobjinfo[MT_CHAINGUY].plural1));
-//        M_StringCopy(mobjinfo[MT_TROOP].name1, "serpentipede", sizeof(mobjinfo[MT_TROOP].name1));
-//        M_StringCopy(mobjinfo[MT_TROOP].plural1, "serpentipedes", sizeof(mobjinfo[MT_TROOP].plural1));
-//        M_StringCopy(mobjinfo[MT_SERGEANT].name1, "flesh worm", sizeof(mobjinfo[MT_SERGEANT].name1));
-//        M_StringCopy(mobjinfo[MT_SERGEANT].plural1, "flesh worms", sizeof(mobjinfo[MT_SERGEANT].plural1));
-//        M_StringCopy(mobjinfo[MT_SHADOWS].name1, "stealth worm", sizeof(mobjinfo[MT_SHADOWS].name1));
-//        M_StringCopy(mobjinfo[MT_SHADOWS].plural1, "stealth worms", sizeof(mobjinfo[MT_SHADOWS].plural1));
-//        M_StringCopy(mobjinfo[MT_HEAD].name1, "trilobite", sizeof(mobjinfo[MT_HEAD].name1));
-//        M_StringCopy(mobjinfo[MT_HEAD].plural1, "trilobites", sizeof(mobjinfo[MT_HEAD].plural1));
-//        M_StringCopy(mobjinfo[MT_BRUISER].name1, "pain bringer", sizeof(mobjinfo[MT_BRUISER].name1));
-//        M_StringCopy(mobjinfo[MT_BRUISER].plural1, "pain bringers", sizeof(mobjinfo[MT_BRUISER].plural1));
-//        M_StringCopy(mobjinfo[MT_KNIGHT].name1, "pain lord", sizeof(mobjinfo[MT_KNIGHT].name1));
-//        M_StringCopy(mobjinfo[MT_KNIGHT].plural1, "pain lords", sizeof(mobjinfo[MT_KNIGHT].plural1));
-//        M_StringCopy(mobjinfo[MT_SKULL].name1, "deadflare", sizeof(mobjinfo[MT_SKULL].name1));
-//        M_StringCopy(mobjinfo[MT_SKULL].plural1, "deadflares", sizeof(mobjinfo[MT_SKULL].plural1));
-//        M_StringCopy(mobjinfo[MT_SPIDER].name1, "large technospider", sizeof(mobjinfo[MT_SPIDER].name1));
-//        M_StringCopy(mobjinfo[MT_SPIDER].plural1, "large technospiders", sizeof(mobjinfo[MT_SPIDER].plural1));
-//        M_StringCopy(mobjinfo[MT_BABY].name1, "technospider", sizeof(mobjinfo[MT_BABY].name1));
-//        M_StringCopy(mobjinfo[MT_BABY].plural1, "technospiders", sizeof(mobjinfo[MT_BABY].plural1));
-//        M_StringCopy(mobjinfo[MT_CYBORG].name1, "assault tripod", sizeof(mobjinfo[MT_CYBORG].name1));
-//        M_StringCopy(mobjinfo[MT_CYBORG].plural1, "assault tripods", sizeof(mobjinfo[MT_CYBORG].plural1));
-//        M_StringCopy(mobjinfo[MT_PAIN].name1, "summoner", sizeof(mobjinfo[MT_PAIN].name1));
-//        M_StringCopy(mobjinfo[MT_PAIN].plural1, "summoners", sizeof(mobjinfo[MT_PAIN].plural1));
-//    }
-//    else if (chex)
-//        mobjinfo[MT_BLOOD].blood = GREENBLOOD;
-//    else if (hacx)
-//    {
-//        mobjinfo[MT_HEAD].flags2 |= MF2_DONTMAP;
-//        mobjinfo[MT_INV].flags2 &= ~MF2_TRANSLUCENT_33;
-//        mobjinfo[MT_INS].flags2 &= ~(MF2_TRANSLUCENT_33 | MF2_FLOATBOB);
-//        mobjinfo[MT_MISC14].flags2 &= ~MF2_FLOATBOB;
-//        mobjinfo[MT_BFG].flags2 &= ~MF2_TRANSLUCENT;
-//        mobjinfo[MT_HEAD].blood = MT_BLOOD;
-//        mobjinfo[MT_BRUISER].blood = MT_BLOOD;
-//        mobjinfo[MT_KNIGHT].blood = MT_BLOOD;
-//    }
-//    else if (eviternity)
-//        mobjinfo[MT_DOGS].blood = MT_GREENBLOOD;
-//    else if (doom4vanilla)
-//    {
-//        mobjinfo[MT_HEAD].blood = MT_BLOOD;
-//        mobjinfo[MT_INV].flags2 &= ~(MF2_TRANSLUCENT_33 | MF2_FLOATBOB);
-//        mobjinfo[MT_MEGA].flags2 &= ~MF2_FLOATBOB;
-//        mobjinfo[MT_KNIGHT].blood = MT_BLOOD;
-//
-//        M_StringCopy(mobjinfo[MT_POSSESSED].name1, "possessed", sizeof(mobjinfo[MT_POSSESSED].name1));
-//        M_StringCopy(mobjinfo[MT_POSSESSED].plural1, "possessed", sizeof(mobjinfo[MT_POSSESSED].plural1));
-//        M_StringCopy(mobjinfo[MT_SHOTGUY].name1, "possessed security", sizeof(mobjinfo[MT_SHOTGUY].name1));
-//        M_StringCopy(mobjinfo[MT_SHOTGUY].plural1, "possessed security", sizeof(mobjinfo[MT_SHOTGUY].plural1));
-//        M_StringCopy(mobjinfo[MT_VILE].name1, "summoner", sizeof(mobjinfo[MT_VILE].name1));
-//        M_StringCopy(mobjinfo[MT_VILE].plural1, "summoners", sizeof(mobjinfo[MT_VILE].plural1));
-//        M_StringCopy(mobjinfo[MT_UNDEAD].name1, "mancubus", sizeof(mobjinfo[MT_UNDEAD].name1));
-//        M_StringCopy(mobjinfo[MT_UNDEAD].plural1, "mancubi", sizeof(mobjinfo[MT_UNDEAD].plural1));
-//        M_StringCopy(mobjinfo[MT_FATSO].name1, "revenant", sizeof(mobjinfo[MT_UNDEAD].name1));
-//        M_StringCopy(mobjinfo[MT_FATSO].plural1, "revenants", sizeof(mobjinfo[MT_UNDEAD].plural1));
-//        M_StringCopy(mobjinfo[MT_CHAINGUY].name1, "hell razer", sizeof(mobjinfo[MT_CHAINGUY].name1));
-//        M_StringCopy(mobjinfo[MT_CHAINGUY].plural1, "hell razers", sizeof(mobjinfo[MT_CHAINGUY].plural1));
-//        M_StringCopy(mobjinfo[MT_SERGEANT].name1, "pinky", sizeof(mobjinfo[MT_SERGEANT].name1));
-//        M_StringCopy(mobjinfo[MT_SERGEANT].plural1, "pinkies", sizeof(mobjinfo[MT_SERGEANT].plural1));
-//        M_StringCopy(mobjinfo[MT_SERGEANT].name3, "demon", sizeof(mobjinfo[MT_SERGEANT].name1));
-//        M_StringCopy(mobjinfo[MT_SERGEANT].plural3, "demons", sizeof(mobjinfo[MT_SERGEANT].plural1));
-//        M_StringCopy(mobjinfo[MT_SPIDER].name1, "cyberdemon", sizeof(mobjinfo[MT_SPIDER].name1));
-//        M_StringCopy(mobjinfo[MT_SPIDER].plural1, "cyberdemons", sizeof(mobjinfo[MT_SPIDER].plural1));
-//        M_StringCopy(mobjinfo[MT_BABY].name1, "spider mastermind", sizeof(mobjinfo[MT_BABY].name1));
-//        M_StringCopy(mobjinfo[MT_BABY].plural1, "spider masterminds", sizeof(mobjinfo[MT_BABY].plural1));
-//        M_StringCopy(mobjinfo[MT_CYBORG].name1, "cyber-mancubus", sizeof(mobjinfo[MT_CYBORG].name1));
-//        M_StringCopy(mobjinfo[MT_CYBORG].plural1, "cyber-mancubi", sizeof(mobjinfo[MT_CYBORG].plural1));
-//        M_StringCopy(mobjinfo[MT_PAIN].name1, "gore nest", sizeof(mobjinfo[MT_PAIN].name1));
-//        M_StringCopy(mobjinfo[MT_PAIN].plural1, "gore nests", sizeof(mobjinfo[MT_PAIN].plural1));
-//        M_StringCopy(mobjinfo[MT_WOLFSS].name1, "possessed", sizeof(mobjinfo[MT_WOLFSS].name1));
-//        M_StringCopy(mobjinfo[MT_WOLFSS].plural1, "possessed", sizeof(mobjinfo[MT_WOLFSS].plural1));
-//        M_StringCopy(mobjinfo[MT_WOLFSS].name2, "possessed scientist", sizeof(mobjinfo[MT_WOLFSS].name1));
-//        M_StringCopy(mobjinfo[MT_WOLFSS].plural2, "possessed scientists", sizeof(mobjinfo[MT_WOLFSS].plural1));
-//        M_StringCopy(mobjinfo[MT_INV].name2, "super chainsaw", sizeof(mobjinfo[MT_INV].name1));
-//        M_StringCopy(mobjinfo[MT_INV].plural2, "super chainsaws", sizeof(mobjinfo[MT_INV].plural1));
-//        M_StringCopy(mobjinfo[MT_MEGA].name2, "mega doll", sizeof(mobjinfo[MT_MEGA].name1));
-//        M_StringCopy(mobjinfo[MT_MEGA].plural2, "mega dolls", sizeof(mobjinfo[MT_MEGA].plural1));
-//    }
-//}
-//
+static void R_InitSpriteLumps(void)
+{
+    dboolean    fixspriteoffsets = false;
+
+    SC_Open("DRCOMPAT");
+
+    while (SC_GetString())
+    {
+        if (M_StringCompare(sc_String, "FIXSPRITEOFFSETS"))
+        {
+            SC_MustGetString();
+
+            if (M_StringCompare(pwadfile, sc_String))
+            {
+                fixspriteoffsets = true;
+                M_SKULL1 = false;
+            }
+        }
+        else if (M_StringCompare(sc_String, "NOBLUEGREENBLOOD"))
+        {
+            SC_MustGetString();
+
+            if (M_StringCompare(pwadfile, sc_String))
+            {
+                mobjinfo[MT_HEAD].blood = MT_BLOOD;
+                mobjinfo[MT_BRUISER].blood = MT_BLOOD;
+                mobjinfo[MT_KNIGHT].blood = MT_BLOOD;
+            }
+        }
+        else if (M_StringCompare(sc_String, "TELEFRAGONMAP30"))
+        {
+            SC_MustGetString();
+
+            if (M_StringCompare(pwadfile, sc_String))
+                telefragonmap30 = true;
+        }
+    }
+
+    SC_Close();
+
+    firstspritelump = W_GetNumForName("S_START") + 1;
+    lastspritelump = W_GetNumForName("S_END") - 1;
+
+    numspritelumps = lastspritelump - firstspritelump + 1;
+    spritewidth = Z_Malloc(numspritelumps * sizeof(*spritewidth), PU_STATIC, NULL);
+    spriteheight = Z_Malloc(numspritelumps * sizeof(*spriteheight), PU_STATIC, NULL);
+    spriteoffset = Z_Malloc(numspritelumps * sizeof(*spriteoffset), PU_STATIC, NULL);
+    spritetopoffset = Z_Malloc(numspritelumps * sizeof(*spritetopoffset), PU_STATIC, NULL);
+
+    newspriteoffset = Z_Malloc(numspritelumps * sizeof(*newspriteoffset), PU_STATIC, NULL);
+    newspritetopoffset = Z_Malloc(numspritelumps * sizeof(*newspritetopoffset), PU_STATIC, NULL);
+
+    for (int i = 0; i < numspritelumps; i++)
+    {
+        patch_t *patch = W_CacheLumpNum(firstspritelump + i);
+
+        if (patch)
+        {
+            spritewidth[i] = SHORT(patch->width) << FRACBITS;
+            spriteheight[i] = SHORT(patch->height) << FRACBITS;
+            spriteoffset[i] = newspriteoffset[i] = SHORT(patch->leftoffset) << FRACBITS;
+            spritetopoffset[i] = newspritetopoffset[i] = SHORT(patch->topoffset) << FRACBITS;
+
+            // [BH] override sprite offsets in WAD with those in sproffsets[] in info.c
+            if (!FREEDOOM && !hacx)
+            {
+                int j = 0;
+
+                while (*sproffsets[j].name)
+                {
+                    if (i == W_CheckNumForName(sproffsets[j].name) - firstspritelump
+                        && spritewidth[i] == (SHORT(sproffsets[j].width) << FRACBITS)
+                        && spriteheight[i] == (SHORT(sproffsets[j].height) << FRACBITS)
+                        && ((!BTSX && !sprfix18) || sproffsets[j].sprfix18)
+                        && (BTSX || fixspriteoffsets || lumpinfo[firstspritelump + i]->wadfile->type != PWAD))
+                    {
+                        newspriteoffset[i] = SHORT(sproffsets[j].x) << FRACBITS;
+                        newspritetopoffset[i] = SHORT(sproffsets[j].y) << FRACBITS;
+                        break;
+                    }
+
+                    j++;
+                }
+            }
+        }
+    }
+
+    // [BH] compatibility fixes
+    if (FREEDOOM)
+    {
+        states[S_BAR3].nextstate = S_BAR2;
+        mobjinfo[MT_BARREL].frames = 2;
+        mobjinfo[MT_HEAD].blood = MT_BLOOD;
+        mobjinfo[MT_BRUISER].blood = MT_BLOOD;
+        mobjinfo[MT_KNIGHT].blood = MT_BLOOD;
+
+        M_StringCopy(weaponinfo[wp_pistol].description, "handgun", sizeof(weaponinfo[wp_pistol].description));
+        M_StringCopy(weaponinfo[wp_shotgun].description, "pump-action shotgun", sizeof(weaponinfo[wp_shotgun].description));
+        M_StringCopy(weaponinfo[wp_chaingun].description, "minigun", sizeof(weaponinfo[wp_chaingun].description));
+        M_StringCopy(weaponinfo[wp_missile].description, "missile launcher", sizeof(weaponinfo[wp_missile].description));
+        M_StringCopy(weaponinfo[wp_plasma].description, "polaric energy cannon", sizeof(weaponinfo[wp_plasma].description));
+        M_StringCopy(weaponinfo[wp_bfg].description, "SKAG 1337", sizeof(weaponinfo[wp_bfg].description));
+        M_StringCopy(weaponinfo[wp_chainsaw].description, "angle grinder", sizeof(weaponinfo[wp_chainsaw].description));
+        M_StringCopy(weaponinfo[wp_supershotgun].description, "double-barreled shotgun", sizeof(weaponinfo[wp_supershotgun].description));
+
+        M_StringCopy(mobjinfo[MT_POSSESSED].name1, "zombie", sizeof(mobjinfo[MT_POSSESSED].name1));
+        M_StringCopy(mobjinfo[MT_POSSESSED].plural1, "zombies", sizeof(mobjinfo[MT_POSSESSED].plural1));
+        M_StringCopy(mobjinfo[MT_SHOTGUY].name1, "shotgun zombie", sizeof(mobjinfo[MT_SHOTGUY].name1));
+        M_StringCopy(mobjinfo[MT_SHOTGUY].plural1, "shotgun zombies", sizeof(mobjinfo[MT_SHOTGUY].plural1));
+        M_StringCopy(mobjinfo[MT_VILE].name1, "necromancer", sizeof(mobjinfo[MT_VILE].name1));
+        M_StringCopy(mobjinfo[MT_VILE].plural1, "necromancers", sizeof(mobjinfo[MT_VILE].plural1));
+        M_StringCopy(mobjinfo[MT_UNDEAD].name1, "dark soldier", sizeof(mobjinfo[MT_UNDEAD].name1));
+        M_StringCopy(mobjinfo[MT_UNDEAD].plural1, "dark soldiers", sizeof(mobjinfo[MT_UNDEAD].plural1));
+        M_StringCopy(mobjinfo[MT_FATSO].name1, "combat slug", sizeof(mobjinfo[MT_FATSO].name1));
+        M_StringCopy(mobjinfo[MT_FATSO].plural1, "combat slugs", sizeof(mobjinfo[MT_FATSO].plural1));
+        M_StringCopy(mobjinfo[MT_CHAINGUY].name1, "minigun zombie", sizeof(mobjinfo[MT_CHAINGUY].name1));
+        M_StringCopy(mobjinfo[MT_CHAINGUY].plural1, "minigun zombies", sizeof(mobjinfo[MT_CHAINGUY].plural1));
+        M_StringCopy(mobjinfo[MT_TROOP].name1, "serpentipede", sizeof(mobjinfo[MT_TROOP].name1));
+        M_StringCopy(mobjinfo[MT_TROOP].plural1, "serpentipedes", sizeof(mobjinfo[MT_TROOP].plural1));
+        M_StringCopy(mobjinfo[MT_SERGEANT].name1, "flesh worm", sizeof(mobjinfo[MT_SERGEANT].name1));
+        M_StringCopy(mobjinfo[MT_SERGEANT].plural1, "flesh worms", sizeof(mobjinfo[MT_SERGEANT].plural1));
+        M_StringCopy(mobjinfo[MT_SHADOWS].name1, "stealth worm", sizeof(mobjinfo[MT_SHADOWS].name1));
+        M_StringCopy(mobjinfo[MT_SHADOWS].plural1, "stealth worms", sizeof(mobjinfo[MT_SHADOWS].plural1));
+        M_StringCopy(mobjinfo[MT_HEAD].name1, "trilobite", sizeof(mobjinfo[MT_HEAD].name1));
+        M_StringCopy(mobjinfo[MT_HEAD].plural1, "trilobites", sizeof(mobjinfo[MT_HEAD].plural1));
+        M_StringCopy(mobjinfo[MT_BRUISER].name1, "pain bringer", sizeof(mobjinfo[MT_BRUISER].name1));
+        M_StringCopy(mobjinfo[MT_BRUISER].plural1, "pain bringers", sizeof(mobjinfo[MT_BRUISER].plural1));
+        M_StringCopy(mobjinfo[MT_KNIGHT].name1, "pain lord", sizeof(mobjinfo[MT_KNIGHT].name1));
+        M_StringCopy(mobjinfo[MT_KNIGHT].plural1, "pain lords", sizeof(mobjinfo[MT_KNIGHT].plural1));
+        M_StringCopy(mobjinfo[MT_SKULL].name1, "deadflare", sizeof(mobjinfo[MT_SKULL].name1));
+        M_StringCopy(mobjinfo[MT_SKULL].plural1, "deadflares", sizeof(mobjinfo[MT_SKULL].plural1));
+        M_StringCopy(mobjinfo[MT_SPIDER].name1, "large technospider", sizeof(mobjinfo[MT_SPIDER].name1));
+        M_StringCopy(mobjinfo[MT_SPIDER].plural1, "large technospiders", sizeof(mobjinfo[MT_SPIDER].plural1));
+        M_StringCopy(mobjinfo[MT_BABY].name1, "technospider", sizeof(mobjinfo[MT_BABY].name1));
+        M_StringCopy(mobjinfo[MT_BABY].plural1, "technospiders", sizeof(mobjinfo[MT_BABY].plural1));
+        M_StringCopy(mobjinfo[MT_CYBORG].name1, "assault tripod", sizeof(mobjinfo[MT_CYBORG].name1));
+        M_StringCopy(mobjinfo[MT_CYBORG].plural1, "assault tripods", sizeof(mobjinfo[MT_CYBORG].plural1));
+        M_StringCopy(mobjinfo[MT_PAIN].name1, "summoner", sizeof(mobjinfo[MT_PAIN].name1));
+        M_StringCopy(mobjinfo[MT_PAIN].plural1, "summoners", sizeof(mobjinfo[MT_PAIN].plural1));
+    }
+    else if (chex)
+        mobjinfo[MT_BLOOD].blood = GREENBLOOD;
+    else if (hacx)
+    {
+        mobjinfo[MT_HEAD].flags2 |= MF2_DONTMAP;
+        mobjinfo[MT_INV].flags2 &= ~MF2_TRANSLUCENT_33;
+        mobjinfo[MT_INS].flags2 &= ~(MF2_TRANSLUCENT_33 | MF2_FLOATBOB);
+        mobjinfo[MT_MISC14].flags2 &= ~MF2_FLOATBOB;
+        mobjinfo[MT_BFG].flags2 &= ~MF2_TRANSLUCENT;
+        mobjinfo[MT_HEAD].blood = MT_BLOOD;
+        mobjinfo[MT_BRUISER].blood = MT_BLOOD;
+        mobjinfo[MT_KNIGHT].blood = MT_BLOOD;
+    }
+    else if (eviternity)
+        mobjinfo[MT_DOGS].blood = MT_GREENBLOOD;
+    else if (doom4vanilla)
+    {
+        mobjinfo[MT_HEAD].blood = MT_BLOOD;
+        mobjinfo[MT_INV].flags2 &= ~(MF2_TRANSLUCENT_33 | MF2_FLOATBOB);
+        mobjinfo[MT_MEGA].flags2 &= ~MF2_FLOATBOB;
+        mobjinfo[MT_KNIGHT].blood = MT_BLOOD;
+
+        M_StringCopy(mobjinfo[MT_POSSESSED].name1, "possessed", sizeof(mobjinfo[MT_POSSESSED].name1));
+        M_StringCopy(mobjinfo[MT_POSSESSED].plural1, "possessed", sizeof(mobjinfo[MT_POSSESSED].plural1));
+        M_StringCopy(mobjinfo[MT_SHOTGUY].name1, "possessed security", sizeof(mobjinfo[MT_SHOTGUY].name1));
+        M_StringCopy(mobjinfo[MT_SHOTGUY].plural1, "possessed security", sizeof(mobjinfo[MT_SHOTGUY].plural1));
+        M_StringCopy(mobjinfo[MT_VILE].name1, "summoner", sizeof(mobjinfo[MT_VILE].name1));
+        M_StringCopy(mobjinfo[MT_VILE].plural1, "summoners", sizeof(mobjinfo[MT_VILE].plural1));
+        M_StringCopy(mobjinfo[MT_UNDEAD].name1, "mancubus", sizeof(mobjinfo[MT_UNDEAD].name1));
+        M_StringCopy(mobjinfo[MT_UNDEAD].plural1, "mancubi", sizeof(mobjinfo[MT_UNDEAD].plural1));
+        M_StringCopy(mobjinfo[MT_FATSO].name1, "revenant", sizeof(mobjinfo[MT_UNDEAD].name1));
+        M_StringCopy(mobjinfo[MT_FATSO].plural1, "revenants", sizeof(mobjinfo[MT_UNDEAD].plural1));
+        M_StringCopy(mobjinfo[MT_CHAINGUY].name1, "hell razer", sizeof(mobjinfo[MT_CHAINGUY].name1));
+        M_StringCopy(mobjinfo[MT_CHAINGUY].plural1, "hell razers", sizeof(mobjinfo[MT_CHAINGUY].plural1));
+        M_StringCopy(mobjinfo[MT_SERGEANT].name1, "pinky", sizeof(mobjinfo[MT_SERGEANT].name1));
+        M_StringCopy(mobjinfo[MT_SERGEANT].plural1, "pinkies", sizeof(mobjinfo[MT_SERGEANT].plural1));
+        M_StringCopy(mobjinfo[MT_SERGEANT].name3, "demon", sizeof(mobjinfo[MT_SERGEANT].name1));
+        M_StringCopy(mobjinfo[MT_SERGEANT].plural3, "demons", sizeof(mobjinfo[MT_SERGEANT].plural1));
+        M_StringCopy(mobjinfo[MT_SPIDER].name1, "cyberdemon", sizeof(mobjinfo[MT_SPIDER].name1));
+        M_StringCopy(mobjinfo[MT_SPIDER].plural1, "cyberdemons", sizeof(mobjinfo[MT_SPIDER].plural1));
+        M_StringCopy(mobjinfo[MT_BABY].name1, "spider mastermind", sizeof(mobjinfo[MT_BABY].name1));
+        M_StringCopy(mobjinfo[MT_BABY].plural1, "spider masterminds", sizeof(mobjinfo[MT_BABY].plural1));
+        M_StringCopy(mobjinfo[MT_CYBORG].name1, "cyber-mancubus", sizeof(mobjinfo[MT_CYBORG].name1));
+        M_StringCopy(mobjinfo[MT_CYBORG].plural1, "cyber-mancubi", sizeof(mobjinfo[MT_CYBORG].plural1));
+        M_StringCopy(mobjinfo[MT_PAIN].name1, "gore nest", sizeof(mobjinfo[MT_PAIN].name1));
+        M_StringCopy(mobjinfo[MT_PAIN].plural1, "gore nests", sizeof(mobjinfo[MT_PAIN].plural1));
+        M_StringCopy(mobjinfo[MT_WOLFSS].name1, "possessed", sizeof(mobjinfo[MT_WOLFSS].name1));
+        M_StringCopy(mobjinfo[MT_WOLFSS].plural1, "possessed", sizeof(mobjinfo[MT_WOLFSS].plural1));
+        M_StringCopy(mobjinfo[MT_WOLFSS].name2, "possessed scientist", sizeof(mobjinfo[MT_WOLFSS].name1));
+        M_StringCopy(mobjinfo[MT_WOLFSS].plural2, "possessed scientists", sizeof(mobjinfo[MT_WOLFSS].plural1));
+        M_StringCopy(mobjinfo[MT_INV].name2, "super chainsaw", sizeof(mobjinfo[MT_INV].name1));
+        M_StringCopy(mobjinfo[MT_INV].plural2, "super chainsaws", sizeof(mobjinfo[MT_INV].plural1));
+        M_StringCopy(mobjinfo[MT_MEGA].name2, "mega doll", sizeof(mobjinfo[MT_MEGA].name1));
+        M_StringCopy(mobjinfo[MT_MEGA].plural2, "mega dolls", sizeof(mobjinfo[MT_MEGA].plural1));
+    }
+}
+
 ////
 //// R_InitColormaps
 ////
@@ -713,8 +716,8 @@ void R_InitData(void)
 {
     R_InitFlats();
     R_InitTextures();
-    //R_InitBrightmaps();
-    //R_InitSpriteLumps();
+    R_InitBrightmaps();
+    R_InitSpriteLumps();
     //R_InitColormaps();
 }
 
@@ -776,31 +779,32 @@ int R_CheckTextureNumForName(char *name)
     return i;
 }
 
-////
-//// R_TextureNumForName
-//// Calls R_CheckTextureNumForName,
-////  aborts with error message.
-////
-//int R_TextureNumForName(char *name)
-//{
-//    int i = R_CheckTextureNumForName(name);
 //
-//    if (i == -1)
-//    {
-//        if (*name && *name != '-')
-//        {
-//            char    *temp = uppercase(name);
+// R_TextureNumForName
+// Calls R_CheckTextureNumForName,
+//  aborts with error message.
 //
-//            C_Warning(1, "The <b>%.8s</b> texture can't be found.", temp);
-//            free(temp);
-//        }
-//
-//        return 0;
-//    }
-//
-//    return i;
-//}
-//
+int R_TextureNumForName(char *name)
+{
+    int i = R_CheckTextureNumForName(name);
+
+    if (i == -1)
+    {
+        if (*name && *name != '-')
+        {
+            char    *temp = uppercase(name);
+
+            //C_Warning(1, "The <b>%.8s</b> texture can't be found.", temp);
+			loge( "The <b>%.8s</b> texture can't be found.\n", temp );
+            free(temp);
+        }
+
+        return 0;
+    }
+
+    return i;
+}
+
 ////
 //// R_PrecacheLevel
 //// Preloads all relevant graphics for the level.

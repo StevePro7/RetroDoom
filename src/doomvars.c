@@ -479,9 +479,13 @@ int         firstflat;
 //static int  lastflat;
 int         numflats;
 
-// for global animation
-int         *flattranslation;
-int         *texturetranslation;
+//static int  missingflatnum;
+
+int         firstspritelump;
+int         lastspritelump;
+int         numspritelumps;
+
+dboolean    telefragonmap30; //= false;
 
 int         numtextures;
 texture_t   **textures;
@@ -491,6 +495,19 @@ fixed_t     *textureheight;
 byte        **brightmap;
 dboolean    *nobrightmap;
 
+
+// for global animation
+int         *flattranslation;
+int         *texturetranslation;
+
+// needed for prerendering
+fixed_t     *spritewidth;
+fixed_t     *spriteheight;
+fixed_t     *spriteoffset;
+fixed_t     *spritetopoffset;
+
+fixed_t     *newspriteoffset;
+fixed_t     *newspritetopoffset;
 
 
 // r_segs.c
@@ -1891,6 +1908,7 @@ state_t  states[ NUMSTATES ];
 
 
 // p_pspr.c
+dboolean        successfulshot;
 dboolean        skippsprinterp;
 
 
@@ -1970,3 +1988,9 @@ seg_t       *curline;
 line_t      *linedef;
 sector_t    *frontsector;
 sector_t    *backsector;
+
+
+// sc_main.c
+char            *sc_String;
+int             sc_Number;
+int             sc_Line;

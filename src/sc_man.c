@@ -1,7 +1,9 @@
-#include "c_console.h"
+#include "sc_man.h"
+#include "doomvars.h"
+
+#include "logger.h"
 #include "i_system.h"
 #include "m_misc.h"
-#include "sc_man.h"
 #include "w_wad.h"
 #include "z_zone.h"
 
@@ -11,9 +13,9 @@
 #define ASCII_QUOTE     '"'
 #define ASCII_ESCAPE    '\\'
 
-char            *sc_String;
-int             sc_Number;
-int             sc_Line;
+//char            *sc_String;
+//int             sc_Number;
+//int             sc_Line;
 
 static char     *ScriptBuffer;
 static char     *ScriptPtr;
@@ -23,33 +25,33 @@ static dboolean sc_End;
 static dboolean ScriptOpen;
 static dboolean AlreadyGot;
 
-void SC_Open(char *name)
+void SC_Open( char *name )
 {
-    static char StringBuffer[MAX_STRING_SIZE];
+	static char StringBuffer[ MAX_STRING_SIZE ];
 
-    SC_Close();
-    ScriptLumpNum = W_GetNumForName(name);
-    ScriptBuffer = W_CacheLumpNum(ScriptLumpNum);
-    ScriptPtr = ScriptBuffer;
-    ScriptEndPtr = ScriptPtr + W_LumpLength(ScriptLumpNum);
-    sc_Line = 1;
-    sc_End = false;
-    ScriptOpen = true;
-    sc_String = StringBuffer;
-    AlreadyGot = false;
+	SC_Close();
+	ScriptLumpNum = W_GetNumForName( name );
+	ScriptBuffer = W_CacheLumpNum( ScriptLumpNum );
+	ScriptPtr = ScriptBuffer;
+	ScriptEndPtr = ScriptPtr + W_LumpLength( ScriptLumpNum );
+	sc_Line = 1;
+	sc_End = false;
+	ScriptOpen = true;
+	sc_String = StringBuffer;
+	AlreadyGot = false;
 }
 
-void SC_Close(void)
+void SC_Close( void )
 {
-    if (ScriptOpen)
-    {
-        if (ScriptLumpNum >= 0)
-            W_ReleaseLumpNum(ScriptLumpNum);
-        else
-            Z_Free(ScriptBuffer);
+	if( ScriptOpen )
+	{
+		if( ScriptLumpNum >= 0 )
+			W_ReleaseLumpNum( ScriptLumpNum );
+		else
+			Z_Free( ScriptBuffer );
 
-        ScriptOpen = false;
-    }
+		ScriptOpen = false;
+	}
 }
 
 dboolean SC_GetString(void)
@@ -137,52 +139,53 @@ dboolean SC_GetString(void)
     return true;
 }
 
-void SC_MustGetString(void)
+void SC_MustGetString( void )
 {
-    if (!SC_GetString())
-        SC_ScriptError();
+	if( !SC_GetString() )
+		SC_ScriptError();
 }
 
-dboolean SC_GetNumber(void)
+//dboolean SC_GetNumber(void)
+//{
+//    if (SC_GetString())
+//    {
+//        sc_Number = strtol(sc_String, NULL, 0);
+//        return true;
+//    }
+//    else
+//        return false;
+//}
+//
+//void SC_MustGetNumber(void)
+//{
+//    if (!SC_GetNumber())
+//        SC_ScriptError();
+//}
+//
+//void SC_UnGet(void)
+//{
+//    AlreadyGot = true;
+//}
+//
+//int SC_MatchString(char **strings)
+//{
+//    for (int i = 0; *strings; i++)
+//        if (SC_Compare(*strings++))
+//            return i;
+//
+//    return -1;
+//}
+//
+//dboolean SC_Compare(char *text)
+//{
+//    return M_StringCompare(text, sc_String);
+//}
+
+static void SC_ScriptError( void )
 {
-    if (SC_GetString())
-    {
-        sc_Number = strtol(sc_String, NULL, 0);
-        return true;
-    }
-    else
-        return false;
-}
+	char    *temp = commify( sc_Line );
 
-void SC_MustGetNumber(void)
-{
-    if (!SC_GetNumber())
-        SC_ScriptError();
-}
-
-void SC_UnGet(void)
-{
-    AlreadyGot = true;
-}
-
-int SC_MatchString(char **strings)
-{
-    for (int i = 0; *strings; i++)
-        if (SC_Compare(*strings++))
-            return i;
-
-    return -1;
-}
-
-dboolean SC_Compare(char *text)
-{
-    return M_StringCompare(text, sc_String);
-}
-
-static void SC_ScriptError(void)
-{
-    char    *temp = commify(sc_Line);
-
-    C_Warning(1, "Line %s in the <b>MAPINFO</b> lump is invalid.", temp);
-    free(temp);
+	//C_Warning( 1, "Line %s in the <b>MAPINFO</b> lump is invalid.", temp );
+	loge( "Line %s in the <b>MAPINFO</b> lump is invalid.\n", temp );
+	free( temp );
 }
