@@ -1195,4 +1195,7 @@ extern line_t       *linedef;
 extern sector_t     *frontsector;
 extern sector_t     *backsector;
 
+// p_spec.c
+extern int          numflats;
+
 #endif

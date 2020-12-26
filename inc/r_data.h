@@ -87,14 +87,14 @@
 //
 //// Retrieve column data for span blitting.
 //byte *R_GetTextureColumn(const rpatch_t *texpatch, int col);
-//
-//// I/O, setting up the stuff.
-//void R_InitData(void);
+
+// I/O, setting up the stuff.
+void R_InitData(void);
 //void R_PrecacheLevel(void);
-//
-//// Retrieval.
-//// Floor/ceiling opaque texture tiles, lookup by name. For animation?
-//int R_FlatNumForName(char *name);
+
+// Retrieval.
+// Floor/ceiling opaque texture tiles, lookup by name. For animation?
+int R_FlatNumForName(char *name);
 //int R_CheckFlatNumForName(char *name);
 //
 //// Called by P_Ticker for switches and animations,

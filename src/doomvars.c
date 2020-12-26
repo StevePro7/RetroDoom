@@ -475,6 +475,14 @@ dboolean        r_fixmaperrors; //=r_fixmaperrors_default;
 
 // r_data.c
 dboolean    r_fixspriteoffsets; //= r_fixspriteoffsets_default;
+int         firstflat;
+//static int  lastflat;
+int         numflats;
+
+// for global animation
+int         *flattranslation;
+int         *texturetranslation;
+
 
 // r_segs.c
 dboolean            r_brightmaps; //= r_brightmaps_default;

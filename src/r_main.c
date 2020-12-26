@@ -1,5 +1,6 @@
 #include "r_main.h"
 #include "doomvars.h"
+#include "r_bsp.h"
 
 //#include "c_cmds.h"
 //#include "c_console.h"
@@ -668,8 +669,8 @@ void R_SetViewSize(int blocks)
 //
 void R_Init(void)
 {
-    //R_InitClipSegs();
-    //R_InitData();
+    R_InitClipSegs();
+    R_InitData();
     //R_InitPointToAngle();
     //R_InitTables();
     //R_SetViewSize(r_screensize);

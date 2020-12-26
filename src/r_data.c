@@ -1,18 +1,20 @@
 #include "r_data.h"
 #include "doomdef.h"
 #include "doomtype.h"
+#include "doomvars.h"
 //#include "c_console.h"
 //#include "doomstat.h"
 //#include "i_colors.h"
 //#include "i_swap.h"
 //#include "i_system.h"
 //#include "m_config.h"
-//#include "m_misc.h"
+#include "logger.h"
+#include "m_misc.h"
 //#include "p_local.h"
 //#include "r_sky.h"
 //#include "sc_man.h"
-//#include "w_wad.h"
-//#include "z_zone.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
 //
 // Graphics.
@@ -404,25 +406,25 @@ static struct
 //                brightmap[num] = brightmaps[i].mask;
 //        }
 //}
+
 //
-////
-//// R_InitFlats
-////
-//static void R_InitFlats(void)
-//{
-//    firstflat = W_GetNumForName("F_START") + 1;
-//    lastflat = W_GetNumForName("F_END") - 1;
-//    numflats = lastflat - firstflat + 1;
+// R_InitFlats
 //
-//    // Create translation table for global animation.
-//    flattranslation = Z_Malloc(((size_t)numflats + 1) * sizeof(*flattranslation), PU_STATIC, NULL);
-//
-//    for (int i = 0; i < numflats; i++)
-//        flattranslation[i] = firstflat + i;
-//
-//    missingflatnum = R_FlatNumForName("-N0_TEX-");
-//}
-//
+static void R_InitFlats(void)
+{
+    firstflat = W_GetNumForName("F_START") + 1;
+    lastflat = W_GetNumForName("F_END") - 1;
+    numflats = lastflat - firstflat + 1;
+
+    // Create translation table for global animation.
+    flattranslation = Z_Malloc(((size_t)numflats + 1) * sizeof(*flattranslation), PU_STATIC, NULL);
+
+    for (int i = 0; i < numflats; i++)
+        flattranslation[i] = firstflat + i;
+
+    missingflatnum = R_FlatNumForName("-N0_TEX-");
+}
+
 ////
 //// R_InitSpriteLumps
 //// Finds the width and hoffset of all sprites in the wad,
@@ -699,46 +701,47 @@ static struct
 //
 //    return (i > numcolormaps ? -1 : i);
 //}
+
 //
-////
-//// R_InitData
-//// Locates all the lumps
-////  that will be used by all views
-//// Must be called after W_Init.
-////
-//void R_InitData(void)
-//{
-//    R_InitFlats();
-//    R_InitTextures();
-//    R_InitBrightmaps();
-//    R_InitSpriteLumps();
-//    R_InitColormaps();
-//}
+// R_InitData
+// Locates all the lumps
+//  that will be used by all views
+// Must be called after W_Init.
 //
-////
-//// R_FlatNumForName
-//// Retrieval, get a flat number for a flat name.
-////
-//int R_FlatNumForName(char *name)
-//{
-//    int i = W_RangeCheckNumForName(firstflat, lastflat, name);
+void R_InitData(void)
+{
+    R_InitFlats();
+    //R_InitTextures();
+    //R_InitBrightmaps();
+    //R_InitSpriteLumps();
+    //R_InitColormaps();
+}
+
 //
-//    if (i == -1)
-//    {
-//        if (*name && *name != '-')
-//        {
-//            char    *temp = uppercase(name);
+// R_FlatNumForName
+// Retrieval, get a flat number for a flat name.
 //
-//            C_Warning(1, "The <b>%.8s</b> flat texture can't be found.", temp);
-//            free(temp);
-//        }
-//
-//        return missingflatnum;
-//    }
-//
-//    return (i - firstflat);
-//}
-//
+int R_FlatNumForName(char *name)
+{
+    int i = W_RangeCheckNumForName(firstflat, lastflat, name);
+
+    if (i == -1)
+    {
+        if (*name && *name != '-')
+        {
+            char    *temp = uppercase(name);
+
+            //C_Warning(1, "The <b>%.8s</b> flat texture can't be found.", temp);
+			loge( "The <b>%.8s</b> flat texture can't be found.\n", temp );
+            free(temp);
+        }
+
+        return missingflatnum;
+    }
+
+    return (i - firstflat);
+}
+
 ////
 //// R_CheckFlatNumForName
 //// Retrieval, get a flat number for a flat name. No error.
