@@ -471,8 +471,24 @@ dboolean                r_liquid_clipsprites; //=r_liquid_clipsprites_default;
 dboolean                r_playersprites; //=r_playersprites_default;
 
 // r_plane.c
+visplane_t          *floorplane;
+visplane_t          *ceilingplane;
+
+int                 *openings;                  // dropoff overflow
+int                 *lastopening;               // dropoff overflow
+
+// Clip values are the solid pixel bounding the range.
+//  floorclip starts out SCREENHEIGHT
+//  ceilingclip starts out -1
+int                 floorclip[ SCREENWIDTH ];     // dropoff overflow
+int                 ceilingclip[ SCREENWIDTH ];   // dropoff overflow
+
+fixed_t             *yslope;
+fixed_t             yslopes[ LOOKDIRS ][ SCREENHEIGHT ];
+
 dboolean            r_liquid_current; //=r_liquid_current_default;
 dboolean            r_liquid_swirl; //=r_liquid_swirl_default;
+
 
 // p_doors.c
 dboolean    r_graduallighting; //=r_graduallighting_default;

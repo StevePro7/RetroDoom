@@ -1039,5 +1039,15 @@ typedef int32_t fixed_t;
 #define NUMCOLORMAPS        32
 
 
+// r_data.h
+#define LOOKDIRMAX  89
+#define LOOKDIRS    (LOOKDIRMAX * 2 + 1)
+
+
+// r_plane.h
+// killough 10/98: special mask indicates sky flat comes from sidedef
+#define PL_SKYFLAT  0x40000000
+
+
 
 #endif

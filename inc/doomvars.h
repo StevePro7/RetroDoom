@@ -1305,4 +1305,15 @@ extern byte         translationtables[ 256 * 3 ];
 extern byte         *dc_translation;
 
 
+// r_plane.h
+// Visplane related.
+extern int      *lastopening;
+extern int      floorclip[ SCREENWIDTH ];
+extern int      ceilingclip[ SCREENWIDTH ];
+extern fixed_t  *yslope;
+extern fixed_t  yslopes[ LOOKDIRS ][ SCREENHEIGHT ];
+extern int      *openings;  // dropoff overflow
+
+
+
 #endif

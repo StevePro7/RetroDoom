@@ -1,5 +1,6 @@
 #include "r_plane.h"
 #include "doomdef.h"
+#include "doomstruct.h"
 #include "doomtype.h"
 
 #include <string.h>
@@ -11,20 +12,20 @@
 //#include "p_local.h"
 //#include "r_sky.h"
 //#include "w_wad.h"
-//
-//#define MAXVISPLANES    128                     // must be a power of 2
-//
-//static visplane_t   *visplanes[MAXVISPLANES];   // killough
-//static visplane_t   *freetail;                  // killough
-//static visplane_t   **freehead = &freetail;     // killough
+
+#define MAXVISPLANES    128                     // must be a power of 2
+
+static visplane_t   *visplanes[MAXVISPLANES];   // killough
+static visplane_t   *freetail;                  // killough
+static visplane_t   **freehead = &freetail;     // killough
 //visplane_t          *floorplane;
 //visplane_t          *ceilingplane;
-//
-//// killough -- hash function for visplanes
-//// Empirically verified to be fairly uniform:
-//#define visplane_hash(picnum, lightlevel, height) \
-//    ((unsigned int)((picnum) * 3 + (lightlevel) + (height) * 7) & (MAXVISPLANES - 1))
-//
+
+// killough -- hash function for visplanes
+// Empirically verified to be fairly uniform:
+#define visplane_hash(picnum, lightlevel, height) \
+    ((unsigned int)((picnum) * 3 + (lightlevel) + (height) * 7) & (MAXVISPLANES - 1))
+
 //int                 *openings;                  // dropoff overflow
 //int                 *lastopening;               // dropoff overflow
 //
@@ -33,13 +34,13 @@
 ////  ceilingclip starts out -1
 //int                 floorclip[SCREENWIDTH];     // dropoff overflow
 //int                 ceilingclip[SCREENWIDTH];   // dropoff overflow
-//
-//// texture mapping
-//static lighttable_t **planezlight;
-//static fixed_t      planeheight;
-//
-//static fixed_t      xoffset, yoffset;           // killough 02/28/98: flat offsets
-//
+
+// texture mapping
+static lighttable_t **planezlight;
+static fixed_t      planeheight;
+
+static fixed_t      xoffset, yoffset;           // killough 02/28/98: flat offsets
+
 //fixed_t             *yslope;
 //fixed_t             yslopes[LOOKDIRS][SCREENHEIGHT];
 //
@@ -287,19 +288,19 @@ static dboolean     updateswirl;
 //            spanstart[b2--] = ds_x2;
 //    }
 //}
-//
-//// Ripple Effect from SMMU (r_ripple.cpp) by Simon Howard
-//#define SPEED           40
-//
-//// swirl factors determine the number of waves per flat width
-//// 1 cycle per 64 units
-//#define SWIRLFACTOR     (8192 / 64)
-//
-//// 1 cycle per 32 units (2 in 64)
-//#define SWIRLFACTOR2    (8192 / 32)
-//
-//static int  offsets[1024 * 4096];
-//
+
+// Ripple Effect from SMMU (r_ripple.cpp) by Simon Howard
+#define SPEED           40
+
+// swirl factors determine the number of waves per flat width
+// 1 cycle per 64 units
+#define SWIRLFACTOR     (8192 / 64)
+
+// 1 cycle per 32 units (2 in 64)
+#define SWIRLFACTOR2    (8192 / 32)
+
+static int  offsets[ 1024 * 4096 ];
+
 ////
 //// R_DistortedFlat
 //// Generates a distorted flat from a normal one using a two-dimensional sine wave pattern.
@@ -338,31 +339,31 @@ static dboolean     updateswirl;
 //
 //    return distortedflat;
 //}
+
 //
-////
-//// R_InitDistortedFlats
-//// [BH] Moved to separate function and called at startup
-////
-//void R_InitDistortedFlats(void)
-//{
-//    for (int i = 0, *offset = offsets; i < 1024 * SPEED; i += SPEED, offset += 4096)
-//        for (int y = 0; y < 64; y++)
-//            for (int x = 0; x < 64; x++)
-//            {
-//                int x1, y1;
-//                int sinvalue, sinvalue2;
+// R_InitDistortedFlats
+// [BH] Moved to separate function and called at startup
 //
-//                sinvalue = finesine[(y * SWIRLFACTOR + i * 5 + 900) & 8191] * 2;
-//                sinvalue2 = finesine[(x * SWIRLFACTOR2 + i * 4 + 300) & 8191] * 2;
-//                x1 = x + 128 + (sinvalue >> FRACBITS) + (sinvalue2 >> FRACBITS);
-//                sinvalue = finesine[(x * SWIRLFACTOR + i * 3 + 700) & 8191] * 2;
-//                sinvalue2 = finesine[(y * SWIRLFACTOR2 + i * 4 + 1200) & 8191] * 2;
-//                y1 = y + 128 + (sinvalue >> FRACBITS) + (sinvalue2 >> FRACBITS);
-//
-//                offset[(y << 6) + x] = ((y1 & 63) << 6) + (x1 & 63);
-//            }
-//}
-//
+void R_InitDistortedFlats(void)
+{
+    for (int i = 0, *offset = offsets; i < 1024 * SPEED; i += SPEED, offset += 4096)
+        for (int y = 0; y < 64; y++)
+            for (int x = 0; x < 64; x++)
+            {
+                int x1, y1;
+                int sinvalue, sinvalue2;
+
+                sinvalue = finesine[(y * SWIRLFACTOR + i * 5 + 900) & 8191] * 2;
+                sinvalue2 = finesine[(x * SWIRLFACTOR2 + i * 4 + 300) & 8191] * 2;
+                x1 = x + 128 + (sinvalue >> FRACBITS) + (sinvalue2 >> FRACBITS);
+                sinvalue = finesine[(x * SWIRLFACTOR + i * 3 + 700) & 8191] * 2;
+                sinvalue2 = finesine[(y * SWIRLFACTOR2 + i * 4 + 1200) & 8191] * 2;
+                y1 = y + 128 + (sinvalue >> FRACBITS) + (sinvalue2 >> FRACBITS);
+
+                offset[(y << 6) + x] = ((y1 & 63) << 6) + (x1 & 63);
+            }
+}
+
 ////
 //// R_DrawPlanes
 //// At the end of each frame.

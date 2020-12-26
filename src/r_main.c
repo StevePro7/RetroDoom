@@ -4,6 +4,7 @@
 #include "r_data.h"
 #include "r_draw.h"
 #include "r_patch.h"
+#include "r_plane.h"
 
 //#include "c_cmds.h"
 //#include "c_console.h"
@@ -683,7 +684,7 @@ void R_Init(void)
     R_InitLightTables();
     R_InitTranslationTables();
     R_InitPatches();
-    //R_InitDistortedFlats();
+    R_InitDistortedFlats();
     //R_InitColumnFunctions();
 }
 
@@ -861,3 +862,5 @@ void R_Init(void)
 //    if (!r_textures && viewplayer->fixedcolormap == INVERSECOLORMAP)
 //        V_InvertScreen();
 //}
+
+#include "r_patch.h"
