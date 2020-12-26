@@ -68,6 +68,7 @@
     <ClCompile Include="..\src\p_pspr.c" />
     <ClCompile Include="..\src\p_saveg.c" />
     <ClCompile Include="..\src\p_tick.c" />
+    <ClCompile Include="..\src\p_user.c" />
     <ClCompile Include="..\src\r_defs.c" />
     <ClCompile Include="..\src\r_main.c" />
     <ClCompile Include="..\src\sounds.c" />

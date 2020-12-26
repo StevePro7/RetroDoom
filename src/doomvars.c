@@ -210,13 +210,13 @@ dboolean        m_novertical; //=m_novertical_default;
 dboolean        mouselook; //=mouselook_default;
 
 // p_user.c
-dboolean        autotilt = autotilt_default;
-dboolean        autouse = autouse_default;
-dboolean        infighting = infighting_default;
-int             movebob = movebob_default;
-dboolean        r_liquid_lowerview = r_liquid_lowerview_default;
-int             r_shake_damage = r_shake_damage_default;
-int             stillbob = stillbob_default;
+dboolean        autotilt; //=autotilt_default;
+dboolean        autouse; //=autouse_default;
+dboolean        infighting; //=infighting_default;
+int             movebob; //=movebob_default;
+dboolean        r_liquid_lowerview; //=r_liquid_lowerview_default;
+int             r_shake_damage; //=r_shake_damage_default;
+int             stillbob; //=stillbob_default;
 
 
 // c_console.c
