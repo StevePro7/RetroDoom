@@ -396,33 +396,33 @@ dboolean        infiniteheight; //=infiniteheight_default;
 uint64_t        stat_distancetraveled; //=0;
 
 // c_cmd.c
-char                *version = version_default;
+char                *version; //= version_default;
 
 // p_mobj.c
-int         r_blood = r_blood_default;
-int         r_bloodsplats_max = r_bloodsplats_max_default;
+int         r_blood; //=r_blood_default;
+int         r_bloodsplats_max; //=r_bloodsplats_max_default;
 int         r_bloodsplats_total;
-dboolean    r_corpses_color = r_corpses_color_default;
-dboolean    r_corpses_gib = r_corpses_gib_default;
-dboolean    r_corpses_mirrored = r_corpses_mirrored_default;
-dboolean    r_corpses_moreblood = r_corpses_moreblood_default;
-dboolean    r_corpses_nudge = r_corpses_nudge_default;
-dboolean    r_corpses_slide = r_corpses_slide_default;
-dboolean    r_corpses_smearblood = r_corpses_smearblood_default;
-dboolean    r_floatbob = r_floatbob_default;
-dboolean    r_rockettrails = r_rockettrails_default;
-dboolean    r_shadows = r_shadows_default;
+dboolean    r_corpses_color; //=r_corpses_color_default;
+dboolean    r_corpses_gib; //=r_corpses_gib_default;
+dboolean    r_corpses_mirrored; //=r_corpses_mirrored_default;
+dboolean    r_corpses_moreblood; //=r_corpses_moreblood_default;
+dboolean    r_corpses_nudge; //=r_corpses_nudge_default;
+dboolean    r_corpses_slide; //=r_corpses_slide_default;
+dboolean    r_corpses_smearblood; //=r_corpses_smearblood_default;
+dboolean    r_floatbob; //=r_floatbob_default;
+dboolean    r_rockettrails; //=r_rockettrails_default;
+dboolean    r_shadows; //=r_shadows_default;
 
 // r_main.c
-dboolean            r_bloodsplats_translucency = r_bloodsplats_translucency_default;
-dboolean            r_dither = r_dither_default;
-int                 r_fov = r_fov_default;
-dboolean            r_homindicator = r_homindicator_default;
-dboolean            r_shadows_translucency = r_shadows_translucency_default;
-dboolean            r_shake_barrels = r_shake_barrels_default;
-int                 r_skycolor = r_skycolor_default;
-dboolean            r_textures = r_textures_default;
-dboolean            r_translucency = r_translucency_default;
+dboolean            r_bloodsplats_translucency; //=r_bloodsplats_translucency_default;
+dboolean            r_dither; //=r_dither_default;
+int                 r_fov; //=r_fov_default;
+dboolean            r_homindicator; //=r_homindicator_default;
+dboolean            r_shadows_translucency; //=r_shadows_translucency_default;
+dboolean            r_shake_barrels; //=r_shake_barrels_default;
+int                 r_skycolor; //=r_skycolor_default;
+dboolean            r_textures; //=r_textures_default;
+dboolean            r_translucency; //=r_translucency_default;
 
 fixed_t             viewx;
 fixed_t             viewy;
@@ -447,12 +447,12 @@ dboolean    r_supersampling;// = r_supersampling_default;
 dboolean            nomusic;
 dboolean            nosfx;
 
-int                 s_channels = s_channels_default;
-int                 s_musicvolume = s_musicvolume_default;
+int                 s_channels; //=s_channels_default;
+int                 s_musicvolume; //=s_musicvolume_default;
 dboolean            s_randommusic;// = s_randommusic_default;
 dboolean            s_randompitch;// = s_randompitch_default;
-int                 s_sfxvolume = s_sfxvolume_default;
-dboolean            s_stereo = s_stereo_default;
+int                 s_sfxvolume; //=s_sfxvolume_default;
+dboolean            s_stereo; //=s_stereo_default;
 
 // p_spec.c
 uint64_t            stat_secretsfound = 0;

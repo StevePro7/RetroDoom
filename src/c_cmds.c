@@ -59,8 +59,8 @@ dboolean            resettingcvar = false;
 dboolean            togglingvanilla = false;
 dboolean            vanilla = false;
 
-//char                *version = version_default;
-//
+char                *version = version_default;
+
 //const control_t controls[] =
 //{
 //    { "1",             keyboardcontrol, '1'                    }, { "2",             keyboardcontrol, '2'                    },

@@ -81,17 +81,17 @@
 //int                 extralight;
 //
 //dboolean            drawbloodsplats;
-//
-//dboolean            r_bloodsplats_translucency = r_bloodsplats_translucency_default;
-//dboolean            r_dither = r_dither_default;
-//int                 r_fov = r_fov_default;
-//dboolean            r_homindicator = r_homindicator_default;
-//dboolean            r_shadows_translucency = r_shadows_translucency_default;
-//dboolean            r_shake_barrels = r_shake_barrels_default;
-//int                 r_skycolor = r_skycolor_default;
-//dboolean            r_textures = r_textures_default;
-//dboolean            r_translucency = r_translucency_default;
-//
+
+dboolean            r_bloodsplats_translucency = r_bloodsplats_translucency_default;
+dboolean            r_dither = r_dither_default;
+int                 r_fov = r_fov_default;
+dboolean            r_homindicator = r_homindicator_default;
+dboolean            r_shadows_translucency = r_shadows_translucency_default;
+dboolean            r_shake_barrels = r_shake_barrels_default;
+int                 r_skycolor = r_skycolor_default;
+dboolean            r_textures = r_textures_default;
+dboolean            r_translucency = r_translucency_default;
+
 //extern dboolean     transferredsky;
 //extern lighttable_t **walllights;
 //

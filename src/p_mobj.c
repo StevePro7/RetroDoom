@@ -1,4 +1,18 @@
 #include "p_mobj.h"
+#include "doomdef.h"
+
+//#include "d_player.h"
+//#include "d_think.h"
+//#include "doomdata.h"
+//#include "doomenum.h"
+//#include "doomstruct.h"
+//#include "doomtype.h"
+//#include "m_fixed.h"
+//#include "info.h"
+//#include "sprites.h"
+//#include "states.h"
+//#include "tables.h"
+
 //#include "c_console.h"
 //#include "doomstat.h"
 //#include "g_game.h"
@@ -14,33 +28,33 @@
 //#include "st_stuff.h"
 //#include "w_wad.h"
 //#include "z_zone.h"
-//
-//int         r_blood = r_blood_default;
-//int         r_bloodsplats_max = r_bloodsplats_max_default;
-//int         r_bloodsplats_total;
-//dboolean    r_corpses_color = r_corpses_color_default;
-//dboolean    r_corpses_gib = r_corpses_gib_default;
-//dboolean    r_corpses_mirrored = r_corpses_mirrored_default;
-//dboolean    r_corpses_moreblood = r_corpses_moreblood_default;
-//dboolean    r_corpses_nudge = r_corpses_nudge_default;
-//dboolean    r_corpses_slide = r_corpses_slide_default;
-//dboolean    r_corpses_smearblood = r_corpses_smearblood_default;
-//dboolean    r_floatbob = r_floatbob_default;
-//dboolean    r_rockettrails = r_rockettrails_default;
-//dboolean    r_shadows = r_shadows_default;
-//
-//static fixed_t floatbobdiffs[64] =
-//{
-//     25695,  25695,  25447,  24955,  24222,  23256,  22066,  20663,
-//     19062,  17277,  15325,  13226,  10999,   8667,   6251,   3775,
-//      1262,  -1262,  -3775,  -6251,  -8667, -10999, -13226, -15325,
-//    -17277, -19062, -20663, -22066, -23256, -24222, -24955, -25447,
-//    -25695, -25695, -25447, -24955, -24222, -23256, -22066, -20663,
-//    -19062, -17277, -15325, -13226, -11000,  -8667,  -6251,  -3775,
-//     -1262,   1262,   3775,   6251,   8667,  10999,  13226,  15325,
-//     17277,  19062,  20663,  22066,  23256,  24222,  24955,  25447
-//};
-//
+
+int         r_blood = r_blood_default;
+int         r_bloodsplats_max = r_bloodsplats_max_default;
+int         r_bloodsplats_total;
+dboolean    r_corpses_color = r_corpses_color_default;
+dboolean    r_corpses_gib = r_corpses_gib_default;
+dboolean    r_corpses_mirrored = r_corpses_mirrored_default;
+dboolean    r_corpses_moreblood = r_corpses_moreblood_default;
+dboolean    r_corpses_nudge = r_corpses_nudge_default;
+dboolean    r_corpses_slide = r_corpses_slide_default;
+dboolean    r_corpses_smearblood = r_corpses_smearblood_default;
+dboolean    r_floatbob = r_floatbob_default;
+dboolean    r_rockettrails = r_rockettrails_default;
+dboolean    r_shadows = r_shadows_default;
+
+static fixed_t floatbobdiffs[ 64 ] =
+{
+	 25695,  25695,  25447,  24955,  24222,  23256,  22066,  20663,
+	 19062,  17277,  15325,  13226,  10999,   8667,   6251,   3775,
+	  1262,  -1262,  -3775,  -6251,  -8667, -10999, -13226, -15325,
+	-17277, -19062, -20663, -22066, -23256, -24222, -24955, -25447,
+	-25695, -25695, -25447, -24955, -24222, -23256, -22066, -20663,
+	-19062, -17277, -15325, -13226, -11000,  -8667,  -6251,  -3775,
+	 -1262,   1262,   3775,   6251,   8667,  10999,  13226,  15325,
+	 17277,  19062,  20663,  22066,  23256,  24222,  24955,  25447
+};
+
 //extern fixed_t  animatedliquiddiffs[64];
 //extern int      deadlookdir;
 //
