@@ -1,5 +1,5 @@
 #include "r_main.h"
-//#include "doomstruct.h"
+#include "doomstat.h"
 #include "doomvars.h"
 #include "r_bsp.h"
 #include "r_data.h"
@@ -9,7 +9,7 @@
 
 //#include "c_cmds.h"
 //#include "c_console.h"
-//#include "doomstat.h"
+
 //#include "i_colors.h"
 //#include "i_timer.h"
 //#include "m_config.h"

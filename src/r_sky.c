@@ -1,21 +1,25 @@
-#include "c_console.h"
-#include "doomstat.h"
-#include "m_config.h"
-#include "p_setup.h"
-#include "r_main.h"
 #include "r_sky.h"
+#include "doomdef.h"
+#include "doomvars.h"
+#include "m_controls.h"
+
+//#include "c_console.h"
+//#include "doomstat.h"
+//#include "m_config.h"
+//#include "p_setup.h"
+//#include "r_main.h"
+
 
 //
 // sky mapping
 //
-int         skyflatnum;
-int         skytexture;
-int         skytexturemid;
+//int         skyflatnum;
+//int         skytexture;
+//int         skytexturemid;
 int         skycolumnoffset = 0;
-int         skyscrolldelta;
+//int         skyscrolldelta;
 
-fixed_t     skyiscale;
-
+//fixed_t     skyiscale;
 dboolean    canmouselook = false;
 
 void R_InitSkyMap(void)

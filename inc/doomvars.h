@@ -1298,10 +1298,6 @@ extern int      numspritelumps;
 
 // r_draw.h
 extern lighttable_t     *dc_colormap[ 2 ];
-
-
-// r_draw.h
-extern lighttable_t     *dc_colormap[ 2 ];
 extern int              dc_x;
 extern int              dc_yl;
 extern int              dc_yh;
@@ -1364,6 +1360,15 @@ extern dboolean     canmodify;
 //extern char         maptitle[ 256 ];
 //extern char         mapnumandtitle[ 512 ];
 //extern char         automaptitle[ 512 ];
+
+
+// r_sky.h
+extern int      skytexture;
+extern int      skytexturemid;
+extern int      skycolumnoffset;
+extern int      skyscrolldelta;
+extern fixed_t  skyiscale;
+extern dboolean canmouselook;
 
 
 #endif

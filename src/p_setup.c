@@ -282,8 +282,8 @@ dboolean        r_fixmaperrors = r_fixmaperrors_default;
 //dboolean        boomcompatible;
 //dboolean        mbfcompatible;
 //dboolean        blockmaprebuilt;
-//dboolean        nojump = false;
-//dboolean        nomouselook = false;
+dboolean        nojump = false;
+dboolean        nomouselook = false;
 //
 //const char *linespecials[] =
 //{

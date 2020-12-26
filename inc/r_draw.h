@@ -110,8 +110,8 @@ void R_VideoErase(unsigned int ofs, int count);
 //
 //// Span blitting for rows, floor/ceiling.
 //// No Spectre effect needed.
-//void R_DrawSpan(void);
-//void R_DrawColorSpan(void);
+void R_DrawSpan(void);
+void R_DrawColorSpan(void);
 //
 //void R_InitBuffer(int width, int height);
 //

@@ -83,6 +83,8 @@ int                 vid_capfps;// = vid_capfps_default;
 
 // doomstat.c
 // Set if homebrew PWAD stuff has been added.
+int             gameepisode;
+int             gamemap;
 dboolean        modifiedgame;
 
 ticcmd_t    localcmds[ BACKUPTICS ];
@@ -460,10 +462,10 @@ int                 viewangletox[ FINEANGLES / 2 ];
 // from clipangle to -clipangle.
 angle_t             xtoviewangle[ SCREENWIDTH + 1 ];
 
-fixed_t             finesine[ 5 * FINEANGLES / 4 ];
-fixed_t             *finecosine = &finesine[ FINEANGLES / 4 ];
-fixed_t             finetangent[ FINEANGLES / 2 ];
-angle_t             tantoangle[ SLOPERANGE + 1 ];
+//fixed_t             finesine[ 5 * FINEANGLES / 4 ];
+//fixed_t             *finecosine = &finesine[ FINEANGLES / 4 ];
+//fixed_t             finetangent[ FINEANGLES / 2 ];
+//angle_t             tantoangle[ SLOPERANGE + 1 ];
 
 int                 numcolormaps;// = 1;
 lighttable_t        *( *scalelight )[ MAXLIGHTSCALE ];
@@ -519,6 +521,7 @@ void( *bloodsplatcolfunc )( void );
 void( *megaspherecolfunc )( void );
 void( *supershotguncolfunc )( void );
 
+dboolean    setsizeneeded;
 
 
 // v_video.c
@@ -2075,8 +2078,8 @@ dboolean        blockmaprebuilt;
 dboolean        transferredsky;
 
 // steveproTODO
-//dboolean        nojump = false;
-//dboolean        nomouselook = false;
+dboolean        nojump;// = false;
+dboolean        nomouselook;// = false;
 
 
 // p_saveg.c
@@ -2086,9 +2089,6 @@ FILE *save_stream;
 // f_finale.c
 dboolean        firstevent;
 
-
-// r_main.c
-dboolean    setsizeneeded;
 
 
 // r_bsp.c
@@ -2106,10 +2106,89 @@ int             sc_Line;
 
 // r_draw.c
 //
+// All drawing to the view buffer is accomplished in this file.
+// The other refresh files only know about coordinates,
+//  not the architecture of the frame buffer.
+// Conveniently, the frame buffer is a linear one,
+//  and we need only the base address,
+//  and the total size == width*height*depth/8.,
+//
+
+int         viewwidth;
+int         scaledviewwidth;
+int         viewheight;
+int         viewwindowx;
+int         viewwindowy;
+
+//
+// R_DrawSpan
+// With DOOM style restrictions on view orientation,
+//  the floors and ceilings consist of horizontal slices
+//  or spans with constant z depth.
+// However, rotation around the world z axis is possible,
+//  thus this mapping, while simpler and faster than
+//  perspective correct texture mapping, has to traverse
+//  the texture at an angle in all but a few cases.
+// In consequence, flats are not stored by column (like walls),
+//  and the inner loop has to step in texture space u and v.
+//
+int             ds_y;
+int             ds_x1;
+int             ds_x2;
+
+lighttable_t    *ds_colormap;
+
+fixed_t         ds_xfrac;
+fixed_t         ds_yfrac;
+fixed_t         ds_xstep;
+fixed_t         ds_ystep;
+
+// start of a 64x64 tile image
+byte            *ds_source;
+
+
+int         fuzzpos;
+const int       fuzzrange[];// = { -SCREENWIDTH, 0, SCREENWIDTH };
+int         fuzztable[ SCREENAREA ];
+
+//
 // R_DrawColumn
 // Source is the top of the column to scale.
 //
 lighttable_t    *dc_colormap[ 2 ];
+int             dc_x;
+int             dc_yl;
+int             dc_yh;
+fixed_t         dc_iscale;
+fixed_t         dc_texturemid;
+fixed_t         dc_texheight;
+fixed_t         dc_texturefrac;
+byte            dc_solidblood;
+byte            *dc_blood;
+byte            *dc_brightmap;
+int             dc_floorclip;
+int             dc_ceilingclip;
+int             dc_numposts;
+byte            dc_black;
+byte            *dc_black25;
+byte            *dc_black40;
+
+// first pixel in a column (possibly virtual)
+byte            *dc_source;
 
 byte    *dc_translation;
 byte    translationtables[ 256 * 3 ];
+
+
+// r_sky.c
+//
+// sky mapping
+//
+int         skyflatnum;
+int         skytexture;
+int         skytexturemid;
+int         skycolumnoffset;// = 0;
+int         skyscrolldelta;
+
+fixed_t     skyiscale;
+dboolean    canmouselook;// = false;

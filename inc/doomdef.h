@@ -1059,4 +1059,15 @@ typedef int32_t fixed_t;
 #define NOTEXTURECOLOR  80
 
 
+// r_sky.h
+// SKY, store the number for name.
+#define SKYFLATNAME         "F_SKY1"
+
+// The sky map is 256*128*4 maps.
+#define ANGLETOSKYSHIFT     22
+
+#define SKYSTRETCH_HEIGHT   228
+
+
+
 #endif

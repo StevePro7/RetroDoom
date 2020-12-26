@@ -28,8 +28,8 @@
 //int         viewwindowx;
 //int         viewwindowy;
 //
-//int         fuzzpos;
-//int         fuzztable[SCREENAREA];
+int         fuzzpos;
+int         fuzztable[SCREENAREA];
 
 static byte *ylookup0[ SCREENHEIGHT ];
 static byte *ylookup1[ SCREENHEIGHT ];
@@ -890,7 +890,7 @@ void R_DrawColorColumn( void )
 ////
 //#define NOFUZZ  251
 //
-//const int       fuzzrange[] = { -SCREENWIDTH, 0, SCREENWIDTH };
+const int       fuzzrange[] = { -SCREENWIDTH, 0, SCREENWIDTH };
 
 void R_DrawFuzzColumn(void)
 {
@@ -1145,39 +1145,39 @@ void R_InitTranslationTables(void)
 //
 //// start of a 64x64 tile image
 //byte            *ds_source;
+
 //
-////
-//// Draws the actual span.
-////
-//void R_DrawSpan(void)
-//{
-//    int     x = ds_x2 - ds_x1;
-//    byte    *dest = ylookup0[ds_y] + ds_x1;
-//    fixed_t xfrac = ds_xfrac;
-//    fixed_t yfrac = ds_yfrac;
+// Draws the actual span.
 //
-//    while (--x)
-//    {
-//        *dest++ = ds_colormap[ds_source[((xfrac >> 16) & 63) | ((yfrac >> 10) & 4032)]];
-//        xfrac += ds_xstep;
-//        yfrac += ds_ystep;
-//    }
-//
-//    *dest = ds_colormap[ds_source[((xfrac >> 16) & 63) | ((yfrac >> 10) & 4032)]];
-//}
-//
-//void R_DrawColorSpan(void)
-//{
-//    int         x = ds_x2 - ds_x1;
-//    byte        *dest = ylookup0[ds_y] + ds_x1;
-//    const byte  color = ds_colormap[NOTEXTURECOLOR];
-//
-//    while (--x)
-//        *dest++ = color;
-//
-//    *dest = color;
-//}
-//
+void R_DrawSpan(void)
+{
+    int     x = ds_x2 - ds_x1;
+    byte    *dest = ylookup0[ds_y] + ds_x1;
+    fixed_t xfrac = ds_xfrac;
+    fixed_t yfrac = ds_yfrac;
+
+    while (--x)
+    {
+        *dest++ = ds_colormap[ds_source[((xfrac >> 16) & 63) | ((yfrac >> 10) & 4032)]];
+        xfrac += ds_xstep;
+        yfrac += ds_ystep;
+    }
+
+    *dest = ds_colormap[ds_source[((xfrac >> 16) & 63) | ((yfrac >> 10) & 4032)]];
+}
+
+void R_DrawColorSpan( void )
+{
+	int         x = ds_x2 - ds_x1;
+	byte        *dest = ylookup0[ ds_y ] + ds_x1;
+	const byte  color = ds_colormap[ NOTEXTURECOLOR ];
+
+	while( --x )
+		*dest++ = color;
+
+	*dest = color;
+}
+
 ////
 //// R_InitBuffer
 ////
