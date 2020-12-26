@@ -1,6 +1,7 @@
 #include "r_main.h"
 #include "doomvars.h"
 #include "r_bsp.h"
+#include "r_data.h"
 
 //#include "c_cmds.h"
 //#include "c_console.h"
@@ -68,10 +69,10 @@
 //
 //// killough 03/20/98: Support dynamic colormaps, e.g. deep water
 //// killough 04/04/98: Support dynamic number of them as well
-//int                 numcolormaps = 1;
-//static lighttable_t *(*c_scalelight)[LIGHTLEVELS][MAXLIGHTSCALE];
-//static lighttable_t *(*c_zlight)[LIGHTLEVELS][MAXLIGHTZ];
-//static lighttable_t *(*c_psprscalelight)[OLDLIGHTLEVELS][OLDMAXLIGHTSCALE];
+int                 numcolormaps = 1;
+static lighttable_t *(*c_scalelight)[LIGHTLEVELS][MAXLIGHTSCALE];
+static lighttable_t *(*c_zlight)[LIGHTLEVELS][MAXLIGHTZ];
+static lighttable_t *(*c_psprscalelight)[OLDLIGHTLEVELS][OLDMAXLIGHTSCALE];
 //lighttable_t        *(*scalelight)[MAXLIGHTSCALE];
 //lighttable_t        *(*psprscalelight)[OLDMAXLIGHTSCALE];
 //lighttable_t        *(*zlight)[MAXLIGHTZ];

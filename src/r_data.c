@@ -7,7 +7,7 @@
 #include "info.h"
 //#include "c_console.h"
 //#include "doomstat.h"
-//#include "i_colors.h"
+#include "i_colors.h"
 #include "i_swap.h"
 #include "i_system.h"
 //#include "m_config.h"
@@ -632,64 +632,73 @@ static void R_InitSpriteLumps(void)
     }
 }
 
-////
-//// R_InitColormaps
-////
-//// killough 03/20/98: rewritten to allow dynamic colormaps
-//// and to remove unnecessary 256-byte alignment
-////
-//// killough 04/04/98: Add support for C_START/C_END markers
-////
-//static void R_InitColormaps(void)
-//{
-//    dboolean    COLORMAP = (W_CheckMultipleLumps("COLORMAP") > 1);
-//    byte        *palsrc;
-//    byte        *palette;
-//    wadfile_t   *colormapwad;
 //
-//    if (W_CheckNumForName("C_START") >= 0 && W_CheckNumForName("C_END") >= 0)
-//    {
-//        firstcolormaplump = W_GetNumForName("C_START");
-//        numcolormaps = W_GetNumForName("C_END") - firstcolormaplump;
+// R_InitColormaps
 //
-//        colormaps = Z_Malloc(sizeof(*colormaps) * numcolormaps, PU_STATIC, NULL);
+// killough 03/20/98: rewritten to allow dynamic colormaps
+// and to remove unnecessary 256-byte alignment
 //
-//        for (int i = 1; i < numcolormaps; i++)
-//            colormaps[i] = W_CacheLumpNum(i + firstcolormaplump);
-//    }
-//    else
-//        colormaps = Z_Malloc(sizeof(*colormaps), PU_STATIC, NULL);
+// killough 04/04/98: Add support for C_START/C_END markers
 //
-//    dc_colormap[1] = colormaps[0] = W_CacheLumpName("COLORMAP");
-//
-//    colormapwad = lumpinfo[W_CheckNumForName("COLORMAP")]->wadfile;
-//
-//    if (numcolormaps == 1)
-//        C_Output("Using the <b>COLORMAP</b> lump in %s <b>%s</b>.",
-//            (colormapwad->type == IWAD ? "IWAD" : "PWAD"), colormapwad->path);
-//    else
-//        C_Output("Using %i colormaps from the <b>COLORMAP</b> lump in %s <b>%s</b>.",
-//            numcolormaps, (colormapwad->type == IWAD ? "IWAD" : "PWAD"), colormapwad->path);
-//
-//    palsrc = palette = PLAYPAL;
-//
-//    for (int i = 0; i < 255; i++)
-//    {
-//        double  red = *palsrc++ / 256.0;
-//        double  green = *palsrc++ / 256.0;
-//        double  blue = *palsrc++ / 256.0;
-//        int     gray = (int)((red * 0.2126 + green * 0.7152 + blue * 0.0722) * 255.0);
-//
-//        grays[i] = FindNearestColor(palette, gray, gray, gray);
-//
-//        if (!COLORMAP)
-//        {
-//            gray = 255 - gray;
-//            colormaps[0][32 * 256 + i] = FindNearestColor(palette, gray, gray, gray);
-//        }
-//    }
-//}
-//
+static void R_InitColormaps(void)
+{
+    dboolean    COLORMAP = (W_CheckMultipleLumps("COLORMAP") > 1);
+    byte        *palsrc;
+    byte        *palette;
+    wadfile_t   *colormapwad;
+
+    if (W_CheckNumForName("C_START") >= 0 && W_CheckNumForName("C_END") >= 0)
+    {
+        firstcolormaplump = W_GetNumForName("C_START");
+        numcolormaps = W_GetNumForName("C_END") - firstcolormaplump;
+
+        colormaps = Z_Malloc(sizeof(*colormaps) * numcolormaps, PU_STATIC, NULL);
+
+        for (int i = 1; i < numcolormaps; i++)
+            colormaps[i] = W_CacheLumpNum(i + firstcolormaplump);
+    }
+    else
+        colormaps = Z_Malloc(sizeof(*colormaps), PU_STATIC, NULL);
+
+    dc_colormap[1] = colormaps[0] = W_CacheLumpName("COLORMAP");
+
+    colormapwad = lumpinfo[W_CheckNumForName("COLORMAP")]->wadfile;
+
+	if( numcolormaps == 1 )
+	{
+		//C_Output( "Using the <b>COLORMAP</b> lump in %s <b>%s</b>.",
+			//( colormapwad->type == IWAD ? "IWAD" : "PWAD" ), colormapwad->path );
+		logd( "Using the <b>COLORMAP</b> lump in %s <b>%s</b>.\n",
+			( colormapwad->type == IWAD ? "IWAD" : "PWAD" ), colormapwad->path );
+	}
+        
+	else
+	{
+		//C_Output( "Using %i colormaps from the <b>COLORMAP</b> lump in %s <b>%s</b>.",
+			//numcolormaps, ( colormapwad->type == IWAD ? "IWAD" : "PWAD" ), colormapwad->path );
+		logd( "Using %i colormaps from the <b>COLORMAP</b> lump in %s <b>%s</b>.\n",
+			numcolormaps, ( colormapwad->type == IWAD ? "IWAD" : "PWAD" ), colormapwad->path );
+	}
+
+    palsrc = palette = PLAYPAL;
+
+    for (int i = 0; i < 255; i++)
+    {
+        double  red = *palsrc++ / 256.0;
+        double  green = *palsrc++ / 256.0;
+        double  blue = *palsrc++ / 256.0;
+        int     gray = (int)((red * 0.2126 + green * 0.7152 + blue * 0.0722) * 255.0);
+
+        grays[i] = FindNearestColor(palette, gray, gray, gray);
+
+        if (!COLORMAP)
+        {
+            gray = 255 - gray;
+            colormaps[0][32 * 256 + i] = FindNearestColor(palette, gray, gray, gray);
+        }
+    }
+}
+
 //// killough 04/04/98: get colormap number from name
 //// killough 04/11/98: changed to return -1 for illegal names
 //int R_ColormapNumForName(char *name)
@@ -718,7 +727,7 @@ void R_InitData(void)
     R_InitTextures();
     R_InitBrightmaps();
     R_InitSpriteLumps();
-    //R_InitColormaps();
+    R_InitColormaps();
 }
 
 //

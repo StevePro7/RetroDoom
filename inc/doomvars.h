@@ -1172,7 +1172,39 @@ extern int      quickSaveSlot;
 
 
 // r_main.h
+//
+// POV related.
+//
+extern fixed_t  viewcos;
+extern fixed_t  viewsin;
+
+extern int      viewwindowx;
+extern int      viewwindowy;
+
+extern int      centerx;
+extern int      centery;
+
+extern fixed_t  centerxfrac;
+extern fixed_t  centeryfrac;
+extern fixed_t  projection;
+
+extern int      validcount;
+
+// killough 03/20/98: Allow colormaps to be dynamic (e.g. underwater)
+extern lighttable_t *( *scalelight )[ MAXLIGHTSCALE ];
+extern lighttable_t *( *zlight )[ MAXLIGHTZ ];
+extern lighttable_t *( *psprscalelight )[ OLDMAXLIGHTSCALE ];
+extern lighttable_t *fullcolormap;
+extern int          numcolormaps;   // killough 04/04/98: dynamic number of maps
+extern lighttable_t **colormaps;
+extern int          extralight;
+extern lighttable_t *fixedcolormap;
 extern dboolean     setsizeneeded;
+
+// [AM] Fractional part of the current tic, in the half-open
+//      range of [0.0, 1.0). Used for interpolation.
+extern fixed_t      fractionaltic;
+
 
 
 // p_tick.h
@@ -1197,6 +1229,7 @@ extern sector_t     *backsector;
 
 
 // r_data.h
+extern byte         grays[ 256 ];
 extern texture_t    **textures;
 
 
@@ -1222,5 +1255,10 @@ extern int      numspritelumps;
 // sprites.h
 //extern char     *sprnames[];
 //extern offset_t sproffsets[];
+
+
+// r_draw.h
+extern lighttable_t     *dc_colormap[ 2 ];
+
 
 #endif

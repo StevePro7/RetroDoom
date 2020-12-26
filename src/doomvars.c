@@ -437,6 +437,13 @@ player_t            *viewplayer;// = NULL;
 
 angle_t             tantoangle[ SLOPERANGE + 1 ];
 
+int                 numcolormaps;// = 1;
+lighttable_t        *( *scalelight )[ MAXLIGHTSCALE ];
+lighttable_t        *( *psprscalelight )[ OLDMAXLIGHTSCALE ];
+lighttable_t        *( *zlight )[ MAXLIGHTZ ];
+lighttable_t        *fullcolormap;
+lighttable_t        **colormaps;
+
 
 
 // v_video.c
@@ -508,6 +515,10 @@ fixed_t     *spritetopoffset;
 
 fixed_t     *newspriteoffset;
 fixed_t     *newspritetopoffset;
+
+dboolean    r_fixspriteoffsets; //= r_fixspriteoffsets_default;
+
+byte        grays[ 256 ];
 
 
 // r_segs.c
@@ -1994,3 +2005,11 @@ sector_t    *backsector;
 char            *sc_String;
 int             sc_Number;
 int             sc_Line;
+
+
+// r_draw.c
+//
+// R_DrawColumn
+// Source is the top of the column to scale.
+//
+lighttable_t    *dc_colormap[ 2 ];

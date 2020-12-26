@@ -1014,5 +1014,30 @@ typedef int32_t fixed_t;
 #define ALTHUD_Y                    (SCREENHEIGHT - SBARHEIGHT - 37)
 
 
+// r_main.h
+//
+// Lighting LUT.
+// Used for z-depth cuing per column/row,
+//  and other lighting effects (sector ambient, flash).
+//
+
+// Lighting constants.
+#define LIGHTLEVELS         128
+#define LIGHTSEGSHIFT       1
+#define LIGHTBRIGHT         2
+#define MAXLIGHTSCALE       384
+#define LIGHTSCALESHIFT     12
+#define MAXLIGHTZ           1024
+#define LIGHTZSHIFT         17
+
+#define OLDLIGHTLEVELS      32
+#define OLDLIGHTSEGSHIFT    3
+#define OLDMAXLIGHTSCALE    48
+
+// Number of diminishing brightness levels.
+// There a 0-31, i.e. 32 LUT in the COLORMAP lump.
+#define NUMCOLORMAPS        32
+
+
 
 #endif
