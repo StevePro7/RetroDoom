@@ -455,23 +455,23 @@ int                 s_sfxvolume; //=s_sfxvolume_default;
 dboolean            s_stereo; //=s_stereo_default;
 
 // p_spec.c
-uint64_t            stat_secretsfound = 0;
-dboolean            r_liquid_bob = r_liquid_bob_default;
+uint64_t            stat_secretsfound; //=0;
+dboolean            r_liquid_bob; //=r_liquid_bob_default;
 
 
 // r_things.c
-dboolean                r_liquid_clipsprites = r_liquid_clipsprites_default;
-dboolean                r_playersprites = r_playersprites_default;
+dboolean                r_liquid_clipsprites; //=r_liquid_clipsprites_default;
+dboolean                r_playersprites; //=r_playersprites_default;
 
 // r_plane.c
-dboolean            r_liquid_current = r_liquid_current_default;
-dboolean            r_liquid_swirl = r_liquid_swirl_default;
+dboolean            r_liquid_current; //=r_liquid_current_default;
+dboolean            r_liquid_swirl; //=r_liquid_swirl_default;
 
 // p_doors.c
-dboolean    r_graduallighting = r_graduallighting_default;
+dboolean    r_graduallighting; //=r_graduallighting_default;
 
 // p_setup.c
-dboolean        r_fixmaperrors = r_fixmaperrors_default;
+dboolean        r_fixmaperrors; //=r_fixmaperrors_default;
 
 // r_data.c
 dboolean    r_fixspriteoffsets = r_fixspriteoffsets_default;
