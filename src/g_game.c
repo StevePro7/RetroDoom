@@ -1,5 +1,6 @@
 #include "g_game.h"
 
+#include "doomdef.h"
 #include "doomenum.h"
 #include "d_event.h"
 #include "m_fixed.h"
@@ -64,10 +65,10 @@ int             gametime = 0;
 //int             barrelcount;
 //
 //wbstartstruct_t wminfo;                             // parms for world map/intermission
-//
-//dboolean        autoload = autoload_default;
-//dboolean        autosave = autosave_default;
-//
+
+dboolean        autoload = autoload_default;
+dboolean        autosave = autosave_default;
+
 #define MAXPLMOVE       forwardmove[1]
 
 fixed_t         forwardmove[] = { FORWARDMOVE0, FORWARDMOVE1 };
@@ -110,39 +111,39 @@ static fixed_t  gamepadangleturn[] = { 640, 960 };
 //char            mouseactionlist[MAX_MOUSE_BUTTONS + 2][255] = { "" };
 //
 //dboolean        skipaction = false;
-//
-//static int      mousex;
-//static int      mousey;
-//
-//dboolean        m_doubleclick_use = m_doubleclick_use_default;
-//dboolean        m_invertyaxis = m_invertyaxis_default;
-//dboolean        m_novertical = m_novertical_default;
-//dboolean        mouselook = mouselook_default;
-//
+
+static int      mousex;
+static int      mousey;
+
+dboolean        m_doubleclick_use = m_doubleclick_use_default;
+dboolean        m_invertyaxis = m_invertyaxis_default;
+dboolean        m_novertical = m_novertical_default;
+dboolean        mouselook = mouselook_default;
+
 //dboolean        usemouselook = false;
-//
-//static int      dclicktime;
-//static dboolean dclickstate;
-//static int      dclicks;
-//static int      dclicktime2;
-//static dboolean dclickstate2;
-//static int      dclicks2;
-//
-//static int      savegameslot;
-//static char     savedescription[SAVESTRINGSIZE];
+
+static int      dclicktime;
+static dboolean dclickstate;
+static int      dclicks;
+static int      dclicktime2;
+static dboolean dclickstate2;
+static int      dclicks2;
+
+static int      savegameslot;
+static char     savedescription[ SAVESTRINGSIZE ];
 //char            savename[MAX_PATH];
 
 gameaction_t    loadaction = ga_nothing;
 
-//uint64_t        stat_gamessaved = 0;
-//uint64_t        stat_mapsstarted = 0;
-//uint64_t        stat_mapscompleted = 0;
-//uint64_t        stat_skilllevel_imtooyoungtodie = 0;
-//uint64_t        stat_skilllevel_heynottoorough = 0;
-//uint64_t        stat_skilllevel_hurtmeplenty = 0;
-//uint64_t        stat_skilllevel_ultraviolence = 0;
-//uint64_t        stat_skilllevel_nightmare = 0;
-//
+uint64_t        stat_gamessaved = 0;
+uint64_t        stat_mapsstarted = 0;
+uint64_t        stat_mapscompleted = 0;
+uint64_t        stat_skilllevel_imtooyoungtodie = 0;
+uint64_t        stat_skilllevel_heynottoorough = 0;
+uint64_t        stat_skilllevel_hurtmeplenty = 0;
+uint64_t        stat_skilllevel_ultraviolence = 0;
+uint64_t        stat_skilllevel_nightmare = 0;
+
 //extern int      logotic;
 //extern int      pagetic;
 //

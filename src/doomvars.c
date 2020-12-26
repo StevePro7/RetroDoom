@@ -122,92 +122,92 @@ byte                *PLAYPAL;
 
 
 // m_config.c
-dboolean            alwaysrun = alwaysrun_default;
-dboolean            m_acceleration = m_acceleration_default;
-int                 r_color = r_color_default;
-float               r_gamma = r_gamma_default;
-dboolean            vid_borderlesswindow = vid_borderlesswindow_default;
-//int                 vid_capfps = vid_capfps_default;
-int                 vid_display = vid_display_default;
+dboolean            alwaysrun; //=alwaysrun_default;
+dboolean            m_acceleration; //=m_acceleration_default;
+int                 r_color; //=r_color_default;
+float               r_gamma; //=r_gamma_default;
+dboolean            vid_borderlesswindow; //=vid_borderlesswindow_default;
+int                 vid_capfps; //=vid_capfps_default;
+int                 vid_display; //=vid_display_default;
 #if !defined(_WIN32)
-char                *vid_driver = vid_driver_default;
+char                *vid_driver; //=vid_driver_default;
 #endif
-dboolean            vid_fullscreen = vid_fullscreen_default;
-int                 vid_motionblur = vid_motionblur_default;
-dboolean            vid_pillarboxes = vid_pillarboxes_default;
-char                *vid_scaleapi = vid_scaleapi_default;
-char                *vid_scalefilter = vid_scalefilter_default;
-char                *vid_screenresolution = vid_screenresolution_default;
-dboolean            vid_showfps = vid_showfps_default;
-int                 vid_vsync = vid_vsync_default;
-dboolean            vid_widescreen = vid_widescreen_default;
-char                *vid_windowpos = vid_windowpos_default;
-char                *vid_windowsize = vid_windowsize_default;
+dboolean            vid_fullscreen; //=vid_fullscreen_default;
+int                 vid_motionblur; //=vid_motionblur_default;
+dboolean            vid_pillarboxes; //=vid_pillarboxes_default;
+char                *vid_scaleapi; //=vid_scaleapi_default;
+char                *vid_scalefilter; //=vid_scalefilter_default;
+char                *vid_screenresolution; //=vid_screenresolution_default;
+dboolean            vid_showfps; //=vid_showfps_default;
+int                 vid_vsync; //=vid_vsync_default;
+dboolean            vid_widescreen; //=vid_widescreen_default;
+char                *vid_windowpos; //=vid_windowpos_default;
+char                *vid_windowsize; //=vid_windowsize_default;
 
 // am_map.c
-int am_allmapcdwallcolor = am_allmapcdwallcolor_default;
-int am_allmapfdwallcolor = am_allmapfdwallcolor_default;
-int am_allmapwallcolor = am_allmapwallcolor_default;
-int am_backcolor = am_backcolor_default;
-int am_cdwallcolor = am_cdwallcolor_default;
-int am_crosshaircolor = am_crosshaircolor_default;
-int am_fdwallcolor = am_fdwallcolor_default;
-int am_gridcolor = am_gridcolor_default;
-int am_markcolor = am_markcolor_default;
-int am_pathcolor = am_pathcolor_default;
-int am_playercolor = am_playercolor_default;
-int am_teleportercolor = am_teleportercolor_default;
-int am_thingcolor = am_thingcolor_default;
-int am_tswallcolor = am_tswallcolor_default;
-int am_wallcolor = am_wallcolor_default;
+int am_allmapcdwallcolor; //=am_allmapcdwallcolor_default;
+int am_allmapfdwallcolor; //=am_allmapfdwallcolor_default;
+int am_allmapwallcolor; //=am_allmapwallcolor_default;
+int am_backcolor; //=am_backcolor_default;
+int am_cdwallcolor; //=am_cdwallcolor_default;
+int am_crosshaircolor; //=am_crosshaircolor_default;
+int am_fdwallcolor; //=am_fdwallcolor_default;
+int am_gridcolor; //=am_gridcolor_default;
+int am_markcolor; //=am_markcolor_default;
+int am_pathcolor; //=am_pathcolor_default;
+int am_playercolor; //=am_playercolor_default;
+int am_teleportercolor; //=am_teleportercolor_default;
+int am_thingcolor; //=am_thingcolor_default;
+int am_tswallcolor; //=am_tswallcolor_default;
+int am_wallcolor; //=am_wallcolor_default;
 
 // am_map.c
-dboolean            am_external = am_external_default;
-dboolean            am_followmode = am_followmode_default;
-dboolean            am_grid = am_grid_default;
-char                *am_gridsize = am_gridsize_default;
-dboolean            am_path = am_path_default;
-dboolean            am_rotatemode = am_rotatemode_default;
+dboolean            am_external; //=am_external_default;
+dboolean            am_followmode; //=am_followmode_default;
+dboolean            am_grid; //=am_grid_default;
+char                *am_gridsize; //=am_gridsize_default;
+dboolean            am_path; //=am_path_default;
+dboolean            am_rotatemode; //=am_rotatemode_default;
 
 dboolean            automapactive;
 
 
 // p_pspr.c
-dboolean        autoaim = autoaim_default;
-dboolean        centerweapon = centerweapon_default;
-int             weaponbob = weaponbob_default;
-dboolean        weaponbounce = weaponbounce_default;
-dboolean        weaponrecoil = weaponrecoil_default;
-uint64_t        stat_shotsfired_pistol = 0;
-uint64_t        stat_shotsfired_shotgun = 0;
-uint64_t        stat_shotsfired_supershotgun = 0;
-uint64_t        stat_shotsfired_chaingun = 0;
-uint64_t        stat_shotsfired_rocketlauncher = 0;
-uint64_t        stat_shotsfired_plasmarifle = 0;
-uint64_t        stat_shotsfired_bfg9000 = 0;
-uint64_t        stat_shotssuccessful_pistol = 0;
-uint64_t        stat_shotssuccessful_shotgun = 0;
-uint64_t        stat_shotssuccessful_supershotgun = 0;
-uint64_t        stat_shotssuccessful_chaingun = 0;
-uint64_t        stat_shotssuccessful_rocketlauncher = 0;
-uint64_t        stat_shotssuccessful_plasmarifle = 0;
-uint64_t        stat_shotssuccessful_bfg9000 = 0;
+dboolean        autoaim; //=autoaim_default;
+dboolean        centerweapon; //=centerweapon_default;
+int             weaponbob; //=weaponbob_default;
+dboolean        weaponbounce; //=weaponbounce_default;
+dboolean        weaponrecoil; //=weaponrecoil_default;
+uint64_t        stat_shotsfired_pistol; //=0;
+uint64_t        stat_shotsfired_shotgun; //=0;
+uint64_t        stat_shotsfired_supershotgun; //=0;
+uint64_t        stat_shotsfired_chaingun; //=0;
+uint64_t        stat_shotsfired_rocketlauncher; //=0;
+uint64_t        stat_shotsfired_plasmarifle; //=0;
+uint64_t        stat_shotsfired_bfg9000; //=0;
+uint64_t        stat_shotssuccessful_pistol; //=0;
+uint64_t        stat_shotssuccessful_shotgun; //=0;
+uint64_t        stat_shotssuccessful_supershotgun; //=0;
+uint64_t        stat_shotssuccessful_chaingun; //=0;
+uint64_t        stat_shotssuccessful_rocketlauncher; //=0;
+uint64_t        stat_shotssuccessful_plasmarifle; //=0;
+uint64_t        stat_shotssuccessful_bfg9000; //=0;
 
 // g_game.c
-dboolean        autoload = autoload_default;
-dboolean        autosave = autosave_default;
-uint64_t        stat_gamessaved = 0;
-uint64_t        stat_mapsstarted = 0;
-uint64_t        stat_mapscompleted = 0;
-uint64_t        stat_skilllevel_imtooyoungtodie = 0;
-uint64_t        stat_skilllevel_heynottoorough = 0;
-uint64_t        stat_skilllevel_hurtmeplenty = 0;
-uint64_t        stat_skilllevel_ultraviolence = 0;
-uint64_t        stat_skilllevel_nightmare = 0;
-dboolean        m_doubleclick_use = m_doubleclick_use_default;
-dboolean        m_invertyaxis = m_invertyaxis_default;
-dboolean        m_novertical = m_novertical_default;
-dboolean        mouselook = mouselook_default;
+dboolean        autoload; //=autoload_default;
+dboolean        autosave; //=autosave_default;
+uint64_t        stat_gamessaved; //=0;
+uint64_t        stat_mapsstarted; //=0;
+uint64_t        stat_mapscompleted; //=0;
+uint64_t        stat_skilllevel_imtooyoungtodie; //=0;
+uint64_t        stat_skilllevel_heynottoorough; //=0;
+uint64_t        stat_skilllevel_hurtmeplenty; //=0;
+uint64_t        stat_skilllevel_ultraviolence; //=0;
+uint64_t        stat_skilllevel_nightmare; //=0;
+dboolean        m_doubleclick_use; //=m_doubleclick_use_default;
+dboolean        m_invertyaxis; //=m_invertyaxis_default;
+dboolean        m_novertical; //=m_novertical_default;
+dboolean        mouselook; //=mouselook_default;
 
 // p_user.c
 dboolean        autotilt = autotilt_default;

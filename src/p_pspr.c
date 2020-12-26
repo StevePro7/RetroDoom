@@ -16,26 +16,26 @@
 #define LOWERSPEED  (6 * FRACUNIT)
 #define RAISESPEED  (6 * FRACUNIT)
 
-//dboolean        autoaim = autoaim_default;
-//dboolean        centerweapon = centerweapon_default;
-//int             weaponbob = weaponbob_default;
-//dboolean        weaponbounce = weaponbounce_default;
-//dboolean        weaponrecoil = weaponrecoil_default;
-//
-//uint64_t        stat_shotsfired_pistol = 0;
-//uint64_t        stat_shotsfired_shotgun = 0;
-//uint64_t        stat_shotsfired_supershotgun = 0;
-//uint64_t        stat_shotsfired_chaingun = 0;
-//uint64_t        stat_shotsfired_rocketlauncher = 0;
-//uint64_t        stat_shotsfired_plasmarifle = 0;
-//uint64_t        stat_shotsfired_bfg9000 = 0;
-//uint64_t        stat_shotssuccessful_pistol = 0;
-//uint64_t        stat_shotssuccessful_shotgun = 0;
-//uint64_t        stat_shotssuccessful_supershotgun = 0;
-//uint64_t        stat_shotssuccessful_chaingun = 0;
-//uint64_t        stat_shotssuccessful_rocketlauncher = 0;
-//uint64_t        stat_shotssuccessful_plasmarifle = 0;
-//uint64_t        stat_shotssuccessful_bfg9000 = 0;
+dboolean        autoaim = autoaim_default;
+dboolean        centerweapon = centerweapon_default;
+int             weaponbob = weaponbob_default;
+dboolean        weaponbounce = weaponbounce_default;
+dboolean        weaponrecoil = weaponrecoil_default;
+
+uint64_t        stat_shotsfired_pistol = 0;
+uint64_t        stat_shotsfired_shotgun = 0;
+uint64_t        stat_shotsfired_supershotgun = 0;
+uint64_t        stat_shotsfired_chaingun = 0;
+uint64_t        stat_shotsfired_rocketlauncher = 0;
+uint64_t        stat_shotsfired_plasmarifle = 0;
+uint64_t        stat_shotsfired_bfg9000 = 0;
+uint64_t        stat_shotssuccessful_pistol = 0;
+uint64_t        stat_shotssuccessful_shotgun = 0;
+uint64_t        stat_shotssuccessful_supershotgun = 0;
+uint64_t        stat_shotssuccessful_chaingun = 0;
+uint64_t        stat_shotssuccessful_rocketlauncher = 0;
+uint64_t        stat_shotssuccessful_plasmarifle = 0;
+uint64_t        stat_shotssuccessful_bfg9000 = 0;
 //
 //dboolean        successfulshot;
 ////dboolean        skippsprinterp;

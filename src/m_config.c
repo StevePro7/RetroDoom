@@ -29,28 +29,28 @@ static dboolean cvarsloaded;
 
 // CVARs
 // i_video.c
-//dboolean            alwaysrun = alwaysrun_default;
-//dboolean            m_acceleration = m_acceleration_default;
-//int                 r_color = r_color_default;
-//float               r_gamma = r_gamma_default;
-//dboolean            vid_borderlesswindow = vid_borderlesswindow_default;
+dboolean            alwaysrun = alwaysrun_default;
+dboolean            m_acceleration = m_acceleration_default;
+int                 r_color = r_color_default;
+float               r_gamma = r_gamma_default;
+dboolean            vid_borderlesswindow = vid_borderlesswindow_default;
 int                 vid_capfps = vid_capfps_default;
-//int                 vid_display = vid_display_default;
-//#if !defined(_WIN32)
-//char                *vid_driver = vid_driver_default;
-//#endif
-//dboolean            vid_fullscreen = vid_fullscreen_default;
-//int                 vid_motionblur = vid_motionblur_default;
-//dboolean            vid_pillarboxes = vid_pillarboxes_default;
-//char                *vid_scaleapi = vid_scaleapi_default;
-//char                *vid_scalefilter = vid_scalefilter_default;
-//char                *vid_screenresolution = vid_screenresolution_default;
-//dboolean            vid_showfps = vid_showfps_default;
-//int                 vid_vsync = vid_vsync_default;
-//dboolean            vid_widescreen = vid_widescreen_default;
-//char                *vid_windowpos = vid_windowpos_default;
-//char                *vid_windowsize = vid_windowsize_default;
-//
+int                 vid_display = vid_display_default;
+#if !defined(_WIN32)
+char                *vid_driver = vid_driver_default;
+#endif
+dboolean            vid_fullscreen = vid_fullscreen_default;
+int                 vid_motionblur = vid_motionblur_default;
+dboolean            vid_pillarboxes = vid_pillarboxes_default;
+char                *vid_scaleapi = vid_scaleapi_default;
+char                *vid_scalefilter = vid_scalefilter_default;
+char                *vid_screenresolution = vid_screenresolution_default;
+dboolean            vid_showfps = vid_showfps_default;
+int                 vid_vsync = vid_vsync_default;
+dboolean            vid_widescreen = vid_widescreen_default;
+char                *vid_windowpos = vid_windowpos_default;
+char                *vid_windowsize = vid_windowsize_default;
+
 //// am_map.c
 //int am_allmapcdwallcolor = am_allmapcdwallcolor_default;
 //int am_allmapfdwallcolor = am_allmapfdwallcolor_default;

@@ -727,7 +727,7 @@ static void D_DoomMainSetup( void )
 	startskill = sk_medium;
 	startepisode = 1;
 	startmap = 1;
-	autostart = false;
+	autostart = false;	// steveproTODO	hardcode autostart
 
 	if( ( p = M_CheckParmsWithArgs( "-skill", "-skilllevel", "", 1, 1 ) ) )
 	{
