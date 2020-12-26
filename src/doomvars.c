@@ -1946,3 +1946,10 @@ dboolean        firstevent;
 
 // r_main.c
 dboolean    setsizeneeded;
+
+
+// r_bsp.c
+seg_t       *curline;
+line_t      *linedef;
+sector_t    *frontsector;
+sector_t    *backsector;

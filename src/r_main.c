@@ -662,24 +662,24 @@ void R_SetViewSize(int blocks)
 //            mo->altcolfunc = mo->info->altcolfunc;
 //        }
 //}
+
 //
-////
-//// R_Init
-////
-//void R_Init(void)
-//{
-//    R_InitClipSegs();
-//    R_InitData();
-//    R_InitPointToAngle();
-//    R_InitTables();
-//    R_SetViewSize(r_screensize);
-//    R_InitLightTables();
-//    R_InitTranslationTables();
-//    R_InitPatches();
-//    R_InitDistortedFlats();
-//    R_InitColumnFunctions();
-//}
+// R_Init
 //
+void R_Init(void)
+{
+    //R_InitClipSegs();
+    //R_InitData();
+    //R_InitPointToAngle();
+    //R_InitTables();
+    //R_SetViewSize(r_screensize);
+    //R_InitLightTables();
+    //R_InitTranslationTables();
+    //R_InitPatches();
+    //R_InitDistortedFlats();
+    //R_InitColumnFunctions();
+}
+
 ////
 //// R_PointInSubsector
 ////

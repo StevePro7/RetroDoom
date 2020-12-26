@@ -1188,4 +1188,11 @@ extern int      armorhighlight;
 extern dboolean drawdisk;
 extern dboolean idbehold;
 
+
+// r_bsp.h
+extern seg_t        *curline;
+extern line_t       *linedef;
+extern sector_t     *frontsector;
+extern sector_t     *backsector;
+
 #endif

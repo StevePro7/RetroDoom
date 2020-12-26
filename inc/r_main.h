@@ -112,9 +112,9 @@ angle_t R_PointToAngle2(fixed_t x1, fixed_t y1, fixed_t x, fixed_t y);
 //
 //// Called by G_Drawer.
 //void R_RenderPlayerView(void);
-//
-//// Called by startup code.
-//void R_Init(void);
+
+// Called by startup code.
+void R_Init(void);
 
 // Called by M_Responder.
 void R_SetViewSize(int blocks);
