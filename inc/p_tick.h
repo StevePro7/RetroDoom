@@ -1,12 +1,13 @@
-//#if !defined(__P_TICK_H__)
-//#define __P_TICK_H__
-//
-//#if defined(__GNUG__)
-//#pragma interface
-//#endif
-//
+#if !defined(__P_TICK_H__)
+#define __P_TICK_H__
+
+#if defined(__GNUG__)
+#pragma interface
+#endif
+
 //// stevepro
 //#include "d_think.h"
+#include "doomenum.h"
 //#include "p_mobj.h"
 //
 //void P_Ticker(void);
@@ -32,5 +33,5 @@
 //};
 //
 //extern thinker_t    thinkers[];
-//
-//#endif
+
+#endif

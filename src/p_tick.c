@@ -1,4 +1,6 @@
-//#include "p_tick.h"
+#include "p_tick.h"
+#include <stdint.h>
+
 //
 //
 ////#include "c_console.h"
@@ -9,7 +11,7 @@
 ////#include "z_zone.h"
 //
 //int         leveltime;
-//uint64_t    stat_time = 0;
+uint64_t    stat_time = 0;
 //
 ////
 //// THINKERS

@@ -210,6 +210,9 @@
     <ClCompile Include="..\src\p_user.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\p_inter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">

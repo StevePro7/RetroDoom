@@ -2509,4 +2509,14 @@ typedef enum
 } mapformat_t;
 
 
+// p_tick.h
+enum
+{
+	th_mobj,
+	th_misc,
+	NUMTHCLASS,
+	th_all = NUMTHCLASS
+};
+
+
 #endif

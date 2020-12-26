@@ -63,6 +63,7 @@
     <ClCompile Include="..\src\m_menu.c" />
     <ClCompile Include="..\src\m_misc.c" />
     <ClCompile Include="..\src\m_random.c" />
+    <ClCompile Include="..\src\p_inter.c" />
     <ClCompile Include="..\src\p_local.c" />
     <ClCompile Include="..\src\p_mobj.c" />
     <ClCompile Include="..\src\p_pspr.c" />

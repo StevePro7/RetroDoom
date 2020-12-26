@@ -1175,4 +1175,8 @@ extern int      quickSaveSlot;
 extern dboolean     setsizeneeded;
 
 
+// p_tick.h
+extern thinker_t    thinkers[];
+
+
 #endif

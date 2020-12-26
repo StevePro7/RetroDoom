@@ -258,43 +258,56 @@ const kern_t altkern[];
 
 
 // p_inter.c
-dboolean        con_obituaries = con_obituaries_default;
-dboolean        r_mirroredweapons = r_mirroredweapons_default;
-dboolean        tossdrop = tossdrop_default;
+dboolean        con_obituaries; //=con_obituaries_default;
+dboolean        r_mirroredweapons; //=r_mirroredweapons_default;
+dboolean        tossdrop; //=tossdrop_default;
 
-uint64_t        stat_barrelsexploded = 0;
-uint64_t        stat_damageinflicted = 0;
-uint64_t        stat_damagereceived = 0;
-uint64_t        stat_deaths = 0;
-uint64_t        stat_itemspickedup = 0;
-uint64_t        stat_itemspickedup_ammo_bullets = 0;
-uint64_t        stat_itemspickedup_ammo_cells = 0;
-uint64_t        stat_itemspickedup_ammo_rockets = 0;
-uint64_t        stat_itemspickedup_ammo_shells = 0;
-uint64_t        stat_itemspickedup_armor = 0;
-uint64_t        stat_itemspickedup_health = 0;
-uint64_t        stat_monsterskilled = 0;
-uint64_t        stat_monsterskilled_arachnotrons = 0;
-uint64_t        stat_monsterskilled_archviles = 0;
-uint64_t        stat_monsterskilled_baronsofhell = 0;
-uint64_t        stat_monsterskilled_cacodemons = 0;
-uint64_t        stat_monsterskilled_cyberdemons = 0;
-uint64_t        stat_monsterskilled_demons = 0;
-uint64_t        stat_monsterskilled_heavyweapondudes = 0;
-uint64_t        stat_monsterskilled_hellknights = 0;
-uint64_t        stat_monsterskilled_imps = 0;
-uint64_t        stat_monsterskilled_lostsouls = 0;
-uint64_t        stat_monsterskilled_mancubi = 0;
-uint64_t        stat_monsterskilled_painelementals = 0;
-uint64_t        stat_monsterskilled_revenants = 0;
-uint64_t        stat_monsterskilled_shotgunguys = 0;
-uint64_t        stat_monsterskilled_spectres = 0;
-uint64_t        stat_monsterskilled_spidermasterminds = 0;
-uint64_t        stat_monsterskilled_zombiemen = 0;
-uint64_t        stat_suicides = 0;
+uint64_t        stat_barrelsexploded; //=0;
+uint64_t        stat_damageinflicted; //=0;
+uint64_t        stat_damagereceived; //=0;
+uint64_t        stat_deaths; //=0;
+uint64_t        stat_itemspickedup; //=0;
+uint64_t        stat_itemspickedup_ammo_bullets; //=0;
+uint64_t        stat_itemspickedup_ammo_cells; //=0;
+uint64_t        stat_itemspickedup_ammo_rockets; //=0;
+uint64_t        stat_itemspickedup_ammo_shells; //=0;
+uint64_t        stat_itemspickedup_armor; //=0;
+uint64_t        stat_itemspickedup_health; //=0;
+uint64_t        stat_monsterskilled; //=0;
+uint64_t        stat_monsterskilled_arachnotrons; //=0;
+uint64_t        stat_monsterskilled_archviles; //=0;
+uint64_t        stat_monsterskilled_baronsofhell; //=0;
+uint64_t        stat_monsterskilled_cacodemons; //=0;
+uint64_t        stat_monsterskilled_cyberdemons; //=0;
+uint64_t        stat_monsterskilled_demons; //=0;
+uint64_t        stat_monsterskilled_heavyweapondudes; //=0;
+uint64_t        stat_monsterskilled_hellknights; //=0;
+uint64_t        stat_monsterskilled_imps; //=0;
+uint64_t        stat_monsterskilled_lostsouls; //=0;
+uint64_t        stat_monsterskilled_mancubi; //=0;
+uint64_t        stat_monsterskilled_painelementals; //=0;
+uint64_t        stat_monsterskilled_revenants; //=0;
+uint64_t        stat_monsterskilled_shotgunguys; //=0;
+uint64_t        stat_monsterskilled_spectres; //=0;
+uint64_t        stat_monsterskilled_spidermasterminds; //=0;
+uint64_t        stat_monsterskilled_zombiemen; //=0;
+uint64_t        stat_suicides; //=0;
 
 // p_tick.c
-uint64_t    stat_time = 0;
+uint64_t    stat_time;// = 0;
+
+//
+// THINKERS
+// All thinkers should be allocated by Z_Malloc
+// so they can be operated on uniformly.
+// The actual structures will vary in size,
+// but the first element must be thinker_t.
+//
+
+// killough 08/29/98: we maintain several separate threads, each containing
+// a special class of thinkers, to allow more efficient searches.
+thinker_t       thinkers[ th_all + 1 ];
+
 
 // hu_stuff.c
 dboolean                message_on;
