@@ -474,19 +474,19 @@ dboolean    r_graduallighting; //=r_graduallighting_default;
 dboolean        r_fixmaperrors; //=r_fixmaperrors_default;
 
 // r_data.c
-dboolean    r_fixspriteoffsets = r_fixspriteoffsets_default;
+dboolean    r_fixspriteoffsets; //= r_fixspriteoffsets_default;
 
 // r_segs.c
 dboolean            r_brightmaps = r_brightmaps_default;
 
 
 // s_sound.c
-//int                 s_channels; //= s_channels_default;
-//int                 s_musicvolume; //= s_musicvolume_default;
-//dboolean            s_randommusic; //= s_randommusic_default;
+int                 s_channels; //= s_channels_default;
+int                 s_musicvolume; //= s_musicvolume_default;
+dboolean            s_randommusic; //= s_randommusic_default;
 dboolean            s_randompitch; //= s_randompitch_default;
-//int                 s_sfxvolume; //= s_sfxvolume_default;
-//dboolean            s_stereo; //= s_stereo_default;
+int                 s_sfxvolume; //= s_sfxvolume_default;
+dboolean            s_stereo; //= s_stereo_default;
 
 
 // Maximum volume of a sound effect.

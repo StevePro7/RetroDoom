@@ -75,6 +75,7 @@
     <ClCompile Include="..\src\p_spec.c" />
     <ClCompile Include="..\src\p_tick.c" />
     <ClCompile Include="..\src\p_user.c" />
+    <ClCompile Include="..\src\r_data.c" />
     <ClCompile Include="..\src\r_defs.c" />
     <ClCompile Include="..\src\r_main.c" />
     <ClCompile Include="..\src\r_plane.c" />
@@ -149,6 +150,7 @@
     <ClInclude Include="..\inc\p_setup.h" />
     <ClInclude Include="..\inc\p_spec.h" />
     <ClInclude Include="..\inc\p_tick.h" />
+    <ClInclude Include="..\inc\r_data.h" />
     <ClInclude Include="..\inc\r_defs.h" />
     <ClInclude Include="..\inc\r_main.h" />
     <ClInclude Include="..\inc\r_plane.h" />
