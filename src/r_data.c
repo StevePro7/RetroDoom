@@ -43,7 +43,7 @@ static int  missingflatnum;
 //texture_t   **textures;
 //
 //// needed for texture pegging
-fixed_t     *textureheight;
+//fixed_t     *textureheight;
 //byte        **brightmap;
 //dboolean    *nobrightmap;
 //
@@ -389,24 +389,24 @@ static void R_InitTextures(void)
     }
 }
 
-////
-//// R_InitBrightmaps
-////
-//static void R_InitBrightmaps(void)
-//{
-//    brightmap = Z_Calloc(numtextures, 256, PU_STATIC, NULL);
-//    nobrightmap = Z_Calloc(numtextures, sizeof(*nobrightmap), PU_STATIC, NULL);
 //
-//    for (int i = 0, game = brightmaps[i].game; brightmaps[i].mask; i++)
-//        if (*brightmaps[i].texture
-//            && (game == DOOM1AND2 || (gamemission == doom && game == DOOM1ONLY) || (gamemission != doom && game == DOOM2ONLY)))
-//        {
-//            int num = R_CheckTextureNumForName(brightmaps[i].texture);
+// R_InitBrightmaps
 //
-//            if (num != -1)
-//                brightmap[num] = brightmaps[i].mask;
-//        }
-//}
+static void R_InitBrightmaps(void)
+{
+    brightmap = Z_Calloc(numtextures, 256, PU_STATIC, NULL);
+    nobrightmap = Z_Calloc(numtextures, sizeof(*nobrightmap), PU_STATIC, NULL);
+
+    for (int i = 0, game = brightmaps[i].game; brightmaps[i].mask; i++)
+        if (*brightmaps[i].texture
+            && (game == DOOM1AND2 || (gamemission == doom && game == DOOM1ONLY) || (gamemission != doom && game == DOOM2ONLY)))
+        {
+            int num = R_CheckTextureNumForName(brightmaps[i].texture);
+
+            if (num != -1)
+                brightmap[num] = brightmaps[i].mask;
+        }
+}
 
 //
 // R_InitFlats
@@ -755,27 +755,27 @@ int R_FlatNumForName(char *name)
 //
 //    return -1;
 //}
+
 //
-////
-//// R_CheckTextureNumForName
-//// Check whether texture is available.
-//// Filter out NoTexture indicator.
-////
-//int R_CheckTextureNumForName(char *name)
-//{
-//    int i = 0;
+// R_CheckTextureNumForName
+// Check whether texture is available.
+// Filter out NoTexture indicator.
 //
-//    if (*name != '-')
-//    {
-//        i = textures[W_LumpNameHash(name) % numtextures]->index;
-//
-//        while (i >= 0 && strncasecmp(textures[i]->name, name, 8))
-//            i = textures[i]->next;
-//    }
-//
-//    return i;
-//}
-//
+int R_CheckTextureNumForName(char *name)
+{
+    int i = 0;
+
+    if (*name != '-')
+    {
+        i = textures[W_LumpNameHash(name) % numtextures]->index;
+
+        while (i >= 0 && strncasecmp(textures[i]->name, name, 8))
+            i = textures[i]->next;
+    }
+
+    return i;
+}
+
 ////
 //// R_TextureNumForName
 //// Calls R_CheckTextureNumForName,

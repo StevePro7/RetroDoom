@@ -486,6 +486,12 @@ int         *texturetranslation;
 int         numtextures;
 texture_t   **textures;
 
+// needed for texture pegging
+fixed_t     *textureheight;
+byte        **brightmap;
+dboolean    *nobrightmap;
+
+
 
 // r_segs.c
 dboolean            r_brightmaps; //= r_brightmaps_default;
