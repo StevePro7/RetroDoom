@@ -213,6 +213,9 @@
     <ClCompile Include="..\src\p_inter.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\hu_stuff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -410,6 +413,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\am_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\hu_stuff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

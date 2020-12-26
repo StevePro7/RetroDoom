@@ -1179,4 +1179,13 @@ extern dboolean     setsizeneeded;
 extern thinker_t    thinkers[];
 
 
+// hu_stuff.h
+extern patch_t  *hu_font[ HU_FONTSIZE ];
+
+extern int      healthhighlight;
+extern int      ammohighlight;
+extern int      armorhighlight;
+extern dboolean drawdisk;
+extern dboolean idbehold;
+
 #endif

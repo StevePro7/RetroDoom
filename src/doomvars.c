@@ -70,6 +70,7 @@ HANDLE       CapFPSEvent;
 
 
 // g_game.c
+gameaction_t    loadaction; // = ga_nothing;
 gamestate_t     gamestate;// = GS_TITLESCREEN;
 dboolean        paused;
 int             gametime;// = 0;
@@ -310,7 +311,19 @@ thinker_t       thinkers[ th_all + 1 ];
 
 
 // hu_stuff.c
+patch_t                 *hu_font[ HU_FONTSIZE ];
+
+int healthhighlight; //=0;
+int ammohighlight; //=0;
+int armorhighlight; //=0;
+
+dboolean                drawdisk;
+
 dboolean                message_on;
+dboolean                message_dontfuckwithme;
+//static dboolean         message_external;
+//static dboolean         message_nottobefuckedwith;
+dboolean                idbehold;
 
 int                     crosshair = crosshair_default;
 int                     crosshaircolor = crosshaircolor_default;
