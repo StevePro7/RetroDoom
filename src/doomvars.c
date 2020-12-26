@@ -483,6 +483,9 @@ int         numflats;
 int         *flattranslation;
 int         *texturetranslation;
 
+int         numtextures;
+texture_t   **textures;
+
 
 // r_segs.c
 dboolean            r_brightmaps; //= r_brightmaps_default;

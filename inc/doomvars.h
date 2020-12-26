@@ -1195,7 +1195,13 @@ extern line_t       *linedef;
 extern sector_t     *frontsector;
 extern sector_t     *backsector;
 
+
+// r_data.h
+extern texture_t    **textures;
+
+
 // p_spec.c
 extern int          numflats;
+
 
 #endif

@@ -671,7 +671,7 @@ void R_Init(void)
 {
     R_InitClipSegs();
     R_InitData();
-    //R_InitPointToAngle();
+//    R_InitPointToAngle();
     //R_InitTables();
     //R_SetViewSize(r_screensize);
     //R_InitLightTables();
