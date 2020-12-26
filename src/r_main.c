@@ -16,6 +16,9 @@
 //#include "r_sky.h"
 //#include "v_video.h"
 #include "tables.h"
+#include "SDL_stdinc.h"
+#include <math.h>
+
 
 // increment every time a check is made
 //int                 validcount = 1;
@@ -249,71 +252,71 @@ angle_t R_PointToAngle2( fixed_t x1, fixed_t y1, fixed_t x, fixed_t y )
 //            return (oangle + (angle_t)((nangle - oangle) * FIXED2DOUBLE(scale)));   // Wrapped around
 //    }
 //}
+
 //
-////
-//// R_InitTables
-////
-//static void R_InitTables(void)
-//{
-//    // viewangle tangent table
-//    for (int i = 0; i < FINEANGLES / 2; i++)
-//        finetangent[i] = (fixed_t)(tan(((double)i - FINEANGLES / 4 + 0.5) * M_PI * 2 / FINEANGLES) * FRACUNIT);
+// R_InitTables
 //
-//    // finesine table
-//    for (int i = 0; i < 5 * FINEANGLES / 4; i++)
-//        finesine[i] = (fixed_t)(sin((i + 0.5) * M_PI * 2 / FINEANGLES) * FRACUNIT);
-//}
+static void R_InitTables(void)
+{
+    // viewangle tangent table
+    for (int i = 0; i < FINEANGLES / 2; i++)
+        finetangent[i] = (fixed_t)(tan(((double)i - FINEANGLES / 4 + 0.5) * M_PI * 2 / FINEANGLES) * FRACUNIT);
+
+    // finesine table
+    for (int i = 0; i < 5 * FINEANGLES / 4; i++)
+        finesine[i] = (fixed_t)(sin((i + 0.5) * M_PI * 2 / FINEANGLES) * FRACUNIT);
+}
+
+static void R_InitPointToAngle(void)
+{
+    // slope (tangent) to angle lookup
+    for (int i = 0; i <= SLOPERANGE; i++)
+        tantoangle[i] = (angle_t)(0xFFFFFFFF * atan((i + 0.5) / SLOPERANGE) / (M_PI * 2));
+}
+
 //
-//static void R_InitPointToAngle(void)
-//{
-//    // slope (tangent) to angle lookup
-//    for (int i = 0; i <= SLOPERANGE; i++)
-//        tantoangle[i] = (angle_t)(0xFFFFFFFF * atan((i + 0.5) / SLOPERANGE) / (M_PI * 2));
-//}
+// R_InitTextureMapping
 //
-////
-//// R_InitTextureMapping
-////
-//static void R_InitTextureMapping(void)
-//{
-//    // Use tangent table to generate viewangletox:
-//    //  viewangletox will give the next greatest x after the view angle.
-//    const fixed_t   limit = finetangent[FINEANGLES / 4 + (r_fov * FINEANGLES / 360) / 2];
-//
-//    // Calc focallength so field of view angles covers SCREENWIDTH.
-//    const fixed_t   focallength = FixedDiv(centerxfrac, limit);
-//
-//    for (int i = 0; i < FINEANGLES / 2; i++)
-//    {
-//        const fixed_t   tangent = finetangent[i];
-//
-//        if (tangent > limit)
-//            viewangletox[i] = -1;
-//        else if (tangent < -limit)
-//            viewangletox[i] = viewwidth + 1;
-//        else
-//            viewangletox[i] = BETWEEN(-1, (centerxfrac - FixedMul(tangent, focallength) + FRACUNIT - 1) >> FRACBITS, viewwidth + 1);
-//    }
-//
-//    // Scan viewangletox[] to generate xtoviewangle[]:
-//    //  xtoviewangle will give the smallest view angle that maps to x.
-//    for (int i, x = 0; x <= viewwidth; x++)
-//    {
-//        for (i = 0; viewangletox[i] > x; i++);
-//
-//        xtoviewangle[x] = (i << ANGLETOFINESHIFT) - ANG90;
-//    }
-//
-//    // Take out the fencepost cases from viewangletox.
-//    for (int i = 0; i < FINEANGLES / 2; i++)
-//        if (viewangletox[i] == -1)
-//            viewangletox[i] = 0;
-//        else if (viewangletox[i] == viewwidth + 1)
-//            viewangletox[i]--;
-//
-//    clipangle = xtoviewangle[0];
-//}
-//
+static void R_InitTextureMapping(void)
+{
+    // Use tangent table to generate viewangletox:
+    //  viewangletox will give the next greatest x after the view angle.
+    const fixed_t   limit = finetangent[FINEANGLES / 4 + (r_fov * FINEANGLES / 360) / 2];
+
+    // Calc focallength so field of view angles covers SCREENWIDTH.
+    const fixed_t   focallength = FixedDiv(centerxfrac, limit);
+
+    for (int i = 0; i < FINEANGLES / 2; i++)
+    {
+        const fixed_t   tangent = finetangent[i];
+
+        if (tangent > limit)
+            viewangletox[i] = -1;
+        else if (tangent < -limit)
+            viewangletox[i] = viewwidth + 1;
+        else
+            viewangletox[i] = BETWEEN(-1, (centerxfrac - FixedMul(tangent, focallength) + FRACUNIT - 1) >> FRACBITS, viewwidth + 1);
+    }
+
+    // Scan viewangletox[] to generate xtoviewangle[]:
+    //  xtoviewangle will give the smallest view angle that maps to x.
+    for (int i, x = 0; x <= viewwidth; x++)
+    {
+        for (i = 0; viewangletox[i] > x; i++);
+
+        xtoviewangle[x] = (i << ANGLETOFINESHIFT) - ANG90;
+    }
+
+    // Take out the fencepost cases from viewangletox.
+    for (int i = 0; i < FINEANGLES / 2; i++)
+        if (viewangletox[i] == -1)
+            viewangletox[i] = 0;
+        else if (viewangletox[i] == viewwidth + 1)
+            viewangletox[i]--;
+
+    clipangle = xtoviewangle[0];
+}
+
 ////
 //// R_InitLightTables
 //// Only inits the zlight table, because the scalelight table changes with view size.
@@ -672,7 +675,7 @@ void R_Init(void)
 {
     R_InitClipSegs();
     R_InitData();
-//    R_InitPointToAngle();
+    R_InitPointToAngle();
     //R_InitTables();
     //R_SetViewSize(r_screensize);
     //R_InitLightTables();
