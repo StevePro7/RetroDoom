@@ -61,15 +61,15 @@ static dboolean         message_nottobefuckedwith;
 //static int              minuspatchy;
 //static patch_t          *greenarmorpatch;
 //static patch_t          *bluearmorpatch;
-//
-//int                     crosshair = crosshair_default;
-//int                     crosshaircolor = crosshaircolor_default;
-//char                    *playername = playername_default;
-//dboolean                r_althud = r_althud_default;
-//dboolean                r_diskicon = r_diskicon_default;
-//dboolean                r_hud = r_hud_default;
-//dboolean                r_hud_translucency = r_hud_translucency_default;
-//
+
+int                     crosshair = crosshair_default;
+int                     crosshaircolor = crosshaircolor_default;
+char                    *playername = playername_default;
+dboolean                r_althud = r_althud_default;
+dboolean                r_diskicon = r_diskicon_default;
+dboolean                r_hud = r_hud_default;
+dboolean                r_hud_translucency = r_hud_translucency_default;
+
 //static patch_t          *stdisk;
 //static short            stdiskwidth;
 //dboolean                drawdisk;

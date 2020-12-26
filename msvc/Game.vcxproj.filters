@@ -216,6 +216,9 @@
     <ClCompile Include="..\src\hu_stuff.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\p_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">

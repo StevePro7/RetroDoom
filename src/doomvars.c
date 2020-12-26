@@ -325,13 +325,13 @@ dboolean                message_dontfuckwithme;
 //static dboolean         message_nottobefuckedwith;
 dboolean                idbehold;
 
-int                     crosshair = crosshair_default;
-int                     crosshaircolor = crosshaircolor_default;
-char                    *playername = playername_default;
-dboolean                r_althud = r_althud_default;
-dboolean                r_diskicon = r_diskicon_default;
-dboolean                r_hud = r_hud_default;
-dboolean                r_hud_translucency = r_hud_translucency_default;
+int                     crosshair; //=crosshair_default;
+int                     crosshaircolor; //=crosshaircolor_default;
+char                    *playername; //=playername_default;
+dboolean                r_althud; //=r_althud_default;
+dboolean                r_diskicon; //=r_diskicon_default;
+dboolean                r_hud; //=r_hud_default;
+dboolean                r_hud_translucency; //=r_hud_translucency_default;
 
 // m_menu.c
 int             episode;// = episode_default;
@@ -379,21 +379,21 @@ int                         st_palette;// = 0;
 
 
 // i_gamepad.c
-dboolean                    gp_analog = gp_analog_default;
-float                       gp_deadzone_left = gp_deadzone_left_default;
-float                       gp_deadzone_right = gp_deadzone_right_default;
-dboolean                    gp_invertyaxis = gp_invertyaxis_default;
-int                         gp_sensitivity_horizontal = gp_sensitivity_horizontal_default;
-int                         gp_sensitivity_vertical = gp_sensitivity_vertical_default;
-dboolean                    gp_swapthumbsticks = gp_swapthumbsticks_default;
-int                         gp_thumbsticks = gp_thumbsticks_default;
-int                         gp_vibrate_barrels = gp_vibrate_barrels_default;
-int                         gp_vibrate_damage = gp_vibrate_damage_default;
-int                         gp_vibrate_weapons = gp_vibrate_weapons_default;
+dboolean                    gp_analog; //=gp_analog_default;
+float                       gp_deadzone_left; //=gp_deadzone_left_default;
+float                       gp_deadzone_right; //=gp_deadzone_right_default;
+dboolean                    gp_invertyaxis; //=gp_invertyaxis_default;
+int                         gp_sensitivity_horizontal; //=gp_sensitivity_horizontal_default;
+int                         gp_sensitivity_vertical; //=gp_sensitivity_vertical_default;
+dboolean                    gp_swapthumbsticks; //=gp_swapthumbsticks_default;
+int                         gp_thumbsticks; //=gp_thumbsticks_default;
+int                         gp_vibrate_barrels; //=gp_vibrate_barrels_default;
+int                         gp_vibrate_damage; //=gp_vibrate_damage_default;
+int                         gp_vibrate_weapons; //=gp_vibrate_weapons_default;
 
 // p_map.c
-dboolean        infiniteheight = infiniteheight_default;
-uint64_t        stat_distancetraveled = 0;
+dboolean        infiniteheight; //=infiniteheight_default;
+uint64_t        stat_distancetraveled; //=0;
 
 // c_cmd.c
 char                *version = version_default;

@@ -8,19 +8,19 @@
 //#include "SDL_gamecontroller.h"
 //#include "SDL_haptic.h"
 //#include "SDL_joystick.h"
-//
-////dboolean                    gp_analog = gp_analog_default;
-////float                       gp_deadzone_left = gp_deadzone_left_default;
-////float                       gp_deadzone_right = gp_deadzone_right_default;
-////dboolean                    gp_invertyaxis = gp_invertyaxis_default;
-////int                         gp_sensitivity_horizontal = gp_sensitivity_horizontal_default;
-////int                         gp_sensitivity_vertical = gp_sensitivity_vertical_default;
-////dboolean                    gp_swapthumbsticks = gp_swapthumbsticks_default;
-////int                         gp_thumbsticks = gp_thumbsticks_default;
-////int                         gp_vibrate_barrels = gp_vibrate_barrels_default;
-////int                         gp_vibrate_damage = gp_vibrate_damage_default;
-////int                         gp_vibrate_weapons = gp_vibrate_weapons_default;
-//
+
+//dboolean                    gp_analog = gp_analog_default;
+//float                       gp_deadzone_left = gp_deadzone_left_default;
+//float                       gp_deadzone_right = gp_deadzone_right_default;
+//dboolean                    gp_invertyaxis = gp_invertyaxis_default;
+//int                         gp_sensitivity_horizontal = gp_sensitivity_horizontal_default;
+//int                         gp_sensitivity_vertical = gp_sensitivity_vertical_default;
+//dboolean                    gp_swapthumbsticks = gp_swapthumbsticks_default;
+//int                         gp_thumbsticks = gp_thumbsticks_default;
+//int                         gp_vibrate_barrels = gp_vibrate_barrels_default;
+//int                         gp_vibrate_damage = gp_vibrate_damage_default;
+//int                         gp_vibrate_weapons = gp_vibrate_weapons_default;
+
 //static SDL_Joystick         *joystick;
 //static SDL_GameController   *gamecontroller;
 //static SDL_Haptic           *haptic;
