@@ -2,11 +2,13 @@
 #include "doomdef.h"
 #include "doomvars.h"
 #include "m_controls.h"
+#include "p_setup.h"
+#include "r_data.h"
 
 //#include "c_console.h"
 //#include "doomstat.h"
 //#include "m_config.h"
-//#include "p_setup.h"
+
 //#include "r_main.h"
 
 

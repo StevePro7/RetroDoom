@@ -1371,4 +1371,14 @@ extern fixed_t  skyiscale;
 extern dboolean canmouselook;
 
 
+// v_video.h
+//
+// VIDEO
+//
+
+// Screen 0 is the screen updated by I_Update screen.
+// Screen 1 is an extra buffer.
+extern byte *screens[ 5 ];
+
+
 #endif

@@ -525,8 +525,14 @@ dboolean    setsizeneeded;
 
 
 // v_video.c
+byte        *screens[ 5 ];
+int         lowpixelwidth;
+int         lowpixelheight;
+char        screenshotfolder[ MAX_PATH ];
+
 char        *r_lowpixelsize;// = r_lowpixelsize_default;
 dboolean    r_supersampling;// = r_supersampling_default;
+
 
 // s_sounds.c
 dboolean            nomusic;

@@ -26,82 +26,82 @@
 //#include "st_stuff.h"
 //#include "w_wad.h"
 //#include "z_zone.h"
-//
-//#define RMAPINFO_SCRIPT_NAME    "RMAPINFO"
-//#define MAPINFO_SCRIPT_NAME     "MAPINFO"
-//#define UMAPINFO_SCRIPT_NAME    "UMAPINFO"
-//
-//#define MAXMAPINFO              100
-//
-//#define NUMLIQUIDS              256
-//
-//#define MCMD_AUTHOR             1
-//#define MCMD_CLUSTER            2
-//#define MCMD_ENDBUNNY           3
-//#define MCMD_ENDCAST            4
-//#define MCMD_ENDGAME            5
-//#define MCMD_ENDPIC             6
-//#define MCMD_EPISODE            7
-//#define MCMD_ENTERPIC           8
-//#define MCMD_EXITPIC            9
-//#define MCMD_INTERBACKDROP      10
-//#define MCMD_INTERMUSIC         11
-//#define MCMD_INTERTEXT          12
-//#define MCMD_INTERTEXTSECRET    13
-//#define MCMD_LEVELNAME          14
-//#define MCMD_LEVELPIC           15
-//#define MCMD_LIQUID             16
-//#define MCMD_MUSIC              17
-//#define MCMD_MUSICCOMPOSER      18
-//#define MCMD_MUSICTITLE         19
-//#define MCMD_NEXT               20
-//#define MCMD_NEXTSECRET         21
-//#define MCMD_NOBRIGHTMAP        22
-//#define MCMD_NOFREELOOK         23
-//#define MCMD_NOJUMP             24
-//#define MCMD_NOLIQUID           25
-//#define MCMD_NOMOUSELOOK        26
-//#define MCMD_PAR                27
-//#define MCMD_PARTIME            28
-//#define MCMD_PISTOLSTART        29
-//#define MCMD_SECRETNEXT         30
-//#define MCMD_SKY1               31
-//#define MCMD_SKYTEXTURE         32
-//#define MCMD_TITLEPATCH         33
-//
-//typedef struct mapinfo_s mapinfo_t;
-//
-//struct mapinfo_s
-//{
-//    char        author[128];
-//    int         cluster;
-//    dboolean    endbunny;
-//    dboolean    endcast;
-//    dboolean    endgame;
-//    int         endpic;
-//    int         enterpic;
-//    int         exitpic;
-//    char        interbackdrop[9];
-//    int         intermusic;
-//    char        intertext[1024];
-//    char        intertextsecret[1024];
-//    int         liquid[NUMLIQUIDS];
-//    int         music;
-//    char        musiccomposer[128];
-//    char        musictitle[128];
-//    char        name[128];
-//    int         next;
-//    dboolean    nojump;
-//    int         noliquid[NUMLIQUIDS];
-//    dboolean    nomouselook;
-//    int         par;
-//    dboolean    pistolstart;
-//    int         secretnext;
-//    int         sky1texture;
-//    int         sky1scrolldelta;
-//    int         titlepatch;
-//};
-//
+
+#define RMAPINFO_SCRIPT_NAME    "RMAPINFO"
+#define MAPINFO_SCRIPT_NAME     "MAPINFO"
+#define UMAPINFO_SCRIPT_NAME    "UMAPINFO"
+
+#define MAXMAPINFO              100
+
+#define NUMLIQUIDS              256
+
+#define MCMD_AUTHOR             1
+#define MCMD_CLUSTER            2
+#define MCMD_ENDBUNNY           3
+#define MCMD_ENDCAST            4
+#define MCMD_ENDGAME            5
+#define MCMD_ENDPIC             6
+#define MCMD_EPISODE            7
+#define MCMD_ENTERPIC           8
+#define MCMD_EXITPIC            9
+#define MCMD_INTERBACKDROP      10
+#define MCMD_INTERMUSIC         11
+#define MCMD_INTERTEXT          12
+#define MCMD_INTERTEXTSECRET    13
+#define MCMD_LEVELNAME          14
+#define MCMD_LEVELPIC           15
+#define MCMD_LIQUID             16
+#define MCMD_MUSIC              17
+#define MCMD_MUSICCOMPOSER      18
+#define MCMD_MUSICTITLE         19
+#define MCMD_NEXT               20
+#define MCMD_NEXTSECRET         21
+#define MCMD_NOBRIGHTMAP        22
+#define MCMD_NOFREELOOK         23
+#define MCMD_NOJUMP             24
+#define MCMD_NOLIQUID           25
+#define MCMD_NOMOUSELOOK        26
+#define MCMD_PAR                27
+#define MCMD_PARTIME            28
+#define MCMD_PISTOLSTART        29
+#define MCMD_SECRETNEXT         30
+#define MCMD_SKY1               31
+#define MCMD_SKYTEXTURE         32
+#define MCMD_TITLEPATCH         33
+
+typedef struct mapinfo_s mapinfo_t;
+
+struct mapinfo_s
+{
+	char        author[ 128 ];
+	int         cluster;
+	dboolean    endbunny;
+	dboolean    endcast;
+	dboolean    endgame;
+	int         endpic;
+	int         enterpic;
+	int         exitpic;
+	char        interbackdrop[ 9 ];
+	int         intermusic;
+	char        intertext[ 1024 ];
+	char        intertextsecret[ 1024 ];
+	int         liquid[ NUMLIQUIDS ];
+	int         music;
+	char        musiccomposer[ 128 ];
+	char        musictitle[ 128 ];
+	char        name[ 128 ];
+	int         next;
+	dboolean    nojump;
+	int         noliquid[ NUMLIQUIDS ];
+	dboolean    nomouselook;
+	int         par;
+	dboolean    pistolstart;
+	int         secretnext;
+	int         sky1texture;
+	int         sky1scrolldelta;
+	int         titlepatch;
+};
+
 ////
 //// MAP related Lookup tables.
 //// Store VERTEXES, LINEDEFS, SIDEDEFS, etc.
@@ -182,11 +182,11 @@
 //// Without special effect, this could be
 ////  used as a PVS lookup as well.
 ////
-//static int          rejectlump = -1;        // cph - store reject lump num if cached
-//const byte          *rejectmatrix;          // cph - const*
-//
-//static mapinfo_t    mapinfo[MAXMAPINFO];
-//
+static int          rejectlump = -1;        // cph - store reject lump num if cached
+const byte          *rejectmatrix;          // cph - const*
+
+static mapinfo_t    mapinfo[ MAXMAPINFO ];
+
 //static char *mapcmdnames[] =
 //{
 //    "AUTHOR",
@@ -3522,22 +3522,22 @@ dboolean        nomouselook = false;
 //{
 //    return mapinfo[map].secretnext;
 //}
-//
-//int P_GetMapSky1Texture(int map)
-//{
-//    return mapinfo[map].sky1texture;
-//}
-//
-//int P_GetMapSky1ScrollDelta(int map)
-//{
-//    return mapinfo[map].sky1scrolldelta;
-//}
-//
-//int P_GetMapTitlePatch(int map)
-//{
-//    return mapinfo[map].titlepatch;
-//}
-//
+
+int P_GetMapSky1Texture( int map )
+{
+	return mapinfo[ map ].sky1texture;
+}
+
+int P_GetMapSky1ScrollDelta( int map )
+{
+	return mapinfo[ map ].sky1scrolldelta;
+}
+
+int P_GetMapTitlePatch( int map )
+{
+	return mapinfo[ map ].titlepatch;
+}
+
 ////
 //// P_Init
 ////
