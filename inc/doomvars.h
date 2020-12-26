@@ -1272,6 +1272,21 @@ extern byte         grays[ 256 ];
 extern texture_t    **textures;
 
 
+// p_spec.h
+extern int              timer;
+extern int              countdown;
+extern fixed_t          animatedliquiddiff;
+extern fixed_t          animatedliquidxdir;
+extern fixed_t          animatedliquidydir;
+extern fixed_t          animatedliquidxoffs;
+extern fixed_t          animatedliquidyoffs;
+
+extern terraintype_t    *terraintypes;
+extern dboolean         *isteleport;
+
+extern dboolean         zerotag_manual;
+
+
 // p_spec.c
 extern int          numflats;
 

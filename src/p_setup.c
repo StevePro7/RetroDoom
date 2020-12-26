@@ -1,6 +1,7 @@
 #include "p_setup.h"
 #include "doomdef.h"
 #include "doomtype.h"
+#include "doomvars.h"
 
 #include <ctype.h>
 
@@ -2961,10 +2962,10 @@ dboolean        nomouselook = false;
 //    if (gamemode != shareware)
 //        S_ParseMusInfo(lumpname);
 //}
-//
-//static int  liquidlumps;
-//static int  noliquidlumps;
-//
+
+static int  liquidlumps;
+static int  noliquidlumps;
+
 //static void P_InitMapInfo(void)
 //{
 //    int         mapmax = 1;
@@ -3414,114 +3415,114 @@ dboolean        nomouselook = false;
 //    return (MAPINFO >= 0 && mapinfo[map].author[0] ? mapinfo[map].author :
 //        (((E1M4B || *speciallumpname) && map == 4) || ((E1M8B || *speciallumpname) && map == 8) ? s_AUTHOR_ROMERO : ""));
 //}
-//
-//char *P_GetInterBackrop(int map)
-//{
-//    return mapinfo[map].interbackdrop;
-//}
-//
-//int P_GetInterMusic(int map)
-//{
-//    return mapinfo[map].intermusic;
-//}
-//
-//char *P_GetInterText(int map)
-//{
-//    return mapinfo[map].intertext;
-//}
-//
-//char *P_GetInterSecretText(int map)
-//{
-//    return mapinfo[map].intertextsecret;
-//}
-//
-//dboolean P_GetMapEndBunny(int map)
-//{
-//    return mapinfo[map].endbunny;
-//}
-//
-//dboolean P_GetMapEndCast(int map)
-//{
-//    return mapinfo[map].endcast;
-//}
-//
-//dboolean P_GetMapEndGame(int map)
-//{
-//    return mapinfo[map].endgame;
-//}
-//
-//int P_GetMapEndPic(int map)
-//{
-//    return mapinfo[map].endpic;
-//}
-//
-//int P_GetMapEnterPic(int map)
-//{
-//    return mapinfo[map].enterpic;
-//}
-//
-//void P_GetMapLiquids(int map)
-//{
-//    for (int i = 0; i < liquidlumps; i++)
-//        terraintypes[mapinfo[map].liquid[i]] = LIQUID;
-//}
-//
-//int P_GetMapMusic(int map)
-//{
-//    return mapinfo[map].music;
-//}
-//
-//char *P_GetMapMusicComposer(int map)
-//{
-//    return mapinfo[map].musiccomposer;
-//}
-//
-//char *P_GetMapMusicTitle(int map)
-//{
-//    return mapinfo[map].musictitle;
-//}
-//
+
+char *P_GetInterBackrop(int map)
+{
+    return mapinfo[map].interbackdrop;
+}
+
+int P_GetInterMusic(int map)
+{
+    return mapinfo[map].intermusic;
+}
+
+char *P_GetInterText(int map)
+{
+    return mapinfo[map].intertext;
+}
+
+char *P_GetInterSecretText(int map)
+{
+    return mapinfo[map].intertextsecret;
+}
+
+dboolean P_GetMapEndBunny(int map)
+{
+    return mapinfo[map].endbunny;
+}
+
+dboolean P_GetMapEndCast(int map)
+{
+    return mapinfo[map].endcast;
+}
+
+dboolean P_GetMapEndGame(int map)
+{
+    return mapinfo[map].endgame;
+}
+
+int P_GetMapEndPic(int map)
+{
+    return mapinfo[map].endpic;
+}
+
+int P_GetMapEnterPic(int map)
+{
+    return mapinfo[map].enterpic;
+}
+
+void P_GetMapLiquids(int map)
+{
+    for (int i = 0; i < liquidlumps; i++)
+        terraintypes[mapinfo[map].liquid[i]] = LIQUID;
+}
+
+int P_GetMapMusic(int map)
+{
+    return mapinfo[map].music;
+}
+
+char *P_GetMapMusicComposer(int map)
+{
+    return mapinfo[map].musiccomposer;
+}
+
+char *P_GetMapMusicTitle(int map)
+{
+    return mapinfo[map].musictitle;
+}
+
 //char *P_GetMapName(int map)
 //{
 //    return (MAPINFO >= 0 && !sigil ? mapinfo[map].name : ((E1M4B || *speciallumpname) && map == 4 ? s_CAPTION_E1M4B :
 //        ((E1M8B || *speciallumpname) && map == 8 ? s_CAPTION_E1M8B : "")));
 //}
-//
-//int P_GetMapNext(int map)
-//{
-//    return mapinfo[map].next;
-//}
-//
-//dboolean P_GetMapNoJump(int map)
-//{
-//    return (MAPINFO >= 0 ? mapinfo[map].nojump : nojump);
-//}
-//
-//void P_GetMapNoLiquids(int map)
-//{
-//    for (int i = 0; i < noliquidlumps; i++)
-//        terraintypes[mapinfo[map].liquid[i]] = SOLID;
-//}
-//
-//dboolean P_GetMapNoMouselook(int map)
-//{
-//    return (MAPINFO >= 0 ? mapinfo[map].nomouselook : nomouselook);
-//}
-//
-//int P_GetMapPar(int map)
-//{
-//    return mapinfo[map].par;
-//}
-//
-//dboolean P_GetMapPistolStart(int map)
-//{
-//    return mapinfo[map].pistolstart;
-//}
-//
-//int P_GetMapSecretNext(int map)
-//{
-//    return mapinfo[map].secretnext;
-//}
+
+int P_GetMapNext( int map )
+{
+	return mapinfo[ map ].next;
+}
+
+dboolean P_GetMapNoJump( int map )
+{
+	return ( MAPINFO >= 0 ? mapinfo[ map ].nojump : nojump );
+}
+
+void P_GetMapNoLiquids( int map )
+{
+	for( int i = 0; i < noliquidlumps; i++ )
+		terraintypes[ mapinfo[ map ].liquid[ i ] ] = SOLID;
+}
+
+dboolean P_GetMapNoMouselook( int map )
+{
+	return ( MAPINFO >= 0 ? mapinfo[ map ].nomouselook : nomouselook );
+}
+
+int P_GetMapPar( int map )
+{
+	return mapinfo[ map ].par;
+}
+
+dboolean P_GetMapPistolStart( int map )
+{
+	return mapinfo[ map ].pistolstart;
+}
+
+int P_GetMapSecretNext( int map )
+{
+	return mapinfo[ map ].secretnext;
+}
 
 int P_GetMapSky1Texture( int map )
 {

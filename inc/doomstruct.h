@@ -1252,6 +1252,14 @@ typedef struct
 // p_spec.h
 
 // p_spec.c
+typedef struct
+{
+	dboolean        istexture;
+	int             picnum;
+	int             basepic;
+	int             numpics;
+	int             speed;
+} anim_t;
 
 
 #endif

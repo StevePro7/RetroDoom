@@ -1,5 +1,6 @@
 #include "p_spec.h"
 #include "doomdef.h"
+#include "doomstruct.h"
 #include "doomtype.h"
 
 //#include "c_console.h"
@@ -85,13 +86,13 @@ dboolean            r_liquid_bob = r_liquid_bob_default;
 //     -314,   314,   942,  1562,  2166,  2748,  3306,  3830,
 //     4318,  4764,  5164,  5516,  5814,  6054,  6238,  6360
 //};
-//
-//static anim_t       *lastanim;
-//static anim_t       *anims;             // new structure w/o limits -- killough
-//
-//terraintype_t       *terraintypes;
-//dboolean            *isteleport;
-//
+
+static anim_t       *lastanim;
+static anim_t       *anims;             // new structure w/o limits -- killough
+
+terraintype_t       *terraintypes;
+dboolean            *isteleport;
+
 //// killough 03/07/98: Initialize generalized scrolling
 //static void P_SpawnScrollers(void);
 //static void P_SpawnFriction(void);      // phares 03/16/98
