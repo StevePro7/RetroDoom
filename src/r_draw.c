@@ -126,39 +126,39 @@ static const byte megasphere[] =
 //// Thus a special case loop for very fast rendering can
 ////  be used. It has also been used with Wolfenstein 3D.
 ////
-//
-//void R_DrawColumn(void)
-//{
-//    int                 y = dc_yh - dc_yl + 1;
-//    byte                *dest = ylookup0[dc_yl] + dc_x;
-//    fixed_t             frac = dc_texturefrac;
-//    const lighttable_t  *colormap = dc_colormap[0];
-//
-//    while (--y)
-//    {
-//        *dest = colormap[dc_source[frac >> FRACBITS]];
-//        dest += SCREENWIDTH;
-//        frac += dc_iscale;
-//    }
-//
-//    *dest = colormap[dc_source[frac >> FRACBITS]];
-//}
-//
-//void R_DrawColorColumn(void)
-//{
-//    int         y = dc_yh - dc_yl + 1;
-//    byte        *dest = ylookup0[dc_yl] + dc_x;
-//    const byte  color = dc_colormap[0][NOTEXTURECOLOR];
-//
-//    while (--y)
-//    {
-//        *dest = color;
-//        dest += SCREENWIDTH;
-//    }
-//
-//    *dest = color;
-//}
-//
+
+void R_DrawColumn( void )
+{
+	int                 y = dc_yh - dc_yl + 1;
+	byte                *dest = ylookup0[ dc_yl ] + dc_x;
+	fixed_t             frac = dc_texturefrac;
+	const lighttable_t  *colormap = dc_colormap[ 0 ];
+
+	while( --y )
+	{
+		*dest = colormap[ dc_source[ frac >> FRACBITS ] ];
+		dest += SCREENWIDTH;
+		frac += dc_iscale;
+	}
+
+	*dest = colormap[ dc_source[ frac >> FRACBITS ] ];
+}
+
+void R_DrawColorColumn( void )
+{
+	int         y = dc_yh - dc_yl + 1;
+	byte        *dest = ylookup0[ dc_yl ] + dc_x;
+	const byte  color = dc_colormap[ 0 ][ NOTEXTURECOLOR ];
+
+	while( --y )
+	{
+		*dest = color;
+		dest += SCREENWIDTH;
+	}
+
+	*dest = color;
+}
+
 //void R_DrawShadowColumn(void)
 //{
 //    int     y = dc_yh - dc_yl;
@@ -891,42 +891,42 @@ static const byte megasphere[] =
 //#define NOFUZZ  251
 //
 //const int       fuzzrange[] = { -SCREENWIDTH, 0, SCREENWIDTH };
-//
-//void R_DrawFuzzColumn(void)
-//{
-//    byte    *dest;
-//    int     y = dc_yh - dc_yl;
-//
-//    if (!y)
-//        return;
-//
-//    dest = ylookup0[dc_yl] + dc_x;;
-//
-//    // top
-//    if (!dc_yl)
-//        *dest = fullcolormap[6 * 256 + dest[(fuzztable[fuzzpos++] = FUZZ(0, 1))]];
-//    else if (!(M_Random() & 3))
-//        *dest = fullcolormap[12 * 256 + dest[(fuzztable[fuzzpos++] = FUZZ(-1, 1))]];
-//
-//    dest += SCREENWIDTH;
-//
-//    while (--y)
-//    {
-//        // middle
-//        *dest = fullcolormap[6 * 256 + dest[(fuzztable[fuzzpos++] = FUZZ(-1, 1))]];
-//        dest += SCREENWIDTH;
-//    }
-//
-//    // bottom
-//    *dest = fullcolormap[5 * 256 + dest[(fuzztable[fuzzpos++] = FUZZ(-1, 0))]];
-//
-//    if (dc_yh < dc_floorclip && !(M_Random() & 3))
-//    {
-//        dest += SCREENWIDTH;
-//        *dest = fullcolormap[14 * 256 + dest[(fuzztable[fuzzpos] = FUZZ(-1, 0))]];
-//    }
-//}
-//
+
+void R_DrawFuzzColumn(void)
+{
+    byte    *dest;
+    int     y = dc_yh - dc_yl;
+
+    if (!y)
+        return;
+
+    dest = ylookup0[dc_yl] + dc_x;;
+
+    // top
+    if (!dc_yl)
+        *dest = fullcolormap[6 * 256 + dest[(fuzztable[fuzzpos++] = FUZZ(0, 1))]];
+    else if (!(M_Random() & 3))
+        *dest = fullcolormap[12 * 256 + dest[(fuzztable[fuzzpos++] = FUZZ(-1, 1))]];
+
+    dest += SCREENWIDTH;
+
+    while (--y)
+    {
+        // middle
+        *dest = fullcolormap[6 * 256 + dest[(fuzztable[fuzzpos++] = FUZZ(-1, 1))]];
+        dest += SCREENWIDTH;
+    }
+
+    // bottom
+    *dest = fullcolormap[5 * 256 + dest[(fuzztable[fuzzpos++] = FUZZ(-1, 0))]];
+
+    if (dc_yh < dc_floorclip && !(M_Random() & 3))
+    {
+        dest += SCREENWIDTH;
+        *dest = fullcolormap[14 * 256 + dest[(fuzztable[fuzzpos] = FUZZ(-1, 0))]];
+    }
+}
+
 //void R_DrawPausedFuzzColumn(void)
 //{
 //    byte    *dest;

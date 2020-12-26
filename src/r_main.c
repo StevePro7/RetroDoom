@@ -1,4 +1,5 @@
 #include "r_main.h"
+//#include "doomstruct.h"
 #include "doomvars.h"
 #include "r_bsp.h"
 #include "r_data.h"
@@ -448,228 +449,228 @@ void R_SetViewSize(int blocks)
 //        }
 //    }
 //}
-//
-//void (*colfunc)(void);
-//void (*wallcolfunc)(void);
-//void (*bmapwallcolfunc)(void);
-//void (*segcolfunc)(void);
-//void (*translatedcolfunc)(void);
-//void (*basecolfunc)(void);
-//void (*fuzzcolfunc)(void);
-//void (*tlcolfunc)(void);
-//void (*tl50colfunc)(void);
-//void (*tl50segcolfunc)(void);
-//void (*tl33colfunc)(void);
-//void (*tlgreencolfunc)(void);
-//void (*tlredcolfunc)(void);
-//void (*tlredwhitecolfunc1)(void);
-//void (*tlredwhitecolfunc2)(void);
-//void (*tlredwhite50colfunc)(void);
-//void (*tlbluecolfunc)(void);
-//void (*tlgreen33colfunc)(void);
-//void (*tlred33colfunc)(void);
-//void (*tlblue25colfunc)(void);
-//void (*redtobluecolfunc)(void);
-//void (*tlredtoblue33colfunc)(void);
-//void (*skycolfunc)(void);
-//void (*redtogreencolfunc)(void);
-//void (*tlredtogreen33colfunc)(void);
-//void (*psprcolfunc)(void);
-//void (*spanfunc)(void);
-//void (*bloodsplatcolfunc)(void);
-//void (*megaspherecolfunc)(void);
-//void (*supershotguncolfunc)(void);
-//
-//void R_InitColumnFunctions(void)
-//{
-//    if (r_textures)
-//    {
-//        basecolfunc = &R_DrawColumn;
-//        fuzzcolfunc = &R_DrawFuzzColumn;
-//        translatedcolfunc = &R_DrawTranslatedColumn;
-//        wallcolfunc = &R_DrawWallColumn;
-//        bmapwallcolfunc = &R_DrawBrightmapWallColumn;
-//        segcolfunc = &R_DrawColumn;
-//
-//        if (r_skycolor != r_skycolor_default)
-//            skycolfunc = &R_DrawSkyColorColumn;
-//        else
-//            skycolfunc = (canmodify && !transferredsky && (gamemode != commercial || gamemap < 21) && !canmouselook ?
-//                &R_DrawFlippedSkyColumn : &R_DrawSkyColumn);
-//
-//        spanfunc = &R_DrawSpan;
-//
-//        if (r_translucency)
-//        {
-//            tlcolfunc = &R_DrawTranslucentColumn;
-//            tl50colfunc = &R_DrawTranslucent50Column;
-//            tl50segcolfunc = (r_dither ? &R_DrawDitheredColumn : &R_DrawTranslucent50Column);
-//            tl33colfunc = &R_DrawTranslucent33Column;
-//            tlgreencolfunc = &R_DrawTranslucentGreenColumn;
-//            tlredcolfunc = &R_DrawTranslucentRedColumn;
-//            tlredwhitecolfunc1 = &R_DrawTranslucentRedWhiteColumn1;
-//            tlredwhitecolfunc2 = &R_DrawTranslucentRedWhiteColumn2;
-//            tlredwhite50colfunc = &R_DrawTranslucentRedWhite50Column;
-//            tlbluecolfunc = &R_DrawTranslucentBlueColumn;
-//            tlgreen33colfunc = &R_DrawTranslucentGreen33Column;
-//            tlred33colfunc = &R_DrawTranslucentRed33Column;
-//            tlblue25colfunc = &R_DrawTranslucentBlue25Column;
-//            tlredtoblue33colfunc = &R_DrawTranslucentRedToBlue33Column;
-//            tlredtogreen33colfunc = &R_DrawTranslucentRedToGreen33Column;
-//            megaspherecolfunc = &R_DrawMegaSphereColumn;
-//            supershotguncolfunc = &R_DrawTranslucentSuperShotgunColumn;
-//        }
-//        else
-//        {
-//            tlcolfunc = &R_DrawColumn;
-//            tl50colfunc = &R_DrawColumn;
-//            tl50segcolfunc = &R_DrawColumn;
-//            tl33colfunc = &R_DrawColumn;
-//            tlgreencolfunc = &R_DrawColumn;
-//            tlredcolfunc = &R_DrawColumn;
-//            tlredwhitecolfunc1 = &R_DrawColumn;
-//            tlredwhitecolfunc2 = &R_DrawColumn;
-//            tlredwhite50colfunc = &R_DrawColumn;
-//            tlbluecolfunc = &R_DrawColumn;
-//            tlgreen33colfunc = &R_DrawColumn;
-//            tlred33colfunc = &R_DrawColumn;
-//            tlblue25colfunc = &R_DrawColumn;
-//            tlredtoblue33colfunc = &R_DrawRedToBlueColumn;
-//            tlredtogreen33colfunc = &R_DrawRedToGreenColumn;
-//            megaspherecolfunc = &R_DrawSolidMegaSphereColumn;
-//            supershotguncolfunc = &R_DrawSuperShotgunColumn;
-//        }
-//
-//        bloodsplatcolfunc = (r_bloodsplats_translucency ? &R_DrawBloodSplatColumn : &R_DrawSolidBloodSplatColumn);
-//        redtobluecolfunc = &R_DrawRedToBlueColumn;
-//        redtogreencolfunc = &R_DrawRedToGreenColumn;
-//        psprcolfunc = &R_DrawPlayerSpriteColumn;
-//    }
-//    else
-//    {
-//        basecolfunc = &R_DrawColorColumn;
-//        fuzzcolfunc = &R_DrawTranslucentColor50Column;
-//        translatedcolfunc = &R_DrawColorColumn;
-//        wallcolfunc = &R_DrawColorColumn;
-//        bmapwallcolfunc = &R_DrawColorColumn;
-//        segcolfunc = &R_DrawColorColumn;
-//        skycolfunc = (r_skycolor == r_skycolor_default ? &R_DrawColorColumn : &R_DrawSkyColorColumn);
-//        spanfunc = &R_DrawColorSpan;
-//        tlcolfunc = &R_DrawColorColumn;
-//        tl50colfunc = &R_DrawColorColumn;
-//        tl50segcolfunc = (r_translucency ? (r_dither ? &R_DrawDitheredColorColumn : &R_DrawTranslucentColor50Column) :
-//            R_DrawColorColumn);
-//        tl33colfunc = &R_DrawColorColumn;
-//        tlgreencolfunc = &R_DrawColorColumn;
-//        tlredcolfunc = &R_DrawColorColumn;
-//        tlredwhitecolfunc1 = &R_DrawColorColumn;
-//        tlredwhitecolfunc2 = &R_DrawColorColumn;
-//        tlredwhite50colfunc = &R_DrawColorColumn;
-//        tlbluecolfunc = &R_DrawColorColumn;
-//        tlgreen33colfunc = &R_DrawColorColumn;
-//        tlred33colfunc = &R_DrawColorColumn;
-//        tlblue25colfunc = &R_DrawColorColumn;
-//        tlredtoblue33colfunc = &R_DrawColorColumn;
-//        tlredtogreen33colfunc = &R_DrawColorColumn;
-//        bloodsplatcolfunc = &R_DrawColorColumn;
-//        megaspherecolfunc = &R_DrawColorColumn;
-//        supershotguncolfunc = &R_DrawColorColumn;
-//        redtobluecolfunc = &R_DrawColorColumn;
-//        redtogreencolfunc = &R_DrawColorColumn;
-//        psprcolfunc = &R_DrawColorColumn;
-//    }
-//
-//    for (int i = 0; i < NUMMOBJTYPES; i++)
-//    {
-//        mobjinfo_t  *info = &mobjinfo[i];
-//        const int   flags2 = info->flags2;
-//
-//        if (flags2 & MF2_TRANSLUCENT)
-//        {
-//            info->colfunc = tlcolfunc;
-//            info->altcolfunc = tl50colfunc;
-//        }
-//        else if (info->doomednum == MegaSphere && !doom4vanilla && !hacx)
-//        {
-//            info->colfunc = megaspherecolfunc;
-//            info->altcolfunc = megaspherecolfunc;
-//        }
-//        else if (info->flags & MF_FUZZ)
-//        {
-//            info->colfunc = fuzzcolfunc;
-//            info->altcolfunc = fuzzcolfunc;
-//        }
-//        else if (flags2 & MF2_TRANSLUCENT_REDONLY)
-//        {
-//            info->colfunc = tlredcolfunc;
-//            info->altcolfunc = tlred33colfunc;
-//        }
-//        else if (flags2 & MF2_TRANSLUCENT_GREENONLY)
-//        {
-//            info->colfunc = tlgreencolfunc;
-//            info->altcolfunc = tlgreen33colfunc;
-//        }
-//        else if (flags2 & MF2_TRANSLUCENT_BLUEONLY)
-//        {
-//            info->colfunc = tlbluecolfunc;
-//            info->altcolfunc = tlblue25colfunc;
-//        }
-//        else if (flags2 & MF2_TRANSLUCENT_33)
-//        {
-//            info->colfunc = tl33colfunc;
-//            info->altcolfunc = tl33colfunc;
-//        }
-//        else if ((info->flags & MF_TRANSLUCENT) || (flags2 & MF2_TRANSLUCENT_50))
-//        {
-//            info->colfunc = tl50colfunc;
-//            info->altcolfunc = tl50colfunc;
-//        }
-//        else if (flags2 & MF2_TRANSLUCENT_REDWHITEONLY)
-//        {
-//            info->colfunc = tlredwhitecolfunc1;
-//            info->altcolfunc = tlred33colfunc;
-//        }
-//        else if (flags2 & MF2_TRANSLUCENT_REDTOGREEN_33)
-//        {
-//            info->colfunc = tlredtogreen33colfunc;
-//            info->altcolfunc = tlredtogreen33colfunc;
-//        }
-//        else if (flags2 & MF2_TRANSLUCENT_REDTOBLUE_33)
-//        {
-//            info->colfunc = tlredtoblue33colfunc;
-//            info->altcolfunc = tlredtoblue33colfunc;
-//        }
-//        else if (flags2 & MF2_TRANSLUCENT_BLUE_25)
-//        {
-//            info->colfunc = tlblue25colfunc;
-//            info->altcolfunc = tlblue25colfunc;
-//        }
-//        else if (flags2 & MF2_REDTOGREEN)
-//        {
-//            info->colfunc = redtogreencolfunc;
-//            info->altcolfunc = redtogreencolfunc;
-//        }
-//        else if (flags2 & MF2_REDTOBLUE)
-//        {
-//            info->colfunc = redtobluecolfunc;
-//            info->altcolfunc = redtobluecolfunc;
-//        }
-//        else
-//        {
-//            info->colfunc = basecolfunc;
-//            info->altcolfunc = basecolfunc;
-//        }
-//    }
-//
-//    if (gamestate == GS_LEVEL)
-//        for (thinker_t *th = thinkers[th_mobj].cnext; th != &thinkers[th_mobj]; th = th->cnext)
-//        {
-//            mobj_t  *mo = (mobj_t *)th;
-//
-//            mo->colfunc = mo->info->colfunc;
-//            mo->altcolfunc = mo->info->altcolfunc;
-//        }
-//}
+
+void (*colfunc)(void);
+void (*wallcolfunc)(void);
+void (*bmapwallcolfunc)(void);
+void (*segcolfunc)(void);
+void (*translatedcolfunc)(void);
+void (*basecolfunc)(void);
+void (*fuzzcolfunc)(void);
+void (*tlcolfunc)(void);
+void (*tl50colfunc)(void);
+void (*tl50segcolfunc)(void);
+void (*tl33colfunc)(void);
+void (*tlgreencolfunc)(void);
+void (*tlredcolfunc)(void);
+void (*tlredwhitecolfunc1)(void);
+void (*tlredwhitecolfunc2)(void);
+void (*tlredwhite50colfunc)(void);
+void (*tlbluecolfunc)(void);
+void (*tlgreen33colfunc)(void);
+void (*tlred33colfunc)(void);
+void (*tlblue25colfunc)(void);
+void (*redtobluecolfunc)(void);
+void (*tlredtoblue33colfunc)(void);
+void (*skycolfunc)(void);
+void (*redtogreencolfunc)(void);
+void (*tlredtogreen33colfunc)(void);
+void (*psprcolfunc)(void);
+void (*spanfunc)(void);
+void (*bloodsplatcolfunc)(void);
+void (*megaspherecolfunc)(void);
+void (*supershotguncolfunc)(void);
+
+void R_InitColumnFunctions( void )
+{
+	if( r_textures )
+	{
+		basecolfunc = &R_DrawColumn;
+		fuzzcolfunc = &R_DrawFuzzColumn;
+		translatedcolfunc = &R_DrawTranslatedColumn;
+		wallcolfunc = &R_DrawWallColumn;
+		bmapwallcolfunc = &R_DrawBrightmapWallColumn;
+		segcolfunc = &R_DrawColumn;
+
+		if( r_skycolor != r_skycolor_default )
+			skycolfunc = &R_DrawSkyColorColumn;
+		else
+			skycolfunc = ( canmodify && !transferredsky && ( gamemode != commercial || gamemap < 21 ) && !canmouselook ?
+				&R_DrawFlippedSkyColumn : &R_DrawSkyColumn );
+
+		spanfunc = &R_DrawSpan;
+
+		if( r_translucency )
+		{
+			tlcolfunc = &R_DrawTranslucentColumn;
+			tl50colfunc = &R_DrawTranslucent50Column;
+			tl50segcolfunc = ( r_dither ? &R_DrawDitheredColumn : &R_DrawTranslucent50Column );
+			tl33colfunc = &R_DrawTranslucent33Column;
+			tlgreencolfunc = &R_DrawTranslucentGreenColumn;
+			tlredcolfunc = &R_DrawTranslucentRedColumn;
+			tlredwhitecolfunc1 = &R_DrawTranslucentRedWhiteColumn1;
+			tlredwhitecolfunc2 = &R_DrawTranslucentRedWhiteColumn2;
+			tlredwhite50colfunc = &R_DrawTranslucentRedWhite50Column;
+			tlbluecolfunc = &R_DrawTranslucentBlueColumn;
+			tlgreen33colfunc = &R_DrawTranslucentGreen33Column;
+			tlred33colfunc = &R_DrawTranslucentRed33Column;
+			tlblue25colfunc = &R_DrawTranslucentBlue25Column;
+			tlredtoblue33colfunc = &R_DrawTranslucentRedToBlue33Column;
+			tlredtogreen33colfunc = &R_DrawTranslucentRedToGreen33Column;
+			megaspherecolfunc = &R_DrawMegaSphereColumn;
+			supershotguncolfunc = &R_DrawTranslucentSuperShotgunColumn;
+		}
+		else
+		{
+			tlcolfunc = &R_DrawColumn;
+			tl50colfunc = &R_DrawColumn;
+			tl50segcolfunc = &R_DrawColumn;
+			tl33colfunc = &R_DrawColumn;
+			tlgreencolfunc = &R_DrawColumn;
+			tlredcolfunc = &R_DrawColumn;
+			tlredwhitecolfunc1 = &R_DrawColumn;
+			tlredwhitecolfunc2 = &R_DrawColumn;
+			tlredwhite50colfunc = &R_DrawColumn;
+			tlbluecolfunc = &R_DrawColumn;
+			tlgreen33colfunc = &R_DrawColumn;
+			tlred33colfunc = &R_DrawColumn;
+			tlblue25colfunc = &R_DrawColumn;
+			tlredtoblue33colfunc = &R_DrawRedToBlueColumn;
+			tlredtogreen33colfunc = &R_DrawRedToGreenColumn;
+			megaspherecolfunc = &R_DrawSolidMegaSphereColumn;
+			supershotguncolfunc = &R_DrawSuperShotgunColumn;
+		}
+
+		bloodsplatcolfunc = ( r_bloodsplats_translucency ? &R_DrawBloodSplatColumn : &R_DrawSolidBloodSplatColumn );
+		redtobluecolfunc = &R_DrawRedToBlueColumn;
+		redtogreencolfunc = &R_DrawRedToGreenColumn;
+		psprcolfunc = &R_DrawPlayerSpriteColumn;
+	}
+	else
+	{
+		basecolfunc = &R_DrawColorColumn;
+		fuzzcolfunc = &R_DrawTranslucentColor50Column;
+		translatedcolfunc = &R_DrawColorColumn;
+		wallcolfunc = &R_DrawColorColumn;
+		bmapwallcolfunc = &R_DrawColorColumn;
+		segcolfunc = &R_DrawColorColumn;
+		skycolfunc = ( r_skycolor == r_skycolor_default ? &R_DrawColorColumn : &R_DrawSkyColorColumn );
+		spanfunc = &R_DrawColorSpan;
+		tlcolfunc = &R_DrawColorColumn;
+		tl50colfunc = &R_DrawColorColumn;
+		tl50segcolfunc = ( r_translucency ? ( r_dither ? &R_DrawDitheredColorColumn : &R_DrawTranslucentColor50Column ) :
+			R_DrawColorColumn );
+		tl33colfunc = &R_DrawColorColumn;
+		tlgreencolfunc = &R_DrawColorColumn;
+		tlredcolfunc = &R_DrawColorColumn;
+		tlredwhitecolfunc1 = &R_DrawColorColumn;
+		tlredwhitecolfunc2 = &R_DrawColorColumn;
+		tlredwhite50colfunc = &R_DrawColorColumn;
+		tlbluecolfunc = &R_DrawColorColumn;
+		tlgreen33colfunc = &R_DrawColorColumn;
+		tlred33colfunc = &R_DrawColorColumn;
+		tlblue25colfunc = &R_DrawColorColumn;
+		tlredtoblue33colfunc = &R_DrawColorColumn;
+		tlredtogreen33colfunc = &R_DrawColorColumn;
+		bloodsplatcolfunc = &R_DrawColorColumn;
+		megaspherecolfunc = &R_DrawColorColumn;
+		supershotguncolfunc = &R_DrawColorColumn;
+		redtobluecolfunc = &R_DrawColorColumn;
+		redtogreencolfunc = &R_DrawColorColumn;
+		psprcolfunc = &R_DrawColorColumn;
+	}
+
+	for( int i = 0; i < NUMMOBJTYPES; i++ )
+	{
+		mobjinfo_t  *info = &mobjinfo[ i ];
+		const int   flags2 = info->flags2;
+
+		if( flags2 & MF2_TRANSLUCENT )
+		{
+			info->colfunc = tlcolfunc;
+			info->altcolfunc = tl50colfunc;
+		}
+		else if( info->doomednum == MegaSphere && !doom4vanilla && !hacx )
+		{
+			info->colfunc = megaspherecolfunc;
+			info->altcolfunc = megaspherecolfunc;
+		}
+		else if( info->flags & MF_FUZZ )
+		{
+			info->colfunc = fuzzcolfunc;
+			info->altcolfunc = fuzzcolfunc;
+		}
+		else if( flags2 & MF2_TRANSLUCENT_REDONLY )
+		{
+			info->colfunc = tlredcolfunc;
+			info->altcolfunc = tlred33colfunc;
+		}
+		else if( flags2 & MF2_TRANSLUCENT_GREENONLY )
+		{
+			info->colfunc = tlgreencolfunc;
+			info->altcolfunc = tlgreen33colfunc;
+		}
+		else if( flags2 & MF2_TRANSLUCENT_BLUEONLY )
+		{
+			info->colfunc = tlbluecolfunc;
+			info->altcolfunc = tlblue25colfunc;
+		}
+		else if( flags2 & MF2_TRANSLUCENT_33 )
+		{
+			info->colfunc = tl33colfunc;
+			info->altcolfunc = tl33colfunc;
+		}
+		else if( ( info->flags & MF_TRANSLUCENT ) || ( flags2 & MF2_TRANSLUCENT_50 ) )
+		{
+			info->colfunc = tl50colfunc;
+			info->altcolfunc = tl50colfunc;
+		}
+		else if( flags2 & MF2_TRANSLUCENT_REDWHITEONLY )
+		{
+			info->colfunc = tlredwhitecolfunc1;
+			info->altcolfunc = tlred33colfunc;
+		}
+		else if( flags2 & MF2_TRANSLUCENT_REDTOGREEN_33 )
+		{
+			info->colfunc = tlredtogreen33colfunc;
+			info->altcolfunc = tlredtogreen33colfunc;
+		}
+		else if( flags2 & MF2_TRANSLUCENT_REDTOBLUE_33 )
+		{
+			info->colfunc = tlredtoblue33colfunc;
+			info->altcolfunc = tlredtoblue33colfunc;
+		}
+		else if( flags2 & MF2_TRANSLUCENT_BLUE_25 )
+		{
+			info->colfunc = tlblue25colfunc;
+			info->altcolfunc = tlblue25colfunc;
+		}
+		else if( flags2 & MF2_REDTOGREEN )
+		{
+			info->colfunc = redtogreencolfunc;
+			info->altcolfunc = redtogreencolfunc;
+		}
+		else if( flags2 & MF2_REDTOBLUE )
+		{
+			info->colfunc = redtobluecolfunc;
+			info->altcolfunc = redtobluecolfunc;
+		}
+		else
+		{
+			info->colfunc = basecolfunc;
+			info->altcolfunc = basecolfunc;
+		}
+	}
+
+	if( gamestate == GS_LEVEL )
+		for( thinker_t *th = thinkers[ th_mobj ].cnext; th != &thinkers[ th_mobj ]; th = th->cnext )
+		{
+			mobj_t  *mo = ( mobj_t * ) th;
+
+			mo->colfunc = mo->info->colfunc;
+			mo->altcolfunc = mo->info->altcolfunc;
+		}
+}
 
 //
 // R_Init
@@ -685,7 +686,7 @@ void R_Init(void)
     R_InitTranslationTables();
     R_InitPatches();
     R_InitDistortedFlats();
-    //R_InitColumnFunctions();
+    R_InitColumnFunctions();
 }
 
 ////

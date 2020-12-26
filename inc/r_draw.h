@@ -2,16 +2,17 @@
 #define __R_DRAW_H__
 
 #include "m_random.h"
+#include "doomdef.h"
 
-#define FUZZ(a, b)      fuzzrange[M_BigRandomInt(a, b) + 1]
-
+//#define FUZZ(a, b)      fuzzrange[M_BigRandomInt(a, b) + 1]
+//
 //// [BH] Compensate for rounding errors in DOOM's renderer by stretching wall
 ////  columns by 1px. This eliminates the randomly-colored pixels ("sparkles")
 ////  that appear at the bottom of some columns.
 //#define SPARKLEFIX      64
 //
 //#define NOTEXTURECOLOR  80
-//
+
 //extern lighttable_t     *dc_colormap[2];
 //extern int              dc_x;
 //extern int              dc_yl;
@@ -36,60 +37,60 @@
 //extern int              fuzzpos;
 //extern const int        fuzzrange[3];
 //extern int              fuzztable[SCREENAREA];
-//
-//// The span blitting interface.
-//// Hook in assembler or system specific BLT here.
-//void R_DrawColumn(void);
-//void R_DrawColorColumn(void);
-//void R_DrawWallColumn(void);
-//void R_DrawBrightmapWallColumn(void);
-//void R_DrawSkyColumn(void);
-//void R_DrawFlippedSkyColumn(void);
-//void R_DrawSkyColorColumn(void);
-//void R_DrawTranslucentColumn(void);
-//void R_DrawTranslucent50Column(void);
-//void R_DrawTranslucentColor50Column(void);
-//void R_DrawDitheredColumn(void);
-//void R_DrawDitheredColorColumn(void);
-//void R_DrawTranslucent33Column(void);
-//void R_DrawTranslucentGreenColumn(void);
-//void R_DrawTranslucentRedColumn(void);
-//void R_DrawTranslucentRedWhiteColumn1(void);
-//void R_DrawTranslucentRedWhiteColumn2(void);
-//void R_DrawTranslucentRedWhite50Column(void);
-//void R_DrawTranslucentBlueColumn(void);
-//void R_DrawTranslucentGreen33Column(void);
-//void R_DrawTranslucentRed33Column(void);
-//void R_DrawTranslucentBlue25Column(void);
-//void R_DrawRedToBlueColumn(void);
-//void R_DrawTranslucentRedToBlue33Column(void);
-//void R_DrawRedToGreenColumn(void);
-//void R_DrawTranslucentRedToGreen33Column(void);
-//void R_DrawPlayerSpriteColumn(void);
-//void R_DrawSuperShotgunColumn(void);
-//void R_DrawTranslucentSuperShotgunColumn(void);
-//void R_DrawShadowColumn(void);
-//void R_DrawFuzzyShadowColumn(void);
-//void R_DrawSolidShadowColumn(void);
-//void R_DrawSolidFuzzyShadowColumn(void);
-//void R_DrawBloodSplatColumn(void);
-//void R_DrawSolidBloodSplatColumn(void);
-//void R_DrawMegaSphereColumn(void);
-//void R_DrawSolidMegaSphereColumn(void);
-//
-//// The Spectre/Invisibility effect.
-//void R_DrawFuzzColumn(void);
-//void R_DrawPausedFuzzColumn(void);
-//void R_DrawFuzzColumns(void);
-//void R_DrawPausedFuzzColumns(void);
-//
-//// Draw with color translation tables,
-////  for player sprite rendering,
-////  Green/Red/Blue/Indigo shirts.
-//void R_DrawTranslatedColumn(void);
-//
-//void R_VideoErase(unsigned int ofs, int count);
-//
+
+// The span blitting interface.
+// Hook in assembler or system specific BLT here.
+void R_DrawColumn(void);
+void R_DrawColorColumn( void );
+void R_DrawWallColumn( void );
+void R_DrawBrightmapWallColumn( void );
+void R_DrawSkyColumn( void );
+void R_DrawFlippedSkyColumn( void );
+void R_DrawSkyColorColumn( void );
+void R_DrawTranslucentColumn( void );
+void R_DrawTranslucent50Column( void );
+void R_DrawTranslucentColor50Column( void );
+void R_DrawDitheredColumn( void );
+void R_DrawDitheredColorColumn( void );
+void R_DrawTranslucent33Column( void );
+void R_DrawTranslucentGreenColumn( void );
+void R_DrawTranslucentRedColumn( void );
+void R_DrawTranslucentRedWhiteColumn1( void );
+void R_DrawTranslucentRedWhiteColumn2( void );
+void R_DrawTranslucentRedWhite50Column( void );
+void R_DrawTranslucentBlueColumn( void );
+void R_DrawTranslucentGreen33Column( void );
+void R_DrawTranslucentRed33Column( void );
+void R_DrawTranslucentBlue25Column( void );
+void R_DrawRedToBlueColumn( void );
+void R_DrawTranslucentRedToBlue33Column( void );
+void R_DrawRedToGreenColumn( void );
+void R_DrawTranslucentRedToGreen33Column( void );
+void R_DrawPlayerSpriteColumn( void );
+void R_DrawSuperShotgunColumn( void );
+void R_DrawTranslucentSuperShotgunColumn( void );
+void R_DrawShadowColumn( void );
+void R_DrawFuzzyShadowColumn( void );
+void R_DrawSolidShadowColumn( void );
+void R_DrawSolidFuzzyShadowColumn( void );
+void R_DrawBloodSplatColumn( void );
+void R_DrawSolidBloodSplatColumn( void );
+void R_DrawMegaSphereColumn( void );
+void R_DrawSolidMegaSphereColumn( void );
+
+// The Spectre/Invisibility effect.
+void R_DrawFuzzColumn(void);
+void R_DrawPausedFuzzColumn(void);
+void R_DrawFuzzColumns(void);
+void R_DrawPausedFuzzColumns(void);
+
+// Draw with color translation tables,
+//  for player sprite rendering,
+//  Green/Red/Blue/Indigo shirts.
+void R_DrawTranslatedColumn(void);
+
+void R_VideoErase(unsigned int ofs, int count);
+
 //extern int          ds_y;
 //extern int          ds_x1;
 //extern int          ds_x2;

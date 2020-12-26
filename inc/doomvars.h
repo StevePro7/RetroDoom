@@ -1205,6 +1205,45 @@ extern dboolean     setsizeneeded;
 //      range of [0.0, 1.0). Used for interpolation.
 extern fixed_t      fractionaltic;
 
+//
+// Function pointers to switch refresh/drawing functions.
+// Used to select shadow mode etc.
+//
+extern void( *colfunc )( void );
+extern void( *wallcolfunc )( void );
+extern void( *bmapwallcolfunc )( void );
+extern void( *segcolfunc )( void );
+extern void( *translatedcolfunc )( void );
+extern void( *basecolfunc )( void );
+extern void( *fuzzcolfunc )( void );
+extern void( *tlcolfunc )( void );
+extern void( *tl50colfunc )( void );
+extern void( *tl50segcolfunc )( void );
+extern void( *tl33colfunc )( void );
+extern void( *tlgreencolfunc )( void );
+extern void( *tlredcolfunc )( void );
+extern void( *tlredwhitecolfunc1 )( void );
+extern void( *tlredwhitecolfunc2 )( void );
+extern void( *tlredwhite50colfunc )( void );
+extern void( *tlbluecolfunc )( void );
+extern void( *tlgreen33colfunc )( void );
+extern void( *tlred33colfunc )( void );
+extern void( *tlblue25colfunc )( void );
+extern void( *redtobluecolfunc )( void );
+extern void( *tlredtoblue33colfunc )( void );
+extern void( *skycolfunc )( void );
+extern void( *redtogreencolfunc )( void );
+extern void( *tlredtogreen33colfunc )( void );
+extern void( *psprcolfunc )( void );
+extern void( *spanfunc )( void );
+extern void( *bloodsplatcolfunc )( void );
+extern void( *megaspherecolfunc )( void );
+extern void( *supershotguncolfunc )( void );
+
+
+// r_main.c
+extern dboolean     transferredsky;
+extern lighttable_t **walllights;
 
 
 // p_tick.h
@@ -1314,6 +1353,17 @@ extern fixed_t  *yslope;
 extern fixed_t  yslopes[ LOOKDIRS ][ SCREENHEIGHT ];
 extern int      *openings;  // dropoff overflow
 
+
+// p_setup.h
+extern dboolean     canmodify;
+//extern dboolean     samelevel;
+//extern dboolean     skipblstart;    // MaxW: Skip initial blocklist short
+//extern const char   *linespecials[];
+//
+//extern char         mapnum[ 6 ];
+//extern char         maptitle[ 256 ];
+//extern char         mapnumandtitle[ 512 ];
+//extern char         automaptitle[ 512 ];
 
 
 #endif

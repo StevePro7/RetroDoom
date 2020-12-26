@@ -413,16 +413,21 @@ dboolean    r_floatbob; //=r_floatbob_default;
 dboolean    r_rockettrails; //=r_rockettrails_default;
 dboolean    r_shadows; //=r_shadows_default;
 
+
 // r_main.c
-dboolean            r_bloodsplats_translucency; //=r_bloodsplats_translucency_default;
-dboolean            r_dither; //=r_dither_default;
-int                 r_fov; //=r_fov_default;
-dboolean            r_homindicator; //=r_homindicator_default;
-dboolean            r_shadows_translucency; //=r_shadows_translucency_default;
-dboolean            r_shake_barrels; //=r_shake_barrels_default;
-int                 r_skycolor; //=r_skycolor_default;
-dboolean            r_textures; //=r_textures_default;
-dboolean            r_translucency; //=r_translucency_default;
+// increment every time a check is made
+int                 validcount = 1;
+
+lighttable_t        *fixedcolormap;
+
+dboolean            usebrightmaps;
+
+int                 centerx;
+int                 centery;
+
+fixed_t             centerxfrac;
+fixed_t             centeryfrac;
+fixed_t             projection;
 
 fixed_t             viewx;
 fixed_t             viewy;
@@ -435,6 +440,29 @@ fixed_t             viewsin;
 
 player_t            *viewplayer;// = NULL;
 
+// [AM] Fractional part of the current tic, in the half-open
+//      range of [0.0, 1.0). Used for interpolation.
+fixed_t             fractionaltic;
+
+//
+// precalculated math tables
+//
+angle_t             clipangle;
+
+// The viewangletox[viewangle + FINEANGLES/4] lookup
+// maps the visible view angles to screen X coordinates,
+// flattening the arc to a flat projection plane.
+// There will be many angles mapped to the same X.
+int                 viewangletox[ FINEANGLES / 2 ];
+
+// The xtoviewangleangle[] table maps a screen pixel
+// to the lowest viewangle that maps back to x ranges
+// from clipangle to -clipangle.
+angle_t             xtoviewangle[ SCREENWIDTH + 1 ];
+
+fixed_t             finesine[ 5 * FINEANGLES / 4 ];
+fixed_t             *finecosine = &finesine[ FINEANGLES / 4 ];
+fixed_t             finetangent[ FINEANGLES / 2 ];
 angle_t             tantoangle[ SLOPERANGE + 1 ];
 
 int                 numcolormaps;// = 1;
@@ -443,6 +471,53 @@ lighttable_t        *( *psprscalelight )[ OLDMAXLIGHTSCALE ];
 lighttable_t        *( *zlight )[ MAXLIGHTZ ];
 lighttable_t        *fullcolormap;
 lighttable_t        **colormaps;
+
+// bumped light from gun blasts
+int                 extralight;
+
+dboolean            drawbloodsplats;
+
+dboolean            r_bloodsplats_translucency; //=r_bloodsplats_translucency_default;
+dboolean            r_dither; //=r_dither_default;
+int                 r_fov; //=r_fov_default;
+dboolean            r_homindicator; //=r_homindicator_default;
+dboolean            r_shadows_translucency; //=r_shadows_translucency_default;
+dboolean            r_shake_barrels; //=r_shake_barrels_default;
+int                 r_skycolor; //=r_skycolor_default;
+dboolean            r_textures; //=r_textures_default;
+dboolean            r_translucency; //=r_translucency_default;
+
+
+void( *colfunc )( void );
+void( *wallcolfunc )( void );
+void( *bmapwallcolfunc )( void );
+void( *segcolfunc )( void );
+void( *translatedcolfunc )( void );
+void( *basecolfunc )( void );
+void( *fuzzcolfunc )( void );
+void( *tlcolfunc )( void );
+void( *tl50colfunc )( void );
+void( *tl50segcolfunc )( void );
+void( *tl33colfunc )( void );
+void( *tlgreencolfunc )( void );
+void( *tlredcolfunc )( void );
+void( *tlredwhitecolfunc1 )( void );
+void( *tlredwhitecolfunc2 )( void );
+void( *tlredwhite50colfunc )( void );
+void( *tlbluecolfunc )( void );
+void( *tlgreen33colfunc )( void );
+void( *tlred33colfunc )( void );
+void( *tlblue25colfunc )( void );
+void( *redtobluecolfunc )( void );
+void( *tlredtoblue33colfunc )( void );
+void( *skycolfunc )( void );
+void( *redtogreencolfunc )( void );
+void( *tlredtogreen33colfunc )( void );
+void( *psprcolfunc )( void );
+void( *spanfunc )( void );
+void( *bloodsplatcolfunc )( void );
+void( *megaspherecolfunc )( void );
+void( *supershotguncolfunc )( void );
 
 
 
@@ -495,6 +570,9 @@ dboolean    r_graduallighting; //=r_graduallighting_default;
 
 // p_setup.c
 dboolean        r_fixmaperrors; //=r_fixmaperrors_default;
+dboolean        canmodify;
+dboolean        transferredsky;
+
 
 // r_data.c
 dboolean    r_fixspriteoffsets; //= r_fixspriteoffsets_default;
@@ -538,6 +616,7 @@ byte        grays[ 256 ];
 
 
 // r_segs.c
+lighttable_t        **walllights;
 dboolean            r_brightmaps; //= r_brightmaps_default;
 
 
@@ -1989,10 +2068,12 @@ byte        *white25;
 const kern_t kern[];
 
 
-// P_steup.c
+// p_steup.c
 dboolean        boomcompatible;
 dboolean        mbfcompatible;
 dboolean        blockmaprebuilt;
+dboolean        transferredsky;
+
 // steveproTODO
 //dboolean        nojump = false;
 //dboolean        nomouselook = false;

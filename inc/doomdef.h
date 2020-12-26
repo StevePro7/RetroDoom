@@ -1049,5 +1049,14 @@ typedef int32_t fixed_t;
 #define PL_SKYFLAT  0x40000000
 
 
+// r_draw.h
+#define FUZZ(a, b)      fuzzrange[M_BigRandomInt(a, b) + 1]
+
+// [BH] Compensate for rounding errors in DOOM's renderer by stretching wall
+//  columns by 1px. This eliminates the randomly-colored pixels ("sparkles")
+//  that appear at the bottom of some columns.
+#define SPARKLEFIX      64
+#define NOTEXTURECOLOR  80
+
 
 #endif
