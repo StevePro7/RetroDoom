@@ -79,6 +79,7 @@
     <ClCompile Include="..\src\r_defs.c" />
     <ClCompile Include="..\src\r_main.c" />
     <ClCompile Include="..\src\r_plane.c" />
+    <ClCompile Include="..\src\r_segs.c" />
     <ClCompile Include="..\src\r_things.c" />
     <ClCompile Include="..\src\sounds.c" />
     <ClCompile Include="..\src\sprites.c" />
@@ -154,6 +155,7 @@
     <ClInclude Include="..\inc\r_defs.h" />
     <ClInclude Include="..\inc\r_main.h" />
     <ClInclude Include="..\inc\r_plane.h" />
+    <ClInclude Include="..\inc\r_segs.h" />
     <ClInclude Include="..\inc\r_things.h" />
     <ClInclude Include="..\inc\sounds.h" />
     <ClInclude Include="..\inc\sprites.h" />

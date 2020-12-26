@@ -477,7 +477,7 @@ dboolean        r_fixmaperrors; //=r_fixmaperrors_default;
 dboolean    r_fixspriteoffsets; //= r_fixspriteoffsets_default;
 
 // r_segs.c
-dboolean            r_brightmaps = r_brightmaps_default;
+dboolean            r_brightmaps; //= r_brightmaps_default;
 
 
 // s_sound.c
