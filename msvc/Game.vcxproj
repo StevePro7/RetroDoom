@@ -78,6 +78,7 @@
     <ClCompile Include="..\src\r_bsp.c" />
     <ClCompile Include="..\src\r_data.c" />
     <ClCompile Include="..\src\r_defs.c" />
+    <ClCompile Include="..\src\r_draw.c" />
     <ClCompile Include="..\src\r_main.c" />
     <ClCompile Include="..\src\r_plane.c" />
     <ClCompile Include="..\src\r_segs.c" />
@@ -156,6 +157,7 @@
     <ClInclude Include="..\inc\r_bsp.h" />
     <ClInclude Include="..\inc\r_data.h" />
     <ClInclude Include="..\inc\r_defs.h" />
+    <ClInclude Include="..\inc\r_draw.h" />
     <ClInclude Include="..\inc\r_main.h" />
     <ClInclude Include="..\inc\r_plane.h" />
     <ClInclude Include="..\inc\r_segs.h" />

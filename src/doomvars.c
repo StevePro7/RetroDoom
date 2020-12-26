@@ -2013,3 +2013,6 @@ int             sc_Line;
 // Source is the top of the column to scale.
 //
 lighttable_t    *dc_colormap[ 2 ];
+
+byte    *dc_translation;
+byte    translationtables[ 256 * 3 ];

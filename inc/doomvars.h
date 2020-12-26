@@ -1261,4 +1261,48 @@ extern int      numspritelumps;
 extern lighttable_t     *dc_colormap[ 2 ];
 
 
+// r_draw.h
+extern lighttable_t     *dc_colormap[ 2 ];
+extern int              dc_x;
+extern int              dc_yl;
+extern int              dc_yh;
+extern fixed_t          dc_iscale;
+extern fixed_t          dc_texturemid;
+extern fixed_t          dc_texheight;
+extern fixed_t          dc_texturefrac;
+extern byte             dc_solidblood;
+extern byte             *dc_blood;
+extern byte             *dc_brightmap;
+extern int              dc_floorclip;
+extern int              dc_ceilingclip;
+extern int              dc_numposts;
+extern byte             dc_black;
+extern byte             *dc_black25;
+extern byte             *dc_black40;
+
+// first pixel in a column
+extern byte             *dc_source;
+
+extern int              fuzzpos;
+extern const int        fuzzrange[ 3 ];
+extern int              fuzztable[ SCREENAREA ];
+
+extern int          ds_y;
+extern int          ds_x1;
+extern int          ds_x2;
+
+extern lighttable_t *ds_colormap;
+
+extern fixed_t      ds_xfrac;
+extern fixed_t      ds_yfrac;
+extern fixed_t      ds_xstep;
+extern fixed_t      ds_ystep;
+
+// start of a 64*64 tile image
+extern byte         *ds_source;
+
+extern byte         translationtables[ 256 * 3 ];
+extern byte         *dc_translation;
+
+
 #endif

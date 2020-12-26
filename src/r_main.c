@@ -317,35 +317,35 @@ static void R_InitTextureMapping(void)
     clipangle = xtoviewangle[0];
 }
 
-////
-//// R_InitLightTables
-//// Only inits the zlight table, because the scalelight table changes with view size.
-////
-//void R_InitLightTables(void)
-//{
-//    int width = FixedMul(SCREENWIDTH, FixedDiv(FRACUNIT, finetangent[FINEANGLES / 4 + (r_fov * FINEANGLES / 360) / 2])) + 1;
 //
-//    c_zlight = malloc(sizeof(*c_zlight) * numcolormaps);
-//    c_scalelight = malloc(sizeof(*c_scalelight) * numcolormaps);
-//    c_psprscalelight = malloc(sizeof(*c_psprscalelight) * numcolormaps);
+// R_InitLightTables
+// Only inits the zlight table, because the scalelight table changes with view size.
 //
-//    // Calculate the light levels to use
-//    //  for each level / distance combination.
-//    for (int i = 0; i < LIGHTLEVELS; i++)
-//    {
-//        const int   start = ((LIGHTLEVELS - LIGHTBRIGHT - i) * 2) * NUMCOLORMAPS / LIGHTLEVELS;
-//
-//        for (int j = 0; j < MAXLIGHTZ; j++)
-//        {
-//            const int   scale = FixedDiv(width / 2 * FRACUNIT, (j + 1) << LIGHTZSHIFT) >> LIGHTSCALESHIFT;
-//            const int   level = BETWEEN(0, start - scale / 2, NUMCOLORMAPS - 1) * 256;
-//
-//            // killough 03/20/98: Initialize multiple colormaps
-//            for (int t = 0; t < numcolormaps; t++)
-//                c_zlight[t][i][j] = &colormaps[t][level];
-//        }
-//    }
-//}
+void R_InitLightTables(void)
+{
+    int width = FixedMul(SCREENWIDTH, FixedDiv(FRACUNIT, finetangent[FINEANGLES / 4 + (r_fov * FINEANGLES / 360) / 2])) + 1;
+
+    c_zlight = malloc(sizeof(*c_zlight) * numcolormaps);
+    c_scalelight = malloc(sizeof(*c_scalelight) * numcolormaps);
+    c_psprscalelight = malloc(sizeof(*c_psprscalelight) * numcolormaps);
+
+    // Calculate the light levels to use
+    //  for each level / distance combination.
+    for (int i = 0; i < LIGHTLEVELS; i++)
+    {
+        const int   start = ((LIGHTLEVELS - LIGHTBRIGHT - i) * 2) * NUMCOLORMAPS / LIGHTLEVELS;
+
+        for (int j = 0; j < MAXLIGHTZ; j++)
+        {
+            const int   scale = FixedDiv(width / 2 * FRACUNIT, (j + 1) << LIGHTZSHIFT) >> LIGHTSCALESHIFT;
+            const int   level = BETWEEN(0, start - scale / 2, NUMCOLORMAPS - 1) * 256;
+
+            // killough 03/20/98: Initialize multiple colormaps
+            for (int t = 0; t < numcolormaps; t++)
+                c_zlight[t][i][j] = &colormaps[t][level];
+        }
+    }
+}
 
 //
 // R_SetViewSize
@@ -676,10 +676,10 @@ void R_Init(void)
     R_InitClipSegs();
     R_InitData();
     R_InitPointToAngle();
-    //R_InitTables();
-    //R_SetViewSize(r_screensize);
-    //R_InitLightTables();
-    //R_InitTranslationTables();
+    R_InitTables();
+    R_SetViewSize(r_screensize);
+    R_InitLightTables();
+    R_InitTranslationTables();
     //R_InitPatches();
     //R_InitDistortedFlats();
     //R_InitColumnFunctions();
