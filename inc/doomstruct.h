@@ -1215,6 +1215,40 @@ typedef struct
 } texture_t;
 
 
+// r_patch.h
+typedef struct
+{
+	int             topdelta;
+	int             length;
+} rpost_t;
+
+typedef struct
+{
+	int             numposts;
+	rpost_t         *posts;
+	unsigned char   *pixels;
+} rcolumn_t;
+
+typedef struct
+{
+	int             width;
+	int             height;
+	unsigned int    widthmask;
+
+	int             leftoffset;
+	int             topoffset;
+
+	// this is the single malloc'ed/free'd array
+	// for this patch
+	unsigned char   *data;
+
+	// these are pointers into the data array
+	unsigned char   *pixels;
+	rcolumn_t       *columns;
+	rpost_t         *posts;
+} rpatch_t;
+
+
 // p_spec.h
 
 // p_spec.c

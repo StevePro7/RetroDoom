@@ -249,6 +249,9 @@
     <ClCompile Include="..\src\r_draw.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\r_patch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -476,6 +479,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\r_draw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\r_patch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

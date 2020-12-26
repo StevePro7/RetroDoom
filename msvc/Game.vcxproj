@@ -80,6 +80,7 @@
     <ClCompile Include="..\src\r_defs.c" />
     <ClCompile Include="..\src\r_draw.c" />
     <ClCompile Include="..\src\r_main.c" />
+    <ClCompile Include="..\src\r_patch.c" />
     <ClCompile Include="..\src\r_plane.c" />
     <ClCompile Include="..\src\r_segs.c" />
     <ClCompile Include="..\src\r_things.c" />
@@ -159,6 +160,7 @@
     <ClInclude Include="..\inc\r_defs.h" />
     <ClInclude Include="..\inc\r_draw.h" />
     <ClInclude Include="..\inc\r_main.h" />
+    <ClInclude Include="..\inc\r_patch.h" />
     <ClInclude Include="..\inc\r_plane.h" />
     <ClInclude Include="..\inc\r_segs.h" />
     <ClInclude Include="..\inc\r_things.h" />

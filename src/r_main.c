@@ -3,6 +3,7 @@
 #include "r_bsp.h"
 #include "r_data.h"
 #include "r_draw.h"
+#include "r_patch.h"
 
 //#include "c_cmds.h"
 //#include "c_console.h"
@@ -681,7 +682,7 @@ void R_Init(void)
     R_SetViewSize(r_screensize);
     R_InitLightTables();
     R_InitTranslationTables();
-    //R_InitPatches();
+    R_InitPatches();
     //R_InitDistortedFlats();
     //R_InitColumnFunctions();
 }

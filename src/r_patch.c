@@ -1,11 +1,16 @@
-#include "c_console.h"
-#include "doomstat.h"
+#include "r_patch.h"
+#include "doomvars.h"
+
+//#include "c_console.h"
+//#include "doomstat.h"
 #include "i_swap.h"
+#include "logger.h"
 #include "m_misc.h"
-#include "p_setup.h"
-#include "r_main.h"
+//#include "p_setup.h"
+#include "r_data.h"
 #include "w_wad.h"
 #include "z_zone.h"
+#include <assert.h>
 
 //
 // Patches.
@@ -24,7 +29,7 @@ static short    FIREBLU1;
 static short    SKY1;
 static short    STEP2;
 
-extern int      numspritelumps;
+//extern int      numspritelumps;
 
 static dboolean getIsSolidAtSpot(const column_t *column, int spot)
 {
@@ -103,8 +108,11 @@ static void createPatch(int id)
 
     if (!CheckIfPatch(patchNum) && patchNum < numlumps)
     {
-        if (lumpinfo[patchNum]->size > 0)
-            C_Warning(1, "The <b>%s</b> patch is in an unknown format.", lumpinfo[patchNum]->name);
+		if( lumpinfo[ patchNum ]->size > 0 )
+		{
+			//C_Warning( 1, "The <b>%s</b> patch is in an unknown format.", lumpinfo[ patchNum ]->name );
+			loge( "The <b>%s</b> patch is in an unknown format.\n", lumpinfo[ patchNum ]->name );
+		}
 
         return;
     }
@@ -537,25 +545,25 @@ void R_InitPatches(void)
         createTextureCompositePatch(i);
 }
 
-const rpatch_t *R_CachePatchNum(int id)
-{
-    return &patches[id];
-}
+//const rpatch_t *R_CachePatchNum(int id)
+//{
+//    return &patches[id];
+//}
+//
+//const rpatch_t *R_CacheTextureCompositePatchNum(int id)
+//{
+//    return &texture_composites[id];
+//}
+//
+//const rcolumn_t *R_GetPatchColumnWrapped(const rpatch_t *patch, int columnIndex)
+//{
+//    while (columnIndex < 0)
+//        columnIndex += patch->width;
+//
+//    return &patch->columns[columnIndex % patch->width];
+//}
 
-const rpatch_t *R_CacheTextureCompositePatchNum(int id)
+const rcolumn_t *R_GetPatchColumnClamped( const rpatch_t *patch, int columnIndex )
 {
-    return &texture_composites[id];
-}
-
-const rcolumn_t *R_GetPatchColumnWrapped(const rpatch_t *patch, int columnIndex)
-{
-    while (columnIndex < 0)
-        columnIndex += patch->width;
-
-    return &patch->columns[columnIndex % patch->width];
-}
-
-const rcolumn_t *R_GetPatchColumnClamped(const rpatch_t *patch, int columnIndex)
-{
-    return &patch->columns[BETWEEN(0, columnIndex, patch->width - 1)];
+	return &patch->columns[ BETWEEN( 0, columnIndex, patch->width - 1 ) ];
 }
