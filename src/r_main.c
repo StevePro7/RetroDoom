@@ -2,6 +2,7 @@
 #include "doomvars.h"
 #include "r_bsp.h"
 #include "r_data.h"
+#include "r_draw.h"
 
 //#include "c_cmds.h"
 //#include "c_console.h"
