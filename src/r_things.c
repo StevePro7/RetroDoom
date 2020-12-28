@@ -1,26 +1,32 @@
 #include "r_things.h"
 #include "doomdef.h"
+#include "doomstruct.h"
 #include "doomtype.h"
+#include "doomvars.h"
+#include "i_system.h"
+#include "m_fixed.h"
+#include "sprites.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
 //#include "c_cmds.h"
 //#include "c_console.h"
 //#include "doomstat.h"
 //#include "i_colors.h"
-//#include "i_system.h"
+
 //#include "m_config.h"
 //#include "m_menu.h"
 //#include "p_local.h"
 //#include "v_video.h"
-//#include "w_wad.h"
-//#include "z_zone.h"
+
+
+#define MAX_SPRITE_FRAMES   29
+#define MINZ                (4 * FRACUNIT)
+#define BASEYCENTER         (VANILLAHEIGHT / 2)
+
+#define MAXVISSPRITES       128
+
 //
-//#define MAX_SPRITE_FRAMES   29
-//#define MINZ                (4 * FRACUNIT)
-//#define BASEYCENTER         (VANILLAHEIGHT / 2)
-//
-//#define MAXVISSPRITES       128
-//
-////
 //// Sprite rotation 0 is facing the viewer, rotation 1 is one angle turn CLOCKWISE around the axis.
 //// This is not the same as the angle, which increases counter clockwise (protractor).
 //// There was a lot of stuff grabbed wrong, so I changed it...
@@ -28,7 +34,7 @@
 //fixed_t                 pspritescale;
 //fixed_t                 pspriteiscale;
 //
-//static lighttable_t     **spritelights;         // killough 01/25/98 made static
+static lighttable_t     **spritelights;         // killough 01/25/98 made static
 //
 //// constant arrays used for psprite clipping and initializing clipping
 //int                     negonearray[SCREENWIDTH];
@@ -42,260 +48,260 @@
 //spritedef_t             *sprites;
 //
 //short                   firstbloodsplatlump;
-//
-//dboolean                allowwolfensteinss = true;
-//
-//static spriteframe_t    sprtemp[MAX_SPRITE_FRAMES];
-//static int              maxframe;
-//
-//static dboolean         drawshadows;
-//static dboolean         interpolatesprites;
-//static dboolean         invulnerable;
-//static dboolean         pausesprites;
-//static fixed_t          floorheight;
-//
+
+dboolean                allowwolfensteinss = true;
+
+static spriteframe_t    sprtemp[ MAX_SPRITE_FRAMES ];
+static int              maxframe;
+
+static dboolean         drawshadows;
+static dboolean         interpolatesprites;
+static dboolean         invulnerable;
+static dboolean         pausesprites;
+static fixed_t          floorheight;
+
 dboolean                r_liquid_clipsprites = r_liquid_clipsprites_default;
 dboolean                r_playersprites = r_playersprites_default;
 //
 //extern dboolean         drawbloodsplats;
 //extern dboolean         SHT2A0;
+
 //
-////
-//// R_InstallSpriteLump
-//// Local function for R_InitSprites.
-////
-//static void R_InstallSpriteLump(const lumpinfo_t *lump, const int lumpnum, const unsigned int frame,
-//    const char rot, const dboolean flipped)
-//{
-//    unsigned int    rotation = (rot >= '0' && rot <= '9' ? rot - '0' : (rot >= 'A' ? rot - 'A' + 10 : 17));
+// R_InstallSpriteLump
+// Local function for R_InitSprites.
 //
-//    if (frame >= MAX_SPRITE_FRAMES || rotation > 16)
-//        I_Error("R_InstallSpriteLump: Bad frame characters in lump %s", lump->name);
+static void R_InstallSpriteLump(const lumpinfo_t *lump, const int lumpnum, const unsigned int frame,
+    const char rot, const dboolean flipped)
+{
+    unsigned int    rotation = (rot >= '0' && rot <= '9' ? rot - '0' : (rot >= 'A' ? rot - 'A' + 10 : 17));
+
+    if (frame >= MAX_SPRITE_FRAMES || rotation > 16)
+        I_Error("R_InstallSpriteLump: Bad frame characters in lump %s", lump->name);
+
+    if ((int)frame > maxframe)
+        maxframe = frame;
+
+    if (!rotation)
+    {
+        // the lump should be used for all rotations
+        for (int r = 14; r >= 0; r -= 2)
+            if (sprtemp[frame].lump[r] == -1)
+            {
+                sprtemp[frame].lump[r] = lumpnum - firstspritelump;
+
+                if (flipped)
+                    sprtemp[frame].flip |= 1 << r;
+
+                sprtemp[frame].rotate = 0;      // jff 4/24/98 if any subbed, rotless
+            }
+
+        return;
+    }
+
+    // the lump is only used for one rotation
+    rotation = (rotation <= 8 ? (rotation - 1) * 2 : (rotation - 9) * 2 + 1);
+
+    if (sprtemp[frame].lump[rotation] == -1)
+    {
+        sprtemp[frame].lump[rotation] = lumpnum - firstspritelump;
+
+        if (flipped)
+            sprtemp[frame].flip |= 1 << rotation;
+
+        sprtemp[frame].rotate = 1;              // jff 4/24/98 only change if rot used
+    }
+}
+
 //
-//    if ((int)frame > maxframe)
-//        maxframe = frame;
+// R_InitSpriteDefs
+// Pass a null terminated list of sprite names (4 chars exactly) to be used.
 //
-//    if (!rotation)
-//    {
-//        // the lump should be used for all rotations
-//        for (int r = 14; r >= 0; r -= 2)
-//            if (sprtemp[frame].lump[r] == -1)
-//            {
-//                sprtemp[frame].lump[r] = lumpnum - firstspritelump;
+// Builds the sprite rotation matrices to account for horizontally flipped sprites.
 //
-//                if (flipped)
-//                    sprtemp[frame].flip |= 1 << r;
+// Will report an error if the lumps are inconsistent. Only called at startup.
 //
-//                sprtemp[frame].rotate = 0;      // jff 4/24/98 if any subbed, rotless
-//            }
+// Sprite lump names are 4 characters for the actor, a letter for the frame, and a number for the rotation.
 //
-//        return;
-//    }
+// A sprite that is flippable will have an additional letter/number appended.
 //
-//    // the lump is only used for one rotation
-//    rotation = (rotation <= 8 ? (rotation - 1) * 2 : (rotation - 9) * 2 + 1);
+// The rotation character can be 0 to signify no rotations.
 //
-//    if (sprtemp[frame].lump[rotation] == -1)
-//    {
-//        sprtemp[frame].lump[rotation] = lumpnum - firstspritelump;
+// 01/25/98, 01/31/98 killough : Rewritten for performance
 //
-//        if (flipped)
-//            sprtemp[frame].flip |= 1 << rotation;
+// Empirically verified to have excellent hash properties across standard DOOM sprites:
+#define R_SpriteNameHash(s) ((s[0] - ((size_t)s[1] * 3 - (size_t)s[3] * 2 - s[2]) * 2))
+
+static void R_InitSpriteDefs(void)
+{
+    size_t  numentries = (size_t)lastspritelump - firstspritelump + 1;
+
+    struct
+    {
+        int index;
+        int next;
+    } *hash;
+
+    if (!numentries)
+        return;
+
+    sprites = Z_Calloc(NUMSPRITES, sizeof(*sprites), PU_STATIC, NULL);
+
+    // Create hash table based on just the first four letters of each sprite
+    // killough 01/31/98
+    hash = malloc(sizeof(*hash) * numentries);      // allocate hash table
+
+    for (unsigned int i = 0; i < numentries; i++)   // initialize hash table as empty
+        hash[i].index = -1;
+
+    for (unsigned int i = 0; i < numentries; i++)   // Prepend each sprite to hash chain
+    {                                               // prepend so that later ones win
+        int j = R_SpriteNameHash(lumpinfo[i + firstspritelump]->name) % numentries;
+
+        hash[i].next = hash[j].index;
+        hash[j].index = i;
+    }
+
+    // scan all the lump names for each of the names, noting the highest frame letter.
+    for (unsigned int i = 0; i < NUMSPRITES; i++)
+    {
+        const char  *spritename = sprnames[i];
+        int         j = hash[R_SpriteNameHash(spritename) % numentries].index;
+
+        if (j >= 0)
+        {
+            memset(sprtemp, -1, sizeof(sprtemp));
+
+            for (int k = 0; k < MAX_SPRITE_FRAMES; k++)
+                sprtemp[k].flip = 0;
+
+            maxframe = -1;
+
+            do
+            {
+                const lumpinfo_t    *lump = lumpinfo[j + firstspritelump];
+
+                // Fast portable comparison -- killough
+                // (using int pointer cast is nonportable):
+                if (!((lump->name[0] ^ spritename[0]) | (lump->name[1] ^ spritename[1])
+                    | (lump->name[2] ^ spritename[2]) | (lump->name[3] ^ spritename[3])))
+                {
+                    R_InstallSpriteLump(lump, j + firstspritelump, lump->name[4] - 'A', lump->name[5], false);
+
+                    if (lump->name[6])
+                        R_InstallSpriteLump(lump, j + firstspritelump, lump->name[6] - 'A', lump->name[7], true);
+                }
+            } while ((j = hash[j].next) >= 0);
+
+            // check the frames that were found for completeness
+            if ((sprites[i].numframes = ++maxframe))  // killough 01/31/98
+            {
+                for (int frame = 0; frame < maxframe; frame++)
+                    switch (sprtemp[frame].rotate)
+                    {
+                        case -1:
+                            // no rotations were found for that frame at all
+                            break;
+
+                        case 0:
+                            // only the first rotation is needed
+                            for (int rot = 1; rot < 16; rot++)
+                                sprtemp[frame].lump[rot] = sprtemp[frame].lump[0];
+
+                            // If the frame is flipped, they all should be
+                            if (sprtemp[frame].flip & 1)
+                                sprtemp[frame].flip = 0xFFFF;
+
+                            break;
+
+                        case 1:
+                            // must have all 16 frames
+                            for (int rot = 0; rot < 16; rot += 2)
+                            {
+                                if (sprtemp[frame].lump[rot + 1] == -1)
+                                {
+                                    sprtemp[frame].lump[rot + 1] = sprtemp[frame].lump[rot];
+
+                                    if (sprtemp[frame].flip & (1 << rot))
+                                        sprtemp[frame].flip |= 1 << (rot + 1);
+                                }
+
+                                if (sprtemp[frame].lump[rot] == -1)
+                                {
+                                    sprtemp[frame].lump[rot] = sprtemp[frame].lump[rot + 1];
+
+                                    if (sprtemp[frame].flip & (1 << (rot + 1)))
+                                        sprtemp[frame].flip |= 1 << rot;
+                                }
+                            }
+
+                            for (int rot = 0; rot < 16; rot++)
+                                if (sprtemp[frame].lump[rot] == -1)
+                                    I_Error("R_InitSprites: Frame %c of sprite %.8s is missing rotations", frame + 'A', sprnames[i]);
+
+                            break;
+                    }
+
+                for (int frame = 0; frame < maxframe; frame++)
+                    if (sprtemp[frame].rotate == -1)
+                    {
+                        memset(&sprtemp[frame].lump, 0, sizeof(sprtemp[0].lump));
+                        sprtemp[frame].flip = 0;
+                        sprtemp[frame].rotate = 0;
+                    }
+
+                // allocate space for the frames present and copy sprtemp to it
+                sprites[i].spriteframes = Z_Malloc(maxframe * sizeof(spriteframe_t), PU_STATIC, NULL);
+                memcpy(sprites[i].spriteframes, sprtemp, maxframe * sizeof(spriteframe_t));
+            }
+        }
+    }
+
+    free(hash); // free hash table
+
+    firstbloodsplatlump = sprites[SPR_BLD2].spriteframes[0].lump[0];
+
+    // check if Wolfenstein SS sprites have been changed to zombiemen sprites
+    if (gamemode != commercial || bfgedition)
+        allowwolfensteinss = false;
+    else
+    {
+        short   poss = sprites[SPR_POSS].spriteframes[0].lump[0];
+        short   sswv = sprites[SPR_SSWV].spriteframes[0].lump[0];
+
+        if (spritewidth[poss] == spritewidth[sswv]
+            && spriteheight[poss] == spriteheight[sswv]
+            && spriteoffset[poss] == spriteoffset[sswv]
+            && spritetopoffset[poss] == spritetopoffset[sswv])
+            allowwolfensteinss = false;
+    }
+}
+
 //
-//        sprtemp[frame].rotate = 1;              // jff 4/24/98 only change if rot used
-//    }
-//}
+// GAME FUNCTIONS
 //
-////
-//// R_InitSpriteDefs
-//// Pass a null terminated list of sprite names (4 chars exactly) to be used.
-////
-//// Builds the sprite rotation matrices to account for horizontally flipped sprites.
-////
-//// Will report an error if the lumps are inconsistent. Only called at startup.
-////
-//// Sprite lump names are 4 characters for the actor, a letter for the frame, and a number for the rotation.
-////
-//// A sprite that is flippable will have an additional letter/number appended.
-////
-//// The rotation character can be 0 to signify no rotations.
-////
-//// 01/25/98, 01/31/98 killough : Rewritten for performance
-////
-//// Empirically verified to have excellent hash properties across standard DOOM sprites:
-//#define R_SpriteNameHash(s) ((s[0] - ((size_t)s[1] * 3 - (size_t)s[3] * 2 - s[2]) * 2))
+
+static vissprite_t              *vissprites;
+static vissprite_t              **vissprite_ptrs;
+static unsigned int             num_vissprite;
+static unsigned int             num_bloodsplatvissprite;
+static unsigned int             num_vissprite_alloc = MAXVISSPRITES;
+
+static bloodsplatvissprite_t    bloodsplatvissprites[r_bloodsplats_max_max];
+
 //
-//static void R_InitSpriteDefs(void)
-//{
-//    size_t  numentries = (size_t)lastspritelump - firstspritelump + 1;
+// R_InitSprites
+// Called at program start.
 //
-//    struct
-//    {
-//        int index;
-//        int next;
-//    } *hash;
-//
-//    if (!numentries)
-//        return;
-//
-//    sprites = Z_Calloc(NUMSPRITES, sizeof(*sprites), PU_STATIC, NULL);
-//
-//    // Create hash table based on just the first four letters of each sprite
-//    // killough 01/31/98
-//    hash = malloc(sizeof(*hash) * numentries);      // allocate hash table
-//
-//    for (unsigned int i = 0; i < numentries; i++)   // initialize hash table as empty
-//        hash[i].index = -1;
-//
-//    for (unsigned int i = 0; i < numentries; i++)   // Prepend each sprite to hash chain
-//    {                                               // prepend so that later ones win
-//        int j = R_SpriteNameHash(lumpinfo[i + firstspritelump]->name) % numentries;
-//
-//        hash[i].next = hash[j].index;
-//        hash[j].index = i;
-//    }
-//
-//    // scan all the lump names for each of the names, noting the highest frame letter.
-//    for (unsigned int i = 0; i < NUMSPRITES; i++)
-//    {
-//        const char  *spritename = sprnames[i];
-//        int         j = hash[R_SpriteNameHash(spritename) % numentries].index;
-//
-//        if (j >= 0)
-//        {
-//            memset(sprtemp, -1, sizeof(sprtemp));
-//
-//            for (int k = 0; k < MAX_SPRITE_FRAMES; k++)
-//                sprtemp[k].flip = 0;
-//
-//            maxframe = -1;
-//
-//            do
-//            {
-//                const lumpinfo_t    *lump = lumpinfo[j + firstspritelump];
-//
-//                // Fast portable comparison -- killough
-//                // (using int pointer cast is nonportable):
-//                if (!((lump->name[0] ^ spritename[0]) | (lump->name[1] ^ spritename[1])
-//                    | (lump->name[2] ^ spritename[2]) | (lump->name[3] ^ spritename[3])))
-//                {
-//                    R_InstallSpriteLump(lump, j + firstspritelump, lump->name[4] - 'A', lump->name[5], false);
-//
-//                    if (lump->name[6])
-//                        R_InstallSpriteLump(lump, j + firstspritelump, lump->name[6] - 'A', lump->name[7], true);
-//                }
-//            } while ((j = hash[j].next) >= 0);
-//
-//            // check the frames that were found for completeness
-//            if ((sprites[i].numframes = ++maxframe))  // killough 01/31/98
-//            {
-//                for (int frame = 0; frame < maxframe; frame++)
-//                    switch (sprtemp[frame].rotate)
-//                    {
-//                        case -1:
-//                            // no rotations were found for that frame at all
-//                            break;
-//
-//                        case 0:
-//                            // only the first rotation is needed
-//                            for (int rot = 1; rot < 16; rot++)
-//                                sprtemp[frame].lump[rot] = sprtemp[frame].lump[0];
-//
-//                            // If the frame is flipped, they all should be
-//                            if (sprtemp[frame].flip & 1)
-//                                sprtemp[frame].flip = 0xFFFF;
-//
-//                            break;
-//
-//                        case 1:
-//                            // must have all 16 frames
-//                            for (int rot = 0; rot < 16; rot += 2)
-//                            {
-//                                if (sprtemp[frame].lump[rot + 1] == -1)
-//                                {
-//                                    sprtemp[frame].lump[rot + 1] = sprtemp[frame].lump[rot];
-//
-//                                    if (sprtemp[frame].flip & (1 << rot))
-//                                        sprtemp[frame].flip |= 1 << (rot + 1);
-//                                }
-//
-//                                if (sprtemp[frame].lump[rot] == -1)
-//                                {
-//                                    sprtemp[frame].lump[rot] = sprtemp[frame].lump[rot + 1];
-//
-//                                    if (sprtemp[frame].flip & (1 << (rot + 1)))
-//                                        sprtemp[frame].flip |= 1 << rot;
-//                                }
-//                            }
-//
-//                            for (int rot = 0; rot < 16; rot++)
-//                                if (sprtemp[frame].lump[rot] == -1)
-//                                    I_Error("R_InitSprites: Frame %c of sprite %.8s is missing rotations", frame + 'A', sprnames[i]);
-//
-//                            break;
-//                    }
-//
-//                for (int frame = 0; frame < maxframe; frame++)
-//                    if (sprtemp[frame].rotate == -1)
-//                    {
-//                        memset(&sprtemp[frame].lump, 0, sizeof(sprtemp[0].lump));
-//                        sprtemp[frame].flip = 0;
-//                        sprtemp[frame].rotate = 0;
-//                    }
-//
-//                // allocate space for the frames present and copy sprtemp to it
-//                sprites[i].spriteframes = Z_Malloc(maxframe * sizeof(spriteframe_t), PU_STATIC, NULL);
-//                memcpy(sprites[i].spriteframes, sprtemp, maxframe * sizeof(spriteframe_t));
-//            }
-//        }
-//    }
-//
-//    free(hash); // free hash table
-//
-//    firstbloodsplatlump = sprites[SPR_BLD2].spriteframes[0].lump[0];
-//
-//    // check if Wolfenstein SS sprites have been changed to zombiemen sprites
-//    if (gamemode != commercial || bfgedition)
-//        allowwolfensteinss = false;
-//    else
-//    {
-//        short   poss = sprites[SPR_POSS].spriteframes[0].lump[0];
-//        short   sswv = sprites[SPR_SSWV].spriteframes[0].lump[0];
-//
-//        if (spritewidth[poss] == spritewidth[sswv]
-//            && spriteheight[poss] == spriteheight[sswv]
-//            && spriteoffset[poss] == spriteoffset[sswv]
-//            && spritetopoffset[poss] == spritetopoffset[sswv])
-//            allowwolfensteinss = false;
-//    }
-//}
-//
-////
-//// GAME FUNCTIONS
-////
-//
-//static vissprite_t              *vissprites;
-//static vissprite_t              **vissprite_ptrs;
-//static unsigned int             num_vissprite;
-//static unsigned int             num_bloodsplatvissprite;
-//static unsigned int             num_vissprite_alloc = MAXVISSPRITES;
-//
-//static bloodsplatvissprite_t    bloodsplatvissprites[r_bloodsplats_max_max];
-//
-////
-//// R_InitSprites
-//// Called at program start.
-////
-//void R_InitSprites(void)
-//{
-//    for (int i = 0; i < SCREENWIDTH; i++)
-//        negonearray[i] = -1;
-//
-//    R_InitSpriteDefs();
-//
-//    vissprites = malloc(num_vissprite_alloc * sizeof(*vissprites));
-//}
-//
+void R_InitSprites(void)
+{
+    for (int i = 0; i < SCREENWIDTH; i++)
+        negonearray[i] = -1;
+
+    R_InitSpriteDefs();
+
+    vissprites = malloc(num_vissprite_alloc * sizeof(*vissprites));
+}
+
 ////
 //// R_ClearSprites
 //// Called at frame start.

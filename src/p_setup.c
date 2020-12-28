@@ -9,6 +9,7 @@
 #include "m_random.h"
 #include "p_spec.h"
 #include "r_data.h"
+#include "r_things.h"
 #include "sc_man.h"
 //#include "st_stuff.h"
 #include "w_wad.h"
@@ -3566,7 +3567,7 @@ void P_Init(void)
     P_InitSwitchList();
     P_InitPicAnims();
     P_InitMapInfo();
-    //R_InitSprites();
+    R_InitSprites();
     //P_CheckSpechits();
     //P_CheckIntercepts();
 }

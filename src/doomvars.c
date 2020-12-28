@@ -558,8 +558,36 @@ fixed_t             animatedliquidyoffs;
 
 
 // r_things.c
+//
+// Sprite rotation 0 is facing the viewer, rotation 1 is one angle turn CLOCKWISE around the axis.
+// This is not the same as the angle, which increases counter clockwise (protractor).
+// There was a lot of stuff grabbed wrong, so I changed it...
+//
+fixed_t                 pspritescale;
+fixed_t                 pspriteiscale;
+
+// constant arrays used for psprite clipping and initializing clipping
+int                     negonearray[ SCREENWIDTH ];
+int                     viewheightarray[ SCREENWIDTH ];
+//
+// INITIALIZATION FUNCTIONS
+//
+
+// variables used to look up and range check thing_t sprites patches
+spritedef_t             *sprites;
+
+short                   firstbloodsplatlump;
+dboolean                allowwolfensteinss;// = true;
+
 dboolean                r_liquid_clipsprites; //=r_liquid_clipsprites_default;
 dboolean                r_playersprites; //=r_playersprites_default;
+
+int             *mfloorclip;
+int             *mceilingclip;
+fixed_t         spryscale;
+int64_t         sprtopscreen;
+
+
 
 // r_plane.c
 visplane_t          *floorplane;
@@ -2217,3 +2245,7 @@ int         skyscrolldelta;
 
 fixed_t     skyiscale;
 dboolean    canmouselook;// = false;
+
+
+// w_merge.c
+dboolean                SHT2A0;
