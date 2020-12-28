@@ -95,7 +95,7 @@ void R_InitData(void);
 // Retrieval.
 // Floor/ceiling opaque texture tiles, lookup by name. For animation?
 int R_FlatNumForName(char *name);
-//int R_CheckFlatNumForName(char *name);
+int R_CheckFlatNumForName(char *name);
 
 // Called by P_Ticker for switches and animations,
 // returns the texture number for the texture name.

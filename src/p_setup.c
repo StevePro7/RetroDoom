@@ -3546,7 +3546,7 @@ int P_GetMapTitlePatch( int map )
 void P_Init(void)
 {
     P_InitSwitchList();
-    //P_InitPicAnims();
+    P_InitPicAnims();
     //P_InitMapInfo();
     //R_InitSprites();
     //P_CheckSpechits();

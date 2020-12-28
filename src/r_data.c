@@ -754,18 +754,18 @@ int R_FlatNumForName(char *name)
     return (i - firstflat);
 }
 
-////
-//// R_CheckFlatNumForName
-//// Retrieval, get a flat number for a flat name. No error.
-////
-//int R_CheckFlatNumForName(char *name)
-//{
-//    for (int i = firstflat; i <= lastflat; i++)
-//        if (!strncasecmp(lumpinfo[i]->name, name, 8))
-//            return (i - firstflat);
 //
-//    return -1;
-//}
+// R_CheckFlatNumForName
+// Retrieval, get a flat number for a flat name. No error.
+//
+int R_CheckFlatNumForName(char *name)
+{
+    for (int i = firstflat; i <= lastflat; i++)
+        if (!strncasecmp(lumpinfo[i]->name, name, 8))
+            return (i - firstflat);
+
+    return -1;
+}
 
 //
 // R_CheckTextureNumForName

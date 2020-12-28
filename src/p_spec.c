@@ -1,8 +1,16 @@
 #include "p_spec.h"
 #include "doomdef.h"
+#include "doomenum.h"
 #include "doomstruct.h"
 #include "doomtype.h"
 #include "doomvars.h"
+#include "i_swap.h"
+#include "i_system.h"
+#include "m_misc.h"
+#include "r_data.h"
+#include "sc_man.h"
+#include "w_wad.h"
+#include "z_zone.h"
 
 //#include "c_console.h"
 //#include "d_deh.h"
@@ -94,270 +102,270 @@ static anim_t       *anims;             // new structure w/o limits -- killough
 terraintype_t       *terraintypes;
 dboolean            *isteleport;
 
-//// killough 03/07/98: Initialize generalized scrolling
-//static void P_SpawnScrollers(void);
-//static void P_SpawnFriction(void);      // phares 03/16/98
-//static void P_SpawnPushers(void);       // phares 03/20/98
-//
-//extern int          numflats;
-//
-//static struct
-//{
-//    char            *startname;
-//    char            *endname;
-//    terraintype_t   terraintype;
-//} texturepacks[] = {
-//    { "GRAYSLM1", "GRAYSLM4", GRAYSLIME },
-//    { "OBLODA01", "OBLODA08", BLOOD     },
-//    { "OGOOPY01", "OGOOPY08", GOOP      },
-//    { "OICYWA01", "OICYWA08", ICYWATER  },
-//    { "OLAVAC01", "OLAVAC08", LAVA      },
-//    { "OLAVAD01", "OLAVAD08", LAVA      },
-//    { "ONUKEA01", "ONUKEA08", NUKAGE    },
-//    { "OSLUDG01", "OSLUDG08", SLUDGE    },
-//    { "OTAR__01", "OTAR__08", TAR       },
-//    { "OWATER01", "OWATER08", SLUDGE    },
-//    { "",         "",         0         }
-//};
-//
-//static void SetTerrainType(anim_t *anim, terraintype_t terraintype)
-//{
-//    for (int i = anim->basepic; i < anim->basepic + anim->numpics; i++)
-//        terraintypes[i] = terraintype;
-//}
+// killough 03/07/98: Initialize generalized scrolling
+static void P_SpawnScrollers(void);
+static void P_SpawnFriction(void);      // phares 03/16/98
+static void P_SpawnPushers(void);       // phares 03/20/98
 
-////
-//// P_InitPicAnims
-////
-//void P_InitPicAnims(void)
-//{
-//    int         size = (numflats + 1) * sizeof(dboolean);
+//extern int          numflats;
+
+static struct
+{
+	char            *startname;
+	char            *endname;
+	terraintype_t   terraintype;
+} texturepacks[] = {
+	{ "GRAYSLM1", "GRAYSLM4", GRAYSLIME },
+	{ "OBLODA01", "OBLODA08", BLOOD     },
+	{ "OGOOPY01", "OGOOPY08", GOOP      },
+	{ "OICYWA01", "OICYWA08", ICYWATER  },
+	{ "OLAVAC01", "OLAVAC08", LAVA      },
+	{ "OLAVAD01", "OLAVAD08", LAVA      },
+	{ "ONUKEA01", "ONUKEA08", NUKAGE    },
+	{ "OSLUDG01", "OSLUDG08", SLUDGE    },
+	{ "OTAR__01", "OTAR__08", TAR       },
+	{ "OWATER01", "OWATER08", SLUDGE    },
+	{ "",         "",         0         }
+};
+
+static void SetTerrainType( anim_t *anim, terraintype_t terraintype )
+{
+	for( int i = anim->basepic; i < anim->basepic + anim->numpics; i++ )
+		terraintypes[ i ] = terraintype;
+}
+
 //
-//    int         lump = W_GetNumForName("ANIMATED");
-//    animdef_t   *animdefs = W_CacheLumpNum(lump);
+// P_InitPicAnims
 //
-//    short       NUKAGE1 = R_CheckFlatNumForName("NUKAGE1");
-//    short       NUKAGE3 = R_CheckFlatNumForName("NUKAGE3");
-//    short       FWATER1 = R_CheckFlatNumForName("FWATER1");
-//    short       FWATER4 = R_CheckFlatNumForName("FWATER4");
-//    short       SWATER1 = R_CheckFlatNumForName("SWATER1");
-//    short       SWATER4 = R_CheckFlatNumForName("SWATER4");
-//    short       LAVA1 = R_CheckFlatNumForName("LAVA1");
-//    short       LAVA4 = R_CheckFlatNumForName("LAVA4");
-//    short       BLOOD1 = R_CheckFlatNumForName("BLOOD1");
-//    short       BLOOD3 = R_CheckFlatNumForName("BLOOD3");
-//    short       SLIME01 = R_CheckFlatNumForName("SLIME01");
-//    short       SLIME08 = R_CheckFlatNumForName("SLIME08");
-//
-//    terraintypes = Z_Calloc(1, size, PU_STATIC, NULL);
-//    isteleport = Z_Calloc(1, size, PU_STATIC, NULL);
-//
-//    RROCK05 = R_CheckFlatNumForName("RROCK05");
-//    RROCK08 = R_CheckFlatNumForName("RROCK08");
-//    SLIME09 = R_CheckFlatNumForName("SLIME09");
-//    SLIME12 = R_CheckFlatNumForName("SLIME12");
-//
-//    // Init animation
-//    lastanim = anims;
-//
-//    for (int i = 0; animdefs[i].istexture != -1; i++)
-//    {
-//        static size_t   maxanims;
-//
-//        // killough 01/11/98 -- removed limit by array-doubling
-//        if (lastanim >= anims + maxanims)
-//        {
-//            size_t  newmax = (maxanims ? maxanims * 2 : MAXANIMS);
-//
-//            anims = I_Realloc(anims, newmax * sizeof(*anims));
-//            lastanim = anims + maxanims;
-//            maxanims = newmax;
-//        }
-//
-//        if (animdefs[i].istexture)
-//        {
-//            // different episode?
-//            if (R_CheckTextureNumForName(animdefs[i].startname) == -1)
-//                continue;
-//
-//            lastanim->picnum = R_TextureNumForName(animdefs[i].endname);
-//            lastanim->basepic = R_TextureNumForName(animdefs[i].startname);
-//
-//            lastanim->numpics = lastanim->picnum - lastanim->basepic + 1;
-//            lastanim->istexture = true;
-//        }
-//        else
-//        {
-//            int         basepic;
-//            dboolean    isliquid = false;
-//
-//            if (R_CheckFlatNumForName(animdefs[i].startname) == -1)
-//                continue;
-//
-//            lastanim->picnum = R_FlatNumForName(animdefs[i].endname);
-//            lastanim->basepic = basepic = R_FlatNumForName(animdefs[i].startname);
-//
-//            lastanim->numpics = lastanim->picnum - basepic + 1;
-//            lastanim->istexture = false;
-//
-//            // Check if flat is liquid in IWAD
-//            if (basepic >= NUKAGE1 && basepic <= NUKAGE3)
-//            {
-//                SetTerrainType(lastanim, NUKAGE);
-//                isliquid = true;
-//            }
-//            else if ((basepic >= FWATER1 && basepic <= FWATER4) || (basepic >= SWATER1 && basepic <= SWATER4))
-//            {
-//                SetTerrainType(lastanim, WATER);
-//                isliquid = true;
-//            }
-//            else if (basepic >= LAVA1 && basepic <= LAVA4)
-//            {
-//                SetTerrainType(lastanim, LAVA);
-//                isliquid = true;
-//            }
-//            else if (basepic >= BLOOD1 && basepic <= BLOOD3)
-//            {
-//                SetTerrainType(lastanim, BLOOD);
-//                isliquid = true;
-//            }
-//            else if (basepic >= SLIME01 && basepic <= SLIME08)
-//            {
-//                SetTerrainType(lastanim, SLIME);
-//                isliquid = true;
-//            }
-//
-//            // Check if name of flat indicates it is liquid
-//            if (!isliquid)
-//            {
-//                if (M_StrCaseStr(animdefs[i].startname, "NUK"))
-//                {
-//                    SetTerrainType(lastanim, NUKAGE);
-//                    isliquid = true;
-//                }
-//                else if (M_StrCaseStr(animdefs[i].startname, "WAT") || M_StrCaseStr(animdefs[i].startname, "WTR")
-//                    || M_StrCaseStr(animdefs[i].startname, "WAV"))
-//                {
-//                    SetTerrainType(lastanim, WATER);
-//                    isliquid = true;
-//                }
-//                else if (M_StrCaseStr(animdefs[i].startname, "LAV"))
-//                {
-//                    SetTerrainType(lastanim, LAVA);
-//                    isliquid = true;
-//                }
-//                else if (M_StrCaseStr(animdefs[i].startname, "BLO"))
-//                {
-//                    SetTerrainType(lastanim, BLOOD);
-//                    isliquid = true;
-//                }
-//                else if ((M_StrCaseStr(animdefs[i].startname, "SLI") && (basepic < SLIME09 || basepic > SLIME12))
-//                    || M_StrCaseStr(animdefs[i].startname, "SLM"))
-//                {
-//                    SetTerrainType(lastanim, SLIME);
-//                    isliquid = true;
-//                }
-//            }
-//
-//            // Check if flat is liquid in popular texture packs
-//            if (!isliquid)
-//                for (int j = 0; *texturepacks[j].startname; j++)
-//                    if (basepic >= R_CheckFlatNumForName(texturepacks[j].startname)
-//                        && basepic <= R_CheckFlatNumForName(texturepacks[j].endname))
-//                    {
-//                        SetTerrainType(lastanim, texturepacks[j].terraintype);
-//                        isliquid = true;
-//                        break;
-//                    }
-//        }
-//
-//        if (lastanim->numpics < 2)
-//            I_Error("P_InitPicAnims: bad cycle from %s to %s", animdefs[i].startname, animdefs[i].endname);
-//
-//        lastanim->speed = LONG(animdefs[i].speed);
-//
-//        if (!lastanim->speed)
-//            lastanim->speed = 1;
-//
-//        lastanim++;
-//    }
-//
-//    W_ReleaseLumpNum(lump);
-//
-//    SC_Open("DRCOMPAT");
-//
-//    while (SC_GetString())
-//    {
-//        dboolean    noliquid = M_StringCompare(sc_String, "NOLIQUID");
-//
-//        if (noliquid || M_StringCompare(sc_String, "LIQUID"))
-//        {
-//            int first;
-//            int last;
-//
-//            SC_MustGetString();
-//            first = R_CheckFlatNumForName(sc_String);
-//            SC_MustGetString();
-//            last = R_CheckFlatNumForName(sc_String);
-//            SC_MustGetString();
-//
-//            if (first >= 0 && last >= 0 && M_StringEndsWith(lumpinfo[firstflat + first]->wadfile->path, sc_String))
-//                for (int i = first; i <= last; i++)
-//                    terraintypes[i] = (noliquid ? SOLID : LIQUID);
-//        }
-//    }
-//
-//    SC_Close();
-//
-//    // [BH] indicate obvious teleport textures for automap
-//    if (BTSX)
-//    {
-//        isteleport[R_CheckFlatNumForName("SLIME05")] = true;
-//        isteleport[R_CheckFlatNumForName("SLIME08")] = true;
-//        isteleport[R_CheckFlatNumForName("SLIME09")] = true;
-//        isteleport[R_CheckFlatNumForName("SLIME12")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT02")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT03")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT04")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT05")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT06")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT07")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT08")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT09")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT10")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT11")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT12")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT13")] = true;
-//        isteleport[R_CheckFlatNumForName("SHNPRT14")] = true;
-//        isteleport[R_CheckFlatNumForName("TELEPRT1")] = true;
-//        isteleport[R_CheckFlatNumForName("TELEPRT2")] = true;
-//        isteleport[R_CheckFlatNumForName("TELEPRT3")] = true;
-//        isteleport[R_CheckFlatNumForName("TELEPRT4")] = true;
-//        isteleport[R_CheckFlatNumForName("TELEPRT5")] = true;
-//        isteleport[R_CheckFlatNumForName("TELEPRT6")] = true;
-//    }
-//    else
-//    {
-//        isteleport[R_CheckFlatNumForName("GATE1")] = true;
-//        isteleport[R_CheckFlatNumForName("GATE2")] = true;
-//        isteleport[R_CheckFlatNumForName("GATE3")] = true;
-//        isteleport[R_CheckFlatNumForName("GATE4")] = true;
-//    }
-//
-//    for (anim_t *anim = anims; anim < lastanim; anim++)
-//        for (int i = anim->basepic; i < anim->basepic + anim->numpics; i++)
-//        {
-//            if (anim->istexture)
-//            {
-//                texture_t   *texture = textures[i];
-//
-//                for (int j = 0; j < texture->patchcount; j++)
-//                    W_CacheLumpNum(texture->patches[j].patch);
-//            }
-//            else
-//                W_CacheLumpNum(firstflat + i);
-//        }
-//}
+void P_InitPicAnims(void)
+{
+    int         size = (numflats + 1) * sizeof(dboolean);
+
+    int         lump = W_GetNumForName("ANIMATED");
+    animdef_t   *animdefs = W_CacheLumpNum(lump);
+
+    short       NUKAGE1 = R_CheckFlatNumForName("NUKAGE1");
+    short       NUKAGE3 = R_CheckFlatNumForName("NUKAGE3");
+    short       FWATER1 = R_CheckFlatNumForName("FWATER1");
+    short       FWATER4 = R_CheckFlatNumForName("FWATER4");
+    short       SWATER1 = R_CheckFlatNumForName("SWATER1");
+    short       SWATER4 = R_CheckFlatNumForName("SWATER4");
+    short       LAVA1 = R_CheckFlatNumForName("LAVA1");
+    short       LAVA4 = R_CheckFlatNumForName("LAVA4");
+    short       BLOOD1 = R_CheckFlatNumForName("BLOOD1");
+    short       BLOOD3 = R_CheckFlatNumForName("BLOOD3");
+    short       SLIME01 = R_CheckFlatNumForName("SLIME01");
+    short       SLIME08 = R_CheckFlatNumForName("SLIME08");
+
+    terraintypes = Z_Calloc(1, size, PU_STATIC, NULL);
+    isteleport = Z_Calloc(1, size, PU_STATIC, NULL);
+
+    RROCK05 = R_CheckFlatNumForName("RROCK05");
+    RROCK08 = R_CheckFlatNumForName("RROCK08");
+    SLIME09 = R_CheckFlatNumForName("SLIME09");
+    SLIME12 = R_CheckFlatNumForName("SLIME12");
+
+    // Init animation
+    lastanim = anims;
+
+    for (int i = 0; animdefs[i].istexture != -1; i++)
+    {
+        static size_t   maxanims;
+
+        // killough 01/11/98 -- removed limit by array-doubling
+        if (lastanim >= anims + maxanims)
+        {
+            size_t  newmax = (maxanims ? maxanims * 2 : MAXANIMS);
+
+            anims = I_Realloc(anims, newmax * sizeof(*anims));
+            lastanim = anims + maxanims;
+            maxanims = newmax;
+        }
+
+        if (animdefs[i].istexture)
+        {
+            // different episode?
+            if (R_CheckTextureNumForName(animdefs[i].startname) == -1)
+                continue;
+
+            lastanim->picnum = R_TextureNumForName(animdefs[i].endname);
+            lastanim->basepic = R_TextureNumForName(animdefs[i].startname);
+
+            lastanim->numpics = lastanim->picnum - lastanim->basepic + 1;
+            lastanim->istexture = true;
+        }
+        else
+        {
+            int         basepic;
+            dboolean    isliquid = false;
+
+            if (R_CheckFlatNumForName(animdefs[i].startname) == -1)
+                continue;
+
+            lastanim->picnum = R_FlatNumForName(animdefs[i].endname);
+            lastanim->basepic = basepic = R_FlatNumForName(animdefs[i].startname);
+
+            lastanim->numpics = lastanim->picnum - basepic + 1;
+            lastanim->istexture = false;
+
+            // Check if flat is liquid in IWAD
+            if (basepic >= NUKAGE1 && basepic <= NUKAGE3)
+            {
+                SetTerrainType(lastanim, NUKAGE);
+                isliquid = true;
+            }
+            else if ((basepic >= FWATER1 && basepic <= FWATER4) || (basepic >= SWATER1 && basepic <= SWATER4))
+            {
+                SetTerrainType(lastanim, WATER);
+                isliquid = true;
+            }
+            else if (basepic >= LAVA1 && basepic <= LAVA4)
+            {
+                SetTerrainType(lastanim, LAVA);
+                isliquid = true;
+            }
+            else if (basepic >= BLOOD1 && basepic <= BLOOD3)
+            {
+                SetTerrainType(lastanim, BLOOD);
+                isliquid = true;
+            }
+            else if (basepic >= SLIME01 && basepic <= SLIME08)
+            {
+                SetTerrainType(lastanim, SLIME);
+                isliquid = true;
+            }
+
+            // Check if name of flat indicates it is liquid
+            if (!isliquid)
+            {
+                if (M_StrCaseStr(animdefs[i].startname, "NUK"))
+                {
+                    SetTerrainType(lastanim, NUKAGE);
+                    isliquid = true;
+                }
+                else if (M_StrCaseStr(animdefs[i].startname, "WAT") || M_StrCaseStr(animdefs[i].startname, "WTR")
+                    || M_StrCaseStr(animdefs[i].startname, "WAV"))
+                {
+                    SetTerrainType(lastanim, WATER);
+                    isliquid = true;
+                }
+                else if (M_StrCaseStr(animdefs[i].startname, "LAV"))
+                {
+                    SetTerrainType(lastanim, LAVA);
+                    isliquid = true;
+                }
+                else if (M_StrCaseStr(animdefs[i].startname, "BLO"))
+                {
+                    SetTerrainType(lastanim, BLOOD);
+                    isliquid = true;
+                }
+                else if ((M_StrCaseStr(animdefs[i].startname, "SLI") && (basepic < SLIME09 || basepic > SLIME12))
+                    || M_StrCaseStr(animdefs[i].startname, "SLM"))
+                {
+                    SetTerrainType(lastanim, SLIME);
+                    isliquid = true;
+                }
+            }
+
+            // Check if flat is liquid in popular texture packs
+            if (!isliquid)
+                for (int j = 0; *texturepacks[j].startname; j++)
+                    if (basepic >= R_CheckFlatNumForName(texturepacks[j].startname)
+                        && basepic <= R_CheckFlatNumForName(texturepacks[j].endname))
+                    {
+                        SetTerrainType(lastanim, texturepacks[j].terraintype);
+                        isliquid = true;
+                        break;
+                    }
+        }
+
+        if (lastanim->numpics < 2)
+            I_Error("P_InitPicAnims: bad cycle from %s to %s", animdefs[i].startname, animdefs[i].endname);
+
+        lastanim->speed = LONG(animdefs[i].speed);
+
+        if (!lastanim->speed)
+            lastanim->speed = 1;
+
+        lastanim++;
+    }
+
+    W_ReleaseLumpNum(lump);
+
+    SC_Open("DRCOMPAT");
+
+    while (SC_GetString())
+    {
+        dboolean    noliquid = M_StringCompare(sc_String, "NOLIQUID");
+
+        if (noliquid || M_StringCompare(sc_String, "LIQUID"))
+        {
+            int first;
+            int last;
+
+            SC_MustGetString();
+            first = R_CheckFlatNumForName(sc_String);
+            SC_MustGetString();
+            last = R_CheckFlatNumForName(sc_String);
+            SC_MustGetString();
+
+            if (first >= 0 && last >= 0 && M_StringEndsWith(lumpinfo[firstflat + first]->wadfile->path, sc_String))
+                for (int i = first; i <= last; i++)
+                    terraintypes[i] = (noliquid ? SOLID : LIQUID);
+        }
+    }
+
+    SC_Close();
+
+    // [BH] indicate obvious teleport textures for automap
+    if (BTSX)
+    {
+        isteleport[R_CheckFlatNumForName("SLIME05")] = true;
+        isteleport[R_CheckFlatNumForName("SLIME08")] = true;
+        isteleport[R_CheckFlatNumForName("SLIME09")] = true;
+        isteleport[R_CheckFlatNumForName("SLIME12")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT02")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT03")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT04")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT05")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT06")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT07")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT08")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT09")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT10")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT11")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT12")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT13")] = true;
+        isteleport[R_CheckFlatNumForName("SHNPRT14")] = true;
+        isteleport[R_CheckFlatNumForName("TELEPRT1")] = true;
+        isteleport[R_CheckFlatNumForName("TELEPRT2")] = true;
+        isteleport[R_CheckFlatNumForName("TELEPRT3")] = true;
+        isteleport[R_CheckFlatNumForName("TELEPRT4")] = true;
+        isteleport[R_CheckFlatNumForName("TELEPRT5")] = true;
+        isteleport[R_CheckFlatNumForName("TELEPRT6")] = true;
+    }
+    else
+    {
+        isteleport[R_CheckFlatNumForName("GATE1")] = true;
+        isteleport[R_CheckFlatNumForName("GATE2")] = true;
+        isteleport[R_CheckFlatNumForName("GATE3")] = true;
+        isteleport[R_CheckFlatNumForName("GATE4")] = true;
+    }
+
+    for (anim_t *anim = anims; anim < lastanim; anim++)
+        for (int i = anim->basepic; i < anim->basepic + anim->numpics; i++)
+        {
+            if (anim->istexture)
+            {
+                texture_t   *texture = textures[i];
+
+                for (int j = 0; j < texture->patchcount; j++)
+                    W_CacheLumpNum(texture->patches[j].patch);
+            }
+            else
+                W_CacheLumpNum(firstflat + i);
+        }
+}
 
 ////
 //// P_SetLiquids
