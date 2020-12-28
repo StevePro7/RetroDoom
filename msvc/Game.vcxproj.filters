@@ -258,6 +258,9 @@
     <ClCompile Include="..\src\p_switch.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\p_maputl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">

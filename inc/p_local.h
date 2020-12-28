@@ -1,6 +1,6 @@
 #if !defined(__P_LOCAL_H__)
 #define __P_LOCAL_H__
-//
+
 //#include "doomdef.h"
 //#include "d_main.h"
 //#include "r_local.h"
@@ -177,9 +177,9 @@
 //void P_UnsetBloodSplatPosition(bloodsplat_t *splat);
 //void P_SetThingPosition(mobj_t *thing);
 //void P_SetBloodSplatPosition(bloodsplat_t *splat);
-//
-//void P_CheckIntercepts(void);
-//
+
+void P_CheckIntercepts(void);
+
 ////
 //// P_MAP.C
 ////

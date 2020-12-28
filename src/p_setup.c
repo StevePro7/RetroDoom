@@ -12,7 +12,6 @@
 #include "r_data.h"
 #include "r_things.h"
 #include "sc_man.h"
-//#include "st_stuff.h"
 #include "w_wad.h"
 #include "z_zone.h"
 #include <ctype.h>
@@ -3570,5 +3569,5 @@ void P_Init(void)
     P_InitMapInfo();
     R_InitSprites();
     P_CheckSpechits();
-    //P_CheckIntercepts();
+    P_CheckIntercepts();
 }
