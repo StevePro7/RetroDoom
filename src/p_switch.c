@@ -1,4 +1,11 @@
 #include "p_spec.h"
+#include "doomstruct.h"
+#include "doomvars.h"
+#include "i_swap.h"
+#include "i_system.h" 
+#include "logger.h"
+#include "r_data.h"
+#include "w_wad.h"
 #include <string.h>
 
 //#include "c_console.h"
@@ -16,116 +23,122 @@
 static int          *switchlist;        // killough
 static int          numswitches;        // killough
 
-//button_t            *buttonlist = NULL;
-//int                 maxbuttons = MAXBUTTONS;
+button_t            *buttonlist = NULL;
+int                 maxbuttons = MAXBUTTONS;
+
 //
-////
-//// P_InitSwitchList
-////
-//// Only called at game initialization in order to list the set of switches
-//// and buttons known to the engine. This enables their texture to change
-//// when activated, and in the case of buttons, change back after a timeout.
-////
-//// This routine modified to read its data from a predefined lump or
-//// PWAD lump called SWITCHES rather than a static table in this module to
-//// allow wad designers to insert or modify switches.
-////
-//// Lump format is an array of byte packed switchlist_t structures, terminated
-//// by a structure with episode == -1. The lump can be generated from a
-//// text source file using SWANTBLS.EXE, distributed with the BOOM utils.
-//// The standard list of switches and animations is contained in the example
-//// source text file DEFSWANI.DAT also in the BOOM util distribution.
-////
-//// Rewritten by Lee Killough to remove limit 02/08/98
-////
-//void P_InitSwitchList(void)
-//{
-//    int             index = 0;
-//    int             episode = (gamemode == registered || gamemode == retail ? 2 : (gamemode == commercial ? 3 : 1));
-//    switchlist_t    *alphSwitchList;                        // jff 3/23/98 pointer to switch table
-//    int             lump = W_GetNumForName("SWITCHES");     // cph - new wad lump handling
+// P_InitSwitchList
 //
-//    // jff 3/23/98 read the switch table from a predefined lump
-//    alphSwitchList = (switchlist_t *)W_CacheLumpNum(lump);
+// Only called at game initialization in order to list the set of switches
+// and buttons known to the engine. This enables their texture to change
+// when activated, and in the case of buttons, change back after a timeout.
 //
-//    for (int i = 0; ; i++)
-//    {
-//        static int  max_numswitches;
+// This routine modified to read its data from a predefined lump or
+// PWAD lump called SWITCHES rather than a static table in this module to
+// allow wad designers to insert or modify switches.
 //
-//        if (index + 1 >= max_numswitches)
-//            switchlist = I_Realloc(switchlist, sizeof(*switchlist) * (max_numswitches = (max_numswitches ? max_numswitches * 2 : 8)));
+// Lump format is an array of byte packed switchlist_t structures, terminated
+// by a structure with episode == -1. The lump can be generated from a
+// text source file using SWANTBLS.EXE, distributed with the BOOM utils.
+// The standard list of switches and animations is contained in the example
+// source text file DEFSWANI.DAT also in the BOOM util distribution.
 //
-//        if (SHORT(alphSwitchList[i].episode) <= episode)    // jff 5/11/98 endianness
-//        {
-//            int texture1;
-//            int texture2;
+// Rewritten by Lee Killough to remove limit 02/08/98
 //
-//            if (!SHORT(alphSwitchList[i].episode))
-//                break;
+void P_InitSwitchList(void)
+{
+    int             index = 0;
+    int             episode = (gamemode == registered || gamemode == retail ? 2 : (gamemode == commercial ? 3 : 1));
+    switchlist_t    *alphSwitchList;                        // jff 3/23/98 pointer to switch table
+    int             lump = W_GetNumForName("SWITCHES");     // cph - new wad lump handling
+
+    // jff 3/23/98 read the switch table from a predefined lump
+    alphSwitchList = (switchlist_t *)W_CacheLumpNum(lump);
+
+    for (int i = 0; ; i++)
+    {
+        static int  max_numswitches;
+
+        if (index + 1 >= max_numswitches)
+            switchlist = I_Realloc(switchlist, sizeof(*switchlist) * (max_numswitches = (max_numswitches ? max_numswitches * 2 : 8)));
+
+        if (SHORT(alphSwitchList[i].episode) <= episode)    // jff 5/11/98 endianness
+        {
+            int texture1;
+            int texture2;
+
+            if (!SHORT(alphSwitchList[i].episode))
+                break;
+
+            // Ignore switches referencing unknown texture names, instead of exiting.
+            // Warn if either one is missing, but only add if both are valid.
+			if( ( texture1 = R_CheckTextureNumForName( alphSwitchList[ i ].name1 ) ) == -1 )
+			{
+				//C_Warning( 1, "Switch %i in the <b>SWITCHES</b> lump has an unknown <b>%s</b> texture.", i, alphSwitchList[ i ].name1 );
+				loge( "Switch %i in the <b>SWITCHES</b> lump has an unknown <b>%s</b> texture.\n", i, alphSwitchList[ i ].name1 );
+			}
+
+			if( ( texture2 = R_CheckTextureNumForName( alphSwitchList[ i ].name2 ) ) == -1 )
+			{
+				//C_Warning( 1, "Switch %i in the <b>SWITCHES</b> lump has an unknown <b>%s</b> texture.", i, alphSwitchList[ i ].name2 );
+				loge( "Switch %i in the <b>SWITCHES</b> lump has an unknown <b>%s</b> texture.\n", i, alphSwitchList[ i ].name2 );
+			}
+
+            if (texture1 != -1 && texture2 != -1)
+            {
+                texture_t   *texture;
+
+                switchlist[index++] = texture1;
+                switchlist[index++] = texture2;
+
+                texture = textures[texture1];
+
+                for (int j = 0; j < texture->patchcount; j++)
+                    W_CacheLumpNum(texture->patches[j].patch);
+
+                texture = textures[texture2];
+
+                for (int j = 0; j < texture->patchcount; j++)
+                    W_CacheLumpNum(texture->patches[j].patch);
+            }
+        }
+    }
+
+    numswitches = index / 2;
+    switchlist[index] = -1;
+    W_ReleaseLumpNum(lump);
+
+    buttonlist = calloc(maxbuttons, sizeof(*buttonlist));
+}
+
 //
-//            // Ignore switches referencing unknown texture names, instead of exiting.
-//            // Warn if either one is missing, but only add if both are valid.
-//            if ((texture1 = R_CheckTextureNumForName(alphSwitchList[i].name1)) == -1)
-//                C_Warning(1, "Switch %i in the <b>SWITCHES</b> lump has an unknown <b>%s</b> texture.", i, alphSwitchList[i].name1);
+// Start a button counting down until it turns off.
 //
-//            if ((texture2 = R_CheckTextureNumForName(alphSwitchList[i].name2)) == -1)
-//                C_Warning(1, "Switch %i in the <b>SWITCHES</b> lump has an unknown <b>%s</b> texture.", i, alphSwitchList[i].name2);
-//
-//            if (texture1 != -1 && texture2 != -1)
-//            {
-//                texture_t   *texture;
-//
-//                switchlist[index++] = texture1;
-//                switchlist[index++] = texture2;
-//
-//                texture = textures[texture1];
-//
-//                for (int j = 0; j < texture->patchcount; j++)
-//                    W_CacheLumpNum(texture->patches[j].patch);
-//
-//                texture = textures[texture2];
-//
-//                for (int j = 0; j < texture->patchcount; j++)
-//                    W_CacheLumpNum(texture->patches[j].patch);
-//            }
-//        }
-//    }
-//
-//    numswitches = index / 2;
-//    switchlist[index] = -1;
-//    W_ReleaseLumpNum(lump);
-//
-//    buttonlist = calloc(maxbuttons, sizeof(*buttonlist));
-//}
-//
-////
-//// Start a button counting down until it turns off.
-////
-//void P_StartButton(line_t *line, bwhere_e where, int texture, int time)
-//{
-//    // See if button is already pressed
-//    for (int i = 0; i < maxbuttons; i++)
-//        if (buttonlist[i].btimer && buttonlist[i].line == line)
-//            return;
-//
-//    for (int i = 0; i < maxbuttons; i++)
-//        if (!buttonlist[i].btimer)
-//        {
-//            buttonlist[i].line = line;
-//            buttonlist[i].where = where;
-//            buttonlist[i].btexture = texture;
-//            buttonlist[i].btimer = time;
-//            buttonlist[i].soundorg = &line->soundorg;
-//            return;
-//        }
-//
-//    // [crispy] remove MAXBUTTONS limit
-//    maxbuttons *= 2;
-//    buttonlist = I_Realloc(buttonlist, sizeof(*buttonlist) * maxbuttons);
-//    memset(buttonlist + maxbuttons / 2, 0, sizeof(*buttonlist) * ((size_t)maxbuttons - maxbuttons / 2));
-//    P_StartButton(line, where, texture, time);
-//}
-//
+void P_StartButton(line_t *line, bwhere_e where, int texture, int time)
+{
+    // See if button is already pressed
+    for (int i = 0; i < maxbuttons; i++)
+        if (buttonlist[i].btimer && buttonlist[i].line == line)
+            return;
+
+    for (int i = 0; i < maxbuttons; i++)
+        if (!buttonlist[i].btimer)
+        {
+            buttonlist[i].line = line;
+            buttonlist[i].where = where;
+            buttonlist[i].btexture = texture;
+            buttonlist[i].btimer = time;
+            buttonlist[i].soundorg = &line->soundorg;
+            return;
+        }
+
+    // [crispy] remove MAXBUTTONS limit
+    maxbuttons *= 2;
+    buttonlist = I_Realloc(buttonlist, sizeof(*buttonlist) * maxbuttons);
+    memset(buttonlist + maxbuttons / 2, 0, sizeof(*buttonlist) * ((size_t)maxbuttons - maxbuttons / 2));
+    P_StartButton(line, where, texture, time);
+}
+
 ////
 //// Function that changes wall texture.
 //// Tell it if switch is ok to use again (true=yes, it's a button).
