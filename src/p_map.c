@@ -20,20 +20,20 @@ static int      ls_x, ls_y;     // Lost Soul position for Lost Soul checks      
 
 // If "floatok" true, move would be ok
 // if within "tmfloorz - tmceilingz".
-dboolean        floatok;
+//dboolean        floatok;
 
 // killough 11/98: if "felldown" true, object was pushed down ledge
-dboolean        felldown;
+//dboolean        felldown;
 
-fixed_t         tmbbox[4];
-fixed_t         tmfloorz;
-fixed_t         tmceilingz;
+//fixed_t         tmbbox[4];
+//fixed_t         tmfloorz;
+//fixed_t         tmceilingz;
 static fixed_t  tmdropoffz;
 
 // keep track of the line that lowers the ceiling,
 // so missiles don't explode against sky hack walls
-line_t          *ceilingline;
-line_t          *blockline;     // killough 08/11/98: blocking linedef
+//line_t          *ceilingline;
+//line_t          *blockline;     // killough 08/11/98: blocking linedef
 static line_t   *floorline;     // killough 08/01/98: Highest touched floor
 static int      tmunstuck;      // killough 08/01/98: whether to allow unsticking
 
@@ -41,7 +41,7 @@ static int      tmunstuck;      // killough 08/01/98: whether to allow unstickin
 // but don't process them until the move is proven valid
 
 // killough 01/11/98: removed limit on special lines crossed
-line_t          **spechit;
+//line_t          **spechit;
 int             numspechit = 0;
 
 static angle_t  shootangle;     // [BH] angle of blood and puffs for automap
@@ -53,11 +53,11 @@ static angle_t  shootangle;     // [BH] angle of blood and puffs for automap
 
 static mobj_t   *onmobj;
 
-dboolean        infiniteheight = infiniteheight_default;
+//dboolean        infiniteheight = infiniteheight_default;
 
 uint64_t        stat_distancetraveled = 0;
 
-extern dboolean successfulshot;
+//extern dboolean successfulshot;
 extern dboolean telefragonmap30;
 
 //

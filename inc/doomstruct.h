@@ -1483,4 +1483,28 @@ typedef struct
 } pusher_t;
 
 
+// p_local.h
+//
+// P_MAPUTL.C
+//
+typedef struct
+{
+	fixed_t     x, y;
+	fixed_t     dx, dy;
+} divline_t;
+
+typedef struct
+{
+	fixed_t     frac;           // along trace line
+	dboolean    isaline;
+
+	union
+	{
+		mobj_t  *thing;
+		line_t  *line;
+	} d;
+} intercept_t;
+
+
+
 #endif

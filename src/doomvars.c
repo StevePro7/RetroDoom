@@ -196,6 +196,9 @@ uint64_t        stat_shotssuccessful_rocketlauncher; //=0;
 uint64_t        stat_shotssuccessful_plasmarifle; //=0;
 uint64_t        stat_shotssuccessful_bfg9000; //=0;
 
+dboolean        successfulshot;
+dboolean        skippsprinterp;
+
 // g_game.c
 dboolean        autoload; //=autoload_default;
 dboolean        autosave; //=autosave_default;
@@ -394,8 +397,14 @@ int                         gp_vibrate_damage; //=gp_vibrate_damage_default;
 int                         gp_vibrate_weapons; //=gp_vibrate_weapons_default;
 
 // p_map.c
+line_t          **spechit;
+int             numspechit;// = 0;
+
 dboolean        infiniteheight; //=infiniteheight_default;
 uint64_t        stat_distancetraveled; //=0;
+
+dboolean    hitwall;
+
 
 // c_cmd.c
 char                *version; //= version_default;

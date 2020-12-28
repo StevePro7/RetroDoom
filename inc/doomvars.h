@@ -925,6 +925,9 @@ extern state_t  states[ NUMSTATES ];
 // p_pspr.h
 extern dboolean skippsprinterp;
 
+// p_pspr.c
+extern dboolean hitwall;
+
 
 // w_wad.h
 extern lumpinfo_t   **lumpinfo;
@@ -1417,6 +1420,77 @@ extern dboolean allowwolfensteinss;
 // r_things.c
 extern dboolean         drawbloodsplats;
 extern dboolean         SHT2A0;
+
+
+// p_local.h
+extern dboolean autousing;
+
+extern fixed_t  opentop;
+extern fixed_t  openbottom;
+extern fixed_t  openrange;
+extern fixed_t  lowfloor;
+
+extern divline_t    dltrace;
+
+//
+// P_MAP.C
+//
+
+// If "floatok" true, move would be ok
+// if within "tmfloorz - tmceilingz".
+extern fixed_t      attackrange;
+extern dboolean     floatok;
+extern dboolean     felldown;       // killough 11/98: indicates object pushed off ledge
+extern fixed_t      tmfloorz;
+extern fixed_t      tmceilingz;
+extern fixed_t      tmbbox[ 4 ];      // phares 03/20/98
+extern msecnode_t   *sector_list;
+extern line_t       *ceilingline;
+extern line_t       *blockline;
+
+extern dboolean     infight;
+extern mobj_t   *linetarget;    // who got hit (or NULL)
+
+//
+// P_SETUP.C
+//
+extern const byte   *rejectmatrix;  // for fast sight rejection
+extern int          *blockmaplump;
+extern int          *blockmap;
+extern int          bmapwidth;
+extern int          bmapheight;     // in mapblocks
+extern fixed_t      bmaporgx;
+extern fixed_t      bmaporgy;       // origin of block map
+extern mobj_t       **blocklinks;   // for thing chains
+
+// MAES: extensions to support 512x512 blockmaps.
+extern int          blockmapxneg;
+extern int          blockmapyneg;
+
+extern int      god_health;
+extern int      idfa_armor;
+extern int      idfa_armor_class;
+extern int      idkfa_armor;
+extern int      idkfa_armor_class;
+extern int      initial_health;
+extern int      initial_bullets;
+extern int      maxhealth;
+extern int      max_armor;
+extern int      green_armor_class;
+extern int      blue_armor_class;
+extern int      max_soul;
+extern int      soul_health;
+extern int      mega_health;
+extern int      bfgcells;
+extern dboolean species_infighting;
+extern int      maxammo[];
+extern int      clipammo[];
+
+
+// p_enemy.c
+// killough 01/11/98: Limit removed on special lines crossed
+extern line_t   **spechit;
+extern int      numspechit;
 
 
 #endif
