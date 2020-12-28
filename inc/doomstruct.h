@@ -1116,6 +1116,18 @@ typedef struct
 	void            *handle;
 } musicinfo_t;
 
+
+
+// s_sound.h
+typedef struct
+{
+	mobj_t  *mapthing;
+	mobj_t  *lastmapthing;
+	int     tics;
+	int     current_item;
+	int     items[ MAX_MUS_ENTRIES ];
+} musinfo_t;
+
 // s_sound.c
 typedef struct
 {

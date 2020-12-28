@@ -28,6 +28,7 @@
 #include "m_menu.h"
 #include "p_setup.h"
 #include "r_main.h"
+#include "s_sound.h"
 #include "v_video.h"
 #include "version.h"
 #include "w_wad.h"
@@ -852,6 +853,8 @@ static void D_DoomMainSetup( void )
 	R_Init();
 
 	P_Init();
+
+	S_Init();
 }
 
 //

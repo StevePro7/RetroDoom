@@ -1493,4 +1493,8 @@ extern line_t   **spechit;
 extern int      numspechit;
 
 
+// s_sound.h
+extern musinfo_t    musinfo;
+
+
 #endif

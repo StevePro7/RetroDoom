@@ -52,40 +52,40 @@ void I_ShutdownMusic(void)
 #endif
 }
 
-//// Initialize music subsystem
-//dboolean I_InitMusic(void)
-//{
-//    int         freq = MIX_DEFAULT_FREQUENCY;
-//    int         channels;
-//    uint16_t    format;
-//
-//    // If SDL_mixer is not initialized, we have to initialize it
-//    // and have the responsibility to shut it down later on.
-//    if (!Mix_QuerySpec(&freq, &format, &channels))
-//    {
-//        if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
-//            return false;
-//
-//        if (Mix_OpenAudioDevice(SAMPLERATE, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, CHUNKSIZE, DEFAULT_DEVICE,
-//            SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
-//        {
-//            SDL_QuitSubSystem(SDL_INIT_AUDIO);
-//            return false;
-//        }
-//    }
-//
-//    SDL_PauseAudio(0);
-//
-//    music_initialized = true;
-//
-//#if defined(_WIN32)
-//    // Initialize RPC server
-//    if (I_MidiRPCInitServer())
-//        midirpc = I_MidiRPCInitClient();
-//#endif
-//
-//    return music_initialized;
-//}
+// Initialize music subsystem
+dboolean I_InitMusic(void)
+{
+    int         freq = MIX_DEFAULT_FREQUENCY;
+    int         channels;
+    uint16_t    format;
+
+    // If SDL_mixer is not initialized, we have to initialize it
+    // and have the responsibility to shut it down later on.
+    if (!Mix_QuerySpec(&freq, &format, &channels))
+    {
+        if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+            return false;
+
+        if (Mix_OpenAudioDevice(SAMPLERATE, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, CHUNKSIZE, DEFAULT_DEVICE,
+            SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
+        {
+            SDL_QuitSubSystem(SDL_INIT_AUDIO);
+            return false;
+        }
+    }
+
+    SDL_PauseAudio(0);
+
+    music_initialized = true;
+
+#if defined(_WIN32)
+    // Initialize RPC server
+    if (I_MidiRPCInitServer())
+        midirpc = I_MidiRPCInitClient();
+#endif
+
+    return music_initialized;
+}
 
 // Set music volume (0 - MIX_MAX_VOLUME)
 void I_SetMusicVolume(int volume)

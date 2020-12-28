@@ -547,6 +547,9 @@ dboolean    r_supersampling;// = r_supersampling_default;
 dboolean            nomusic;
 dboolean            nosfx;
 
+musinfo_t           musinfo;
+
+
 int                 s_channels; //=s_channels_default;
 int                 s_musicvolume; //=s_musicvolume_default;
 dboolean            s_randommusic;// = s_randommusic_default;

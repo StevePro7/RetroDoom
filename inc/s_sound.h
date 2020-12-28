@@ -2,33 +2,34 @@
 #define __S_SOUND_H__
 
 #include "doomstruct.h"
+#include "doomtype.h"
 #include "sounds.h"
 
 #include "SDL_mixer.h"
 //
 //#include "r_defs.h"
 
-#define CHUNKSIZE                   1024
-#define SAMPLERATE                  44100
+//#define CHUNKSIZE                   1024
+//#define SAMPLERATE                  44100
+//
+//#if !defined(__HAIKU__)
+//#define DEFAULT_DEVICE              NULL
+//#else
+//// Triggers a segfault if no name is provided even though the default device is empty
+//#define DEFAULT_DEVICE              ""
+//#endif
+//
+//#define LOWER_MUSIC_VOLUME_FACTOR   3
 
-#if !defined(__HAIKU__)
-#define DEFAULT_DEVICE              NULL
-#else
-// Triggers a segfault if no name is provided even though the default device is empty
-#define DEFAULT_DEVICE              ""
-#endif
-
-#define LOWER_MUSIC_VOLUME_FACTOR   3
-
-//dboolean I_InitSound(void);
+dboolean I_InitSound(void);
 //void I_ShutdownSound(void);
-//dboolean CacheSFX(sfxinfo_t *sfxinfo);
+dboolean CacheSFX(sfxinfo_t *sfxinfo);
 void I_UpdateSoundParms(int channel, int vol, int sep);
 int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch);
 void I_StopSound(int channel);
 dboolean I_SoundIsPlaying(int channel);
 
-//dboolean I_InitMusic(void);
+dboolean I_InitMusic(void);
 //void I_ShutdownMusic(void);
 void I_SetMusicVolume(int volume);
 //void I_PauseSong(void);
@@ -39,13 +40,13 @@ void I_PlaySong(void *handle, dboolean looping);
 //void I_StopSong(void);
 dboolean I_AnySoundStillPlaying(void);
 
-////
-//// Initializes sound stuff, including volume
-//// Sets channels, SFX and music volume,
-////  allocates channel buffer, sets S_sfx lookup.
-////
-//void S_Init(void);
 //
+// Initializes sound stuff, including volume
+// Sets channels, SFX and music volume,
+//  allocates channel buffer, sets S_sfx lookup.
+//
+void S_Init(void);
+
 //// Shut down sound
 //void S_Shutdown(void);
 //
@@ -87,7 +88,7 @@ void S_StartSound(mobj_t *mobj, int sfx_id);
 //
 void S_SetMusicVolume(int volume);
 //void S_LowerMusicVolume(void);
-//void S_SetSfxVolume(int volume);
+void S_SetSfxVolume(int volume);
 //
 //#define MAX_MUS_ENTRIES 64
 //

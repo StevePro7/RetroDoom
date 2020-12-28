@@ -1,23 +1,22 @@
 #include "s_sound.h"
-#include "doomstruct.h"
-
-#include <ctype.h>
-
 #include "doomdef.h"
+#include "doomstruct.h"
 #include "doomvars.h"
 
+#include "logger.h"
 //#include "c_console.h"
 //#include "doomstat.h"
-//#include "m_argv.h"
+#include "m_argv.h"
 //#include "m_config.h"
-//#include "m_misc.h"
+#include "m_misc.h"
 //#include "m_fixed.h"
 //#include "m_random.h"
 #include "r_main.h"
-#include "s_sound.h"
 //#include "sc_man.h"
-//#include "w_wad.h"
-//#include "z_zone.h"
+#include "w_wad.h"
+#include "z_zone.h"
+
+#include <ctype.h>
 
 // when to clip out sounds
 // Does not fit the large outdoor areas.
@@ -80,9 +79,9 @@ dboolean            s_stereo = s_stereo_default;
 // Internal volume level, ranging from 0-MIX_MAX_VOLUME
 static int          snd_SfxVolume;
 
-//// Whether songs are mus_paused
-//static dboolean     mus_paused;
-//
+// Whether songs are mus_paused
+static dboolean     mus_paused;
+
 //// Music currently being played
 //musicinfo_t         *mus_playing;
 //
@@ -90,133 +89,145 @@ static int          snd_SfxVolume;
 //dboolean            nomusic;
 //
 //musinfo_t           musinfo;
+
+#if defined(_WIN32)
+extern dboolean     serverMidiPlaying;
+#endif
+
+// Initialize sound effects.
+static void InitSfxModule(void)
+{
+    if (I_InitSound())
+    {
+        const char  *audiodriver = SDL_GetCurrentAudioDriver();
+
+		//C_Output( "Sound effects are playing at a sample rate of %.1fkHz over %i channels%s.", SAMPLERATE / 1000.0f, s_channels,
+		//	( M_StringCompare( audiodriver, "wasapi" ) ? " using the <i><b>WASAPI</b></i>" :
+		//	( M_StringCompare( audiodriver, "directsound" ) ? " using the <i><b>DirectSound</b></i> API" : "" ) ) );
+
+        logd("Sound effects are playing at a sample rate of %.1fkHz over %i channels%s.\n", SAMPLERATE / 1000.0f, s_channels,
+            (M_StringCompare(audiodriver, "wasapi") ? " using the <i><b>WASAPI</b></i>\n" :
+            (M_StringCompare(audiodriver, "directsound") ? " using the <i><b>DirectSound</b></i> API\n" : "\n")));
+    }
+    else
+    {
+        //C_Warning(1, "Sound effects couldn't be initialized.");
+		loge( "Sound effects couldn't be initialized.\n" );
+        nosfx = true;
+    }
+}
+
+// Initialize music.
+static void InitMusicModule(void)
+{
+    if (!I_InitMusic())
+    {
+        //C_Warning(1, "Music couldn't be initialized.");
+		loge( "Music couldn't be initialized.\n" );
+        nomusic = true;
+    }
+}
+
 //
-//#if defined(_WIN32)
-//extern dboolean     serverMidiPlaying;
-//#endif
+// Initializes sound stuff, including volume
+// Sets channels, SFX and music volume, allocates channel buffer, sets S_sfx lookup.
 //
-//// Initialize sound effects.
-//static void InitSfxModule(void)
-//{
-//    if (I_InitSound())
-//    {
-//        const char  *audiodriver = SDL_GetCurrentAudioDriver();
-//
-//        C_Output("Sound effects are playing at a sample rate of %.1fkHz over %i channels%s.", SAMPLERATE / 1000.0f, s_channels,
-//            (M_StringCompare(audiodriver, "wasapi") ? " using the <i><b>WASAPI</b></i>" :
-//            (M_StringCompare(audiodriver, "directsound") ? " using the <i><b>DirectSound</b></i> API" : "")));
-//    }
-//    else
-//    {
-//        C_Warning(1, "Sound effects couldn't be initialized.");
-//        nosfx = true;
-//    }
-//}
-//
-//// Initialize music.
-//static void InitMusicModule(void)
-//{
-//    if (!I_InitMusic())
-//    {
-//        C_Warning(1, "Music couldn't be initialized.");
-//        nomusic = true;
-//    }
-//}
-//
-////
-//// Initializes sound stuff, including volume
-//// Sets channels, SFX and music volume, allocates channel buffer, sets S_sfx lookup.
-////
-//void S_Init(void)
-//{
-//    if (M_CheckParm("-nosound"))
-//    {
-//        C_Warning(1, "A <b>-nosound</b> parameter was found on the command-line. Both sound effects and music have been disabled.");
-//        nomusic = true;
-//        nosfx = true;
-//    }
-//    else
-//    {
-//        if (M_CheckParm("-nomusic"))
-//        {
-//            C_Warning(1, "A <b>-nomusic</b> parameter was found on the command-line. Music has been disabled.");
-//            nomusic = true;
-//        }
-//
-//        if (M_CheckParm("-nosfx"))
-//        {
-//            C_Warning(1, "A <b>-nosfx</b> parameter was found on the command-line. Sound effects have been disabled.");
-//            nosfx = true;
-//        }
-//    }
-//
-//    if (!nosfx)
-//    {
-//#if defined(_WIN32)
-//        char    *audiodriver = SDL_getenv("SDL_AUDIODRIVER");
-//
-//        if (audiodriver)
-//        {
-//            C_Warning(1, "The <b>SDL_AUDIODRIVER</b> environment variable has been set to <b>\"%s\"</b>.", audiodriver);
-//            free(audiodriver);
-//        }
-//#endif
-//
-//        InitSfxModule();
-//        S_SetSfxVolume(sfxVolume * MIX_MAX_VOLUME / 31);
-//
-//        // Allocating the internal channels for mixing (the maximum number of sounds rendered simultaneously) within zone memory.
-//        channels = Z_Calloc(s_channels_max, sizeof(channel_t), PU_STATIC, NULL);
-//        sobjs = Z_Malloc(s_channels_max * sizeof(sobj_t), PU_STATIC, NULL);
-//
-//        // [BH] precache all SFX
-//        for (int i = 1; i < NUMSFX; i++)
-//        {
-//            sfxinfo_t   *sfx = &S_sfx[i];
-//            char        namebuf[9];
-//
-//            M_snprintf(namebuf, sizeof(namebuf), "ds%s", sfx->name1);
-//
-//            if ((sfx->lumpnum = W_CheckNumForName(namebuf)) >= 0)
-//            {
-//                if (!CacheSFX(sfx) && W_CheckMultipleLumps(namebuf) > 1)
-//                {
-//                    sfx->lumpnum = W_GetLastNumForName(namebuf);
-//
-//                    if (!CacheSFX(sfx))
-//                        sfx->lumpnum = -1;
-//                    else
-//                    {
-//                        char    *temp = uppercase(namebuf);
-//
-//                        C_Warning(1, "The <b>%s</b> sound lump is in an unknown format.", temp);
-//                        free(temp);
-//                    }
-//                }
-//
-//                if (sfx->lumpnum == -1)
-//                {
-//                    char    *temp = uppercase(namebuf);
-//
-//                    C_Warning(1, "The <b>%s</b> sound lump is in an unknown format and won't be played.", temp);
-//                    free(temp);
-//                }
-//            }
-//        }
-//    }
-//
-//    if (!nomusic)
-//    {
-//        InitMusicModule();
-//        S_SetMusicVolume(musicVolume * MIX_MAX_VOLUME / 31);
-//
-//        // no sounds are playing, and they are not mus_paused
-//        mus_paused = false;
-//
-//        musinfo.mapthing = NULL;
-//    }
-//}
-//
+void S_Init(void)
+{
+    if (M_CheckParm("-nosound"))
+    {
+        //C_Warning(1, "A <b>-nosound</b> parameter was found on the command-line. Both sound effects and music have been disabled.");
+		loge( "A <b>-nosound</b> parameter was found on the command-line. Both sound effects and music have been disabled.\n" );
+        nomusic = true;
+        nosfx = true;
+    }
+    else
+    {
+        if (M_CheckParm("-nomusic"))
+        {
+            //C_Warning(1, "A <b>-nomusic</b> parameter was found on the command-line. Music has been disabled.");
+			loge( "A <b>-nomusic</b> parameter was found on the command-line. Music has been disabled.\n" );
+            nomusic = true;
+        }
+
+        if (M_CheckParm("-nosfx"))
+        {
+            //C_Warning(1, "A <b>-nosfx</b> parameter was found on the command-line. Sound effects have been disabled.");
+			loge( "A <b>-nosfx</b> parameter was found on the command-line. Sound effects have been disabled.\n" );
+            nosfx = true;
+        }
+    }
+
+    if (!nosfx)
+    {
+#if defined(_WIN32)
+        char    *audiodriver = SDL_getenv("SDL_AUDIODRIVER");
+
+        if (audiodriver)
+        {
+            //C_Warning(1, "The <b>SDL_AUDIODRIVER</b> environment variable has been set to <b>\"%s\"</b>.", audiodriver);
+			loge( "The <b>SDL_AUDIODRIVER</b> environment variable has been set to <b>\"%s\"</b>.\n", audiodriver );
+            free(audiodriver);
+        }
+#endif
+
+        InitSfxModule();
+        S_SetSfxVolume(sfxVolume * MIX_MAX_VOLUME / 31);
+
+        // Allocating the internal channels for mixing (the maximum number of sounds rendered simultaneously) within zone memory.
+        channels = Z_Calloc(s_channels_max, sizeof(channel_t), PU_STATIC, NULL);
+        sobjs = Z_Malloc(s_channels_max * sizeof(sobj_t), PU_STATIC, NULL);
+
+        // [BH] precache all SFX
+        for (int i = 1; i < NUMSFX; i++)
+        {
+            sfxinfo_t   *sfx = &S_sfx[i];
+            char        namebuf[9];
+
+            M_snprintf(namebuf, sizeof(namebuf), "ds%s", sfx->name1);
+
+            if ((sfx->lumpnum = W_CheckNumForName(namebuf)) >= 0)
+            {
+                if (!CacheSFX(sfx) && W_CheckMultipleLumps(namebuf) > 1)
+                {
+                    sfx->lumpnum = W_GetLastNumForName(namebuf);
+
+                    if (!CacheSFX(sfx))
+                        sfx->lumpnum = -1;
+                    else
+                    {
+                        char    *temp = uppercase(namebuf);
+
+                        //C_Warning(1, "The <b>%s</b> sound lump is in an unknown format.", temp);
+						loge( "The <b>%s</b> sound lump is in an unknown format.\n", temp );
+                        free(temp);
+                    }
+                }
+
+                if (sfx->lumpnum == -1)
+                {
+                    char    *temp = uppercase(namebuf);
+
+                    //C_Warning(1, "The <b>%s</b> sound lump is in an unknown format and won't be played.", temp);
+					loge( "The <b>%s</b> sound lump is in an unknown format and won't be played.\n", temp );
+                    free(temp);
+                }
+            }
+        }
+    }
+
+    if (!nomusic)
+    {
+        InitMusicModule();
+        S_SetMusicVolume(musicVolume * MIX_MAX_VOLUME / 31);
+
+        // no sounds are playing, and they are not mus_paused
+        mus_paused = false;
+
+        musinfo.mapthing = NULL;
+    }
+}
+
 //void S_Shutdown(void)
 //{
 //    I_ShutdownSound();
@@ -573,12 +584,12 @@ void S_SetMusicVolume(int volume)
 //
 //    S_SetMusicVolume(musicVolume * MIX_MAX_VOLUME / 31 / LOWER_MUSIC_VOLUME_FACTOR);
 //}
-//
-//void S_SetSfxVolume(int volume)
-//{
-//    snd_SfxVolume = volume;
-//}
-//
+
+void S_SetSfxVolume( int volume )
+{
+	snd_SfxVolume = volume;
+}
+
 //void S_StartMusic(int music_id)
 //{
 //    S_ChangeMusic(music_id, false, false, false);

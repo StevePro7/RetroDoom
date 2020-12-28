@@ -853,6 +853,9 @@ typedef int32_t fixed_t;
 
 #define LOWER_MUSIC_VOLUME_FACTOR   3
 
+#define MAX_MUS_ENTRIES 64
+
+
 
 // c_console.h
 #define CONSOLESTRINGSMAX       256

@@ -1,16 +1,20 @@
 #include "i_sound.h"
 #include "doomtype.h"
 #include "doomvars.h"
+#include "i_system.h"
+#include "logger.h"
+#include "sounds.h"
+#include "s_sound.h"
+#include "w_wad.h"
+
 #include "SDL.h"
 #include "SDL_mixer.h"
 
 //#include "c_console.h"
-//#include "i_system.h"
+
 //#include "m_config.h"
-#include "sounds.h"
-#include "s_sound.h"
 //#include "version.h"
-//#include "w_wad.h"
+
 ////#include <stdio.h>
 //#include <string.h>
 
@@ -206,94 +210,94 @@ static void ReleaseSoundOnChannel(int channel)
         FreeAllocatedSound(snd);
 }
 
-//// Generic sound expansion function for any sample rate.
-//static void ExpandSoundData(sfxinfo_t *sfxinfo, byte *data, int samplerate, int bits, int length)
-//{
-//    unsigned int        samplecount = length / (bits / 8);
-//    unsigned int        expanded_length = (unsigned int)(((uint64_t)samplecount * mixer_freq) / samplerate);
-//    allocated_sound_t   *snd = AllocateSound(sfxinfo, expanded_length * 4);
-//    int16_t             *expanded = (int16_t *)(&snd->chunk)->abuf;
-//    int                 expand_ratio = (samplecount << 8) / expanded_length;
-//    double              dt = 1.0 / mixer_freq;
-//    double              alpha = dt / (1.0 / (M_PI * samplerate) + dt);
-//
-//    if (bits == 8)
-//        for (unsigned int i = 0; i < expanded_length; i++)
-//        {
-//            byte    src = data[(i * expand_ratio) >> 8];
-//
-//            expanded[i * 2] = expanded[i * 2 + 1] = (src | (src << 8)) - 32768;
-//        }
-//    else
-//        for (unsigned int i = 0; i < expanded_length; i++)
-//        {
-//            byte    src = ((i * expand_ratio) >> 8) * 2;
-//
-//            expanded[i * 2] = expanded[i * 2 + 1] = (data[src] | (data[src + 1] << 8));
-//        }
-//
-//    // Apply low-pass filter
-//    for (unsigned int i = 2; i < expanded_length * 2; i++)
-//        expanded[i] = (int16_t)(alpha * expanded[i] + (1 - alpha) * expanded[i - 2]);
-//}
-//
-//// Load and convert a sound effect
-//// Returns true if successful
-//dboolean CacheSFX(sfxinfo_t *sfxinfo)
-//{
-//    // need to load the sound
-//    int             lumpnum = sfxinfo->lumpnum;
-//    byte            *data = W_CacheLumpNum(lumpnum);
-//    unsigned int    lumplen = W_LumpLength(lumpnum);
-//    int             samplerate;
-//    unsigned int    bits = 8;
-//    unsigned int    length;
-//
-//    // Check the header, and ensure this is a valid sound
-//    if (lumplen > 44 && !memcmp(data, "RIFF", 4) && !memcmp(data + 8, "WAVEfmt ", 8))
-//    {
-//        // Chunk size must be 16
-//        if ((data[16] | (data[17] << 8) | (data[18] << 16) | (data[19] << 24)) != 16)
-//            return false;
-//
-//        // Format must be 1 (PCM)
-//        if ((data[20] | (data[21] << 8)) != 1)
-//            return false;
-//
-//        // Number of channels must be 1
-//        if ((data[22] | (data[23] << 8)) != 1)
-//            return false;
-//
-//        samplerate = (data[24] | (data[25] << 8) | (data[26] << 16) | (data[27] << 24));
-//        length = MIN((data[40] | (data[41] << 8) | (data[42] << 16) | (data[43] << 24)), lumplen - 44);
-//
-//        // Must be 8 or 16-bit
-//        if ((bits = (data[34] | (data[35] << 8))) != 8 && bits != 16)
-//            return false;
-//
-//        ExpandSoundData(sfxinfo, data + 44, samplerate, bits, length);
-//        return true;
-//    }
-//    else if (lumplen >= 8 && data[0] == 0x03 && data[1] == 0x00)
-//    {
-//        samplerate = (data[2] | (data[3] << 8));
-//        length = (data[4] | (data[5] << 8) | (data[6] << 16) | (data[7] << 24));
-//
-//        // If the header specifies that the length of the sound is greater than the length of the lump
-//        // itself, this is an invalid sound lump
-//
-//        // We also discard sound lumps that are less than 49 samples long, as this is how DMX behaves -
-//        // although the actual cut-off length seems to vary slightly depending on the sample rate. This
-//        // needs further investigation to better understand the correct behavior.
-//        if (length > lumplen - 8 || length <= 48)
-//            return false;
-//
-//        ExpandSoundData(sfxinfo, data + 24, samplerate, bits, length - 32);
-//        return true;
-//    }
-//    else
-//        return false;
-//}
+// Generic sound expansion function for any sample rate.
+static void ExpandSoundData(sfxinfo_t *sfxinfo, byte *data, int samplerate, int bits, int length)
+{
+    unsigned int        samplecount = length / (bits / 8);
+    unsigned int        expanded_length = (unsigned int)(((uint64_t)samplecount * mixer_freq) / samplerate);
+    allocated_sound_t   *snd = AllocateSound(sfxinfo, expanded_length * 4);
+    int16_t             *expanded = (int16_t *)(&snd->chunk)->abuf;
+    int                 expand_ratio = (samplecount << 8) / expanded_length;
+    double              dt = 1.0 / mixer_freq;
+    double              alpha = dt / (1.0 / (M_PI * samplerate) + dt);
+
+    if (bits == 8)
+        for (unsigned int i = 0; i < expanded_length; i++)
+        {
+            byte    src = data[(i * expand_ratio) >> 8];
+
+            expanded[i * 2] = expanded[i * 2 + 1] = (src | (src << 8)) - 32768;
+        }
+    else
+        for (unsigned int i = 0; i < expanded_length; i++)
+        {
+            byte    src = ((i * expand_ratio) >> 8) * 2;
+
+            expanded[i * 2] = expanded[i * 2 + 1] = (data[src] | (data[src + 1] << 8));
+        }
+
+    // Apply low-pass filter
+    for (unsigned int i = 2; i < expanded_length * 2; i++)
+        expanded[i] = (int16_t)(alpha * expanded[i] + (1 - alpha) * expanded[i - 2]);
+}
+
+// Load and convert a sound effect
+// Returns true if successful
+dboolean CacheSFX(sfxinfo_t *sfxinfo)
+{
+    // need to load the sound
+    int             lumpnum = sfxinfo->lumpnum;
+    byte            *data = W_CacheLumpNum(lumpnum);
+    unsigned int    lumplen = W_LumpLength(lumpnum);
+    int             samplerate;
+    unsigned int    bits = 8;
+    unsigned int    length;
+
+    // Check the header, and ensure this is a valid sound
+    if (lumplen > 44 && !memcmp(data, "RIFF", 4) && !memcmp(data + 8, "WAVEfmt ", 8))
+    {
+        // Chunk size must be 16
+        if ((data[16] | (data[17] << 8) | (data[18] << 16) | (data[19] << 24)) != 16)
+            return false;
+
+        // Format must be 1 (PCM)
+        if ((data[20] | (data[21] << 8)) != 1)
+            return false;
+
+        // Number of channels must be 1
+        if ((data[22] | (data[23] << 8)) != 1)
+            return false;
+
+        samplerate = (data[24] | (data[25] << 8) | (data[26] << 16) | (data[27] << 24));
+        length = MIN((data[40] | (data[41] << 8) | (data[42] << 16) | (data[43] << 24)), lumplen - 44);
+
+        // Must be 8 or 16-bit
+        if ((bits = (data[34] | (data[35] << 8))) != 8 && bits != 16)
+            return false;
+
+        ExpandSoundData(sfxinfo, data + 44, samplerate, bits, length);
+        return true;
+    }
+    else if (lumplen >= 8 && data[0] == 0x03 && data[1] == 0x00)
+    {
+        samplerate = (data[2] | (data[3] << 8));
+        length = (data[4] | (data[5] << 8) | (data[6] << 16) | (data[7] << 24));
+
+        // If the header specifies that the length of the sound is greater than the length of the lump
+        // itself, this is an invalid sound lump
+
+        // We also discard sound lumps that are less than 49 samples long, as this is how DMX behaves -
+        // although the actual cut-off length seems to vary slightly depending on the sample rate. This
+        // needs further investigation to better understand the correct behavior.
+        if (length > lumplen - 8 || length <= 48)
+            return false;
+
+        ExpandSoundData(sfxinfo, data + 24, samplerate, bits, length - 32);
+        return true;
+    }
+    else
+        return false;
+}
 
 void I_UpdateSoundParms(int channel, int vol, int sep)
 {
@@ -371,37 +375,41 @@ void I_ShutdownSound(void)
     sound_initialized = false;
 }
 
-//dboolean I_InitSound(void)
-//{
-//    const SDL_version   *linked = Mix_Linked_Version();
-//    uint16_t            mixer_format;
-//    int                 mixer_channels;
-//
-//    // No sounds yet
-//    for (int i = 0; i < s_channels_max; i++)
-//        channels_playing[i] = NULL;
-//
-//    if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
-//        return false;
-//
-//    if (linked->major != SDL_MIXER_MAJOR_VERSION || linked->minor != SDL_MIXER_MINOR_VERSION)
-//        I_Error("The wrong version of %s was found. %s requires v%i.%i.%i.",
-//            SDL_MIXER_FILENAME, PACKAGE_NAME, SDL_MIXER_MAJOR_VERSION, SDL_MIXER_MINOR_VERSION, SDL_MIXER_PATCHLEVEL);
-//
-//    if (linked->patch != SDL_MIXER_PATCHLEVEL)
-//        C_Warning(1, "The wrong version of <b>%s</b> was found. <i>%s</i> requires v%i.%i.%i.",
-//            SDL_MIXER_FILENAME, PACKAGE_NAME, SDL_MIXER_MAJOR_VERSION, SDL_MIXER_MINOR_VERSION, SDL_MIXER_PATCHLEVEL);
-//
-//    if (Mix_OpenAudioDevice(SAMPLERATE, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, CHUNKSIZE, DEFAULT_DEVICE,
-//        SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
-//        return false;
-//
-//    if (!Mix_QuerySpec(&mixer_freq, &mixer_format, &mixer_channels))
-//        return false;
-//
-//    Mix_AllocateChannels(s_channels_max);
-//    SDL_PauseAudio(0);
-//    sound_initialized = true;
-//
-//    return true;
-//}
+dboolean I_InitSound(void)
+{
+    const SDL_version   *linked = Mix_Linked_Version();
+    uint16_t            mixer_format;
+    int                 mixer_channels;
+
+    // No sounds yet
+    for (int i = 0; i < s_channels_max; i++)
+        channels_playing[i] = NULL;
+
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+        return false;
+
+    if (linked->major != SDL_MIXER_MAJOR_VERSION || linked->minor != SDL_MIXER_MINOR_VERSION)
+        I_Error("The wrong version of %s was found. %s requires v%i.%i.%i.",
+            SDL_MIXER_FILENAME, PACKAGE_NAME, SDL_MIXER_MAJOR_VERSION, SDL_MIXER_MINOR_VERSION, SDL_MIXER_PATCHLEVEL);
+
+	if( linked->patch != SDL_MIXER_PATCHLEVEL )
+	{
+		/*C_Warning( 1, "The wrong version of <b>%s</b> was found. <i>%s</i> requires v%i.%i.%i.",
+			SDL_MIXER_FILENAME, PACKAGE_NAME, SDL_MIXER_MAJOR_VERSION, SDL_MIXER_MINOR_VERSION, SDL_MIXER_PATCHLEVEL );*/
+		loge( "The wrong version of <b>%s</b> was found. <i>%s</i> requires v%i.%i.%i.\n",
+			SDL_MIXER_FILENAME, PACKAGE_NAME, SDL_MIXER_MAJOR_VERSION, SDL_MIXER_MINOR_VERSION, SDL_MIXER_PATCHLEVEL );
+	}
+
+    if (Mix_OpenAudioDevice(SAMPLERATE, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, CHUNKSIZE, DEFAULT_DEVICE,
+        SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
+        return false;
+
+    if (!Mix_QuerySpec(&mixer_freq, &mixer_format, &mixer_channels))
+        return false;
+
+    Mix_AllocateChannels(s_channels_max);
+    SDL_PauseAudio(0);
+    sound_initialized = true;
+
+    return true;
+}
