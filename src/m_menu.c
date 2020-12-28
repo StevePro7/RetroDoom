@@ -1536,43 +1536,43 @@ int M_CountSaveGames( void )
 //        }
 //    }
 //}
+
 //
-////
-//// M_Episode
-////
-//static int      epi;
+// M_Episode
+//
+static int      epi;
 //dboolean        EpiCustom;
-//static short    EpiMenuMap[] = { 1, 1, 1, 1, -1, -1, -1, -1 };
-//static short    EpiMenuEpi[] = { 1, 2, 3, 4, -1, -1, -1, -1 };
-//
-//void M_AddEpisode(int map, int ep, const char *lumpname, const char *string)
-//{
-//    if (!EpiCustom)
-//    {
-//        EpiCustom = true;
-//        NewDef.prevMenu = &EpiDef;
-//
-//        if (gamemode == commercial)
-//            EpiDef.numitems = 0;
-//        else if (EpiDef.numitems > 4)
-//            EpiDef.numitems = 4;
-//    }
-//
-//    if (!*lumpname && !*string)
-//        EpiDef.numitems = 0;
-//    else
-//    {
-//        if (EpiDef.numitems >= 8)
-//            return;
-//
-//        EpiMenuEpi[EpiDef.numitems] = ep;
-//        EpiMenuMap[EpiDef.numitems] = map - (ep - 1) * 10;
-//        M_StringCopy(EpisodeMenu[EpiDef.numitems].name, lumpname, 9);
-//        *EpisodeMenu[EpiDef.numitems].text = M_StringDuplicate(string);
-//        EpiDef.numitems++;
-//    }
-//}
-//
+static short    EpiMenuMap[] = { 1, 1, 1, 1, -1, -1, -1, -1 };
+static short    EpiMenuEpi[] = { 1, 2, 3, 4, -1, -1, -1, -1 };
+
+void M_AddEpisode( int map, int ep, const char *lumpname, const char *string )
+{
+	if( !EpiCustom )
+	{
+		EpiCustom = true;
+		NewDef.prevMenu = &EpiDef;
+
+		if( gamemode == commercial )
+			EpiDef.numitems = 0;
+		else if( EpiDef.numitems > 4 )
+			EpiDef.numitems = 4;
+	}
+
+	if( !*lumpname && !*string )
+		EpiDef.numitems = 0;
+	else
+	{
+		if( EpiDef.numitems >= 8 )
+			return;
+
+		EpiMenuEpi[ EpiDef.numitems ] = ep;
+		EpiMenuMap[ EpiDef.numitems ] = map - ( ep - 1 ) * 10;
+		M_StringCopy( EpisodeMenu[ EpiDef.numitems ].name, lumpname, 9 );
+		*EpisodeMenu[ EpiDef.numitems ].text = M_StringDuplicate( string );
+		EpiDef.numitems++;
+	}
+}
+
 //static void M_DrawEpisode(void)
 //{
 //    M_DarkBackground();

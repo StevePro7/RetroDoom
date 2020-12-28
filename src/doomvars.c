@@ -74,7 +74,7 @@ gameaction_t    loadaction; // = ga_nothing;
 gamestate_t     gamestate;// = GS_TITLESCREEN;
 dboolean        paused;
 int             gametime;// = 0;
-
+char            speciallumpname[ 6 ];// = "";
 
 
 // m_config.c
@@ -585,9 +585,28 @@ dboolean            r_liquid_swirl; //=r_liquid_swirl_default;
 dboolean    r_graduallighting; //=r_graduallighting_default;
 
 // p_setup.c
-dboolean        r_fixmaperrors; //=r_fixmaperrors_default;
 dboolean        canmodify;
 dboolean        transferredsky;
+dboolean        r_fixmaperrors; //=r_fixmaperrors_default;
+dboolean        samelevel;
+dboolean            skipblstart;            // MaxW: Skip initial blocklist short
+
+const char *linespecials[];
+
+char    mapnum[ 6 ];
+char    maptitle[ 256 ];
+char    mapnumandtitle[ 512 ];
+char    automaptitle[ 512 ];
+
+mapformat_t     mapformat;
+const char *mapformats[];
+
+dboolean        boomcompatible;
+dboolean        mbfcompatible;
+dboolean        blockmaprebuilt;
+dboolean        transferredsky;
+dboolean        nojump;// = false;
+dboolean        nomouselook;// = false;
 
 
 // r_data.c
@@ -2084,15 +2103,8 @@ byte        *white25;
 const kern_t kern[];
 
 
-// p_steup.c
-dboolean        boomcompatible;
-dboolean        mbfcompatible;
-dboolean        blockmaprebuilt;
-dboolean        transferredsky;
-
 // steveproTODO
-dboolean        nojump;// = false;
-dboolean        nomouselook;// = false;
+
 
 
 // p_saveg.c

@@ -145,41 +145,41 @@ void SC_MustGetString( void )
 		SC_ScriptError();
 }
 
-//dboolean SC_GetNumber(void)
-//{
-//    if (SC_GetString())
-//    {
-//        sc_Number = strtol(sc_String, NULL, 0);
-//        return true;
-//    }
-//    else
-//        return false;
-//}
-//
-//void SC_MustGetNumber(void)
-//{
-//    if (!SC_GetNumber())
-//        SC_ScriptError();
-//}
-//
-//void SC_UnGet(void)
-//{
-//    AlreadyGot = true;
-//}
-//
-//int SC_MatchString(char **strings)
-//{
-//    for (int i = 0; *strings; i++)
-//        if (SC_Compare(*strings++))
-//            return i;
-//
-//    return -1;
-//}
-//
-//dboolean SC_Compare(char *text)
-//{
-//    return M_StringCompare(text, sc_String);
-//}
+dboolean SC_GetNumber(void)
+{
+    if (SC_GetString())
+    {
+        sc_Number = strtol(sc_String, NULL, 0);
+        return true;
+    }
+    else
+        return false;
+}
+
+void SC_MustGetNumber(void)
+{
+    if (!SC_GetNumber())
+        SC_ScriptError();
+}
+
+void SC_UnGet( void )
+{
+	AlreadyGot = true;
+}
+
+int SC_MatchString( char **strings )
+{
+	for( int i = 0; *strings; i++ )
+		if( SC_Compare( *strings++ ) )
+			return i;
+
+	return -1;
+}
+
+dboolean SC_Compare( char *text )
+{
+	return M_StringCompare( text, sc_String );
+}
 
 static void SC_ScriptError( void )
 {

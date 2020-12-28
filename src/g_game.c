@@ -48,7 +48,7 @@ gamestate_t     gamestate = GS_TITLESCREEN;
 //int             pendinggameskill;
 //int             gameepisode;
 //int             gamemap;
-//char            speciallumpname[6] = "";
+char            speciallumpname[6] = "";
 //
 //dboolean        paused;
 //dboolean        sendpause;                          // send a pause event next tic

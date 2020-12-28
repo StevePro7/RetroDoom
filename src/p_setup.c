@@ -2,8 +2,17 @@
 #include "doomdef.h"
 #include "doomtype.h"
 #include "doomvars.h"
+#include "logger.h"
+#include "m_argv.h"
+#include "m_menu.h"
+#include "m_misc.h"
+#include "m_random.h"
 #include "p_spec.h"
-
+#include "r_data.h"
+#include "sc_man.h"
+//#include "st_stuff.h"
+#include "w_wad.h"
+#include "z_zone.h"
 #include <ctype.h>
 
 //#include "am_map.h"
@@ -16,15 +25,13 @@
 //#include "m_argv.h"
 //#include "m_bbox.h"
 //#include "m_config.h"
-//#include "m_menu.h"
-//#include "m_misc.h"
-//#include "m_random.h"
+
 //#include "p_fix.h"
 //#include "p_local.h"
 //#include "p_setup.h"
 //#include "p_tick.h"
 //#include "s_sound.h"
-//#include "sc_man.h"
+
 //#include "st_stuff.h"
 //#include "w_wad.h"
 //#include "z_zone.h"
@@ -104,12 +111,12 @@ struct mapinfo_s
 	int         titlepatch;
 };
 
-////
-//// MAP related Lookup tables.
-//// Store VERTEXES, LINEDEFS, SIDEDEFS, etc.
-////
-//static int          mapcount;
 //
+// MAP related Lookup tables.
+// Store VERTEXES, LINEDEFS, SIDEDEFS, etc.
+//
+static int          mapcount;
+
 //int                 numvertexes;
 //vertex_t            *vertexes;
 //
@@ -189,79 +196,79 @@ const byte          *rejectmatrix;          // cph - const*
 
 static mapinfo_t    mapinfo[ MAXMAPINFO ];
 
-//static char *mapcmdnames[] =
-//{
-//    "AUTHOR",
-//    "ENDBUNNY",
-//    "ENDCAST",
-//    "ENDGAME",
-//    "ENDPIC",
-//    "ENTERPIC",
-//    "EXITPIC",
-//    "EPISODE",
-//    "INTERBACKDROP",
-//    "INTERMUSIC",
-//    "INTERTEXT",
-//    "INTERTEXTSECRET",
-//    "LIQUID",
-//    "LEVELNAME",
-//    "LEVELPIC",
-//    "MUSIC",
-//    "MUSICCOMPOSER",
-//    "MUSICTITLE",
-//    "NEXT",
-//    "NEXTSECRET",
-//    "NOBRIGHTMAP",
-//    "NOFREELOOK",
-//    "NOJUMP",
-//    "NOLIQUID",
-//    "NOMOUSELOOK",
-//    "PAR",
-//    "PARTIME",
-//    "PISTOLSTART",
-//    "SECRETNEXT",
-//    "SKY1",
-//    "SKYTEXTURE",
-//    "TITLEPATCH",
-//    NULL
-//};
-//
-//static int mapcmdids[] =
-//{
-//    MCMD_AUTHOR,
-//    MCMD_ENDBUNNY,
-//    MCMD_ENDCAST,
-//    MCMD_ENDGAME,
-//    MCMD_ENDPIC,
-//    MCMD_ENTERPIC,
-//    MCMD_EXITPIC,
-//    MCMD_EPISODE,
-//    MCMD_INTERBACKDROP,
-//    MCMD_INTERMUSIC,
-//    MCMD_INTERTEXT,
-//    MCMD_INTERTEXTSECRET,
-//    MCMD_LIQUID,
-//    MCMD_LEVELNAME,
-//    MCMD_LEVELPIC,
-//    MCMD_MUSIC,
-//    MCMD_MUSICCOMPOSER,
-//    MCMD_MUSICTITLE,
-//    MCMD_NEXT,
-//    MCMD_NEXTSECRET,
-//    MCMD_NOBRIGHTMAP,
-//    MCMD_NOFREELOOK,
-//    MCMD_NOJUMP,
-//    MCMD_NOLIQUID,
-//    MCMD_NOMOUSELOOK,
-//    MCMD_PAR,
-//    MCMD_PARTIME,
-//    MCMD_PISTOLSTART,
-//    MCMD_SECRETNEXT,
-//    MCMD_SKY1,
-//    MCMD_SKYTEXTURE,
-//    MCMD_TITLEPATCH,
-//};
-//
+static char *mapcmdnames[] =
+{
+	"AUTHOR",
+	"ENDBUNNY",
+	"ENDCAST",
+	"ENDGAME",
+	"ENDPIC",
+	"ENTERPIC",
+	"EXITPIC",
+	"EPISODE",
+	"INTERBACKDROP",
+	"INTERMUSIC",
+	"INTERTEXT",
+	"INTERTEXTSECRET",
+	"LIQUID",
+	"LEVELNAME",
+	"LEVELPIC",
+	"MUSIC",
+	"MUSICCOMPOSER",
+	"MUSICTITLE",
+	"NEXT",
+	"NEXTSECRET",
+	"NOBRIGHTMAP",
+	"NOFREELOOK",
+	"NOJUMP",
+	"NOLIQUID",
+	"NOMOUSELOOK",
+	"PAR",
+	"PARTIME",
+	"PISTOLSTART",
+	"SECRETNEXT",
+	"SKY1",
+	"SKYTEXTURE",
+	"TITLEPATCH",
+	NULL
+};
+
+static int mapcmdids[] =
+{
+    MCMD_AUTHOR,
+    MCMD_ENDBUNNY,
+    MCMD_ENDCAST,
+    MCMD_ENDGAME,
+    MCMD_ENDPIC,
+    MCMD_ENTERPIC,
+    MCMD_EXITPIC,
+    MCMD_EPISODE,
+    MCMD_INTERBACKDROP,
+    MCMD_INTERMUSIC,
+    MCMD_INTERTEXT,
+    MCMD_INTERTEXTSECRET,
+    MCMD_LIQUID,
+    MCMD_LEVELNAME,
+    MCMD_LEVELPIC,
+    MCMD_MUSIC,
+    MCMD_MUSICCOMPOSER,
+    MCMD_MUSICTITLE,
+    MCMD_NEXT,
+    MCMD_NEXTSECRET,
+    MCMD_NOBRIGHTMAP,
+    MCMD_NOFREELOOK,
+    MCMD_NOJUMP,
+    MCMD_NOLIQUID,
+    MCMD_NOMOUSELOOK,
+    MCMD_PAR,
+    MCMD_PARTIME,
+    MCMD_PISTOLSTART,
+    MCMD_SECRETNEXT,
+    MCMD_SKY1,
+    MCMD_SKYTEXTURE,
+    MCMD_TITLEPATCH,
+};
+
 //dboolean        canmodify;
 //dboolean        transferredsky;
 static int      UMAPINFO;
@@ -273,297 +280,297 @@ dboolean        r_fixmaperrors = r_fixmaperrors_default;
 //dboolean        samelevel;
 //
 //mapformat_t     mapformat;
-//
-//const char *mapformats[] =
-//{
-//    "Regular",
-//    "<i>DeeP</i>",
-//    "<i>ZDoom</i> extended (uncompressed)"
-//};
-//
+
+const char *mapformats[] =
+{
+    "Regular",
+    "<i>DeeP</i>",
+    "<i>ZDoom</i> extended (uncompressed)"
+};
+
 //dboolean        boomcompatible;
 //dboolean        mbfcompatible;
 //dboolean        blockmaprebuilt;
 dboolean        nojump = false;
 dboolean        nomouselook = false;
-//
-//const char *linespecials[] =
-//{
-//    "",
-//    "DR Door open wait close (also monsters)",
-//    "W1 Door open stay",
-//    "W1 Door close stay",
-//    "W1 Door open wait close",
-//    "W1 Floor raise to lowest ceiling",
-//    "W1 Crusher start with fast damage",
-//    "S1 Stairs raise by 8",
-//    "W1 Stairs raise by 8",
-//    "S1 Floor raise donut (changes texture)",
-//    "W1 Lift lower wait raise",
-//    "S1 Exit level",
-//    "W1 Light change to brightest adjacent",
-//    "W1 Light change to 255",
-//    "S1 Floor raise by 32 (changes texture)",
-//    "S1 Floor raise by 24 (changes texture)",
-//    "W1 Door close wait open",
-//    "W1 Light start blinking",
-//    "S1 Floor raise to next highest floor",
-//    "W1 Floor lower to highest floor",
-//    "S1 Floor raise to next highest floor (changes texture)",
-//    "S1 Lift lower wait raise",
-//    "W1 Floor raise to next highest floor (changes texture)",
-//    "S1 Floor lower to lowest floor",
-//    "G1 Floor raise to lowest ceiling",
-//    "W1 Crusher start with slow damage",
-//    "DR Door (blue) open wait close",
-//    "DR Door (yellow) open wait close",
-//    "DR Door (red) open wait close",
-//    "S1 Door open wait close",
-//    "W1 Floor raise by shortest lower texture",
-//    "D1 Door open stay",
-//    "D1 Door (blue) open stay",
-//    "D1 Door (red) open stay",
-//    "D1 Door (yellow) open stay",
-//    "W1 Light change to 35",
-//    "W1 Floor lower to 8 above highest floor",
-//    "W1 Floor lower to lowest floor (changes texture)",
-//    "W1 Floor lower to lowest floor",
-//    "W1 Teleport",
-//    "W1 Ceiling raise to highest ceiling",
-//    "S1 Ceiling lower to floor",
-//    "SR Door close stay",
-//    "SR Ceiling lower to floor",
-//    "W1 Ceiling lower to 8 above floor",
-//    "SR Floor lower to highest floor",
-//    "GR Door open stay",
-//    "G1 Floor raise to next highest floor (changes texture)",
-//    "Scroll texture left",
-//    "S1 Ceiling lower to 8 above floor (perpetual slow crusher damage)",
-//    "S1 Door close stay",
-//    "S1 Exit level (goes to secret level)",
-//    "W1 Exit level",
-//    "W1 Floor start moving up and down",
-//    "W1 Floor stop moving",
-//    "S1 Floor raise to 8 below lowest ceiling (crushes)",
-//    "W1 Floor raise to 8 below lowest ceiling (crushes)",
-//    "W1 Crusher stop",
-//    "W1 Floor raise by 24",
-//    "W1 Floor raise by 24 (changes texture)",
-//    "SR Floor lower to lowest floor",
-//    "SR Door open stay",
-//    "SR Lift lower wait raise",
-//    "SR Door open wait close",
-//    "SR Floor raise to lowest ceiling",
-//    "SR Floor raise to 8 below lowest ceiling (crushes)",
-//    "SR Floor raise by 24 (changes texture)",
-//    "SR Floor raise by 32 (changes texture)",
-//    "SR Floor raise to next highest floor (changes texture)",
-//    "SR Floor raise to next highest floor",
-//    "SR Floor lower to 8 above highest floor",
-//    "S1 Floor lower to 8 above highest floor",
-//    "WR Ceiling lower to 8 above floor",
-//    "WR Crusher start with slow damage",
-//    "WR Crusher stop",
-//    "WR Door close stay",
-//    "WR Door close stay open",
-//    "WR Crusher start with fast damage",
-//    "SR Change texture and effect to nearest",
-//    "WR Light change to 35",
-//    "WR Light change to brightest adjacent",
-//    "WR Light change to 255",
-//    "WR Floor lower to lowest floor",
-//    "WR Floor lower to highest floor",
-//    "WR Floor lower to lowest floor (changes texture)",
-//    "Scroll texture right",
-//    "WR Door open stay",
-//    "WR Floor start moving up and down",
-//    "WR Lift lower wait raise",
-//    "WR Floor stop moving",
-//    "WR Door open wait close",
-//    "WR Floor raise to lowest ceiling",
-//    "WR Floor raise by 24",
-//    "WR Floor raise by 24 (changes texture)",
-//    "WR Floor raise to 8 below lowest ceiling (crushes)",
-//    "WR Floor raise to next highest floor (changes texture)",
-//    "WR Floor raise by shortest lower texture",
-//    "WR Teleport",
-//    "WR Floor lower to 8 above highest floor",
-//    "SR Door (blue) open stay (fast)",
-//    "W1 Stairs raise by 16 (fast)",
-//    "S1 Floor raise to lowest ceiling",
-//    "S1 Floor lower to highest floor",
-//    "S1 Door open stay",
-//    "W1 Light change to darkest adjacent",
-//    "WR Door open wait close (fast)",
-//    "WR Door open stay (fast)",
-//    "WR Door close stay (fast)",
-//    "W1 Door open wait close (fast)",
-//    "W1 Door open stay (fast)",
-//    "W1 Door close stay (fast)",
-//    "S1 Door open wait close (fast)",
-//    "S1 Door open stay (fast)",
-//    "S1 Door close stay (fast)",
-//    "SR Door open wait close (fast)",
-//    "SR Door open stay (fast)",
-//    "SR Door close stay (fast)",
-//    "DR Door open wait close (fast)",
-//    "D1 Door open stay (fast)",
-//    "W1 Floor raise to next highest floor",
-//    "WR Lift lower wait raise (fast)",
-//    "W1 Lift lower wait raise (fast)",
-//    "S1 Lift lower wait raise (fast)",
-//    "SR Lift lower wait raise (fast)",
-//    "W1 Exit level (goes to secret level)",
-//    "W1 Teleport (monsters only)",
-//    "WR Teleport (monsters only)",
-//    "S1 Stairs raise by 16 (fast)",
-//    "WR Floor raise to next highest floor",
-//    "WR Floor raise to next highest floor (fast)",
-//    "W1 Floor raise to next highest floor (fast)",
-//    "S1 Floor raise to next highest floor (fast)",
-//    "SR Floor raise to next highest floor (fast)",
-//    "S1 Door (blue) open stay (fast)",
-//    "SR Door (red) open stay (fast)",
-//    "S1 Door (red) open stay (fast)",
-//    "SR Door (yellow) open stay (fast)",
-//    "S1 Door (yellow) open stay (fast)",
-//    "SR Light change to 255",
-//    "SR Light change to 35",
-//    "S1 Floor raise by 512",
-//    "W1 Crusher start with slow damage (silent)",
-//    "W1 Floor raise by 512",
-//    "W1 Lift raise by 24 (changes texture)",
-//    "W1 Lift raise by 32 (changes texture)",
-//    "W1 Ceiling lower to floor (fast)",
-//    "W1 Floor raise donut (changes texture)",
-//    "WR Floor raise by 512",
-//    "WR Lift raise by 24 (changes texture)",
-//    "WR Lift raise by 32 (changes texture)",
-//    "WR Crusher start (silent)",
-//    "WR Ceiling raise to highest ceiling",
-//    "WR Ceiling lower to floor (fast)",
-//    "W1 Change texture and effect",
-//    "WR Change texture and effect",
-//    "WR Floor raise donut (changes texture)",
-//    "WR Light start blinking",
-//    "WR Light change to darkest adjacent",
-//    "S1 Floor raise by shortest lower texture",
-//    "S1 Floor lower to lowest floor (changes texture)",
-//    "S1 Floor raise by 24 (changes texture and effect)",
-//    "S1 Floor raise by 24",
-//    "S1 Lift perpetual lowest and highest floors",
-//    "S1 Lift stop",
-//    "S1 Crusher start (fast)",
-//    "S1 Crusher start (silent)",
-//    "S1 Ceiling raise to highest ceiling",
-//    "S1 Ceiling lower to 8 above floor",
-//    "S1 Crusher stop",
-//    "S1 Light change to brightest adjacent",
-//    "S1 Light change to 35",
-//    "S1 Light change to 255",
-//    "S1 Light start blinking",
-//    "S1 Light change to darkest adjacent",
-//    "S1 Teleport (also monsters)",
-//    "S1 Door close wait open (30 seconds)",
-//    "SR Floor raise by shortest lower texture",
-//    "SR Floor lower to lowest floor (changes texture)",
-//    "SR Floor raise by 512",
-//    "SR Floor raise by 24 (changes texture and effect)",
-//    "SR Floor raise by 24",
-//    "SR Lift perpetual lowest and highest floors",
-//    "SR Lift stop",
-//    "SR Crusher start (fast)",
-//    "SR Crusher start",
-//    "SR Crusher start (silent)",
-//    "SR Ceiling raise to highest ceiling",
-//    "SR Ceiling lower to 8 above floor",
-//    "SR Crusher stop",
-//    "S1 Change texture and effect",
-//    "SR Change texture and effect",
-//    "SR Floor raise donut (changes texture)",
-//    "SR Light change to brightest adjacent",
-//    "SR Light start blinking",
-//    "SR Light change to darkest adjacent",
-//    "SR Teleport (also monsters)",
-//    "SR Door close wait open (30 seconds)",
-//    "G1 Exit level",
-//    "G1 Exit level (goes to secret level)",
-//    "W1 Ceiling lower to lowest ceiling",
-//    "W1 Ceiling lower to highest floor",
-//    "WR Ceiling lower to lowest ceiling",
-//    "WR Ceiling lower to highest floor",
-//    "S1 Ceiling lower to lowest ceiling",
-//    "S1 Ceiling lower to highest floor",
-//    "SR Ceiling lower to lowest ceiling",
-//    "SR Ceiling lower to highest floor",
-//    "W1 Teleport (also monsters, silent, same angle)",
-//    "WR Teleport (also monsters, silent, same angle)",
-//    "S1 Teleport (also monsters, silent, same angle)",
-//    "SR Teleport (also monsters, silent, same angle)",
-//    "SR Lift raise to ceiling (instantly)",
-//    "WR Lift raise to ceiling (instantly)",
-//    "Floor change brightness to this brightness",
-//    "Scroll ceiling accelerates when sector height changes",
-//    "Scroll floor accelerates when sector height changes",
-//    "Scroll things accelerate when sector height changes",
-//    "Scroll floor and things accelerate when sector height changes",
-//    "Scroll wall accelerates when sector height changes",
-//    "W1 Floor lower to nearest floor",
-//    "WR Floor lower to nearest floor",
-//    "S1 Floor lower to nearest floor",
-//    "SR Floor lower to nearest floor",
-//    "Friction tagged sector",
-//    "Wind according to line vector",
-//    "Current according to line vector",
-//    "Wind/current by push/pull thing in sector",
-//    "W1 Lift raise to next highest floor (fast)",
-//    "WR Lift raise to next highest floor (fast)",
-//    "S1 Lift raise to next highest floor (fast)",
-//    "SR Lift raise to next highest floor (fast)",
-//    "W1 Lift lower to next lowest floor (fast)",
-//    "WR Lift lower to next lowest floor (fast)",
-//    "S1 Lift lower to next lowest floor (fast)",
-//    "SR Lift lower to next lowest floor (fast)",
-//    "W1 Lift move to same floor height (fast)",
-//    "WR Lift move to same floor height (fast)",
-//    "S1 Lift move to same floor height (fast)",
-//    "SR Lift move to same floor height (fast)",
-//    "W1 Change texture and effect to nearest",
-//    "WR Change texture and effect to nearest",
-//    "S1 Change texture and effect to nearest",
-//    "Create fake ceiling and floor",
-//    "W1 Teleport to line with same tag (silent, same angle)",
-//    "WR Teleport to line with same tag (silent, same angle)",
-//    "Scroll ceiling when sector changes height",
-//    "Scroll floor when sector changes height",
-//    "Scroll move things when sector changes height",
-//    "Scroll floor and move things when sector changes height",
-//    "Scroll wall when sector changes height",
-//    "Scroll ceiling according to line vector",
-//    "Scroll floor according to line vector",
-//    "Scroll move things according to line vector",
-//    "Scroll floor, move things",
-//    "Scroll wall according to line vector",
-//    "Scroll wall using sidedef offsets",
-//    "WR Stairs raise by 8",
-//    "WR Stairs raise by 16 (fast)",
-//    "SR Stairs raise by 8",
-//    "SR Stairs raise by 16 (fast)",
-//    "Translucent (middle texture)",
-//    "Ceiling change brightness to this brightness",
-//    "W1 Teleport to line with same tag (silent, reversed angle)",
-//    "WR Teleport to line with same tag (silent, reversed angle)",
-//    "W1 Teleport to line with same tag (monsters only, silent, reversed angle)",
-//    "WR Teleport to line with same tag (monsters only, silent, reversed angle)",
-//    "W1 Teleport to line with same tag (monsters only, silent)",
-//    "WR Teleport to line with same tag (monsters only, silent)",
-//    "W1 Teleport (monsters only, silent)",
-//    "WR Teleport (monsters only, silent)",
-//    "",
-//    "Transfer sky texture to tagged sectors",
-//    "Transfer sky texture to tagged sectors (flipped)"
-//};
-//
+
+const char *linespecials[] =
+{
+	"",
+	"DR Door open wait close (also monsters)",
+	"W1 Door open stay",
+	"W1 Door close stay",
+	"W1 Door open wait close",
+	"W1 Floor raise to lowest ceiling",
+	"W1 Crusher start with fast damage",
+	"S1 Stairs raise by 8",
+	"W1 Stairs raise by 8",
+	"S1 Floor raise donut (changes texture)",
+	"W1 Lift lower wait raise",
+	"S1 Exit level",
+	"W1 Light change to brightest adjacent",
+	"W1 Light change to 255",
+	"S1 Floor raise by 32 (changes texture)",
+	"S1 Floor raise by 24 (changes texture)",
+	"W1 Door close wait open",
+	"W1 Light start blinking",
+	"S1 Floor raise to next highest floor",
+	"W1 Floor lower to highest floor",
+	"S1 Floor raise to next highest floor (changes texture)",
+	"S1 Lift lower wait raise",
+	"W1 Floor raise to next highest floor (changes texture)",
+	"S1 Floor lower to lowest floor",
+	"G1 Floor raise to lowest ceiling",
+	"W1 Crusher start with slow damage",
+	"DR Door (blue) open wait close",
+	"DR Door (yellow) open wait close",
+	"DR Door (red) open wait close",
+	"S1 Door open wait close",
+	"W1 Floor raise by shortest lower texture",
+	"D1 Door open stay",
+	"D1 Door (blue) open stay",
+	"D1 Door (red) open stay",
+	"D1 Door (yellow) open stay",
+	"W1 Light change to 35",
+	"W1 Floor lower to 8 above highest floor",
+	"W1 Floor lower to lowest floor (changes texture)",
+	"W1 Floor lower to lowest floor",
+	"W1 Teleport",
+	"W1 Ceiling raise to highest ceiling",
+	"S1 Ceiling lower to floor",
+	"SR Door close stay",
+	"SR Ceiling lower to floor",
+	"W1 Ceiling lower to 8 above floor",
+	"SR Floor lower to highest floor",
+	"GR Door open stay",
+	"G1 Floor raise to next highest floor (changes texture)",
+	"Scroll texture left",
+	"S1 Ceiling lower to 8 above floor (perpetual slow crusher damage)",
+	"S1 Door close stay",
+	"S1 Exit level (goes to secret level)",
+	"W1 Exit level",
+	"W1 Floor start moving up and down",
+	"W1 Floor stop moving",
+	"S1 Floor raise to 8 below lowest ceiling (crushes)",
+	"W1 Floor raise to 8 below lowest ceiling (crushes)",
+	"W1 Crusher stop",
+	"W1 Floor raise by 24",
+	"W1 Floor raise by 24 (changes texture)",
+	"SR Floor lower to lowest floor",
+	"SR Door open stay",
+	"SR Lift lower wait raise",
+	"SR Door open wait close",
+	"SR Floor raise to lowest ceiling",
+	"SR Floor raise to 8 below lowest ceiling (crushes)",
+	"SR Floor raise by 24 (changes texture)",
+	"SR Floor raise by 32 (changes texture)",
+	"SR Floor raise to next highest floor (changes texture)",
+	"SR Floor raise to next highest floor",
+	"SR Floor lower to 8 above highest floor",
+	"S1 Floor lower to 8 above highest floor",
+	"WR Ceiling lower to 8 above floor",
+	"WR Crusher start with slow damage",
+	"WR Crusher stop",
+	"WR Door close stay",
+	"WR Door close stay open",
+	"WR Crusher start with fast damage",
+	"SR Change texture and effect to nearest",
+	"WR Light change to 35",
+	"WR Light change to brightest adjacent",
+	"WR Light change to 255",
+	"WR Floor lower to lowest floor",
+	"WR Floor lower to highest floor",
+	"WR Floor lower to lowest floor (changes texture)",
+	"Scroll texture right",
+	"WR Door open stay",
+	"WR Floor start moving up and down",
+	"WR Lift lower wait raise",
+	"WR Floor stop moving",
+	"WR Door open wait close",
+	"WR Floor raise to lowest ceiling",
+	"WR Floor raise by 24",
+	"WR Floor raise by 24 (changes texture)",
+	"WR Floor raise to 8 below lowest ceiling (crushes)",
+	"WR Floor raise to next highest floor (changes texture)",
+	"WR Floor raise by shortest lower texture",
+	"WR Teleport",
+	"WR Floor lower to 8 above highest floor",
+	"SR Door (blue) open stay (fast)",
+	"W1 Stairs raise by 16 (fast)",
+	"S1 Floor raise to lowest ceiling",
+	"S1 Floor lower to highest floor",
+	"S1 Door open stay",
+	"W1 Light change to darkest adjacent",
+	"WR Door open wait close (fast)",
+	"WR Door open stay (fast)",
+	"WR Door close stay (fast)",
+	"W1 Door open wait close (fast)",
+	"W1 Door open stay (fast)",
+	"W1 Door close stay (fast)",
+	"S1 Door open wait close (fast)",
+	"S1 Door open stay (fast)",
+	"S1 Door close stay (fast)",
+	"SR Door open wait close (fast)",
+	"SR Door open stay (fast)",
+	"SR Door close stay (fast)",
+	"DR Door open wait close (fast)",
+	"D1 Door open stay (fast)",
+	"W1 Floor raise to next highest floor",
+	"WR Lift lower wait raise (fast)",
+	"W1 Lift lower wait raise (fast)",
+	"S1 Lift lower wait raise (fast)",
+	"SR Lift lower wait raise (fast)",
+	"W1 Exit level (goes to secret level)",
+	"W1 Teleport (monsters only)",
+	"WR Teleport (monsters only)",
+	"S1 Stairs raise by 16 (fast)",
+	"WR Floor raise to next highest floor",
+	"WR Floor raise to next highest floor (fast)",
+	"W1 Floor raise to next highest floor (fast)",
+	"S1 Floor raise to next highest floor (fast)",
+	"SR Floor raise to next highest floor (fast)",
+	"S1 Door (blue) open stay (fast)",
+	"SR Door (red) open stay (fast)",
+	"S1 Door (red) open stay (fast)",
+	"SR Door (yellow) open stay (fast)",
+	"S1 Door (yellow) open stay (fast)",
+	"SR Light change to 255",
+	"SR Light change to 35",
+	"S1 Floor raise by 512",
+	"W1 Crusher start with slow damage (silent)",
+	"W1 Floor raise by 512",
+	"W1 Lift raise by 24 (changes texture)",
+	"W1 Lift raise by 32 (changes texture)",
+	"W1 Ceiling lower to floor (fast)",
+	"W1 Floor raise donut (changes texture)",
+	"WR Floor raise by 512",
+	"WR Lift raise by 24 (changes texture)",
+	"WR Lift raise by 32 (changes texture)",
+	"WR Crusher start (silent)",
+	"WR Ceiling raise to highest ceiling",
+	"WR Ceiling lower to floor (fast)",
+	"W1 Change texture and effect",
+	"WR Change texture and effect",
+	"WR Floor raise donut (changes texture)",
+	"WR Light start blinking",
+	"WR Light change to darkest adjacent",
+	"S1 Floor raise by shortest lower texture",
+	"S1 Floor lower to lowest floor (changes texture)",
+	"S1 Floor raise by 24 (changes texture and effect)",
+	"S1 Floor raise by 24",
+	"S1 Lift perpetual lowest and highest floors",
+	"S1 Lift stop",
+	"S1 Crusher start (fast)",
+	"S1 Crusher start (silent)",
+	"S1 Ceiling raise to highest ceiling",
+	"S1 Ceiling lower to 8 above floor",
+	"S1 Crusher stop",
+	"S1 Light change to brightest adjacent",
+	"S1 Light change to 35",
+	"S1 Light change to 255",
+	"S1 Light start blinking",
+	"S1 Light change to darkest adjacent",
+	"S1 Teleport (also monsters)",
+	"S1 Door close wait open (30 seconds)",
+	"SR Floor raise by shortest lower texture",
+	"SR Floor lower to lowest floor (changes texture)",
+	"SR Floor raise by 512",
+	"SR Floor raise by 24 (changes texture and effect)",
+	"SR Floor raise by 24",
+	"SR Lift perpetual lowest and highest floors",
+	"SR Lift stop",
+	"SR Crusher start (fast)",
+	"SR Crusher start",
+	"SR Crusher start (silent)",
+	"SR Ceiling raise to highest ceiling",
+	"SR Ceiling lower to 8 above floor",
+	"SR Crusher stop",
+	"S1 Change texture and effect",
+	"SR Change texture and effect",
+	"SR Floor raise donut (changes texture)",
+	"SR Light change to brightest adjacent",
+	"SR Light start blinking",
+	"SR Light change to darkest adjacent",
+	"SR Teleport (also monsters)",
+	"SR Door close wait open (30 seconds)",
+	"G1 Exit level",
+	"G1 Exit level (goes to secret level)",
+	"W1 Ceiling lower to lowest ceiling",
+	"W1 Ceiling lower to highest floor",
+	"WR Ceiling lower to lowest ceiling",
+	"WR Ceiling lower to highest floor",
+	"S1 Ceiling lower to lowest ceiling",
+	"S1 Ceiling lower to highest floor",
+	"SR Ceiling lower to lowest ceiling",
+	"SR Ceiling lower to highest floor",
+	"W1 Teleport (also monsters, silent, same angle)",
+	"WR Teleport (also monsters, silent, same angle)",
+	"S1 Teleport (also monsters, silent, same angle)",
+	"SR Teleport (also monsters, silent, same angle)",
+	"SR Lift raise to ceiling (instantly)",
+	"WR Lift raise to ceiling (instantly)",
+	"Floor change brightness to this brightness",
+	"Scroll ceiling accelerates when sector height changes",
+	"Scroll floor accelerates when sector height changes",
+	"Scroll things accelerate when sector height changes",
+	"Scroll floor and things accelerate when sector height changes",
+	"Scroll wall accelerates when sector height changes",
+	"W1 Floor lower to nearest floor",
+	"WR Floor lower to nearest floor",
+	"S1 Floor lower to nearest floor",
+	"SR Floor lower to nearest floor",
+	"Friction tagged sector",
+	"Wind according to line vector",
+	"Current according to line vector",
+	"Wind/current by push/pull thing in sector",
+	"W1 Lift raise to next highest floor (fast)",
+	"WR Lift raise to next highest floor (fast)",
+	"S1 Lift raise to next highest floor (fast)",
+	"SR Lift raise to next highest floor (fast)",
+	"W1 Lift lower to next lowest floor (fast)",
+	"WR Lift lower to next lowest floor (fast)",
+	"S1 Lift lower to next lowest floor (fast)",
+	"SR Lift lower to next lowest floor (fast)",
+	"W1 Lift move to same floor height (fast)",
+	"WR Lift move to same floor height (fast)",
+	"S1 Lift move to same floor height (fast)",
+	"SR Lift move to same floor height (fast)",
+	"W1 Change texture and effect to nearest",
+	"WR Change texture and effect to nearest",
+	"S1 Change texture and effect to nearest",
+	"Create fake ceiling and floor",
+	"W1 Teleport to line with same tag (silent, same angle)",
+	"WR Teleport to line with same tag (silent, same angle)",
+	"Scroll ceiling when sector changes height",
+	"Scroll floor when sector changes height",
+	"Scroll move things when sector changes height",
+	"Scroll floor and move things when sector changes height",
+	"Scroll wall when sector changes height",
+	"Scroll ceiling according to line vector",
+	"Scroll floor according to line vector",
+	"Scroll move things according to line vector",
+	"Scroll floor, move things",
+	"Scroll wall according to line vector",
+	"Scroll wall using sidedef offsets",
+	"WR Stairs raise by 8",
+	"WR Stairs raise by 16 (fast)",
+	"SR Stairs raise by 8",
+	"SR Stairs raise by 16 (fast)",
+	"Translucent (middle texture)",
+	"Ceiling change brightness to this brightness",
+	"W1 Teleport to line with same tag (silent, reversed angle)",
+	"WR Teleport to line with same tag (silent, reversed angle)",
+	"W1 Teleport to line with same tag (monsters only, silent, reversed angle)",
+	"WR Teleport to line with same tag (monsters only, silent, reversed angle)",
+	"W1 Teleport to line with same tag (monsters only, silent)",
+	"WR Teleport to line with same tag (monsters only, silent)",
+	"W1 Teleport (monsters only, silent)",
+	"WR Teleport (monsters only, silent)",
+	"",
+	"Transfer sky texture to tagged sectors",
+	"Transfer sky texture to tagged sectors (flipped)"
+};
+
 //static const char *sectorspecials[] =
 //{
 //    "",
@@ -2967,455 +2974,466 @@ dboolean        nomouselook = false;
 static int  liquidlumps;
 static int  noliquidlumps;
 
-//static void P_InitMapInfo(void)
-//{
-//    int         mapmax = 1;
-//    int         mcmdvalue;
-//    mapinfo_t   *info;
-//    char        *temp;
-//
-//    if (sigil || M_CheckParm("-nomapinfo"))
-//        return;
-//
-//    if ((RMAPINFO = MAPINFO = W_CheckNumForName(RMAPINFO_SCRIPT_NAME)) < 0)
-//        if ((UMAPINFO = MAPINFO = W_CheckNumForName(UMAPINFO_SCRIPT_NAME)) < 0)
-//            if ((MAPINFO = W_CheckNumForName(MAPINFO_SCRIPT_NAME)) < 0)
-//                return;
-//
-//    for (int i = 0; i < MAXMAPINFO; i++)
-//    {
-//        mapinfo[i].author[0] = '\0';
-//        mapinfo[i].endbunny = false;
-//        mapinfo[i].endcast = false;
-//        mapinfo[i].endgame = false;
-//        mapinfo[i].endpic = 0;
-//        mapinfo[i].enterpic = 0;
-//        mapinfo[i].exitpic = 0;
-//        mapinfo[i].cluster = 0;
-//        mapinfo[i].interbackdrop[0] = '\0';
-//        mapinfo[i].intermusic = 0;
-//        mapinfo[i].intertext[0] = '\0';
-//        mapinfo[i].intertextsecret[0] = '\0';
-//
-//        for (int j = 0; j < NUMLIQUIDS; j++)
-//        {
-//            mapinfo[i].liquid[j] = -1;
-//            mapinfo[i].noliquid[j] = -1;
-//        }
-//
-//        mapinfo[i].music = 0;
-//        mapinfo[i].musiccomposer[0] = '\0';
-//        mapinfo[i].musictitle[0] = '\0';
-//        mapinfo[i].name[0] = '\0';
-//        mapinfo[i].next = 0;
-//        mapinfo[i].nojump = false;
-//        mapinfo[i].nomouselook = false;
-//        mapinfo[i].par = 0;
-//        mapinfo[i].pistolstart = false;
-//        mapinfo[i].secretnext = 0;
-//        mapinfo[i].sky1texture = 0;
-//        mapinfo[i].sky1scrolldelta = 0;
-//        mapinfo[i].titlepatch = 0;
-//    }
-//
-//    SC_Open(RMAPINFO >= 0 ? RMAPINFO_SCRIPT_NAME : (UMAPINFO >= 0 ? UMAPINFO_SCRIPT_NAME : MAPINFO_SCRIPT_NAME));
-//
-//    while (SC_GetString())
-//    {
-//        int ep = -1;
-//        int map = -1;
-//
-//        if (SC_Compare("MAP"))
-//        {
-//            SC_MustGetString();
-//            sscanf(sc_String, "%i", &map);
-//
-//            if (map < 0 || map > 99)
-//            {
-//                char    *buffer = uppercase(sc_String);
-//
-//                if (gamemode == commercial)
-//                {
-//                    ep = 1;
-//                    sscanf(buffer, "MAP0%1i", &map);
-//
-//                    if (map == -1)
-//                        sscanf(buffer, "MAP%2i", &map);
-//                }
-//                else
-//                {
-//                    sscanf(buffer, "E%1iM%1i", &ep, &map);
-//
-//                    if (ep != -1 && map != -1)
-//                        map += (ep - 1) * 10;
-//                }
-//
-//                free(buffer);
-//            }
-//
-//            if (map < 0 || map > 99)
-//            {
-//                if (M_StringEndsWith(lumpinfo[MAPINFO]->wadfile->path, "NERVE.WAD"))
-//                {
-//                    C_Warning(0, "The map markers in PWAD <b>%s</b> are invalid.", lumpinfo[MAPINFO]->wadfile->path);
-//                    nerve = false;
-//                    NewDef.prevMenu = &MainDef;
-//                    MAPINFO = -1;
-//                    break;
-//                }
-//                else
-//                {
-//                    C_Warning(0, "The <b>MAPINFO</b> lump contains an invalid map marker.");
-//                    continue;
-//                }
-//            }
-//
-//            info = &mapinfo[map];
-//
-//            if (SC_GetString() && !SC_Compare("LOOKUP"))
-//                M_StringCopy(info->name, sc_String, sizeof(info->name));
-//
-//            // Process optional tokens
-//            while (SC_GetString())
-//            {
-//                if (SC_Compare("MAP") || SC_Compare("DEFAULTMAP") || SC_Compare("CLUSTERDEF"))
-//                {
-//                    SC_UnGet();
-//                    break;
-//                }
-//
-//                if ((mcmdvalue = SC_MatchString(mapcmdnames)) >= 0)
-//                    switch (mapcmdids[mcmdvalue])
-//                    {
-//                        case MCMD_AUTHOR:
-//                            SC_MustGetString();
-//                            M_StringCopy(info->author, sc_String, sizeof(info->author));
-//                            break;
-//
-//                        case MCMD_CLUSTER:
-//                            SC_MustGetNumber();
-//                            info->cluster = sc_Number;
-//                            break;
-//
-//                        case MCMD_ENDBUNNY:
-//                            SC_MustGetString();
-//
-//                            if (SC_Compare("true"))
-//                                info->endbunny = true;
-//
-//                            break;
-//
-//                        case MCMD_ENDCAST:
-//                            SC_MustGetString();
-//
-//                            if (SC_Compare("true"))
-//                                info->endcast = true;
-//
-//                            break;
-//
-//                        case MCMD_ENDGAME:
-//                            SC_MustGetString();
-//
-//                            if (SC_Compare("true"))
-//                                info->endgame = true;
-//
-//                            break;
-//
-//                        case MCMD_ENDPIC:
-//                            SC_MustGetString();
-//                            info->endpic = W_GetNumForName(sc_String);
-//                            break;
-//
-//                        case MCMD_ENTERPIC:
-//                            SC_MustGetString();
-//                            info->enterpic = W_GetNumForName(sc_String);
-//                            break;
-//
-//                        case MCMD_EXITPIC:
-//                            SC_MustGetString();
-//                            info->exitpic = W_GetNumForName(sc_String);
-//                            break;
-//
-//                        case MCMD_EPISODE:
-//                        {
-//                            char    lumpname[9];
-//                            char    string[128];
-//
-//                            SC_MustGetString();
-//
-//                            if (SC_Compare("clear"))
-//                            {
-//                                M_AddEpisode(map, ep, "", "");
-//                                break;
-//                            }
-//
-//                            M_StringCopy(lumpname, sc_String, sizeof(lumpname));
-//                            SC_MustGetString();
-//                            M_StringCopy(string, sc_String, sizeof(string));
-//                            SC_MustGetString(); // skip key
-//
-//                            M_AddEpisode(map, ep, lumpname, string);
-//                            break;
-//                        }
-//
-//                        case MCMD_INTERBACKDROP:
-//                            SC_MustGetString();
-//                            M_StringCopy(info->interbackdrop, sc_String, sizeof(info->interbackdrop));
-//                            break;
-//
-//                        case MCMD_INTERMUSIC:
-//                            SC_MustGetString();
-//                            info->intermusic = W_CheckNumForName(sc_String);
-//                            break;
-//
-//                        case MCMD_INTERTEXTSECRET:
-//                        {
-//                            char    buf[1024] = "";
-//
-//                            while (SC_GetString())
-//                            {
-//                                if (SC_MatchString(mapcmdnames) >= 0 || SC_Compare("MAP"))
-//                                {
-//                                    SC_UnGet();
-//                                    break;
-//                                }
-//
-//                                if (!buf[0])
-//                                    M_StringCopy(buf, sc_String, sizeof(buf));
-//                                else
-//                                {
-//                                    strcat(buf, "\n");
-//                                    strcat(buf, sc_String);
-//                                }
-//                            }
-//
-//                            M_StringCopy(info->intertextsecret, buf, sizeof(info->intertextsecret));
-//                            break;
-//                        }
-//
-//                        case MCMD_INTERTEXT:
-//                        {
-//                            char    buf[1024] = "";
-//
-//                            while (SC_GetString())
-//                            {
-//                                if (SC_MatchString(mapcmdnames) >= 0 || SC_Compare("MAP"))
-//                                {
-//                                    SC_UnGet();
-//                                    break;
-//                                }
-//
-//                                if (!buf[0])
-//                                    M_StringCopy(buf, sc_String, sizeof(buf));
-//                                else
-//                                {
-//                                    strcat(buf, "\n");
-//                                    strcat(buf, sc_String);
-//                                }
-//                            }
-//
-//                            M_StringCopy(info->intertext, buf, sizeof(info->intertext));
-//                            break;
-//                        }
-//
-//                        case MCMD_LIQUID:
-//                        {
-//                            int lump;
-//
-//                            SC_MustGetString();
-//
-//                            if ((lump = R_CheckFlatNumForName(sc_String)) >= 0)
-//                                info->liquid[liquidlumps++] = lump;
-//
-//                            break;
-//                        }
-//
-//                        case MCMD_LEVELNAME:
-//                            SC_MustGetString();
-//                            M_StringCopy(info->name, sc_String, sizeof(info->name));
-//                            break;
-//
-//                        case MCMD_MUSIC:
-//                            SC_MustGetString();
-//                            info->music = W_CheckNumForName(sc_String);
-//                            break;
-//
-//                        case MCMD_MUSICCOMPOSER:
-//                            SC_MustGetString();
-//                            M_StringCopy(info->musiccomposer, sc_String, sizeof(info->musiccomposer));
-//                            break;
-//
-//                        case MCMD_MUSICTITLE:
-//                            SC_MustGetString();
-//                            M_StringCopy(info->musictitle, sc_String, sizeof(info->musictitle));
-//                            break;
-//
-//                        case MCMD_NEXT:
-//                        {
-//                            int nextepisode = 1;
-//                            int nextmap = -1;
-//
-//                            SC_MustGetString();
-//
-//                            if (SC_Compare("ENDGAMEC"))
-//                            {
-//                                info->endcast = true;
-//                                break;
-//                            }
-//
-//                            sscanf(sc_String, "%i", &nextmap);
-//
-//                            if (nextmap < 0 || nextmap > 99)
-//                            {
-//                                char    *buffer = uppercase(sc_String);
-//
-//                                if (gamemode == commercial)
-//                                {
-//                                    sscanf(buffer, "MAP0%1i", &nextmap);
-//
-//                                    if (nextmap == -1)
-//                                        sscanf(buffer, "MAP%2i", &nextmap);
-//                                }
-//                                else
-//                                    sscanf(buffer, "E%1iM%1i", &nextepisode, &nextmap);
-//
-//                                free(buffer);
-//                            }
-//
-//                            info->next = (nextepisode - 1) * 10 + nextmap;
-//                            break;
-//                        }
-//
-//                        case MCMD_NOBRIGHTMAP:
-//                        {
-//                            int texture;
-//
-//                            SC_MustGetString();
-//
-//                            if ((texture = R_TextureNumForName(sc_String)) >= 0)
-//                                nobrightmap[texture] = true;
-//
-//                            break;
-//                        }
-//
-//                        case MCMD_NOJUMP:
-//                            info->nojump = true;
-//                            break;
-//
-//                        case MCMD_NOLIQUID:
-//                        {
-//                            int lump;
-//
-//                            SC_MustGetString();
-//
-//                            if ((lump = R_CheckFlatNumForName(sc_String)) >= 0)
-//                                info->noliquid[noliquidlumps++] = lump;
-//
-//                            break;
-//                        }
-//
-//                        case MCMD_NOFREELOOK:
-//                        case MCMD_NOMOUSELOOK:
-//                            info->nomouselook = true;
-//                            break;
-//
-//                        case MCMD_PAR:
-//                        case MCMD_PARTIME:
-//                            SC_MustGetNumber();
-//                            info->par = sc_Number;
-//                            break;
-//
-//                        case MCMD_PISTOLSTART:
-//                            info->pistolstart = true;
-//                            break;
-//
-//                        case MCMD_NEXTSECRET:
-//                        case MCMD_SECRETNEXT:
-//                        {
-//                            int nextepisode = 1;
-//                            int nextmap = -1;
-//
-//                            SC_MustGetString();
-//                            sscanf(sc_String, "%i", &nextmap);
-//
-//                            if (nextmap < 0 || nextmap > 99)
-//                            {
-//                                char    *buffer = uppercase(sc_String);
-//
-//                                if (gamemode == commercial)
-//                                {
-//                                    sscanf(buffer, "MAP0%1i", &nextmap);
-//
-//                                    if (nextmap == -1)
-//                                        sscanf(buffer, "MAP%2i", &nextmap);
-//                                }
-//                                else
-//                                    sscanf(buffer, "E%1iM%1i", &nextepisode, &nextmap);
-//
-//                                free(buffer);
-//                            }
-//
-//                            info->secretnext = (nextepisode - 1) * 10 + nextmap;
-//                            break;
-//                        }
-//
-//                        case MCMD_SKY1:
-//                            SC_MustGetString();
-//                            info->sky1texture = R_TextureNumForName(sc_String);
-//
-//                            if (SC_GetNumber())
-//                            {
-//                                info->sky1scrolldelta = sc_Number << 8;
-//                                SC_UnGet();
-//                            }
-//
-//                            break;
-//
-//                        case MCMD_SKYTEXTURE:
-//                            SC_MustGetString();
-//                            info->sky1texture = R_TextureNumForName(sc_String);
-//                            break;
-//
-//                        case MCMD_LEVELPIC:
-//                        case MCMD_TITLEPATCH:
-//                            SC_MustGetString();
-//                            info->titlepatch = W_CheckNumForName(sc_String);
-//                            break;
-//                    }
-//            }
-//
-//            mapmax = MAX(map, mapmax);
-//        }
-//        else if (SC_Compare("NOJUMP"))
-//        {
-//            if (!autosigil)
-//                nojump = true;
-//        }
-//        else if (SC_Compare("NOMOUSELOOK") || SC_Compare("NOFREELOOK"))
-//            nomouselook = true;
-//    }
-//
-//    SC_Close();
-//    mapcount = mapmax;
-//
-//    temp = commify(sc_Line);
-//    C_Output("Parsed %s line%s in the <b>%sMAPINFO</b> lump in %s <b>%s</b>.",
-//        temp, (sc_Line > 1 ? "s" : ""), (RMAPINFO >= 0 ? "R" : (UMAPINFO >= 0 ? "U" : "")),
-//        (lumpinfo[MAPINFO]->wadfile->type == IWAD ? "IWAD" : "PWAD"), lumpinfo[MAPINFO]->wadfile->path);
-//    free(temp);
-//
-//    if (nojump)
-//        C_Warning(1, "This PWAD has disabled use of the <b>+jump</b> action.");
-//
-//    if (nomouselook)
-//        C_Warning(1, "This PWAD has disabled use of the <b>mouselook</b> CVAR and <b>+mouselook</b> action.");
-//}
-//
-//char *P_GetMapAuthor(int map)
-//{
-//    return (MAPINFO >= 0 && mapinfo[map].author[0] ? mapinfo[map].author :
-//        (((E1M4B || *speciallumpname) && map == 4) || ((E1M8B || *speciallumpname) && map == 8) ? s_AUTHOR_ROMERO : ""));
-//}
+static void P_InitMapInfo(void)
+{
+    int         mapmax = 1;
+    int         mcmdvalue;
+    mapinfo_t   *info;
+    char        *temp;
+
+    if (sigil || M_CheckParm("-nomapinfo"))
+        return;
+
+    if ((RMAPINFO = MAPINFO = W_CheckNumForName(RMAPINFO_SCRIPT_NAME)) < 0)
+        if ((UMAPINFO = MAPINFO = W_CheckNumForName(UMAPINFO_SCRIPT_NAME)) < 0)
+            if ((MAPINFO = W_CheckNumForName(MAPINFO_SCRIPT_NAME)) < 0)
+                return;
+
+    for (int i = 0; i < MAXMAPINFO; i++)
+    {
+        mapinfo[i].author[0] = '\0';
+        mapinfo[i].endbunny = false;
+        mapinfo[i].endcast = false;
+        mapinfo[i].endgame = false;
+        mapinfo[i].endpic = 0;
+        mapinfo[i].enterpic = 0;
+        mapinfo[i].exitpic = 0;
+        mapinfo[i].cluster = 0;
+        mapinfo[i].interbackdrop[0] = '\0';
+        mapinfo[i].intermusic = 0;
+        mapinfo[i].intertext[0] = '\0';
+        mapinfo[i].intertextsecret[0] = '\0';
+
+        for (int j = 0; j < NUMLIQUIDS; j++)
+        {
+            mapinfo[i].liquid[j] = -1;
+            mapinfo[i].noliquid[j] = -1;
+        }
+
+        mapinfo[i].music = 0;
+        mapinfo[i].musiccomposer[0] = '\0';
+        mapinfo[i].musictitle[0] = '\0';
+        mapinfo[i].name[0] = '\0';
+        mapinfo[i].next = 0;
+        mapinfo[i].nojump = false;
+        mapinfo[i].nomouselook = false;
+        mapinfo[i].par = 0;
+        mapinfo[i].pistolstart = false;
+        mapinfo[i].secretnext = 0;
+        mapinfo[i].sky1texture = 0;
+        mapinfo[i].sky1scrolldelta = 0;
+        mapinfo[i].titlepatch = 0;
+    }
+
+    SC_Open(RMAPINFO >= 0 ? RMAPINFO_SCRIPT_NAME : (UMAPINFO >= 0 ? UMAPINFO_SCRIPT_NAME : MAPINFO_SCRIPT_NAME));
+
+    while (SC_GetString())
+    {
+        int ep = -1;
+        int map = -1;
+
+        if (SC_Compare("MAP"))
+        {
+            SC_MustGetString();
+            sscanf(sc_String, "%i", &map);
+
+            if (map < 0 || map > 99)
+            {
+                char    *buffer = uppercase(sc_String);
+
+                if (gamemode == commercial)
+                {
+                    ep = 1;
+                    sscanf(buffer, "MAP0%1i", &map);
+
+                    if (map == -1)
+                        sscanf(buffer, "MAP%2i", &map);
+                }
+                else
+                {
+                    sscanf(buffer, "E%1iM%1i", &ep, &map);
+
+                    if (ep != -1 && map != -1)
+                        map += (ep - 1) * 10;
+                }
+
+                free(buffer);
+            }
+
+            if (map < 0 || map > 99)
+            {
+                if (M_StringEndsWith(lumpinfo[MAPINFO]->wadfile->path, "NERVE.WAD"))
+                {
+                    //C_Warning(0, "The map markers in PWAD <b>%s</b> are invalid.", lumpinfo[MAPINFO]->wadfile->path);
+					loge( "The map markers in PWAD <b>%s</b> are invalid.\n", lumpinfo[ MAPINFO ]->wadfile->path );
+                    nerve = false;
+                    NewDef.prevMenu = &MainDef;
+                    MAPINFO = -1;
+                    break;
+                }
+                else
+                {
+                    //C_Warning(0, "The <b>MAPINFO</b> lump contains an invalid map marker.");
+					loge( "The <b>MAPINFO</b> lump contains an invalid map marker.\n" );
+                    continue;
+                }
+            }
+
+            info = &mapinfo[map];
+
+            if (SC_GetString() && !SC_Compare("LOOKUP"))
+                M_StringCopy(info->name, sc_String, sizeof(info->name));
+
+            // Process optional tokens
+            while (SC_GetString())
+            {
+                if (SC_Compare("MAP") || SC_Compare("DEFAULTMAP") || SC_Compare("CLUSTERDEF"))
+                {
+                    SC_UnGet();
+                    break;
+                }
+
+                if ((mcmdvalue = SC_MatchString(mapcmdnames)) >= 0)
+                    switch (mapcmdids[mcmdvalue])
+                    {
+                        case MCMD_AUTHOR:
+                            SC_MustGetString();
+                            M_StringCopy(info->author, sc_String, sizeof(info->author));
+                            break;
+
+                        case MCMD_CLUSTER:
+                            SC_MustGetNumber();
+                            info->cluster = sc_Number;
+                            break;
+
+                        case MCMD_ENDBUNNY:
+                            SC_MustGetString();
+
+                            if (SC_Compare("true"))
+                                info->endbunny = true;
+
+                            break;
+
+                        case MCMD_ENDCAST:
+                            SC_MustGetString();
+
+                            if (SC_Compare("true"))
+                                info->endcast = true;
+
+                            break;
+
+                        case MCMD_ENDGAME:
+                            SC_MustGetString();
+
+                            if (SC_Compare("true"))
+                                info->endgame = true;
+
+                            break;
+
+                        case MCMD_ENDPIC:
+                            SC_MustGetString();
+                            info->endpic = W_GetNumForName(sc_String);
+                            break;
+
+                        case MCMD_ENTERPIC:
+                            SC_MustGetString();
+                            info->enterpic = W_GetNumForName(sc_String);
+                            break;
+
+                        case MCMD_EXITPIC:
+                            SC_MustGetString();
+                            info->exitpic = W_GetNumForName(sc_String);
+                            break;
+
+                        case MCMD_EPISODE:
+                        {
+                            char    lumpname[9];
+                            char    string[128];
+
+                            SC_MustGetString();
+
+                            if (SC_Compare("clear"))
+                            {
+                                M_AddEpisode(map, ep, "", "");
+                                break;
+                            }
+
+                            M_StringCopy(lumpname, sc_String, sizeof(lumpname));
+                            SC_MustGetString();
+                            M_StringCopy(string, sc_String, sizeof(string));
+                            SC_MustGetString(); // skip key
+
+                            M_AddEpisode(map, ep, lumpname, string);
+                            break;
+                        }
+
+                        case MCMD_INTERBACKDROP:
+                            SC_MustGetString();
+                            M_StringCopy(info->interbackdrop, sc_String, sizeof(info->interbackdrop));
+                            break;
+
+                        case MCMD_INTERMUSIC:
+                            SC_MustGetString();
+                            info->intermusic = W_CheckNumForName(sc_String);
+                            break;
+
+                        case MCMD_INTERTEXTSECRET:
+                        {
+                            char    buf[1024] = "";
+
+                            while (SC_GetString())
+                            {
+                                if (SC_MatchString(mapcmdnames) >= 0 || SC_Compare("MAP"))
+                                {
+                                    SC_UnGet();
+                                    break;
+                                }
+
+                                if (!buf[0])
+                                    M_StringCopy(buf, sc_String, sizeof(buf));
+                                else
+                                {
+                                    strcat(buf, "\n");
+                                    strcat(buf, sc_String);
+                                }
+                            }
+
+                            M_StringCopy(info->intertextsecret, buf, sizeof(info->intertextsecret));
+                            break;
+                        }
+
+                        case MCMD_INTERTEXT:
+                        {
+                            char    buf[1024] = "";
+
+                            while (SC_GetString())
+                            {
+                                if (SC_MatchString(mapcmdnames) >= 0 || SC_Compare("MAP"))
+                                {
+                                    SC_UnGet();
+                                    break;
+                                }
+
+                                if (!buf[0])
+                                    M_StringCopy(buf, sc_String, sizeof(buf));
+                                else
+                                {
+                                    strcat(buf, "\n");
+                                    strcat(buf, sc_String);
+                                }
+                            }
+
+                            M_StringCopy(info->intertext, buf, sizeof(info->intertext));
+                            break;
+                        }
+
+                        case MCMD_LIQUID:
+                        {
+                            int lump;
+
+                            SC_MustGetString();
+
+                            if ((lump = R_CheckFlatNumForName(sc_String)) >= 0)
+                                info->liquid[liquidlumps++] = lump;
+
+                            break;
+                        }
+
+                        case MCMD_LEVELNAME:
+                            SC_MustGetString();
+                            M_StringCopy(info->name, sc_String, sizeof(info->name));
+                            break;
+
+                        case MCMD_MUSIC:
+                            SC_MustGetString();
+                            info->music = W_CheckNumForName(sc_String);
+                            break;
+
+                        case MCMD_MUSICCOMPOSER:
+                            SC_MustGetString();
+                            M_StringCopy(info->musiccomposer, sc_String, sizeof(info->musiccomposer));
+                            break;
+
+                        case MCMD_MUSICTITLE:
+                            SC_MustGetString();
+                            M_StringCopy(info->musictitle, sc_String, sizeof(info->musictitle));
+                            break;
+
+                        case MCMD_NEXT:
+                        {
+                            int nextepisode = 1;
+                            int nextmap = -1;
+
+                            SC_MustGetString();
+
+                            if (SC_Compare("ENDGAMEC"))
+                            {
+                                info->endcast = true;
+                                break;
+                            }
+
+                            sscanf(sc_String, "%i", &nextmap);
+
+                            if (nextmap < 0 || nextmap > 99)
+                            {
+                                char    *buffer = uppercase(sc_String);
+
+                                if (gamemode == commercial)
+                                {
+                                    sscanf(buffer, "MAP0%1i", &nextmap);
+
+                                    if (nextmap == -1)
+                                        sscanf(buffer, "MAP%2i", &nextmap);
+                                }
+                                else
+                                    sscanf(buffer, "E%1iM%1i", &nextepisode, &nextmap);
+
+                                free(buffer);
+                            }
+
+                            info->next = (nextepisode - 1) * 10 + nextmap;
+                            break;
+                        }
+
+                        case MCMD_NOBRIGHTMAP:
+                        {
+                            int texture;
+
+                            SC_MustGetString();
+
+                            if ((texture = R_TextureNumForName(sc_String)) >= 0)
+                                nobrightmap[texture] = true;
+
+                            break;
+                        }
+
+                        case MCMD_NOJUMP:
+                            info->nojump = true;
+                            break;
+
+                        case MCMD_NOLIQUID:
+                        {
+                            int lump;
+
+                            SC_MustGetString();
+
+                            if ((lump = R_CheckFlatNumForName(sc_String)) >= 0)
+                                info->noliquid[noliquidlumps++] = lump;
+
+                            break;
+                        }
+
+                        case MCMD_NOFREELOOK:
+                        case MCMD_NOMOUSELOOK:
+                            info->nomouselook = true;
+                            break;
+
+                        case MCMD_PAR:
+                        case MCMD_PARTIME:
+                            SC_MustGetNumber();
+                            info->par = sc_Number;
+                            break;
+
+                        case MCMD_PISTOLSTART:
+                            info->pistolstart = true;
+                            break;
+
+                        case MCMD_NEXTSECRET:
+                        case MCMD_SECRETNEXT:
+                        {
+                            int nextepisode = 1;
+                            int nextmap = -1;
+
+                            SC_MustGetString();
+                            sscanf(sc_String, "%i", &nextmap);
+
+                            if (nextmap < 0 || nextmap > 99)
+                            {
+                                char    *buffer = uppercase(sc_String);
+
+                                if (gamemode == commercial)
+                                {
+                                    sscanf(buffer, "MAP0%1i", &nextmap);
+
+                                    if (nextmap == -1)
+                                        sscanf(buffer, "MAP%2i", &nextmap);
+                                }
+                                else
+                                    sscanf(buffer, "E%1iM%1i", &nextepisode, &nextmap);
+
+                                free(buffer);
+                            }
+
+                            info->secretnext = (nextepisode - 1) * 10 + nextmap;
+                            break;
+                        }
+
+                        case MCMD_SKY1:
+                            SC_MustGetString();
+                            info->sky1texture = R_TextureNumForName(sc_String);
+
+                            if (SC_GetNumber())
+                            {
+                                info->sky1scrolldelta = sc_Number << 8;
+                                SC_UnGet();
+                            }
+
+                            break;
+
+                        case MCMD_SKYTEXTURE:
+                            SC_MustGetString();
+                            info->sky1texture = R_TextureNumForName(sc_String);
+                            break;
+
+                        case MCMD_LEVELPIC:
+                        case MCMD_TITLEPATCH:
+                            SC_MustGetString();
+                            info->titlepatch = W_CheckNumForName(sc_String);
+                            break;
+                    }
+            }
+
+            mapmax = MAX(map, mapmax);
+        }
+        else if (SC_Compare("NOJUMP"))
+        {
+            if (!autosigil)
+                nojump = true;
+        }
+        else if (SC_Compare("NOMOUSELOOK") || SC_Compare("NOFREELOOK"))
+            nomouselook = true;
+    }
+
+    SC_Close();
+    mapcount = mapmax;
+
+    temp = commify(sc_Line);
+    logd("Parsed %s line%s in the <b>%sMAPINFO</b> lump in %s <b>%s</b>.\n",
+        temp, (sc_Line > 1 ? "s" : ""), (RMAPINFO >= 0 ? "R" : (UMAPINFO >= 0 ? "U" : "")),
+        (lumpinfo[MAPINFO]->wadfile->type == IWAD ? "IWAD" : "PWAD"), lumpinfo[MAPINFO]->wadfile->path);
+	/*C_Output( "Parsed %s line%s in the <b>%sMAPINFO</b> lump in %s <b>%s</b>.",
+		temp, ( sc_Line > 1 ? "s" : "" ), ( RMAPINFO >= 0 ? "R" : ( UMAPINFO >= 0 ? "U" : "" ) ),
+		( lumpinfo[ MAPINFO ]->wadfile->type == IWAD ? "IWAD" : "PWAD" ), lumpinfo[ MAPINFO ]->wadfile->path );*/
+    free(temp);
+
+	if( nojump )
+	{
+		//C_Warning( 1, "This PWAD has disabled use of the <b>+jump</b> action." );
+		loge( "This PWAD has disabled use of the <b>+jump</b> action.\n" );
+	}
+
+	if( nomouselook )
+	{
+		//C_Warning( 1, "This PWAD has disabled use of the <b>mouselook</b> CVAR and <b>+mouselook</b> action." );
+		loge( "This PWAD has disabled use of the <b>mouselook</b> CVAR and <b>+mouselook</b> action.\n" );
+	}
+}
+
+char *P_GetMapAuthor(int map)
+{
+    return (MAPINFO >= 0 && mapinfo[map].author[0] ? mapinfo[map].author :
+        (((E1M4B || *speciallumpname) && map == 4) || ((E1M8B || *speciallumpname) && map == 8) ? s_AUTHOR_ROMERO : ""));
+}
 
 char *P_GetInterBackrop(int map)
 {
@@ -3547,7 +3565,7 @@ void P_Init(void)
 {
     P_InitSwitchList();
     P_InitPicAnims();
-    //P_InitMapInfo();
+    P_InitMapInfo();
     //R_InitSprites();
     //P_CheckSpechits();
     //P_CheckIntercepts();

@@ -1367,14 +1367,14 @@ extern int      *openings;  // dropoff overflow
 
 // p_setup.h
 extern dboolean     canmodify;
-//extern dboolean     samelevel;
-//extern dboolean     skipblstart;    // MaxW: Skip initial blocklist short
-//extern const char   *linespecials[];
-//
-//extern char         mapnum[ 6 ];
-//extern char         maptitle[ 256 ];
-//extern char         mapnumandtitle[ 512 ];
-//extern char         automaptitle[ 512 ];
+extern dboolean     samelevel;
+extern dboolean     skipblstart;    // MaxW: Skip initial blocklist short
+extern const char   *linespecials[];
+
+extern char         mapnum[ 6 ];
+extern char         maptitle[ 256 ];
+extern char         mapnumandtitle[ 512 ];
+extern char         automaptitle[ 512 ];
 
 
 // r_sky.h
