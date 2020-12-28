@@ -671,7 +671,6 @@ static void R_InitColormaps(void)
 		logd( "Using the <b>COLORMAP</b> lump in %s <b>%s</b>.\n",
 			( colormapwad->type == IWAD ? "IWAD" : "PWAD" ), colormapwad->path );
 	}
-        
 	else
 	{
 		//C_Output( "Using %i colormaps from the <b>COLORMAP</b> lump in %s <b>%s</b>.",

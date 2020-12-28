@@ -674,7 +674,7 @@ static void D_DoomMainSetup( void )
 
 	// steveproTODO	complete all the code then switch to Windows mode instead of Console
 	// does this work now i.e. NOT get the linker error "unresolved external symbol _SDL_main referenced in function _main_getcmdline"
-	//I_InitGraphics();
+	I_InitGraphics();
 
 	//I_InitGamepad();
 

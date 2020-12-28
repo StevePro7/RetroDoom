@@ -73,7 +73,7 @@ extern SDL_Window   *mapwindow;
 extern SDL_Renderer *maprenderer;
 extern byte         *mapscreen;
 
-extern byte         *PLAYPAL;
+//extern byte         *PLAYPAL;
 
 extern dboolean     returntowidescreen;
 extern dboolean     altdown;

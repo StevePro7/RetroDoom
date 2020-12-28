@@ -92,7 +92,7 @@ static byte         *pixels;
 static int          pitch;
 static SDL_Palette  *palette;
 static SDL_Color    colors[ 256 ];
-byte                *PLAYPAL;
+//byte                *PLAYPAL;
 
 static byte         *oscreen;
 byte                *mapscreen;
