@@ -7,6 +7,7 @@
 #include "m_menu.h"
 #include "m_misc.h"
 #include "m_random.h"
+#include "p_local.h"
 #include "p_spec.h"
 #include "r_data.h"
 #include "r_things.h"
@@ -3568,6 +3569,6 @@ void P_Init(void)
     P_InitPicAnims();
     P_InitMapInfo();
     R_InitSprites();
-    //P_CheckSpechits();
+    P_CheckSpechits();
     //P_CheckIntercepts();
 }

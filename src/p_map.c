@@ -1,16 +1,17 @@
 #include "doomdef.h"
 #include "doomstruct.h"
 #include "doomtype.h"
+#include "doomvars.h"
 #include "tables.h"
 
 //#include "doomstat.h"
-//#include "i_system.h"
+#include "i_system.h"
 //#include "m_bbox.h"
 //#include "m_config.h"
 //#include "m_random.h"
 //#include "p_local.h"
 //#include "s_sound.h"
-//#include "z_zone.h"
+#include "z_zone.h"
 
 static mobj_t   *tmthing;
 static fixed_t  tmx, tmy, tmz;
@@ -301,19 +302,19 @@ static dboolean telefrag;   // killough 08/09/98: whether to telefrag at exit
 //        || (bbox[BOXBOTTOM] = y - tmradius) >= ld->bbox[BOXTOP]
 //        || P_BoxOnLineSide(bbox, ld) != -1);
 //}
-//
-//void P_CheckSpechits(void)
-//{
-//    static int  spechit_max;
-//
-//    // killough 01/11/98: remove limit on lines hit, by array doubling
-//    if (numspechit >= spechit_max)
-//    {
-//        spechit_max = (spechit_max ? spechit_max * 2 : 8);
-//        spechit = I_Realloc(spechit, sizeof(*spechit) * spechit_max);
-//    }
-//}
-//
+
+void P_CheckSpechits(void)
+{
+    static int  spechit_max;
+
+    // killough 01/11/98: remove limit on lines hit, by array doubling
+    if (numspechit >= spechit_max)
+    {
+        spechit_max = (spechit_max ? spechit_max * 2 : 8);
+        spechit = I_Realloc(spechit, sizeof(*spechit) * spechit_max);
+    }
+}
+
 ////
 //// PIT_CheckLine
 //// Adjusts tmfloorz and tmceilingz as lines are contacted
