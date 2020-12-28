@@ -26,6 +26,7 @@
 #include "m_fixed.h"
 #include "m_misc.h"
 #include "m_menu.h"
+#include "p_setup.h"
 #include "r_main.h"
 #include "v_video.h"
 #include "version.h"
@@ -849,6 +850,8 @@ static void D_DoomMainSetup( void )
 	M_Init();
 
 	R_Init();
+
+	P_Init();
 }
 
 //

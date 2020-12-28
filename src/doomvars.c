@@ -548,6 +548,13 @@ dboolean            s_stereo; //=s_stereo_default;
 // p_spec.c
 uint64_t            stat_secretsfound; //=0;
 dboolean            r_liquid_bob; //=r_liquid_bob_default;
+int timer;// = 0;
+int countdown;
+fixed_t             animatedliquiddiff;
+fixed_t             animatedliquidxdir;
+fixed_t             animatedliquidydir;
+fixed_t             animatedliquidxoffs;
+fixed_t             animatedliquidyoffs;
 
 
 // r_things.c

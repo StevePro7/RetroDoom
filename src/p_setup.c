@@ -2,6 +2,7 @@
 #include "doomdef.h"
 #include "doomtype.h"
 #include "doomvars.h"
+#include "p_spec.h"
 
 #include <ctype.h>
 
@@ -3539,15 +3540,15 @@ int P_GetMapTitlePatch( int map )
 	return mapinfo[ map ].titlepatch;
 }
 
-////
-//// P_Init
-////
-//void P_Init(void)
-//{
-//    P_InitSwitchList();
-//    P_InitPicAnims();
-//    P_InitMapInfo();
-//    R_InitSprites();
-//    P_CheckSpechits();
-//    P_CheckIntercepts();
-//}
+//
+// P_Init
+//
+void P_Init(void)
+{
+    //P_InitSwitchList();
+    //P_InitPicAnims();
+    //P_InitMapInfo();
+    //R_InitSprites();
+    //P_CheckSpechits();
+    //P_CheckIntercepts();
+}

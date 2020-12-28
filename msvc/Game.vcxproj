@@ -73,6 +73,7 @@
     <ClCompile Include="..\src\p_saveg.c" />
     <ClCompile Include="..\src\p_setup.c" />
     <ClCompile Include="..\src\p_spec.c" />
+    <ClCompile Include="..\src\p_switch.c" />
     <ClCompile Include="..\src\p_tick.c" />
     <ClCompile Include="..\src\p_user.c" />
     <ClCompile Include="..\src\r_bsp.c" />

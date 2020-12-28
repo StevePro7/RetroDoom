@@ -2519,4 +2519,291 @@ enum
 };
 
 
+// p_spec.h
+// jff 2/23/98 identify the special classes that can share sectors
+typedef enum
+{
+	floor_special,
+	ceiling_special
+} special_e;
+
+typedef enum
+{
+	nowhere = -1,
+	top,
+	middle,
+	bottom
+} bwhere_e;
+
+//
+// P_PLATS.C
+//
+typedef enum
+{
+	up,
+	down,
+	waiting,
+	in_stasis
+} plat_e;
+
+// jff 3/15/98 pure texture/type change for better generalized support
+typedef enum
+{
+	trigChangeOnly,
+	numChangeOnly
+} change_e;
+
+typedef enum
+{
+	perpetualRaise,
+	downWaitUpStay,
+	raiseAndChange,
+	raiseToNearestAndChange,
+	blazeDWUS,
+	genLift,            // jff added to support generalized Plat types
+	genPerpetual,
+	toggleUpDn
+} plattype_e;
+
+//
+// P_DOORS.C
+//
+typedef enum
+{
+	doorNormal,
+	doorClose30ThenOpen,
+	doorClose,
+	doorOpen,
+	doorRaiseIn5Mins,
+	doorBlazeRaise,
+	doorBlazeOpen,
+	doorBlazeClose,
+
+	// jff 02/05/98 add generalized door types
+	genRaise,
+	genBlazeRaise,
+	genOpen,
+	genBlazeOpen,
+	genClose,
+	genBlazeClose,
+	genCdO,
+	genBlazeCdO
+} vldoor_e;
+
+//
+// P_CEILING.C
+//
+typedef enum
+{
+	lowerToFloor,
+	raiseToHighest,
+	lowerToLowest,
+	lowerToMaxFloor,
+	lowerAndCrush,
+	crushAndRaise,
+	fastCrushAndRaise,
+	silentCrushAndRaise,
+
+	// jff 02/04/98 add types for generalized ceiling mover
+	genCeiling,
+	genCeilingChg,
+	genCeilingChg0,
+	genCeilingChgT,
+
+	// jff 02/05/98 add types for generalized ceiling mover
+	genCrusher,
+	genSilentCrusher
+} ceiling_e;
+
+//
+// P_FLOOR.C
+//
+typedef enum
+{
+	// lower floor to highest surrounding floor
+	lowerFloor,
+
+	// lower floor to lowest surrounding floor
+	lowerFloorToLowest,
+
+	// lower floor to highest surrounding floor VERY FAST
+	turboLower,
+
+	// raise floor to lowest surrounding CEILING
+	raiseFloor,
+
+	// raise floor to next highest surrounding floor
+	raiseFloorToNearest,
+
+	// jff 02/03/98 lower floor to next lowest neighbor
+	lowerFloorToNearest,
+
+	// jff 02/03/98 lower floor 24 absolute
+	lowerFloor24,
+
+	// jff 02/03/98 lower floor 32 absolute
+	lowerFloor32Turbo,
+
+	// raise floor to shortest height texture around it
+	raiseToTexture,
+
+	// lower floor to lowest surrounding floor
+	//  and change floorpic
+	lowerAndChange,
+
+	raiseFloor24,
+
+	// jff 02/03/98 raise floor 32 absolute
+	raiseFloor32Turbo,
+
+	raiseFloor24AndChange,
+	raiseFloorCrush,
+
+	// raise to next highest floor, turbo-speed
+	raiseFloorTurbo,
+	donutRaise,
+	raiseFloor512,
+
+	// jff 02/04/98  add types for generalized floor mover
+	genFloor,
+	genFloorChg,
+	genFloorChg0,
+	genFloorChgT,
+
+	buildStair,
+	genBuildStair
+} floor_e;
+
+typedef enum
+{
+	elevateUp,
+	elevateDown,
+	elevateCurrent
+} elevator_e;
+
+enum
+{
+	build8,     // slowly build by 8
+	turbo16     // quickly build by 16
+};
+
+typedef enum
+{
+	ok,
+	crushed,
+	pastdest
+} result_e;
+
+// define names for the TriggerType field of the general linedefs
+enum
+{
+	WalkOnce,
+	WalkMany,
+	SwitchOnce,
+	SwitchMany,
+	GunOnce,
+	GunMany,
+	PushOnce,
+	PushMany
+};
+
+// define names for the Speed field of the general linedefs
+enum
+{
+	SpeedSlow,
+	SpeedNormal,
+	SpeedFast,
+	SpeedTurbo
+};
+
+// define names for the Target field of the general floor
+enum
+{
+	FtoHnF,
+	FtoLnF,
+	FtoNnF,
+	FtoLnC,
+	FtoC,
+	FbyST,
+	Fby24,
+	Fby32
+};
+
+// define names for the Changer Type field of the general floor
+enum
+{
+	FNoChg,
+	FChgZero,
+	FChgTxt,
+	FChgTyp
+};
+
+// define names for the Change Model field of the general floor
+enum
+{
+	FTriggerModel,
+	FNumericModel
+};
+
+// define names for the Target field of the general ceiling
+enum
+{
+	CtoHnC,
+	CtoLnC,
+	CtoNnC,
+	CtoHnF,
+	CtoF,
+	CbyST,
+	Cby24,
+	Cby32
+};
+
+// define names for the Changer Type field of the general ceiling
+enum
+{
+	CNoChg,
+	CChgZero,
+	CChgTxt,
+	CChgTyp
+};
+
+// define names for the Change Model field of the general ceiling
+enum
+{
+	CTriggerModel,
+	CNumericModel
+};
+
+// define names for the Target field of the general lift
+enum
+{
+	F2LnF,
+	F2NnF,
+	F2LnC,
+	LnF2HnF
+};
+
+// define names for the door Kind field of the general ceiling
+enum
+{
+	OdCDoor,
+	ODoor,
+	CdODoor,
+	CDoor
+};
+
+// define names for the locked door Kind field of the general ceiling
+enum
+{
+	AnyKey,
+	RCard,
+	BCard,
+	YCard,
+	RSkull,
+	BSkull,
+	YSkull,
+	AllKeys
+};
+
+
 #endif

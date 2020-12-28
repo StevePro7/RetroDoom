@@ -2,6 +2,7 @@
 #include "doomdef.h"
 #include "doomstruct.h"
 #include "doomtype.h"
+#include "doomvars.h"
 
 //#include "c_console.h"
 //#include "d_deh.h"
@@ -43,27 +44,27 @@
 //    int             numpics;
 //    int             speed;
 //} anim_t;
+
+#if defined(_MSC_VER) || defined(__GNUC__)
+#pragma pack(push, 1)
+#endif
+
 //
-//#if defined(_MSC_VER) || defined(__GNUC__)
-//#pragma pack(push, 1)
-//#endif
+// source animation definition
 //
-////
-//// source animation definition
-////
-//typedef struct
-//{
-//    signed char     istexture;              // if false, it is a flat
-//    char            endname[9];
-//    char            startname[9];
-//    int             speed;
-//} PACKEDATTR animdef_t;
-//
-//#if defined(_MSC_VER) || defined(__GNUC__)
-//#pragma pack(pop)
-//#endif
-//
-//#define MAXANIMS    32
+typedef struct
+{
+    signed char     istexture;              // if false, it is a flat
+    char            endname[9];
+    char            startname[9];
+    int             speed;
+} PACKEDATTR animdef_t;
+
+#if defined(_MSC_VER) || defined(__GNUC__)
+#pragma pack(pop)
+#endif
+
+#define MAXANIMS    32
 
 uint64_t            stat_secretsfound = 0;
 
@@ -124,7 +125,7 @@ dboolean            *isteleport;
 //    for (int i = anim->basepic; i < anim->basepic + anim->numpics; i++)
 //        terraintypes[i] = terraintype;
 //}
-//
+
 ////
 //// P_InitPicAnims
 ////
@@ -357,7 +358,7 @@ dboolean            *isteleport;
 //                W_CacheLumpNum(firstflat + i);
 //        }
 //}
-//
+
 ////
 //// P_SetLiquids
 ////
@@ -2249,14 +2250,14 @@ dboolean            *isteleport;
 //        }
 //    }
 //}
+
 //
-////
-//// P_UpdateSpecials
-//// Animate planes, scroll walls, etc.
-////
-//int timer = 0;
+// P_UpdateSpecials
+// Animate planes, scroll walls, etc.
+//
+int timer = 0;
 //int countdown;
-//
+
 //void P_UpdateSpecials(void)
 //{
 //    // ANIMATE FLATS AND TEXTURES GLOBALLY

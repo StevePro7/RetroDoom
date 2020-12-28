@@ -1250,6 +1250,185 @@ typedef struct
 
 
 // p_spec.h
+//
+// P_LIGHTS.C
+//
+typedef struct
+{
+	thinker_t   thinker;
+	sector_t    *sector;
+	int         count;
+	int         maxlight;
+	int         minlight;
+} fireflicker_t;
+
+typedef struct
+{
+	thinker_t   thinker;
+	sector_t    *sector;
+	int         count;
+	int         maxlight;
+	int         minlight;
+	int         maxtime;
+	int         mintime;
+} lightflash_t;
+
+typedef struct
+{
+	thinker_t   thinker;
+	sector_t    *sector;
+	int         count;
+	int         minlight;
+	int         maxlight;
+	int         darktime;
+	int         brighttime;
+} strobe_t;
+
+typedef struct
+{
+	thinker_t   thinker;
+	sector_t    *sector;
+	int         minlight;
+	int         maxlight;
+	int         direction;
+} glow_t;
+
+//
+// P_SWITCH.C
+//
+
+#if defined(_MSC_VER) || defined(__GNUC__)
+#pragma pack(push, 1)
+#endif
+
+typedef struct
+{
+	char        name1[ 9 ];
+	char        name2[ 9 ];
+	short       episode;
+} switchlist_t;
+
+#if defined(_MSC_VER) || defined(__GNUC__)
+#pragma pack(pop)
+#endif
+
+typedef struct
+{
+	line_t      *line;
+	bwhere_e    where;
+	int         btexture;
+	int         btimer;
+	degenmobj_t *soundorg;
+} button_t;
+
+typedef struct
+{
+	thinker_t           thinker;
+	sector_t            *sector;
+	fixed_t             speed;
+	fixed_t             low;
+	fixed_t             high;
+	int                 wait;
+	int                 count;
+	plat_e              status;
+	plat_e              oldstatus;
+	dboolean            crush;
+	int                 tag;
+	plattype_e          type;
+
+	struct platlist_s   *list;  // killough
+} plat_t;
+
+// New limit-free plat structure -- killough
+typedef struct platlist_s
+{
+	plat_t              *plat;
+	struct platlist_s   *next;
+	struct platlist_s   **prev;
+} platlist_t;
+
+typedef struct
+{
+	thinker_t   thinker;
+	vldoor_e    type;
+	sector_t    *sector;
+	fixed_t     topheight;
+	fixed_t     speed;
+
+	// 1 = up, 0 = waiting at top, -1 = down
+	int         direction;
+
+	// tics to wait at the top
+	int         topwait;
+
+	// (keep in case a door going down is reset)
+	// when it reaches 0, start going down
+	int         topcountdown;
+
+	// jff 1/31/98 keep track of line door is triggered by
+	line_t      *line;
+
+	// killough 10/98: sector tag for gradual lighting effects
+	int         lighttag;
+} vldoor_t;
+
+typedef struct
+{
+	thinker_t               thinker;
+	ceiling_e               type;
+	sector_t                *sector;
+	fixed_t                 bottomheight;
+	fixed_t                 topheight;
+	fixed_t                 speed;
+	fixed_t                 oldspeed;
+	dboolean                crush;
+
+	// jff 02/04/98 add these to support ceiling changers
+	int                     newspecial;
+	short                   texture;
+
+	// 1 = up, 0 = waiting, -1 = down
+	int                     direction;
+
+	// ID
+	int                     tag;
+	int                     olddirection;
+	struct ceilinglist_s    *list;          // jff 02/22/98 copied from killough's plats
+} ceiling_t;
+
+typedef struct ceilinglist_s
+{
+	ceiling_t               *ceiling;
+	struct ceilinglist_s    *next;
+	struct ceilinglist_s    **prev;
+} ceilinglist_t;
+
+typedef struct
+{
+	thinker_t   thinker;
+	floor_e     type;
+	dboolean    crush;
+	sector_t    *sector;
+	int         direction;
+	int         newspecial;
+	short       texture;
+	fixed_t     floordestheight;
+	fixed_t     speed;
+	dboolean    stopsound;
+} floormove_t;
+
+typedef struct
+{
+	thinker_t   thinker;
+	elevator_e  type;
+	sector_t    *sector;
+	int         direction;
+	fixed_t     floordestheight;
+	fixed_t     ceilingdestheight;
+	fixed_t     speed;
+	dboolean    stopsound;
+} elevator_t;
+
 
 // p_spec.c
 typedef struct
@@ -1260,6 +1439,48 @@ typedef struct
 	int             numpics;
 	int             speed;
 } anim_t;
+
+// killough 03/07/98: Add generalized scroll effects
+typedef struct
+{
+	thinker_t   thinker;        // Thinker structure for scrolling
+	fixed_t     dx, dy;         // (dx,dy) scroll speeds
+	int         affectee;       // Number of affected sidedef, sector, tag, or whatever
+	int         control;        // Control sector (-1 if none) used to control scrolling
+	fixed_t     last_height;    // Last known height of control sector
+	fixed_t     vdx, vdy;       // Accumulated velocity if accelerative
+	int         accel;          // Whether it's accelerative
+
+	enum
+	{
+		sc_side,
+		sc_floor,
+		sc_ceiling,
+		sc_carry
+	} type;                     // Type of scroll effect
+} scroll_t;
+
+typedef struct
+{
+	thinker_t   thinker;        // Thinker structure for Pusher
+
+	enum
+	{
+		p_push,
+		p_pull,
+		p_wind,
+		p_current
+	} type;
+
+	mobj_t      *source;        // Point source if point pusher
+	int         x_mag;          // X Strength
+	int         y_mag;          // Y Strength
+	int         magnitude;      // Vector strength for point pusher
+	int         radius;         // Effective radius for point pusher
+	int         x;              // X of point source if point pusher
+	int         y;              // Y of point source if point pusher
+	int         affectee;       // Number of affected sector
+} pusher_t;
 
 
 #endif

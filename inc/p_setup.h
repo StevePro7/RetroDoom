@@ -13,10 +13,10 @@
 //
 //void P_SetupLevel(int ep, int map);
 //void P_MapName(int ep, int map);
-//
-//// Called by startup code.
-//void P_Init(void);
-//
+
+// Called by startup code.
+void P_Init(void);
+
 //char *P_GetMapAuthor(int map);
 //char *P_GetInterBackrop(int map);
 //int P_GetInterMusic(int map);

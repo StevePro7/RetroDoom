@@ -22,10 +22,10 @@
 //extern dboolean         *isteleport;
 //
 //extern dboolean         zerotag_manual;
-//
-//// at game start
-//void P_InitPicAnims(void);
-//
+
+// at game start
+void P_InitPicAnims(void);
+
 //// at map load
 //void P_SetTimer(int minutes);
 //void P_SpawnSpecials(void);
@@ -207,7 +207,7 @@
 //extern button_t *buttonlist;
 //extern int      maxbuttons;
 //
-//void P_InitSwitchList(void);
+void P_InitSwitchList(void);
 //void P_StartButton(line_t *line, bwhere_e where, int texture, int time);
 //void P_ChangeSwitchTexture(line_t *line, dboolean useagain);
 //
