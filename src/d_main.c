@@ -382,6 +382,21 @@ static void D_DoomLoop(void)
 {
 }
 
+static void D_ParseStartupString( const char *string )
+{
+	size_t  len = strlen( string );
+
+	for( size_t i = 0, start = 0; i < len; i++ )
+		if( string[ i ] == '\n' || i == len - 1 )
+		{
+			char    *temp = M_SubString( string, start, i - start );
+
+			//C_Output( temp );
+			logd( "%s\n", temp );
+			start = i + 1;
+			free( temp );
+		}
+}
 
 //
 // D_DoomMainSetup
@@ -397,7 +412,7 @@ static void D_DoomMainSetup( void )
 	char    *iwadfile;
 	int     startloadgame;
 	char    *resourcefolder = M_GetResourceFolder();
-//	char    *seconds;
+	char    *seconds;
 
 	packagewad = M_StringJoin( resourcefolder, DIR_SEPARATOR_S, PACKAGE_WAD, NULL );
 	free( resourcefolder );
@@ -984,6 +999,32 @@ static void D_DoomMainSetup( void )
 #endif
 	}
 
+	seconds = striptrailingzero( ( I_GetTimeMS() - startuptimer ) / 1000.0f, 1 );
+	//C_Output( "Startup took %s second%s to complete.", seconds, ( M_StringCompare( seconds, "1" ) ? "" : "s" ) );
+	logd( "Startup took %s second%s to complete.\n", seconds, ( M_StringCompare( seconds, "1" ) ? "\n" : "s\n" ) );
+	free( seconds );
+
+	// Ty 04/08/98 - Add 5 lines of misc. data, only if non-blank
+	// The expectation is that these will be set in a .bex file
+	if( ( *startup1 || *startup2 || *startup3 || *startup4 || *startup5 ) && !FREEDOOM )
+	{
+		C_AddConsoleDivider();
+
+		if( *startup1 )
+			D_ParseStartupString( startup1 );
+
+		if( *startup2 )
+			D_ParseStartupString( startup2 );
+
+		if( *startup3 )
+			D_ParseStartupString( startup3 );
+
+		if( *startup4 )
+			D_ParseStartupString( startup4 );
+
+		if( *startup5 )
+			D_ParseStartupString( startup5 );
+	}
 }
 
 //

@@ -516,19 +516,19 @@ void C_StrCVAROutput( char *cvar, char *string )
 //    undohistory[undolevels].selectend = selectend;
 //    undolevels++;
 //}
-//
-//void C_AddConsoleDivider(void)
-//{
-//    if (!consolestrings || console[consolestrings - 1].stringtype != dividerstring)
-//    {
-//        if (consolestrings >= (int)consolestringsmax)
-//            console = I_Realloc(console, (consolestringsmax += CONSOLESTRINGSMAX) * sizeof(*console));
-//
-//        C_DumpConsoleStringToFile(consolestrings);
-//        console[consolestrings].truncate = 0;
-//        console[consolestrings++].stringtype = dividerstring;
-//    }
-//}
+
+void C_AddConsoleDivider( void )
+{
+	if( !consolestrings || console[ consolestrings - 1 ].stringtype != dividerstring )
+	{
+		if( consolestrings >= ( int ) consolestringsmax )
+			console = I_Realloc( console, ( consolestringsmax += CONSOLESTRINGSMAX ) * sizeof( *console ) );
+
+		C_DumpConsoleStringToFile( consolestrings );
+		console[ consolestrings ].truncate = 0;
+		console[ consolestrings++ ].stringtype = dividerstring;
+	}
+}
 
 const kern_t altkern[] =
 {

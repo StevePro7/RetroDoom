@@ -16,7 +16,7 @@ void C_StrCVAROutput(char *cvar, char *string);
 //void C_Warning(const int minwarninglevel, const char *string, ...);
 //void C_PlayerMessage(const char *string, ...);
 //void C_Obituary(const char *string, ...);
-//void C_AddConsoleDivider(void);
+void C_AddConsoleDivider(void);
 //int C_TextWidth(const char *text, const dboolean formatting, const dboolean kerning);
 void C_Init(void);
 //void C_ShowConsole(void);
