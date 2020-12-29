@@ -20,7 +20,7 @@
 #include "SDL_opengl.h"
 
 //#include "d_deh.h"
-//#include "d_main.h"
+#include "d_main.h"
 //#include "doomstat.h"
 //#include "hu_stuff.h"
 #include "i_colors.h"
