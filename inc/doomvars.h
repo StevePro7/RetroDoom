@@ -1184,6 +1184,10 @@ extern dboolean waspaused;
 // g_game.h
 extern int      quickSaveSlot;
 
+// g_game.c
+extern int      logotic;
+extern int      pagetic;
+
 
 // r_main.h
 //

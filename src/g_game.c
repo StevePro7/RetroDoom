@@ -146,6 +146,7 @@ uint64_t        stat_skilllevel_nightmare = 0;
 
 //extern int      logotic;
 //extern int      pagetic;
+
 //
 //void G_RemoveChoppers(void)
 //{

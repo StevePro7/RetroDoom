@@ -68,6 +68,13 @@ dboolean            realframe;
 HANDLE       CapFPSEvent;
 #endif
 
+//
+//  TITLE LOOP
+//
+int             titlesequence;// = 0;
+int             pagetic;// = 3 * TICRATE;
+int             logotic;// = 3 * TICRATE;
+
 
 // g_game.c
 gameaction_t    loadaction; // = ga_nothing;

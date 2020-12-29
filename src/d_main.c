@@ -167,6 +167,21 @@ struct tm           gamestarttime;
 extern HANDLE       CapFPSEvent;
 #endif
 
+//
+//  TITLE LOOP
+//
+int             titlesequence = 0;
+int             pagetic = 3 * TICRATE;
+int             logotic = 3 * TICRATE;
+
+static patch_t  *pagelump;
+static patch_t  *fineprintlump;
+static patch_t  *logolump[ 18 ];
+static patch_t  *titlelump;
+static patch_t  *creditlump;
+static byte     *splashpal;
+
+
 static void D_ProcessDehInWad( void )
 {
 	dboolean    process = ( !M_CheckParm( "-nodeh" ) && !M_CheckParm( "-nobex" ) );
