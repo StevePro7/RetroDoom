@@ -267,6 +267,9 @@
     <ClCompile Include="..\src\c_autocomplete.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\m_cheat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -503,6 +506,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\st_lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\m_cheat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

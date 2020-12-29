@@ -14,6 +14,7 @@
 #include "c_console.h"
 #include "logger.h"
 #include "d_deh.h"
+#include "d_event.h"
 #include "d_iwad.h"
 #include "d_loop.h"
 #include "d_main.h"
@@ -172,6 +173,26 @@ static dboolean     guess;
 #if defined(_WIN32)
 extern HANDLE       CapFPSEvent;
 #endif
+
+//
+// D_PostEvent
+//
+void D_PostEvent( event_t *ev )
+{
+	//if( dowipe )
+	//	return;
+
+	//lasteventtype = ev->type;
+
+	//if( C_Responder( ev ) )
+	//	return; // console ate the event
+
+	//if( M_Responder( ev ) )
+	//	return; // menu ate the event
+
+	//G_Responder( ev );
+}
+
 
 //
 //  TITLE LOOP

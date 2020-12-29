@@ -1,6 +1,7 @@
 #if !defined(__D_MAIN_H__)
 #define __D_MAIN_H__
 
+#include "d_event.h"
 
 //
 // D_DoomMain()
@@ -9,6 +10,9 @@
 // If not overridden by user input, calls D_AdvanceTitle.
 //
 void D_DoomMain(void);
+
+// Called by IO functions when input is detected.
+void D_PostEvent( event_t *ev );
 
 //
 // BASE LEVEL

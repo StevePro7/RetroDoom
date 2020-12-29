@@ -6,7 +6,7 @@
 //#include "d_main.h"
 //#include "doomstat.h"
 //#include "g_game.h"
-//#include "i_system.h"
+#include "i_system.h"
 #include "i_timer.h"
 //#include "m_config.h"
 //#include "m_menu.h"
@@ -24,7 +24,7 @@ void TryRunTics(void)
 
     while (newtics--)
     {
-        //I_StartTic();		// steveproTODO
+        I_StartTic();		// steveproTODO
 
         if (maketic - gametime > BACKUPTICS / 2)
             break;

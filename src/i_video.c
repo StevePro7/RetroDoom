@@ -1,6 +1,8 @@
 #include "i_video.h"
 #include "a_game.h"
+#include "c_console.h"
 #include "doomkeys.h"
+#include "doomtype.h"
 #include "doomvars.h"
 #include "m_controls.h"
 
@@ -17,9 +19,6 @@
 
 #include "SDL_opengl.h"
 
-#include "doomtype.h"
-
-#include "c_console.h"
 //#include "d_deh.h"
 //#include "d_main.h"
 //#include "doomstat.h"
@@ -29,7 +28,7 @@
 #include "i_system.h"
 #include "i_timer.h"
 #include "logger.h"
-//#include "m_cheat.h"
+#include "m_cheat.h"
 #include "m_config.h"
 #include "m_misc.h"
 #include "m_random.h"
@@ -213,30 +212,30 @@ static void SetShowCursor( dboolean show )
 	SDL_GetRelativeMouseState( NULL, NULL );
 }
 
-//static const int translatekey[] =
-//{
-//    0, 0, 0, 0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-//    's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', KEY_ENTER,
-//    KEY_ESCAPE, KEY_BACKSPACE, KEY_TAB, ' ', KEY_MINUS, KEY_EQUALS, '[', ']', '\\', 0, ';', '\'', '`', ',',
-//    '.', '/', KEY_CAPSLOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10,
-//    KEY_F11, KEY_F12, KEY_PRINTSCREEN, KEY_SCROLLLOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGEUP,
-//    KEY_DELETE, KEY_END, KEY_PAGEDOWN, KEY_RIGHTARROW, KEY_LEFTARROW, KEY_DOWNARROW, KEY_UPARROW,
-//    KEY_NUMLOCK, KEYP_DIVIDE, KEYP_MULTIPLY, KEYP_MINUS, KEYP_PLUS, KEYP_ENTER, KEYP_1, KEYP_2, KEYP_3,
-//    KEYP_4, KEYP_5, KEYP_6, KEYP_7, KEYP_8, KEYP_9, KEYP_0, KEYP_PERIOD, 0, 0, 0, KEYP_EQUALS, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, KEY_CTRL, KEY_SHIFT, KEY_ALT, 0, KEY_CTRL, KEY_SHIFT, KEY_ALT, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-//    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-//};
-//
+static const int translatekey[] =
+{
+	0, 0, 0, 0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+	's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', KEY_ENTER,
+	KEY_ESCAPE, KEY_BACKSPACE, KEY_TAB, ' ', KEY_MINUS, KEY_EQUALS, '[', ']', '\\', 0, ';', '\'', '`', ',',
+	'.', '/', KEY_CAPSLOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10,
+	KEY_F11, KEY_F12, KEY_PRINTSCREEN, KEY_SCROLLLOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGEUP,
+	KEY_DELETE, KEY_END, KEY_PAGEDOWN, KEY_RIGHTARROW, KEY_LEFTARROW, KEY_DOWNARROW, KEY_UPARROW,
+	KEY_NUMLOCK, KEYP_DIVIDE, KEYP_MULTIPLY, KEYP_MINUS, KEYP_PLUS, KEYP_ENTER, KEYP_1, KEYP_2, KEYP_3,
+	KEYP_4, KEYP_5, KEYP_6, KEYP_7, KEYP_8, KEYP_9, KEYP_0, KEYP_PERIOD, 0, 0, 0, KEYP_EQUALS, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, KEY_CTRL, KEY_SHIFT, KEY_ALT, 0, KEY_CTRL, KEY_SHIFT, KEY_ALT, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+
 //static int TranslateKey2(int key)
 //{
 //    switch (key)
@@ -387,38 +386,38 @@ void I_ShutdownKeyboard( void )
 #endif
 }
 
-//static int AccelerateMouse(int value)
-//{
-//    return (value > 10 ? value * 2 - 10 : (value < -10 ? value * 2 + 10 : value));
-//}
-//
-//static short inline clamp(short value, short deadzone)
-//{
-//    return (ABS(value) < deadzone ? 0 : (gp_analog ? MAX(-SHRT_MAX, value) : SIGN(value) * SHRT_MAX));
-//}
-//
+static int AccelerateMouse( int value )
+{
+	return ( value > 10 ? value * 2 - 10 : ( value < -10 ? value * 2 + 10 : value ) );
+}
+
+static short inline clamp( short value, short deadzone )
+{
+	return ( ABS( value ) < deadzone ? 0 : ( gp_analog ? MAX( -SHRT_MAX, value ) : SIGN( value ) * SHRT_MAX ) );
+}
+
 //dboolean    altdown = false;
 dboolean    waspaused = false;
+
+static const SDL_Scancode keypad[] =
+{
+	SDL_SCANCODE_KP_1, SDL_SCANCODE_DOWN, SDL_SCANCODE_KP_3, SDL_SCANCODE_LEFT, SDL_SCANCODE_KP_5,
+	SDL_SCANCODE_RIGHT, SDL_SCANCODE_KP_7, SDL_SCANCODE_UP, SDL_SCANCODE_KP_9, SDL_SCANCODE_KP_0
+};
+
+static void I_GetEvent(void)
+{
+//	SDL_Event   SDLEvent;
+//	SDL_Event   *Event = &SDLEvent;
 //
-//static const SDL_Scancode keypad[] =
-//{
-//    SDL_SCANCODE_KP_1, SDL_SCANCODE_DOWN, SDL_SCANCODE_KP_3, SDL_SCANCODE_LEFT, SDL_SCANCODE_KP_5,
-//    SDL_SCANCODE_RIGHT, SDL_SCANCODE_KP_7, SDL_SCANCODE_UP, SDL_SCANCODE_KP_9, SDL_SCANCODE_KP_0
-//};
+//	SDL_PumpEvents();
 //
-//static void I_GetEvent(void)
-//{
-//    SDL_Event   SDLEvent;
-//    SDL_Event   *Event = &SDLEvent;
-//
-//    SDL_PumpEvents();
-//
-//    while (SDL_PollEvent(Event))
-//    {
-//        event_t         event;
+//	while( SDL_PollEvent( Event ) )
+//	{
+//		event_t         event;
 //
 //#if !defined(_WIN32)
-//        static dboolean enterdown;
+//		static dboolean enterdown;
 //#endif
 //
 //        switch (Event->type)
@@ -723,47 +722,47 @@ dboolean    waspaused = false;
 //                break;
 //        }
 //    }
-//}
+}
+
+static void I_ReadMouse( void )
+{
+	int         x, y;
+	static int  prevmousebuttonstate = -1;
+
+	SDL_GetRelativeMouseState( &x, &y );
+
+	if( x || y || mousebuttonstate != prevmousebuttonstate )
+	{
+		event_t ev;
+
+		ev.type = ev_mouse;
+		ev.data1 = mousebuttonstate;
+
+		if( m_acceleration )
+		{
+			ev.data2 = AccelerateMouse( x );
+			ev.data3 = AccelerateMouse( y );
+		}
+		else
+		{
+			ev.data2 = x;
+			ev.data3 = y;
+		}
+
+		D_PostEvent( &ev );
+		prevmousebuttonstate = mousebuttonstate;
+	}
+}
+
 //
-//static void I_ReadMouse(void)
-//{
-//    int         x, y;
-//    static int  prevmousebuttonstate = -1;
+// I_StartTic
 //
-//    SDL_GetRelativeMouseState(&x, &y);
-//
-//    if (x || y || mousebuttonstate != prevmousebuttonstate)
-//    {
-//        event_t ev;
-//
-//        ev.type = ev_mouse;
-//        ev.data1 = mousebuttonstate;
-//
-//        if (m_acceleration)
-//        {
-//            ev.data2 = AccelerateMouse(x);
-//            ev.data3 = AccelerateMouse(y);
-//        }
-//        else
-//        {
-//            ev.data2 = x;
-//            ev.data3 = y;
-//        }
-//
-//        D_PostEvent(&ev);
-//        prevmousebuttonstate = mousebuttonstate;
-//    }
-//}
-//
-////
-//// I_StartTic
-////
-//void I_StartTic(void)
-//{
-//    I_GetEvent();
-//    I_ReadMouse();
-//    I_UpdateGamepadVibration();
-//}
+void I_StartTic(void)
+{
+    I_GetEvent();
+    I_ReadMouse();
+    //I_UpdateGamepadVibration();
+}
 
 static void UpdateGrab( void )
 {
