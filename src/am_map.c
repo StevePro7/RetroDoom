@@ -125,35 +125,35 @@ static unsigned int mapheight;
 static unsigned int maparea;
 static unsigned int mapbottom;
 
-////dboolean            automapactive;
-//
-//static mpoint_t     m_paninc;       // how far the window pans each tic (map coords)
-//static fixed_t      mtof_zoommul;   // how far the window zooms in each tic (map coords)
-//static fixed_t      ftom_zoommul;   // how far the window zooms in each tic (fb coords)
-//
-//// LL x,y where the window is on the map (map coords)
-//static fixed_t      m_x = FIXED_MAX, m_y = FIXED_MAX;
-//
-//// width/height of window on map (map coords)
-//static fixed_t      m_w, m_h;
-//
-//// based on level size
-//static fixed_t      min_x, min_y;
-//static fixed_t      max_x, max_y;
-//
-//static fixed_t      min_scale_mtof; // used to tell when to stop zooming out
-//static fixed_t      max_scale_mtof; // used to tell when to stop zooming in
-//
-//// old stuff for recovery later
-//static fixed_t      old_m_w, old_m_h;
-//static fixed_t      old_m_x, old_m_y;
-//
-//// used by MTOF to scale from map-to-frame-buffer coords
-//static fixed_t      scale_mtof;
-//
-//// used by FTOM to scale from frame-buffer-to-map coords (=1/scale_mtof)
-//static fixed_t      scale_ftom;
-//
+//dboolean            automapactive;
+
+static mpoint_t     m_paninc;       // how far the window pans each tic (map coords)
+static fixed_t      mtof_zoommul;   // how far the window zooms in each tic (map coords)
+static fixed_t      ftom_zoommul;   // how far the window zooms in each tic (fb coords)
+
+// LL x,y where the window is on the map (map coords)
+static fixed_t      m_x = FIXED_MAX, m_y = FIXED_MAX;
+
+// width/height of window on map (map coords)
+static fixed_t      m_w, m_h;
+
+// based on level size
+static fixed_t      min_x, min_y;
+static fixed_t      max_x, max_y;
+
+static fixed_t      min_scale_mtof; // used to tell when to stop zooming out
+static fixed_t      max_scale_mtof; // used to tell when to stop zooming in
+
+// old stuff for recovery later
+static fixed_t      old_m_w, old_m_h;
+static fixed_t      old_m_x, old_m_y;
+
+// used by MTOF to scale from map-to-frame-buffer coords
+static fixed_t      scale_mtof;
+
+// used by FTOM to scale from frame-buffer-to-map coords (=1/scale_mtof)
+static fixed_t      scale_ftom;
+
 //mpoint_t            *markpoints;    // where the points are
 //int                 markpointnum;   // next point to be assigned
 //int                 markpointnum_max;
@@ -185,92 +185,92 @@ static void AM_Rotate(fixed_t *x, fixed_t *y, angle_t angle);
 static void (*putbigdot)(unsigned int, unsigned int, byte *);
 static void PUTDOT(unsigned int x, unsigned int y, byte *color);
 static void PUTBIGDOT(unsigned int x, unsigned int y, byte *color);
+
+static void AM_ActivateNewScale(void)
+{
+    m_x += m_w / 2;
+    m_y += m_h / 2;
+    m_w = FTOM(MAPWIDTH);
+    m_h = FTOM(mapheight);
+    m_x -= m_w / 2;
+    m_y -= m_h / 2;
+    putbigdot = (scale_mtof >= FRACUNIT + FRACUNIT / 2 ? &PUTBIGDOT : &PUTDOT);
+}
+
+static void AM_SaveScaleAndLoc(void)
+{
+    old_m_x = m_x;
+    old_m_y = m_y;
+    old_m_w = m_w;
+    old_m_h = m_h;
+}
+
+static void AM_RestoreScaleAndLoc(void)
+{
+    m_w = old_m_w;
+    m_h = old_m_h;
+
+    if (!am_followmode)
+    {
+        m_x = old_m_x;
+        m_y = old_m_y;
+    }
+
+    // Change the scaling multipliers
+    scale_mtof = FixedDiv(MAPWIDTH << FRACBITS, m_w);
+    scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+    putbigdot = (scale_mtof >= FRACUNIT + FRACUNIT / 2 ? &PUTBIGDOT : &PUTDOT);
+}
+
 //
-//static void AM_ActivateNewScale(void)
-//{
-//    m_x += m_w / 2;
-//    m_y += m_h / 2;
-//    m_w = FTOM(MAPWIDTH);
-//    m_h = FTOM(mapheight);
-//    m_x -= m_w / 2;
-//    m_y -= m_h / 2;
-//    putbigdot = (scale_mtof >= FRACUNIT + FRACUNIT / 2 ? &PUTBIGDOT : &PUTDOT);
-//}
+// Determines bounding box of all vertexes, sets global variables controlling zoom range.
 //
-//static void AM_SaveScaleAndLoc(void)
-//{
-//    old_m_x = m_x;
-//    old_m_y = m_y;
-//    old_m_w = m_w;
-//    old_m_h = m_h;
-//}
-//
-//static void AM_RestoreScaleAndLoc(void)
-//{
-//    m_w = old_m_w;
-//    m_h = old_m_h;
-//
-//    if (!am_followmode)
-//    {
-//        m_x = old_m_x;
-//        m_y = old_m_y;
-//    }
-//
-//    // Change the scaling multipliers
-//    scale_mtof = FixedDiv(MAPWIDTH << FRACBITS, m_w);
-//    scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
-//    putbigdot = (scale_mtof >= FRACUNIT + FRACUNIT / 2 ? &PUTBIGDOT : &PUTDOT);
-//}
-//
-////
-//// Determines bounding box of all vertexes, sets global variables controlling zoom range.
-////
-//static void AM_FindMinMaxBoundaries(void)
-//{
-//    fixed_t a;
-//    fixed_t b;
-//
-//    min_x = FIXED_MAX;
-//    min_y = FIXED_MAX;
-//    max_x = FIXED_MIN;
-//    max_y = FIXED_MIN;
-//
-//    for (int i = 0; i < numvertexes; i++)
-//    {
-//        const fixed_t   x = vertexes[i].x;
-//        const fixed_t   y = vertexes[i].y;
-//
-//        if (x < min_x)
-//            min_x = x;
-//        else if (x > max_x)
-//            max_x = x;
-//
-//        if (y < min_y)
-//            min_y = y;
-//        else if (y > max_y)
-//            max_y = y;
-//    }
-//
-//    a = FixedDiv(MAPWIDTH << FRACBITS, (max_x >>= FRACTOMAPBITS) - (min_x >>= FRACTOMAPBITS));
-//    b = FixedDiv(mapheight << FRACBITS, (max_y >>= FRACTOMAPBITS) - (min_y >>= FRACTOMAPBITS));
-//
-//    min_scale_mtof = MIN(a, b);
-//    max_scale_mtof = FixedDiv(mapheight << FRACBITS, 2 * PLAYERRADIUS);
-//}
-//
-//static void AM_ChangeWindowLoc(void)
-//{
-//    fixed_t         incx = m_paninc.x;
-//    fixed_t         incy = m_paninc.y;
-//    const fixed_t   width = m_w / 2;
-//    const fixed_t   height = m_h / 2;
-//
-//    if (am_rotatemode)
-//        AM_Rotate(&incx, &incy, viewangle - ANG90);
-//
-//    m_x = BETWEEN(min_x, m_x + width + incx, max_x) - width;
-//    m_y = BETWEEN(min_y, m_y + height + incy, max_y) - height;
-//}
+static void AM_FindMinMaxBoundaries(void)
+{
+    fixed_t a;
+    fixed_t b;
+
+    min_x = FIXED_MAX;
+    min_y = FIXED_MAX;
+    max_x = FIXED_MIN;
+    max_y = FIXED_MIN;
+
+    for (int i = 0; i < numvertexes; i++)
+    {
+        const fixed_t   x = vertexes[i].x;
+        const fixed_t   y = vertexes[i].y;
+
+        if (x < min_x)
+            min_x = x;
+        else if (x > max_x)
+            max_x = x;
+
+        if (y < min_y)
+            min_y = y;
+        else if (y > max_y)
+            max_y = y;
+    }
+
+    a = FixedDiv(MAPWIDTH << FRACBITS, (max_x >>= FRACTOMAPBITS) - (min_x >>= FRACTOMAPBITS));
+    b = FixedDiv(mapheight << FRACBITS, (max_y >>= FRACTOMAPBITS) - (min_y >>= FRACTOMAPBITS));
+
+    min_scale_mtof = MIN(a, b);
+    max_scale_mtof = FixedDiv(mapheight << FRACBITS, 2 * PLAYERRADIUS);
+}
+
+static void AM_ChangeWindowLoc(void)
+{
+    fixed_t         incx = m_paninc.x;
+    fixed_t         incy = m_paninc.y;
+    const fixed_t   width = m_w / 2;
+    const fixed_t   height = m_h / 2;
+
+    if (am_rotatemode)
+        AM_Rotate(&incx, &incy, viewangle - ANG90);
+
+    m_x = BETWEEN(min_x, m_x + width + incx, max_x) - width;
+    m_y = BETWEEN(min_y, m_y + height + incy, max_y) - height;
+}
 
 void AM_SetColors( void )
 {
@@ -1071,21 +1071,21 @@ void AM_SetAutomapSize(void)
 //
 //    return rc;
 //}
+
 //
-////
-//// Rotation in 2D.
-//// Used to rotate player arrow line character.
-////
-//static void AM_Rotate(fixed_t *x, fixed_t *y, angle_t angle)
-//{
-//    const fixed_t   cosine = finecosine[(angle >>= ANGLETOFINESHIFT)];
-//    const fixed_t   sine = finesine[angle];
-//    const fixed_t   temp = FixedMul(*x, cosine) - FixedMul(*y, sine);
+// Rotation in 2D.
+// Used to rotate player arrow line character.
 //
-//    *y = FixedMul(*x, sine) + FixedMul(*y, cosine);
-//    *x = temp;
-//}
-//
+static void AM_Rotate(fixed_t *x, fixed_t *y, angle_t angle)
+{
+    const fixed_t   cosine = finecosine[(angle >>= ANGLETOFINESHIFT)];
+    const fixed_t   sine = finesine[angle];
+    const fixed_t   temp = FixedMul(*x, cosine) - FixedMul(*y, sine);
+
+    *y = FixedMul(*x, sine) + FixedMul(*y, cosine);
+    *x = temp;
+}
+
 //static void AM_RotatePoint(mpoint_t *point)
 //{
 //    fixed_t         temp;
@@ -1219,80 +1219,80 @@ void AM_SetAutomapSize(void)
 //
 //    return !(outcode1 & outcode2);
 //}
-//
-//static inline void _PUTDOT(byte *dot, byte *color)
-//{
-//    *dot = *(*dot + color);
-//}
-//
-//static inline void PUTDOT(unsigned int x, unsigned int y, byte *color)
-//{
-//    if (x < MAPWIDTH && y < maparea)
-//    {
-//        byte    *dot = mapscreen + y + x;
-//
-//        *dot = *(*dot + color);
-//    }
-//}
-//
-//static inline void PUTDOT2(unsigned int x, unsigned int y, byte *color)
-//{
-//    if (x < MAPWIDTH && y < maparea)
-//        *(mapscreen + y + x) = *color;
-//}
-//
-//static inline void PUTBIGDOT(unsigned int x, unsigned int y, byte *color)
-//{
-//    if (x < MAPWIDTH)
-//    {
-//        byte            *dot = mapscreen + y + x;
-//        const dboolean  attop = (y < maparea);
-//        const dboolean  atbottom = (y < mapbottom);
-//
-//        if (attop)
-//            *dot = *(*dot + color);
-//
-//        if (atbottom)
-//            _PUTDOT(dot + MAPWIDTH, color);
-//
-//        if (x + 1 < MAPWIDTH)
-//        {
-//            if (attop)
-//                _PUTDOT(dot + 1, color);
-//
-//            if (atbottom)
-//            {
-//                dot += MAPWIDTH + 1;
-//                *dot = *(*dot + color);
-//            }
-//        }
-//    }
-//    else if (++x < MAPWIDTH)
-//    {
-//        byte    *dot = mapscreen + y + x;
-//
-//        if (y < maparea)
-//            *dot = *(*dot + color);
-//
-//        if (y < mapbottom)
-//        {
-//            dot += MAPWIDTH;
-//            *dot = *(*dot + color);
-//        }
-//    }
-//}
-//
-//static inline void PUTTRANSLUCENTDOT(unsigned int x, unsigned int y, byte *color)
-//{
-//    if (x < MAPWIDTH && y < maparea)
-//    {
-//        byte    *dot = mapscreen + y + x;
-//
-//        if (*dot != tinttab66[*color])
-//            *dot = tinttab66[(*dot << 8) + *color];
-//    }
-//}
-//
+
+static inline void _PUTDOT( byte *dot, byte *color )
+{
+	*dot = *( *dot + color );
+}
+
+static inline void PUTDOT( unsigned int x, unsigned int y, byte *color )
+{
+	if( x < MAPWIDTH && y < maparea )
+	{
+		byte    *dot = mapscreen + y + x;
+
+		*dot = *( *dot + color );
+	}
+}
+
+static inline void PUTDOT2( unsigned int x, unsigned int y, byte *color )
+{
+	if( x < MAPWIDTH && y < maparea )
+		*( mapscreen + y + x ) = *color;
+}
+
+static inline void PUTBIGDOT( unsigned int x, unsigned int y, byte *color )
+{
+	if( x < MAPWIDTH )
+	{
+		byte            *dot = mapscreen + y + x;
+		const dboolean  attop = ( y < maparea );
+		const dboolean  atbottom = ( y < mapbottom );
+
+		if( attop )
+			*dot = *( *dot + color );
+
+		if( atbottom )
+			_PUTDOT( dot + MAPWIDTH, color );
+
+		if( x + 1 < MAPWIDTH )
+		{
+			if( attop )
+				_PUTDOT( dot + 1, color );
+
+			if( atbottom )
+			{
+				dot += MAPWIDTH + 1;
+				*dot = *( *dot + color );
+			}
+		}
+	}
+	else if( ++x < MAPWIDTH )
+	{
+		byte    *dot = mapscreen + y + x;
+
+		if( y < maparea )
+			*dot = *( *dot + color );
+
+		if( y < mapbottom )
+		{
+			dot += MAPWIDTH;
+			*dot = *( *dot + color );
+		}
+	}
+}
+
+static inline void PUTTRANSLUCENTDOT( unsigned int x, unsigned int y, byte *color )
+{
+	if( x < MAPWIDTH && y < maparea )
+	{
+		byte    *dot = mapscreen + y + x;
+
+		if( *dot != tinttab66[ *color ] )
+			*dot = tinttab66[ ( *dot << 8 ) + *color ];
+	}
+}
+
 ////
 //// Classic Bresenham w/ whatever optimizations needed for speed
 ////

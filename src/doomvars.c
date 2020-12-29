@@ -172,6 +172,14 @@ int am_tswallcolor; //=am_tswallcolor_default;
 int am_wallcolor; //=am_wallcolor_default;
 
 // am_map.c
+mpoint_t            *markpoints;    // where the points are
+int                 markpointnum;   // next point to be assigned
+int                 markpointnum_max;
+
+mpoint_t            *pathpoints;
+int                 pathpointnum;
+int                 pathpointnum_max;
+
 dboolean            am_external; //=am_external_default;
 dboolean            am_followmode; //=am_followmode_default;
 dboolean            am_grid; //=am_grid_default;
