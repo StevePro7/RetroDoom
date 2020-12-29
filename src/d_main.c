@@ -15,6 +15,7 @@
 #include "logger.h"
 #include "d_deh.h"
 #include "d_iwad.h"
+#include "d_loop.h"
 #include "d_main.h"
 #include "doomdef.h"
 #include "doomtype.h"
@@ -381,7 +382,7 @@ static int D_OpenWADLauncher( void )
 static void D_DoomLoop(void)
 {
 	time_t      now = time( NULL );
-	//player_t    player;
+	player_t    player;
 
 #if defined(_WIN32)
 	localtime_s( &gamestarttime, &now );
@@ -391,6 +392,18 @@ static void D_DoomLoop(void)
 
 	R_ExecuteSetViewSize();
 
+	viewplayer = &player;
+	memset( viewplayer, 0, sizeof( *viewplayer ) );
+
+	while( true )
+	{
+		TryRunTics();       // will run at least one tic
+
+		//S_UpdateSounds();   // move positional sounds
+
+		//// Update display, next frame, with current state.
+		//D_Display();
+	}
 }
 
 static void D_ParseStartupString( const char *string )

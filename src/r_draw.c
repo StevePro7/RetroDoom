@@ -1258,15 +1258,15 @@ void R_InitBuffer(int width, int height)
 //    V_DrawPatch(x1 - 8, y2, 1, brdr_bl);
 //    V_DrawPatch(x2, y2, 1, brdr_br);
 //}
+
 //
-////
-//// Copy a screen buffer.
-////
-//void R_VideoErase(unsigned int ofs, int count)
-//{
-//    memcpy(screens[0] + ofs, screens[1] + ofs, count);
-//}
+// Copy a screen buffer.
 //
+void R_VideoErase(unsigned int ofs, int count)
+{
+    memcpy(screens[0] + ofs, screens[1] + ofs, count);
+}
+
 ////
 //// R_DrawViewBorder
 //// Draws the border around the view
