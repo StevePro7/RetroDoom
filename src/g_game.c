@@ -2,8 +2,10 @@
 
 #include "doomdef.h"
 #include "doomenum.h"
+#include "doomvars.h"
 #include "d_event.h"
 #include "m_fixed.h"
+#include "m_misc.h"
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -1375,12 +1377,12 @@ uint64_t        stat_skilllevel_nightmare = 0;
 //        gameaction = ga_autosavegame;
 //}
 //
-//void G_LoadGame(char *name)
-//{
-//    M_StringCopy(savename, name, sizeof(savename));
-//    gameaction = ga_loadgame;
-//}
-//
+void G_LoadGame(char *name)
+{
+    M_StringCopy(savename, name, sizeof(savename));
+    gameaction = ga_loadgame;
+}
+
 //void G_DoLoadGame(void)
 //{
 //    int savedleveltime;

@@ -8,6 +8,7 @@
 #include "d_event.h"
 #include "d_ticcmd.h"
 //#include "r_defs.h"
+#include <time.h>
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -1181,7 +1182,24 @@ extern dboolean waspaused;
 
 
 // g_game.h
+extern fixed_t  forwardmove[ 2 ];
+extern fixed_t  sidemove[ 2 ];
+extern fixed_t  angleturn[ 3 ];
+extern dboolean gamekeydown[ NUMKEYS ];
+extern dboolean *mousebuttons;
+extern dboolean gamepadpress;
+extern char     lbmname1[ MAX_PATH ];
+extern char     lbmpath1[ MAX_PATH ];
+extern char     lbmpath2[ MAX_PATH ];
+extern char     keyactionlist[ NUMKEYS ][ 255 ];
+extern char     mouseactionlist[ MAX_MOUSE_BUTTONS + 2 ][ 255 ];
+extern int      mousewait;
 extern int      quickSaveSlot;
+extern int      st_facecount;
+extern dboolean skipaction;
+extern char     savename[ MAX_PATH ];
+extern dboolean usemouselook;
+extern dboolean secretexit;
 
 // g_game.c
 extern int      logotic;

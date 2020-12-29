@@ -11,6 +11,7 @@
 #endif
 
 #include "am_map.h"
+#include "c_console.h"
 #include "logger.h"
 #include "d_deh.h"
 #include "d_iwad.h"
@@ -28,6 +29,7 @@
 #include "m_fixed.h"
 #include "m_misc.h"
 #include "m_menu.h"
+#include "p_saveg.h"
 #include "p_setup.h"
 #include "r_main.h"
 #include "s_sound.h"
@@ -163,7 +165,7 @@ static int          startuptimer;
 static dboolean     error;
 static dboolean     guess;
 
-struct tm           gamestarttime;
+//struct tm           gamestarttime;
 
 #if defined(_WIN32)
 extern HANDLE       CapFPSEvent;
@@ -368,7 +370,7 @@ static void D_DoomMainSetup( void )
 	char    lumpname[ 6 ];
 	char    *appdatafolder = M_GetAppDataFolder();
 	char    *iwadfile;
-	//int     startloadgame;
+	int     startloadgame;
 	char    *resourcefolder = M_GetResourceFolder();
 //	char    *seconds;
 
@@ -881,6 +883,19 @@ static void D_DoomMainSetup( void )
 	AM_Init();
 
 	C_Init();
+
+	if( ( startloadgame = ( ( p = M_CheckParmWithArgs( "-loadgame", 1, 1 ) ) ? atoi( myargv[ p + 1 ] ) : -1 ) ) >= 0 && startloadgame <= 5 )
+	{
+		menuactive = false;
+		splashscreen = false;
+		I_InitKeyboard();
+
+		if( alwaysrun )
+			C_StrCVAROutput( stringize( alwaysrun ), "on" );
+
+		G_LoadGame( P_SaveGameFile( startloadgame ) );
+	}
+
 }
 
 //

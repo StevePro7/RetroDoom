@@ -7,11 +7,11 @@
 
 //#define NUMKEYS         256
 
-#define FORWARDMOVE0    0x19
-#define FORWARDMOVE1    0x32
-
-#define SIDEMOVE0       0x18
-#define SIDEMOVE1       0x28
+//#define FORWARDMOVE0    0x19
+//#define FORWARDMOVE1    0x32
+//
+//#define SIDEMOVE0       0x18
+//#define SIDEMOVE1       0x28
 
 //
 // GAME
@@ -24,11 +24,11 @@
 //void G_DeferredInitNew(skill_t skill, int ep, int map);
 //
 //void G_DeferredLoadLevel(skill_t skill, int ep, int map);
-//
-//// Can be called by the startup code or M_Responder,
-//// calls P_SetupLevel.
-//void G_LoadGame(char *name);
-//
+
+// Can be called by the startup code or M_Responder,
+// calls P_SetupLevel.
+void G_LoadGame(char *name);
+
 //void G_DoLoadGame(void);
 //void G_DoLoadLevel(void);
 //

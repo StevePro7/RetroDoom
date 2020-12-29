@@ -1247,5 +1247,14 @@ typedef int32_t fixed_t;
 #define FRACTOMAPBITS   (FRACBITS - MAPBITS)
 
 
+// g_game.h
+#define NUMKEYS         256
+
+#define FORWARDMOVE0    0x19
+#define FORWARDMOVE1    0x32
+
+#define SIDEMOVE0       0x18
+#define SIDEMOVE1       0x28
+
 
 #endif

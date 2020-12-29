@@ -161,7 +161,7 @@ extern int              leveltime;      // tics in game play for par
 //  WAD, partly set at startup time.
 
 //extern int              gametime;
-extern struct tm        gamestarttime;
+//extern struct tm        gamestarttime;
 
 extern dboolean         realframe;
 

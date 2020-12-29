@@ -61,8 +61,8 @@ dboolean            splashscreen;// = true;
 dboolean            realframe;
 //static dboolean     error;
 //static dboolean     guess;
-//
-//struct tm           gamestarttime;
+
+struct tm           gamestarttime;
 
 #if defined(_WIN32)
 HANDLE       CapFPSEvent;
@@ -82,6 +82,7 @@ gamestate_t     gamestate;// = GS_TITLESCREEN;
 dboolean        paused;
 int             gametime;// = 0;
 char            speciallumpname[ 6 ];// = "";
+char            savename[ MAX_PATH ];
 
 
 // m_config.c

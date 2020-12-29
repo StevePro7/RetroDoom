@@ -2040,24 +2040,24 @@ void I_SetGamma( float value )
 		for( gammaindex = 0; gammalevels[ gammaindex ] != r_gamma_default; gammaindex++ );
 }
 
-//void I_InitKeyboard(void)
-//{
-//    if (keyboardalwaysrun == KEY_CAPSLOCK)
-//    {
-//        capslock = GetCapsLockState();
-//
-//#if defined(_WIN32)
-//        if (alwaysrun != capslock)
-//            ToggleCapsLockState();
-//#elif defined(X11)
-//        if (alwaysrun && !capslock)
-//            SetCapsLockState(true);
-//        else if (!alwaysrun && capslock)
-//            SetCapsLockState(false);
-//#endif
-//    }
-//}
-//
+void I_InitKeyboard(void)
+{
+    if (keyboardalwaysrun == KEY_CAPSLOCK)
+    {
+        capslock = GetCapsLockState();
+
+#if defined(_WIN32)
+        if (alwaysrun != capslock)
+            ToggleCapsLockState();
+#elif defined(X11)
+        if (alwaysrun && !capslock)
+            SetCapsLockState(true);
+        else if (!alwaysrun && capslock)
+            SetCapsLockState(false);
+#endif
+    }
+}
+
 void I_InitGraphics( void )
 {
 	SDL_Event   dummy;

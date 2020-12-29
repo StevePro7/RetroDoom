@@ -1,6 +1,11 @@
 #include "c_cmds.h"
+#include "doomdef.h"
+#include "doomenum.h"
+#include "doomstruct.h"
+#include "doomvars.h"
 
 #include <float.h>
+#include <stdio.h>
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -9,7 +14,7 @@
 
 //#include "am_map.h"
 //#include "c_cmds.h"
-//#include "c_console.h"
+#include "c_console.h"
 //#include "d_deh.h"
 //#include "d_iwad.h"
 //#include "doomstat.h"
@@ -22,7 +27,7 @@
 //#include "m_cheat.h"
 //#include "m_config.h"
 //#include "m_menu.h"
-//#include "m_misc.h"
+#include "m_misc.h"
 //#include "m_random.h"
 //#include "p_inter.h"
 //#include "p_local.h"
@@ -1603,87 +1608,87 @@ char                *version = version_default;
 //                C_TabbedOutput(tabs, "%i.\t<b>%s</b> %s\t%s", count, consolecmds[i].name, format, description1);
 //        }
 //}
+
+static FILE *condumpfile = NULL;
+
 //
-//static FILE *condumpfile = NULL;
+// condump CCMD
 //
-////
-//// condump CCMD
-////
-//void C_DumpConsoleStringToFile(int index)
-//{
-//    if (!condumpfile)
-//        return;
-//
-//    if (console[index].stringtype == dividerstring)
-//        fprintf(condumpfile, "%s\n", DIVIDERSTRING);
-//    else
-//    {
-//        char            *string = M_StringDuplicate(console[index].string);
-//        int             len;
-//        unsigned int    outpos = 0;
-//        int             tabcount = 0;
-//
-//        strreplace(string, "<b>", "");
-//        strreplace(string, "</b>", "");
-//        strreplace(string, "<i>", "");
-//        strreplace(string, "</i>", "");
-//        len = (int)strlen(string);
-//
-//        if (console[index].stringtype == warningstring)
-//            fputs((console[index].line == 1 ? "! " : (string[0] == ' ' ? " " : "  ")), condumpfile);
-//
-//        for (int inpos = 0; inpos < len; inpos++)
-//        {
-//            const unsigned char letter = string[inpos];
-//
-//            if (letter != '\n')
-//            {
-//                if (letter == '\t')
-//                {
-//                    const unsigned int  tabstop = console[index].tabs[tabcount] / 5;
-//
-//                    if (outpos < tabstop)
-//                    {
-//                        for (unsigned int spaces = 0; spaces < tabstop - outpos; spaces++)
-//                            fputc(' ', condumpfile);
-//
-//                        outpos = tabstop;
-//                        tabcount++;
-//                    }
-//                    else
-//                    {
-//                        fputc(' ', condumpfile);
-//                        outpos++;
-//                    }
-//                }
-//                else
-//                {
-//                    fputc(letter, condumpfile);
-//                    outpos++;
-//                }
-//            }
-//        }
-//
-//        if (console[index].stringtype == playermessagestring || console[index].stringtype == obituarystring)
-//        {
-//            char    buffer[9];
-//
-//            for (unsigned int spaces = 0; spaces < 92 - outpos; spaces++)
-//                fputc(' ', condumpfile);
-//
-//            M_StringCopy(buffer, C_CreateTimeStamp(index), sizeof(buffer));
-//
-//            if (strlen(buffer) == 7)
-//                fputc(' ', condumpfile);
-//
-//            fputs(C_CreateTimeStamp(index), condumpfile);
-//        }
-//
-//        fputc('\n', condumpfile);
-//        free(string);
-//    }
-//}
-//
+void C_DumpConsoleStringToFile(int index)
+{
+    if (!condumpfile)
+        return;
+
+    if (console[index].stringtype == dividerstring)
+        fprintf(condumpfile, "%s\n", DIVIDERSTRING);
+    else
+    {
+        char            *string = M_StringDuplicate(console[index].string);
+        int             len;
+        unsigned int    outpos = 0;
+        int             tabcount = 0;
+
+        strreplace(string, "<b>", "");
+        strreplace(string, "</b>", "");
+        strreplace(string, "<i>", "");
+        strreplace(string, "</i>", "");
+        len = (int)strlen(string);
+
+        if (console[index].stringtype == warningstring)
+            fputs((console[index].line == 1 ? "! " : (string[0] == ' ' ? " " : "  ")), condumpfile);
+
+        for (int inpos = 0; inpos < len; inpos++)
+        {
+            const unsigned char letter = string[inpos];
+
+            if (letter != '\n')
+            {
+                if (letter == '\t')
+                {
+                    const unsigned int  tabstop = console[index].tabs[tabcount] / 5;
+
+                    if (outpos < tabstop)
+                    {
+                        for (unsigned int spaces = 0; spaces < tabstop - outpos; spaces++)
+                            fputc(' ', condumpfile);
+
+                        outpos = tabstop;
+                        tabcount++;
+                    }
+                    else
+                    {
+                        fputc(' ', condumpfile);
+                        outpos++;
+                    }
+                }
+                else
+                {
+                    fputc(letter, condumpfile);
+                    outpos++;
+                }
+            }
+        }
+
+        if (console[index].stringtype == playermessagestring || console[index].stringtype == obituarystring)
+        {
+            char    buffer[9];
+
+            for (unsigned int spaces = 0; spaces < 92 - outpos; spaces++)
+                fputc(' ', condumpfile);
+
+            M_StringCopy(buffer, C_CreateTimeStamp(index), sizeof(buffer));
+
+            if (strlen(buffer) == 7)
+                fputc(' ', condumpfile);
+
+            fputs(C_CreateTimeStamp(index), condumpfile);
+        }
+
+        fputc('\n', condumpfile);
+        free(string);
+    }
+}
+
 //static dboolean condump_cmd_func1(char *cmd, char *parms)
 //{
 //    return (consolestrings > 1);

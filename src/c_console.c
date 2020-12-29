@@ -11,7 +11,7 @@
 //#include "SDL_image.h"
 //#include "SDL_mixer.h"
 //
-//#include "c_cmds.h"
+#include "c_cmds.h"
 //#include "c_console.h"
 //#include "d_main.h"
 //#include "doomstat.h"
@@ -19,7 +19,7 @@
 //#include "i_colors.h"
 //#include "i_gamepad.h"
 #include "i_swap.h"
-//#include "i_system.h"
+#include "i_system.h"
 //#include "i_timer.h"
 //#include "m_config.h"
 //#include "m_menu.h"
@@ -128,33 +128,33 @@ static int              consolecolors[ STRINGTYPES ];
 //extern int              framespersecond;
 //extern int              refreshrate;
 //extern dboolean         quitcmd;
-//
-//void C_Input(const char *string, ...)
-//{
-//    va_list argptr;
-//    char    buffer[CONSOLETEXTMAXLENGTH];
-//
-//    if (togglingvanilla)
-//        return;
-//
-//    va_start(argptr, string);
-//    M_vsnprintf(buffer, CONSOLETEXTMAXLENGTH - 1, string, argptr);
-//    va_end(argptr);
-//
-//    if (consolestrings >= (int)consolestringsmax)
-//        console = I_Realloc(console, (consolestringsmax += CONSOLESTRINGSMAX) * sizeof(*console));
-//
-//    M_StringCopy(console[consolestrings].string, buffer, sizeof(console[consolestrings].string));
-//    C_DumpConsoleStringToFile(consolestrings);
-//    console[consolestrings].truncate = 0;
-//    console[consolestrings++].stringtype = inputstring;
-//    outputhistory = -1;
-//    consoleinput[0] = '\0';
-//    caretpos = 0;
-//    selectstart = 0;
-//    selectend = 0;
-//}
-//
+
+void C_Input( const char *string, ... )
+{
+	va_list argptr;
+	char    buffer[ CONSOLETEXTMAXLENGTH ];
+
+	if( togglingvanilla )
+		return;
+
+	va_start( argptr, string );
+	M_vsnprintf( buffer, CONSOLETEXTMAXLENGTH - 1, string, argptr );
+	va_end( argptr );
+
+	if( consolestrings >= ( int ) consolestringsmax )
+		console = I_Realloc( console, ( consolestringsmax += CONSOLESTRINGSMAX ) * sizeof( *console ) );
+
+	M_StringCopy( console[ consolestrings ].string, buffer, sizeof( console[ consolestrings ].string ) );
+	C_DumpConsoleStringToFile( consolestrings );
+	console[ consolestrings ].truncate = 0;
+	console[ consolestrings++ ].stringtype = inputstring;
+	outputhistory = -1;
+	consoleinput[ 0 ] = '\0';
+	caretpos = 0;
+	selectstart = 0;
+	selectend = 0;
+}
+
 //void C_InputNoRepeat(const char *string, ...)
 //{
 //    va_list argptr;
@@ -206,17 +206,17 @@ static int              consolecolors[ STRINGTYPES ];
 //    free(temp);
 //}
 //
-//void C_StrCVAROutput(char *cvar, char *string)
-//{
-//    char    *temp = M_StringJoin(cvar, " ", NULL);
-//
-//    if (consolestrings && M_StringStartsWithExact(console[consolestrings - 1].string, temp))
-//        consolestrings--;
-//
-//    C_Input("%s %s", cvar, string);
-//    free(temp);
-//}
-//
+void C_StrCVAROutput( char *cvar, char *string )
+{
+	char    *temp = M_StringJoin( cvar, " ", NULL );
+
+	if( consolestrings && M_StringStartsWithExact( console[ consolestrings - 1 ].string, temp ) )
+		consolestrings--;
+
+	C_Input( "%s %s", cvar, string );
+	free( temp );
+}
+
 //void C_Output(const char *string, ...)
 //{
 //    va_list argptr;
@@ -1210,49 +1210,49 @@ static void C_DrawOverlayText( int x, int y, const char *text, const int color, 
 	}
 }
 
-//char *C_CreateTimeStamp(int index)
-//{
-//    int hours = gamestarttime.tm_hour;
-//    int minutes = gamestarttime.tm_min;
-//    int seconds = gamestarttime.tm_sec;
-//    int tics = console[index].tics / TICRATE;
-//
-//    if ((seconds += (tics % 3600) % 60) >= 60)
-//    {
-//        minutes += seconds / 60;
-//        seconds %= 60;
-//    }
-//
-//    if ((minutes += (tics % 3600) / 60) >= 60)
-//    {
-//        hours += minutes / 60;
-//        minutes %= 60;
-//    }
-//
-//    if ((hours += tics / 3600) > 12)
-//        hours %= 12;
-//
-//    M_snprintf(console[index].timestamp, 9, "%i:%02i:%02i", hours, minutes, seconds);
-//    return console[index].timestamp;
-//}
-//
-//static void C_DrawTimeStamp(int x, int y, int index)
-//{
-//    char    buffer[9];
-//
-//    M_StringCopy(buffer, (*console[index].timestamp ? console[index].timestamp : C_CreateTimeStamp(index)), sizeof(buffer));
-//    y -= CONSOLEHEIGHT - consoleheight;
-//
-//    for (int i = (int)strlen(buffer) - 1; i >= 0; i--)
-//    {
-//        char    ch = buffer[i];
-//        patch_t *patch = consolefont[ch - CONSOLEFONTSTART];
-//        int     width = SHORT(patch->width);
-//
-//        x -= (i && ch != ':' ? zerowidth : width);
-//        V_DrawConsoleOutputTextPatch(x + (i && ch == '1'), y, patch, width, consoletimestampcolor, NOBACKGROUNDCOLOR, false, tinttab33);
-//    }
-//}
+char *C_CreateTimeStamp(int index)
+{
+    int hours = gamestarttime.tm_hour;
+    int minutes = gamestarttime.tm_min;
+    int seconds = gamestarttime.tm_sec;
+    int tics = console[index].tics / TICRATE;
+
+    if ((seconds += (tics % 3600) % 60) >= 60)
+    {
+        minutes += seconds / 60;
+        seconds %= 60;
+    }
+
+    if ((minutes += (tics % 3600) / 60) >= 60)
+    {
+        hours += minutes / 60;
+        minutes %= 60;
+    }
+
+    if ((hours += tics / 3600) > 12)
+        hours %= 12;
+
+    M_snprintf(console[index].timestamp, 9, "%i:%02i:%02i", hours, minutes, seconds);
+    return console[index].timestamp;
+}
+
+static void C_DrawTimeStamp(int x, int y, int index)
+{
+    char    buffer[9];
+
+    M_StringCopy(buffer, (*console[index].timestamp ? console[index].timestamp : C_CreateTimeStamp(index)), sizeof(buffer));
+    y -= CONSOLEHEIGHT - consoleheight;
+
+    for (int i = (int)strlen(buffer) - 1; i >= 0; i--)
+    {
+        char    ch = buffer[i];
+        patch_t *patch = consolefont[ch - CONSOLEFONTSTART];
+        int     width = SHORT(patch->width);
+
+        x -= (i && ch != ':' ? zerowidth : width);
+        V_DrawConsoleOutputTextPatch(x + (i && ch == '1'), y, patch, width, consoletimestampcolor, NOBACKGROUNDCOLOR, false, tinttab33);
+    }
+}
 
 void C_UpdateFPS(void)
 {
