@@ -9,8 +9,9 @@
 //#include "i_gamepad.h"
 //#include "i_system.h"
 //#include "i_timer.h"
+#include "i_video.h"
 //#include "m_bbox.h"
-//#include "m_config.h"
+#include "m_config.h"
 //#include "m_menu.h"
 //#include "m_misc.h"
 //#include "p_local.h"
@@ -35,85 +36,85 @@ int am_teleportercolor = am_teleportercolor_default;
 int am_thingcolor = am_thingcolor_default;
 int am_tswallcolor = am_tswallcolor_default;
 int am_wallcolor = am_wallcolor_default;
-//
-//// Automap color priorities
-//#define PATHPRIORITY           10
-//#define WALLPRIORITY            9
-//#define ALLMAPWALLPRIORITY      8
-//#define CDWALLPRIORITY          7
-//#define ALLMAPCDWALLPRIORITY    6
-//#define FDWALLPRIORITY          5
-//#define ALLMAPFDWALLPRIORITY    4
-//#define TELEPORTERPRIORITY      3
-//#define TSWALLPRIORITY          2
-//#define GRIDPRIORITY            1
-//
-//static byte playercolor;
-//static byte thingcolor;
-//static byte markcolor;
-//static byte backcolor;
-//
-//static byte *pathcolor;
-//static byte *wallcolor;
-//static byte *allmapwallcolor;
-//static byte *teleportercolor;
-//static byte *fdwallcolor;
-//static byte *allmapfdwallcolor;
-//static byte *cdwallcolor;
-//static byte *allmapcdwallcolor;
-//static byte *tswallcolor;
-//static byte *gridcolor;
-//static byte *am_crosshaircolor2;
-//
-//#define AM_PANDOWNKEY   keyboardback
-//#define AM_PANDOWNKEY2  keyboardback2
-//#define AM_PANUPKEY     keyboardforward
-//#define AM_PANUPKEY2    keyboardforward2
-//#define AM_PANRIGHTKEY  keyboardright
-//#define AM_PANRIGHTKEY2 keyboardstraferight
-//#define AM_PANRIGHTKEY3 keyboardstraferight2
-//#define AM_PANLEFTKEY   keyboardleft
-//#define AM_PANLEFTKEY2  keyboardstrafeleft
-//#define AM_PANLEFTKEY3  keyboardstrafeleft2
-//#define AM_ZOOMINKEY    keyboardautomapzoomin
-//#define AM_ZOOMOUTKEY   keyboardautomapzoomout
-//#define AM_STARTKEY     keyboardautomap
-//#define AM_ENDKEY       keyboardautomap
-//#define AM_GOBIGKEY     keyboardautomapmaxzoom
-//#define AM_FOLLOWKEY    keyboardautomapfollowmode
-//#define AM_GRIDKEY      keyboardautomapgrid
-//#define AM_MARKKEY      keyboardautomapmark
-//#define AM_CLEARMARKKEY keyboardautomapclearmark
-//#define AM_ROTATEKEY    keyboardautomaprotatemode
-//
-//#define MAPWIDTH        SCREENWIDTH
-//
-//// scale on entry
-//// [BH] changed to initial zoom level of E1M1: Hangar so each map zoom level is consistent
-//#define INITSCALEMTOF   125114
-//
-//// how much the automap moves window per tic in map coordinates
-//// moves 140 pixels in 1 second
-//#define F_PANINC        ((uint64_t)8 << speedtoggle)
-//
-//// how much zoom-in per tic
-//// goes to 2x in 1 second
-//#define M_ZOOMIN        ((fixed_t)((uint64_t)FRACUNIT * (1.0 + F_PANINC / 200.0)))
-//
-//// how much zoom-out per tic
-//// pulls out to 0.5x in 1 second
-//#define M_ZOOMOUT       ((fixed_t)((uint64_t)FRACUNIT / (1.0 + F_PANINC / 200.0)))
-//
-//#define PLAYERRADIUS    (16 * (1 << MAPBITS))
-//
-//// translates between frame-buffer and map distances
-//#define FTOM(x)         (fixed_t)((((uint64_t)(x) << FRACBITS) * scale_ftom) >> FRACBITS)
-//#define MTOF(x)         (fixed_t)((((uint64_t)(x) * scale_mtof) >> FRACBITS) >> FRACBITS)
-//
-//// translates between frame-buffer and map coordinates
-//#define CXMTOF(x)       MTOF((uint64_t)(x) - m_x)
-//#define CYMTOF(y)       (mapheight - MTOF((uint64_t)(y) - m_y))
-//
+
+// Automap color priorities
+#define PATHPRIORITY           10
+#define WALLPRIORITY            9
+#define ALLMAPWALLPRIORITY      8
+#define CDWALLPRIORITY          7
+#define ALLMAPCDWALLPRIORITY    6
+#define FDWALLPRIORITY          5
+#define ALLMAPFDWALLPRIORITY    4
+#define TELEPORTERPRIORITY      3
+#define TSWALLPRIORITY          2
+#define GRIDPRIORITY            1
+
+static byte playercolor;
+static byte thingcolor;
+static byte markcolor;
+static byte backcolor;
+
+static byte *pathcolor;
+static byte *wallcolor;
+static byte *allmapwallcolor;
+static byte *teleportercolor;
+static byte *fdwallcolor;
+static byte *allmapfdwallcolor;
+static byte *cdwallcolor;
+static byte *allmapcdwallcolor;
+static byte *tswallcolor;
+static byte *gridcolor;
+static byte *am_crosshaircolor2;
+
+#define AM_PANDOWNKEY   keyboardback
+#define AM_PANDOWNKEY2  keyboardback2
+#define AM_PANUPKEY     keyboardforward
+#define AM_PANUPKEY2    keyboardforward2
+#define AM_PANRIGHTKEY  keyboardright
+#define AM_PANRIGHTKEY2 keyboardstraferight
+#define AM_PANRIGHTKEY3 keyboardstraferight2
+#define AM_PANLEFTKEY   keyboardleft
+#define AM_PANLEFTKEY2  keyboardstrafeleft
+#define AM_PANLEFTKEY3  keyboardstrafeleft2
+#define AM_ZOOMINKEY    keyboardautomapzoomin
+#define AM_ZOOMOUTKEY   keyboardautomapzoomout
+#define AM_STARTKEY     keyboardautomap
+#define AM_ENDKEY       keyboardautomap
+#define AM_GOBIGKEY     keyboardautomapmaxzoom
+#define AM_FOLLOWKEY    keyboardautomapfollowmode
+#define AM_GRIDKEY      keyboardautomapgrid
+#define AM_MARKKEY      keyboardautomapmark
+#define AM_CLEARMARKKEY keyboardautomapclearmark
+#define AM_ROTATEKEY    keyboardautomaprotatemode
+
+#define MAPWIDTH        SCREENWIDTH
+
+// scale on entry
+// [BH] changed to initial zoom level of E1M1: Hangar so each map zoom level is consistent
+#define INITSCALEMTOF   125114
+
+// how much the automap moves window per tic in map coordinates
+// moves 140 pixels in 1 second
+#define F_PANINC        ((uint64_t)8 << speedtoggle)
+
+// how much zoom-in per tic
+// goes to 2x in 1 second
+#define M_ZOOMIN        ((fixed_t)((uint64_t)FRACUNIT * (1.0 + F_PANINC / 200.0)))
+
+// how much zoom-out per tic
+// pulls out to 0.5x in 1 second
+#define M_ZOOMOUT       ((fixed_t)((uint64_t)FRACUNIT / (1.0 + F_PANINC / 200.0)))
+
+#define PLAYERRADIUS    (16 * (1 << MAPBITS))
+
+// translates between frame-buffer and map distances
+#define FTOM(x)         (fixed_t)((((uint64_t)(x) << FRACBITS) * scale_ftom) >> FRACBITS)
+#define MTOF(x)         (fixed_t)((((uint64_t)(x) * scale_mtof) >> FRACBITS) >> FRACBITS)
+
+// translates between frame-buffer and map coordinates
+#define CXMTOF(x)       MTOF((uint64_t)(x) - m_x)
+#define CYMTOF(y)       (mapheight - MTOF((uint64_t)(y) - m_y))
+
 //typedef struct
 //{
 //    mpoint_t    a;
@@ -168,22 +169,22 @@ char                *am_gridsize = am_gridsize_default;
 dboolean            am_path = am_path_default;
 dboolean            am_rotatemode = am_rotatemode_default;
 
-//static int          gridwidth;
-//static int          gridheight;
-//
-//static dboolean     bigstate;
-//static dboolean     movement;
-//int                 keydown;
+static int          gridwidth;
+static int          gridheight;
+
+static dboolean     bigstate;
+static dboolean     movement;
+int                 keydown;
 //int                 direction;
 //
 //am_frame_t          am_frame;
-//
-//static dboolean     isteleportline[NUMLINESPECIALS];
-//
-//static void AM_Rotate(fixed_t *x, fixed_t *y, angle_t angle);
-//static void (*putbigdot)(unsigned int, unsigned int, byte *);
-//static void PUTDOT(unsigned int x, unsigned int y, byte *color);
-//static void PUTBIGDOT(unsigned int x, unsigned int y, byte *color);
+
+static dboolean     isteleportline[NUMLINESPECIALS];
+
+static void AM_Rotate(fixed_t *x, fixed_t *y, angle_t angle);
+static void (*putbigdot)(unsigned int, unsigned int, byte *);
+static void PUTDOT(unsigned int x, unsigned int y, byte *color);
+static void PUTBIGDOT(unsigned int x, unsigned int y, byte *color);
 //
 //static void AM_ActivateNewScale(void)
 //{
@@ -270,82 +271,82 @@ dboolean            am_rotatemode = am_rotatemode_default;
 //    m_x = BETWEEN(min_x, m_x + width + incx, max_x) - width;
 //    m_y = BETWEEN(min_y, m_y + height + incy, max_y) - height;
 //}
-//
-//void AM_SetColors(void)
-//{
-//    byte        priority[256] = { 0 };
-//    static byte priorities[256 * 256];
-//
-//    priority[nearestcolors[am_pathcolor]] = PATHPRIORITY;
-//    priority[nearestcolors[am_wallcolor]] = WALLPRIORITY;
-//    priority[nearestcolors[am_allmapwallcolor]] = ALLMAPWALLPRIORITY;
-//    priority[nearestcolors[am_cdwallcolor]] = CDWALLPRIORITY;
-//    priority[nearestcolors[am_allmapcdwallcolor]] = ALLMAPCDWALLPRIORITY;
-//    priority[nearestcolors[am_fdwallcolor]] = FDWALLPRIORITY;
-//    priority[nearestcolors[am_allmapfdwallcolor]] = ALLMAPFDWALLPRIORITY;
-//    priority[nearestcolors[am_teleportercolor]] = TELEPORTERPRIORITY;
-//    priority[nearestcolors[am_tswallcolor]] = TSWALLPRIORITY;
-//    priority[nearestcolors[am_gridcolor]] = GRIDPRIORITY;
-//
-//    playercolor = nearestcolors[am_playercolor];
-//    thingcolor = nearestcolors[am_thingcolor];
-//    markcolor = nearestcolors[am_markcolor];
-//    backcolor = nearestcolors[am_backcolor];
-//    am_crosshaircolor2 = &tinttab60[nearestcolors[am_crosshaircolor] << 8];
-//
-//    for (int x = 0; x < 256; x++)
-//        for (int y = 0; y < 256; y++)
-//            priorities[(x << 8) + y] = (priority[x] > priority[y] ? x : y);
-//
-//    pathcolor = &priorities[nearestcolors[am_pathcolor] << 8];
-//    wallcolor = &priorities[nearestcolors[am_wallcolor] << 8];
-//    allmapwallcolor = &priorities[nearestcolors[am_allmapwallcolor] << 8];
-//    cdwallcolor = &priorities[nearestcolors[am_cdwallcolor] << 8];
-//    allmapcdwallcolor = &priorities[nearestcolors[am_allmapcdwallcolor] << 8];
-//    fdwallcolor = &priorities[nearestcolors[am_fdwallcolor] << 8];
-//    allmapfdwallcolor = &priorities[nearestcolors[am_allmapfdwallcolor] << 8];
-//    teleportercolor = &priorities[nearestcolors[am_teleportercolor] << 8];
-//    tswallcolor = &priorities[nearestcolors[am_tswallcolor] << 8];
-//    gridcolor = &priorities[nearestcolors[am_gridcolor ]<< 8];
-//}
-//
-//void AM_GetGridSize(void)
-//{
-//    int width = -1;
-//    int height = -1;
-//
-//    if (sscanf(am_gridsize, "%10ix%10i", &width, &height) == 2
-//        && width >= 4 && width <= 4096 && height >= 4 && height <= 4096)
-//    {
-//        gridwidth = width << MAPBITS;
-//        gridheight = height << MAPBITS;
-//    }
-//    else
-//    {
-//        gridwidth = 128 << MAPBITS;
-//        gridheight = 128 << MAPBITS;
-//        am_gridsize = am_gridsize_default;
-//        M_SaveCVARs();
-//    }
-//}
-//
-//void AM_Init(void)
-//{
-//    AM_SetColors();
-//    AM_GetGridSize();
-//    AM_SetAutomapSize();
-//
-//    isteleportline[W1_Teleport] = true;
-//    isteleportline[W1_ExitLevel] = true;
-//    isteleportline[WR_Teleport] = true;
-//    isteleportline[W1_ExitLevel_GoesToSecretLevel] = true;
-//    isteleportline[W1_Teleport_AlsoMonsters_Silent_SameAngle] = true;
-//    isteleportline[WR_Teleport_AlsoMonsters_Silent_SameAngle] = true;
-//    isteleportline[W1_TeleportToLineWithSameTag_Silent_SameAngle] = true;
-//    isteleportline[WR_TeleportToLineWithSameTag_Silent_SameAngle] = true;
-//    isteleportline[W1_TeleportToLineWithSameTag_Silent_ReversedAngle] = true;
-//    isteleportline[WR_TeleportToLineWithSameTag_Silent_ReversedAngle] = true;
-//}
+
+void AM_SetColors( void )
+{
+	byte        priority[ 256 ] = { 0 };
+	static byte priorities[ 256 * 256 ];
+
+	priority[ nearestcolors[ am_pathcolor ] ] = PATHPRIORITY;
+	priority[ nearestcolors[ am_wallcolor ] ] = WALLPRIORITY;
+	priority[ nearestcolors[ am_allmapwallcolor ] ] = ALLMAPWALLPRIORITY;
+	priority[ nearestcolors[ am_cdwallcolor ] ] = CDWALLPRIORITY;
+	priority[ nearestcolors[ am_allmapcdwallcolor ] ] = ALLMAPCDWALLPRIORITY;
+	priority[ nearestcolors[ am_fdwallcolor ] ] = FDWALLPRIORITY;
+	priority[ nearestcolors[ am_allmapfdwallcolor ] ] = ALLMAPFDWALLPRIORITY;
+	priority[ nearestcolors[ am_teleportercolor ] ] = TELEPORTERPRIORITY;
+	priority[ nearestcolors[ am_tswallcolor ] ] = TSWALLPRIORITY;
+	priority[ nearestcolors[ am_gridcolor ] ] = GRIDPRIORITY;
+
+	playercolor = nearestcolors[ am_playercolor ];
+	thingcolor = nearestcolors[ am_thingcolor ];
+	markcolor = nearestcolors[ am_markcolor ];
+	backcolor = nearestcolors[ am_backcolor ];
+	am_crosshaircolor2 = &tinttab60[ nearestcolors[ am_crosshaircolor ] << 8 ];
+
+	for( int x = 0; x < 256; x++ )
+		for( int y = 0; y < 256; y++ )
+			priorities[ ( x << 8 ) + y ] = ( priority[ x ] > priority[ y ] ? x : y );
+
+	pathcolor = &priorities[ nearestcolors[ am_pathcolor ] << 8 ];
+	wallcolor = &priorities[ nearestcolors[ am_wallcolor ] << 8 ];
+	allmapwallcolor = &priorities[ nearestcolors[ am_allmapwallcolor ] << 8 ];
+	cdwallcolor = &priorities[ nearestcolors[ am_cdwallcolor ] << 8 ];
+	allmapcdwallcolor = &priorities[ nearestcolors[ am_allmapcdwallcolor ] << 8 ];
+	fdwallcolor = &priorities[ nearestcolors[ am_fdwallcolor ] << 8 ];
+	allmapfdwallcolor = &priorities[ nearestcolors[ am_allmapfdwallcolor ] << 8 ];
+	teleportercolor = &priorities[ nearestcolors[ am_teleportercolor ] << 8 ];
+	tswallcolor = &priorities[ nearestcolors[ am_tswallcolor ] << 8 ];
+	gridcolor = &priorities[ nearestcolors[ am_gridcolor ] << 8 ];
+}
+
+void AM_GetGridSize(void)
+{
+    int width = -1;
+    int height = -1;
+
+    if (sscanf(am_gridsize, "%10ix%10i", &width, &height) == 2
+        && width >= 4 && width <= 4096 && height >= 4 && height <= 4096)
+    {
+        gridwidth = width << MAPBITS;
+        gridheight = height << MAPBITS;
+    }
+    else
+    {
+        gridwidth = 128 << MAPBITS;
+        gridheight = 128 << MAPBITS;
+        am_gridsize = am_gridsize_default;
+        M_SaveCVARs();
+    }
+}
+
+void AM_Init( void )
+{
+	AM_SetColors();
+	AM_GetGridSize();
+	AM_SetAutomapSize();
+
+	isteleportline[ W1_Teleport ] = true;
+	isteleportline[ W1_ExitLevel ] = true;
+	isteleportline[ WR_Teleport ] = true;
+	isteleportline[ W1_ExitLevel_GoesToSecretLevel ] = true;
+	isteleportline[ W1_Teleport_AlsoMonsters_Silent_SameAngle ] = true;
+	isteleportline[ WR_Teleport_AlsoMonsters_Silent_SameAngle ] = true;
+	isteleportline[ W1_TeleportToLineWithSameTag_Silent_SameAngle ] = true;
+	isteleportline[ WR_TeleportToLineWithSameTag_Silent_SameAngle ] = true;
+	isteleportline[ W1_TeleportToLineWithSameTag_Silent_ReversedAngle ] = true;
+	isteleportline[ WR_TeleportToLineWithSameTag_Silent_ReversedAngle ] = true;
+}
 
 void AM_SetAutomapSize(void)
 {

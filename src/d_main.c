@@ -10,6 +10,7 @@
 #include <mmsystem.h>
 #endif
 
+#include "am_map.h"
 #include "logger.h"
 #include "d_deh.h"
 #include "d_iwad.h"
@@ -877,7 +878,7 @@ static void D_DoomMainSetup( void )
 
 	ST_Init();
 
-	//AM_Init();
+	AM_Init();
 
 	//C_Init();
 }

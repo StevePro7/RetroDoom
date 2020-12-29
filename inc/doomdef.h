@@ -1242,4 +1242,10 @@ typedef int32_t fixed_t;
 #define BFGCELLS    40
 
 
+// am_map.h
+#define MAPBITS         12
+#define FRACTOMAPBITS   (FRACBITS - MAPBITS)
+
+
+
 #endif

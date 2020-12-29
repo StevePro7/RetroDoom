@@ -1,17 +1,6 @@
 #if !defined(__AM_MAP_H__)
 #define __AM_MAP_H__
 
-//#include "d_event.h"
-//#include "m_fixed.h"
-//
-//#define MAPBITS         12
-//#define FRACTOMAPBITS   (FRACBITS - MAPBITS)
-//
-//typedef struct
-//{
-//    fixed_t x, y;
-//} mpoint_t;
-//
 //// Called by main loop.
 //dboolean AM_Responder(const event_t *ev);
 //
@@ -35,34 +24,10 @@
 
 void AM_SetAutomapSize(void);
 
-//void AM_Init(void);
-//void AM_SetColors(void);
-//void AM_GetGridSize(void);
-//void AM_AddToPath(void);
-//
-//typedef struct
-//{
-//    mpoint_t    center;
-//    fixed_t     sin;
-//    fixed_t     cos;
-//    fixed_t     bbox[4];
-//} am_frame_t;
-//
-//extern dboolean     message_dontfuckwithme;
-//
-//extern int          gamepadwait;
-//
-//extern mpoint_t     *markpoints;
-//extern int          markpointnum;
-//extern int          markpointnum_max;
-//
-//extern mpoint_t     *pathpoints;
-//extern int          pathpointnum;
-//extern int          pathpointnum_max;
-//
-//extern am_frame_t   am_frame;
-//extern int          direction;
-//
-//dboolean keystate(int key);
+void AM_Init(void);
+void AM_SetColors( void );
+void AM_GetGridSize( void );
+void AM_AddToPath( void );
+
 
 #endif

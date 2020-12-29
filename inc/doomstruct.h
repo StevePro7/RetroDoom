@@ -1552,5 +1552,19 @@ typedef struct
 } hu_stext_t;
 
 
+// am_map.h
+typedef struct
+{
+	fixed_t x, y;
+} mpoint_t;
+
+typedef struct
+{
+	mpoint_t    center;
+	fixed_t     sin;
+	fixed_t     cos;
+	fixed_t     bbox[ 4 ];
+} am_frame_t;
+
 
 #endif

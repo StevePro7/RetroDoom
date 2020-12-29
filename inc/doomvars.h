@@ -1524,4 +1524,21 @@ extern musinfo_t    musinfo;
 extern dboolean usesmallnums;
 
 
+// am_map.h
+extern dboolean     message_dontfuckwithme;
+
+extern int          gamepadwait;
+
+extern mpoint_t     *markpoints;
+extern int          markpointnum;
+extern int          markpointnum_max;
+
+extern mpoint_t     *pathpoints;
+extern int          pathpointnum;
+extern int          pathpointnum_max;
+
+extern am_frame_t   am_frame;
+extern int          direction;
+
+
 #endif

@@ -180,6 +180,7 @@ dboolean            am_path; //=am_path_default;
 dboolean            am_rotatemode; //=am_rotatemode_default;
 
 dboolean            automapactive;
+am_frame_t          am_frame;
 
 
 // p_pspr.c
