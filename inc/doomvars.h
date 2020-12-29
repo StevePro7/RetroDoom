@@ -1180,7 +1180,6 @@ extern dboolean EpiCustom;
 extern dboolean waspaused;
 
 
-
 // g_game.h
 extern int      quickSaveSlot;
 
@@ -1276,6 +1275,15 @@ extern int      ammohighlight;
 extern int      armorhighlight;
 extern dboolean drawdisk;
 extern dboolean idbehold;
+
+// hu_stuff.c
+extern patch_t          *tallnum[ 10 ];
+extern patch_t          *tallpercent;
+extern short            tallpercentwidth;
+extern dboolean         emptytallpercent;
+extern int              caretcolor;
+extern patch_t          *faces[ ST_NUMFACES ];
+extern int              st_faceindex;
 
 
 // r_bsp.h
@@ -1439,12 +1447,12 @@ extern dboolean         SHT2A0;
 
 // p_local.h
 extern dboolean autousing;
+extern int  barrelms;
 
 extern fixed_t  opentop;
 extern fixed_t  openbottom;
 extern fixed_t  openrange;
 extern fixed_t  lowfloor;
-
 extern divline_t    dltrace;
 
 //
@@ -1510,6 +1518,10 @@ extern int      numspechit;
 
 // s_sound.h
 extern musinfo_t    musinfo;
+
+
+// st_lib.h
+extern dboolean usesmallnums;
 
 
 #endif

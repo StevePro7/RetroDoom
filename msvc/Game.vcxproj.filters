@@ -261,6 +261,9 @@
     <ClCompile Include="..\src\p_maputl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\st_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\win32.rc">
@@ -494,6 +497,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\r_sky.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\st_lib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

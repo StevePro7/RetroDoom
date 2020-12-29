@@ -1,4 +1,5 @@
 #include "st_stuff.h"
+#include "doomvars.h"
 //#include "r_defs.h"
 
 //#include "am_map.h"
@@ -9,20 +10,20 @@
 //#include "g_game.h"
 //#include "hu_stuff.h"
 //#include "i_colors.h"
-//#include "i_swap.h"
+#include "i_swap.h"
 //#include "m_cheat.h"
 //#include "m_config.h"
 //#include "m_menu.h"
-//#include "m_misc.h"
+#include "m_controls.h"
+#include "m_misc.h"
 //#include "m_random.h"
 //#include "p_inter.h"
 //#include "p_local.h"
 //#include "p_setup.h"
 //#include "s_sound.h"
-//#include "st_lib.h"
-//
-//#include "v_video.h"
-//#include "w_wad.h"
+#include "st_lib.h"
+#include "v_video.h"
+#include "w_wad.h"
 
 //
 // STATUS BAR DATA
@@ -245,104 +246,104 @@ cheatseq_t cheat_mypos = CHEAT("idmypos", 0);
 cheatseq_t cheat_amap = CHEAT("iddt", 0);
 cheatseq_t cheat_buddha = CHEAT("mumu", 0);
 
-//static dboolean movekey(char key)
-//{
-//    return (key == keyboardright || key == keyboardleft || key == keyboardforward || key == keyboardforward2
-//        || key == keyboardback || key == keyboardback2 || key == keyboardstrafeleft || key == keyboardstraferight);
-//}
-//
-//static void ST_InitCheats(void)
-//{
-//    cheat_mus.movekey = movekey(cheat_mus.sequence[0]);
-//    cheat_mus_xy.movekey = movekey(cheat_mus_xy.sequence[0]);
-//    cheat_god.movekey = movekey(cheat_god.sequence[0]);
-//    cheat_ammo.movekey = movekey(cheat_ammo.sequence[0]);
-//    cheat_ammonokey.movekey = movekey(cheat_ammonokey.sequence[0]);
-//    cheat_noclip.movekey = movekey(cheat_noclip.sequence[0]);
-//    cheat_commercial_noclip.movekey = movekey(cheat_commercial_noclip.sequence[0]);
-//    cheat_powerup[0].movekey = movekey(cheat_powerup[0].sequence[0]);
-//    cheat_powerup[1].movekey = movekey(cheat_powerup[1].sequence[0]);
-//    cheat_powerup[2].movekey = movekey(cheat_powerup[2].sequence[0]);
-//    cheat_powerup[3].movekey = movekey(cheat_powerup[3].sequence[0]);
-//    cheat_powerup[4].movekey = movekey(cheat_powerup[4].sequence[0]);
-//    cheat_powerup[5].movekey = movekey(cheat_powerup[5].sequence[0]);
-//    cheat_powerup[6].movekey = movekey(cheat_powerup[6].sequence[0]);
-//    cheat_choppers.movekey = movekey(cheat_choppers.sequence[0]);
-//    cheat_buddha.movekey = movekey(cheat_buddha.sequence[0]);
-//    cheat_clev.movekey = movekey(cheat_clev.sequence[0]);
-//    cheat_clev_xy.movekey = movekey(cheat_clev_xy.sequence[0]);
-//    cheat_mypos.movekey = movekey(cheat_mypos.sequence[0]);
-//    cheat_amap.movekey = movekey(cheat_amap.sequence[0]);
-//}
-//
-//#define NONE        -1
-//#define IDMUS_MAX   60
-//
-//static const int mus[IDMUS_MAX][6] =
-//{
-//    /* xy      shareware    registered   commercial   retail      bfgedition   nerve      */
-//    /* 00 */ { NONE,        NONE,        NONE,        NONE,       NONE,        NONE       },
-//    /* 01 */ { NONE,        NONE,        mus_runnin,  NONE,       mus_runnin,  mus_messag },
-//    /* 02 */ { NONE,        NONE,        mus_stalks,  NONE,       mus_stalks,  mus_ddtblu },
-//    /* 03 */ { NONE,        NONE,        mus_countd,  NONE,       mus_countd,  mus_doom   },
-//    /* 04 */ { NONE,        NONE,        mus_betwee,  NONE,       mus_betwee,  mus_shawn  },
-//    /* 05 */ { NONE,        NONE,        mus_doom,    NONE,       mus_doom,    mus_in_cit },
-//    /* 06 */ { NONE,        NONE,        mus_the_da,  NONE,       mus_the_da,  mus_the_da },
-//    /* 07 */ { NONE,        NONE,        mus_shawn,   NONE,       mus_shawn,   mus_in_cit },
-//    /* 08 */ { NONE,        NONE,        mus_ddtblu,  NONE,       mus_ddtblu,  mus_shawn  },
-//    /* 09 */ { NONE,        NONE,        mus_in_cit,  NONE,       mus_in_cit,  mus_ddtblu },
-//    /* 10 */ { NONE,        NONE,        mus_dead,    NONE,       mus_dead,    NONE       },
-//    /* 11 */ { mus_e1m1,    mus_e1m1,    mus_stlks2,  mus_e1m1,   mus_stlks2,  NONE       },
-//    /* 12 */ { mus_e1m2,    mus_e1m2,    mus_theda2,  mus_e1m2,   mus_theda2,  NONE       },
-//    /* 13 */ { mus_e1m3,    mus_e1m3,    mus_doom2,   mus_e1m3,   mus_doom2,   NONE       },
-//    /* 14 */ { mus_e1m4,    mus_e1m4,    mus_ddtbl2,  mus_e1m4,   mus_ddtbl2,  NONE       },
-//    /* 15 */ { mus_e1m5,    mus_e1m5,    mus_runni2,  mus_e1m5,   mus_runni2,  NONE       },
-//    /* 16 */ { mus_e1m6,    mus_e1m6,    mus_dead2,   mus_e1m6,   mus_dead2,   NONE       },
-//    /* 17 */ { mus_e1m7,    mus_e1m7,    mus_stlks3,  mus_e1m7,   mus_stlks3,  NONE       },
-//    /* 18 */ { mus_e1m8,    mus_e1m8,    mus_romero,  mus_e1m8,   mus_romero,  NONE       },
-//    /* 19 */ { mus_e1m9,    mus_e1m9,    mus_shawn2,  mus_e1m9,   mus_shawn2,  NONE       },
-//    /* 20 */ { NONE,        NONE,        mus_messag,  NONE,       mus_messag,  NONE       },
-//    /* 21 */ { NONE,        mus_e2m1,    mus_count2,  mus_e2m1,   mus_count2,  NONE       },
-//    /* 22 */ { NONE,        mus_e2m2,    mus_ddtbl3,  mus_e2m2,   mus_ddtbl3,  NONE       },
-//    /* 23 */ { NONE,        mus_e2m3,    mus_ampie,   mus_e2m3,   mus_ampie,   NONE       },
-//    /* 24 */ { NONE,        mus_e2m4,    mus_theda3,  mus_e2m4,   mus_theda3,  NONE       },
-//    /* 25 */ { NONE,        mus_e2m5,    mus_adrian,  mus_e2m5,   mus_adrian,  NONE       },
-//    /* 26 */ { NONE,        mus_e2m6,    mus_messg2,  mus_e2m6,   mus_messg2,  NONE       },
-//    /* 27 */ { NONE,        mus_e2m7,    mus_romer2,  mus_e2m7,   mus_romer2,  NONE       },
-//    /* 28 */ { NONE,        mus_e2m8,    mus_tense,   mus_e2m8,   mus_tense,   NONE       },
-//    /* 29 */ { NONE,        mus_e2m9,    mus_shawn3,  mus_e2m9,   mus_shawn3,  NONE       },
-//    /* 30 */ { NONE,        NONE,        mus_openin,  NONE,       mus_openin,  NONE       },
-//    /* 31 */ { NONE,        mus_e3m1,    mus_evil,    mus_e3m1,   mus_evil,    NONE       },
-//    /* 32 */ { NONE,        mus_e3m2,    mus_ultima,  mus_e3m2,   mus_ultima,  NONE       },
-//    /* 33 */ { NONE,        mus_e3m3,    NONE,        mus_e3m3,   mus_read_m,  NONE       },
-//    /* 34 */ { NONE,        mus_e3m4,    NONE,        mus_e3m4,   NONE,        NONE       },
-//    /* 35 */ { NONE,        mus_e3m5,    NONE,        mus_e3m5,   NONE,        NONE       },
-//    /* 36 */ { NONE,        mus_e3m6,    NONE,        mus_e3m6,   NONE,        NONE       },
-//    /* 37 */ { NONE,        mus_e3m7,    NONE,        mus_e3m7,   NONE,        NONE       },
-//    /* 38 */ { NONE,        mus_e3m8,    NONE,        mus_e3m8,   NONE,        NONE       },
-//    /* 39 */ { NONE,        mus_e3m9,    NONE,        mus_e3m9,   NONE,        NONE       },
-//    /* 40 */ { NONE,        NONE,        NONE,        NONE,       NONE,        NONE       },
-//    /* 41 */ { NONE,        NONE,        NONE,        mus_e3m4,   NONE,        NONE       },
-//    /* 42 */ { NONE,        NONE,        NONE,        mus_e3m2,   NONE,        NONE       },
-//    /* 43 */ { NONE,        NONE,        NONE,        mus_e3m3,   NONE,        NONE       },
-//    /* 44 */ { NONE,        NONE,        NONE,        mus_e1m5,   NONE,        NONE       },
-//    /* 45 */ { NONE,        NONE,        NONE,        mus_e2m7,   NONE,        NONE       },
-//    /* 46 */ { NONE,        NONE,        NONE,        mus_e2m4,   NONE,        NONE       },
-//    /* 47 */ { NONE,        NONE,        NONE,        mus_e2m6,   NONE,        NONE       },
-//    /* 48 */ { NONE,        NONE,        NONE,        mus_e2m5,   NONE,        NONE       },
-//    /* 49 */ { NONE,        NONE,        NONE,        mus_e1m9,   NONE,        NONE       },
-//    /* 50 */ { NONE,        NONE,        NONE,        NONE,       NONE,        NONE       },
-//    /* 51 */ { NONE,        NONE,        NONE,        mus_e5m1,   NONE,        NONE       },
-//    /* 52 */ { NONE,        NONE,        NONE,        mus_e5m2,   NONE,        NONE       },
-//    /* 53 */ { NONE,        NONE,        NONE,        mus_e5m3,   NONE,        NONE       },
-//    /* 54 */ { NONE,        NONE,        NONE,        mus_e5m4,   NONE,        NONE       },
-//    /* 55 */ { NONE,        NONE,        NONE,        mus_e5m5,   NONE,        NONE       },
-//    /* 56 */ { NONE,        NONE,        NONE,        mus_e5m6,   NONE,        NONE       },
-//    /* 57 */ { NONE,        NONE,        NONE,        mus_e5m7,   NONE,        NONE       },
-//    /* 58 */ { NONE,        NONE,        NONE,        mus_e5m8,   NONE,        NONE       },
-//    /* 59 */ { NONE,        NONE,        NONE,        mus_e5m9,   NONE,        NONE       }
-//};
-//
+static dboolean movekey(char key)
+{
+    return (key == keyboardright || key == keyboardleft || key == keyboardforward || key == keyboardforward2
+        || key == keyboardback || key == keyboardback2 || key == keyboardstrafeleft || key == keyboardstraferight);
+}
+
+static void ST_InitCheats(void)
+{
+    cheat_mus.movekey = movekey(cheat_mus.sequence[0]);
+    cheat_mus_xy.movekey = movekey(cheat_mus_xy.sequence[0]);
+    cheat_god.movekey = movekey(cheat_god.sequence[0]);
+    cheat_ammo.movekey = movekey(cheat_ammo.sequence[0]);
+    cheat_ammonokey.movekey = movekey(cheat_ammonokey.sequence[0]);
+    cheat_noclip.movekey = movekey(cheat_noclip.sequence[0]);
+    cheat_commercial_noclip.movekey = movekey(cheat_commercial_noclip.sequence[0]);
+    cheat_powerup[0].movekey = movekey(cheat_powerup[0].sequence[0]);
+    cheat_powerup[1].movekey = movekey(cheat_powerup[1].sequence[0]);
+    cheat_powerup[2].movekey = movekey(cheat_powerup[2].sequence[0]);
+    cheat_powerup[3].movekey = movekey(cheat_powerup[3].sequence[0]);
+    cheat_powerup[4].movekey = movekey(cheat_powerup[4].sequence[0]);
+    cheat_powerup[5].movekey = movekey(cheat_powerup[5].sequence[0]);
+    cheat_powerup[6].movekey = movekey(cheat_powerup[6].sequence[0]);
+    cheat_choppers.movekey = movekey(cheat_choppers.sequence[0]);
+    cheat_buddha.movekey = movekey(cheat_buddha.sequence[0]);
+    cheat_clev.movekey = movekey(cheat_clev.sequence[0]);
+    cheat_clev_xy.movekey = movekey(cheat_clev_xy.sequence[0]);
+    cheat_mypos.movekey = movekey(cheat_mypos.sequence[0]);
+    cheat_amap.movekey = movekey(cheat_amap.sequence[0]);
+}
+
+#define NONE        -1
+#define IDMUS_MAX   60
+
+static const int mus[IDMUS_MAX][6] =
+{
+    /* xy      shareware    registered   commercial   retail      bfgedition   nerve      */
+    /* 00 */ { NONE,        NONE,        NONE,        NONE,       NONE,        NONE       },
+    /* 01 */ { NONE,        NONE,        mus_runnin,  NONE,       mus_runnin,  mus_messag },
+    /* 02 */ { NONE,        NONE,        mus_stalks,  NONE,       mus_stalks,  mus_ddtblu },
+    /* 03 */ { NONE,        NONE,        mus_countd,  NONE,       mus_countd,  mus_doom   },
+    /* 04 */ { NONE,        NONE,        mus_betwee,  NONE,       mus_betwee,  mus_shawn  },
+    /* 05 */ { NONE,        NONE,        mus_doom,    NONE,       mus_doom,    mus_in_cit },
+    /* 06 */ { NONE,        NONE,        mus_the_da,  NONE,       mus_the_da,  mus_the_da },
+    /* 07 */ { NONE,        NONE,        mus_shawn,   NONE,       mus_shawn,   mus_in_cit },
+    /* 08 */ { NONE,        NONE,        mus_ddtblu,  NONE,       mus_ddtblu,  mus_shawn  },
+    /* 09 */ { NONE,        NONE,        mus_in_cit,  NONE,       mus_in_cit,  mus_ddtblu },
+    /* 10 */ { NONE,        NONE,        mus_dead,    NONE,       mus_dead,    NONE       },
+    /* 11 */ { mus_e1m1,    mus_e1m1,    mus_stlks2,  mus_e1m1,   mus_stlks2,  NONE       },
+    /* 12 */ { mus_e1m2,    mus_e1m2,    mus_theda2,  mus_e1m2,   mus_theda2,  NONE       },
+    /* 13 */ { mus_e1m3,    mus_e1m3,    mus_doom2,   mus_e1m3,   mus_doom2,   NONE       },
+    /* 14 */ { mus_e1m4,    mus_e1m4,    mus_ddtbl2,  mus_e1m4,   mus_ddtbl2,  NONE       },
+    /* 15 */ { mus_e1m5,    mus_e1m5,    mus_runni2,  mus_e1m5,   mus_runni2,  NONE       },
+    /* 16 */ { mus_e1m6,    mus_e1m6,    mus_dead2,   mus_e1m6,   mus_dead2,   NONE       },
+    /* 17 */ { mus_e1m7,    mus_e1m7,    mus_stlks3,  mus_e1m7,   mus_stlks3,  NONE       },
+    /* 18 */ { mus_e1m8,    mus_e1m8,    mus_romero,  mus_e1m8,   mus_romero,  NONE       },
+    /* 19 */ { mus_e1m9,    mus_e1m9,    mus_shawn2,  mus_e1m9,   mus_shawn2,  NONE       },
+    /* 20 */ { NONE,        NONE,        mus_messag,  NONE,       mus_messag,  NONE       },
+    /* 21 */ { NONE,        mus_e2m1,    mus_count2,  mus_e2m1,   mus_count2,  NONE       },
+    /* 22 */ { NONE,        mus_e2m2,    mus_ddtbl3,  mus_e2m2,   mus_ddtbl3,  NONE       },
+    /* 23 */ { NONE,        mus_e2m3,    mus_ampie,   mus_e2m3,   mus_ampie,   NONE       },
+    /* 24 */ { NONE,        mus_e2m4,    mus_theda3,  mus_e2m4,   mus_theda3,  NONE       },
+    /* 25 */ { NONE,        mus_e2m5,    mus_adrian,  mus_e2m5,   mus_adrian,  NONE       },
+    /* 26 */ { NONE,        mus_e2m6,    mus_messg2,  mus_e2m6,   mus_messg2,  NONE       },
+    /* 27 */ { NONE,        mus_e2m7,    mus_romer2,  mus_e2m7,   mus_romer2,  NONE       },
+    /* 28 */ { NONE,        mus_e2m8,    mus_tense,   mus_e2m8,   mus_tense,   NONE       },
+    /* 29 */ { NONE,        mus_e2m9,    mus_shawn3,  mus_e2m9,   mus_shawn3,  NONE       },
+    /* 30 */ { NONE,        NONE,        mus_openin,  NONE,       mus_openin,  NONE       },
+    /* 31 */ { NONE,        mus_e3m1,    mus_evil,    mus_e3m1,   mus_evil,    NONE       },
+    /* 32 */ { NONE,        mus_e3m2,    mus_ultima,  mus_e3m2,   mus_ultima,  NONE       },
+    /* 33 */ { NONE,        mus_e3m3,    NONE,        mus_e3m3,   mus_read_m,  NONE       },
+    /* 34 */ { NONE,        mus_e3m4,    NONE,        mus_e3m4,   NONE,        NONE       },
+    /* 35 */ { NONE,        mus_e3m5,    NONE,        mus_e3m5,   NONE,        NONE       },
+    /* 36 */ { NONE,        mus_e3m6,    NONE,        mus_e3m6,   NONE,        NONE       },
+    /* 37 */ { NONE,        mus_e3m7,    NONE,        mus_e3m7,   NONE,        NONE       },
+    /* 38 */ { NONE,        mus_e3m8,    NONE,        mus_e3m8,   NONE,        NONE       },
+    /* 39 */ { NONE,        mus_e3m9,    NONE,        mus_e3m9,   NONE,        NONE       },
+    /* 40 */ { NONE,        NONE,        NONE,        NONE,       NONE,        NONE       },
+    /* 41 */ { NONE,        NONE,        NONE,        mus_e3m4,   NONE,        NONE       },
+    /* 42 */ { NONE,        NONE,        NONE,        mus_e3m2,   NONE,        NONE       },
+    /* 43 */ { NONE,        NONE,        NONE,        mus_e3m3,   NONE,        NONE       },
+    /* 44 */ { NONE,        NONE,        NONE,        mus_e1m5,   NONE,        NONE       },
+    /* 45 */ { NONE,        NONE,        NONE,        mus_e2m7,   NONE,        NONE       },
+    /* 46 */ { NONE,        NONE,        NONE,        mus_e2m4,   NONE,        NONE       },
+    /* 47 */ { NONE,        NONE,        NONE,        mus_e2m6,   NONE,        NONE       },
+    /* 48 */ { NONE,        NONE,        NONE,        mus_e2m5,   NONE,        NONE       },
+    /* 49 */ { NONE,        NONE,        NONE,        mus_e1m9,   NONE,        NONE       },
+    /* 50 */ { NONE,        NONE,        NONE,        NONE,       NONE,        NONE       },
+    /* 51 */ { NONE,        NONE,        NONE,        mus_e5m1,   NONE,        NONE       },
+    /* 52 */ { NONE,        NONE,        NONE,        mus_e5m2,   NONE,        NONE       },
+    /* 53 */ { NONE,        NONE,        NONE,        mus_e5m3,   NONE,        NONE       },
+    /* 54 */ { NONE,        NONE,        NONE,        mus_e5m4,   NONE,        NONE       },
+    /* 55 */ { NONE,        NONE,        NONE,        mus_e5m5,   NONE,        NONE       },
+    /* 56 */ { NONE,        NONE,        NONE,        mus_e5m6,   NONE,        NONE       },
+    /* 57 */ { NONE,        NONE,        NONE,        mus_e5m7,   NONE,        NONE       },
+    /* 58 */ { NONE,        NONE,        NONE,        mus_e5m8,   NONE,        NONE       },
+    /* 59 */ { NONE,        NONE,        NONE,        mus_e5m9,   NONE,        NONE       }
+};
+
 ////
 //// STATUS BAR CODE
 ////
@@ -1315,124 +1316,124 @@ cheatseq_t cheat_buddha = CHEAT("mumu", 0);
 //    else
 //        ST_DiffDraw();
 //}
-//
-//typedef void (*load_callback_t)(char *lumpname, patch_t **variable);
-//
-//static void ST_LoadUnloadGraphics(load_callback_t callback)
-//{
-//    int     facenum = 0;
-//    char    namebuf[9];
-//
-//    // Load the numbers, tall and short
-//    for (int i = 0; i < 10; i++)
-//    {
-//        M_snprintf(namebuf, sizeof(namebuf), "STTNUM%i", i);
-//        callback(namebuf, &tallnum[i]);
-//        M_snprintf(namebuf, sizeof(namebuf), "STYSNUM%i", i);
-//        callback(namebuf, &shortnum[i]);
-//    }
-//
-//    callback("STTPRCNT", &tallpercent);
-//    emptytallpercent = V_IsEmptyPatch(tallpercent);
-//    tallpercentwidth = (emptytallpercent ? 0 : SHORT(tallpercent->width));
-//
-//    // key cards
-//    for (int i = 0; i < 6; i++)
-//    {
-//        M_snprintf(namebuf, sizeof(namebuf), "STKEYS%i", i);
-//        callback(namebuf, &keys[i]);
-//    }
-//
-//    // arms background
-//    callback("STARMS", &armsbg);
-//
-//    armsbg->leftoffset = 0;
-//    armsbg->topoffset = 0;
-//
-//    // arms ownership widgets
-//    // [BH] now manually drawn
-//    for (int i = 0; i < 6; i++)
-//    {
-//        M_snprintf(namebuf, sizeof(namebuf), "STGNUM%i", i + 2);
-//
-//        // gray #
-//        callback(namebuf, &arms[i][0]);
-//
-//        // yellow #
-//        arms[i][1] = shortnum[i + 2];
-//    }
-//
-//    // status bar background bits
-//    callback("STBAR", &sbar);
-//    callback("STBAR2", &sbar2); // [BH] double resolution
-//
-//    sbar->leftoffset = 0;
-//    sbar->topoffset = 0;
-//    sbar2->leftoffset = 0;
-//    sbar2->topoffset = 0;
-//
-//    // face states
-//    for (int i = 0; i < ST_NUMPAINFACES; i++)
-//    {
-//        for (int j = 0; j < ST_NUMSTRAIGHTFACES; j++)
-//        {
-//            M_snprintf(namebuf, sizeof(namebuf), "STFST%i%i", i, j);
-//            callback(namebuf, &faces[facenum++]);
-//        }
-//
-//        M_snprintf(namebuf, sizeof(namebuf), "STFTR%i0", i);          // turn right
-//        callback(namebuf, &faces[facenum++]);
-//        M_snprintf(namebuf, sizeof(namebuf), "STFTL%i0", i);          // turn left
-//        callback(namebuf, &faces[facenum++]);
-//        M_snprintf(namebuf, sizeof(namebuf), "STFOUCH%i", i);         // ouch!
-//        callback(namebuf, &faces[facenum++]);
-//        M_snprintf(namebuf, sizeof(namebuf), "STFEVL%i", i);          // evil grin ;)
-//        callback(namebuf, &faces[facenum++]);
-//        M_snprintf(namebuf, sizeof(namebuf), "STFKILL%i", i);         // pissed off
-//        callback(namebuf, &faces[facenum++]);
-//    }
-//
-//    callback("STFGOD0", &faces[facenum++]);
-//    callback("STFDEAD0", &faces[facenum]);
-//
-//    // back screen
-//    callback((gamemode == commercial ? "GRNROCK" : "FLOOR7_2"), &grnrock);
-//    callback("BRDR_T", &brdr_t);
-//    callback("BRDR_B", &brdr_b);
-//    callback("BRDR_L", &brdr_l);
-//    callback("BRDR_R", &brdr_r);
-//    callback("BRDR_TL", &brdr_tl);
-//    callback("BRDR_TR", &brdr_tr);
-//    callback("BRDR_BL", &brdr_bl);
-//    callback("BRDR_BR", &brdr_br);
-//
-//    // [BH] fix display of viewborder for wads that have these patches without offsets
-//    brdr_t->leftoffset = 0;
-//    brdr_t->topoffset = -5;
-//    brdr_b->leftoffset = 0;
-//    brdr_b->topoffset = 0;
-//    brdr_l->leftoffset = -5;
-//    brdr_l->topoffset = 0;
-//    brdr_r->leftoffset = 0;
-//    brdr_r->topoffset = 0;
-//    brdr_tl->leftoffset = -5;
-//    brdr_tl->topoffset = -5;
-//    brdr_tr->leftoffset = 0;
-//    brdr_tr->topoffset = -5;
-//    brdr_bl->leftoffset = -5;
-//    brdr_bl->topoffset = 0;
-//    brdr_br->leftoffset = 0;
-//    brdr_br->topoffset = 0;
-//}
-//
-//static void ST_LoadCallback(char *lumpname, patch_t **variable)
-//{
-//    if (M_StringCompare(lumpname, "STARMS") || M_StringCompare(lumpname, "STBAR") || M_StringCompare(lumpname, "STFGOD0"))
-//        *variable = ((FREEDOOM && !modifiedgame) || hacx ? W_CacheLastLumpName(lumpname) : W_CacheLumpName(lumpname));
-//    else
-//        *variable = W_CacheLumpName(lumpname);
-//}
-//
+
+typedef void (*load_callback_t)(char *lumpname, patch_t **variable);
+
+static void ST_LoadUnloadGraphics(load_callback_t callback)
+{
+    int     facenum = 0;
+    char    namebuf[9];
+
+    // Load the numbers, tall and short
+    for (int i = 0; i < 10; i++)
+    {
+        M_snprintf(namebuf, sizeof(namebuf), "STTNUM%i", i);
+        callback(namebuf, &tallnum[i]);
+        M_snprintf(namebuf, sizeof(namebuf), "STYSNUM%i", i);
+        callback(namebuf, &shortnum[i]);
+    }
+
+    callback("STTPRCNT", &tallpercent);
+    emptytallpercent = V_IsEmptyPatch(tallpercent);
+    tallpercentwidth = (emptytallpercent ? 0 : SHORT(tallpercent->width));
+
+    // key cards
+    for (int i = 0; i < 6; i++)
+    {
+        M_snprintf(namebuf, sizeof(namebuf), "STKEYS%i", i);
+        callback(namebuf, &keys[i]);
+    }
+
+    // arms background
+    callback("STARMS", &armsbg);
+
+    armsbg->leftoffset = 0;
+    armsbg->topoffset = 0;
+
+    // arms ownership widgets
+    // [BH] now manually drawn
+    for (int i = 0; i < 6; i++)
+    {
+        M_snprintf(namebuf, sizeof(namebuf), "STGNUM%i", i + 2);
+
+        // gray #
+        callback(namebuf, &arms[i][0]);
+
+        // yellow #
+        arms[i][1] = shortnum[i + 2];
+    }
+
+    // status bar background bits
+    callback("STBAR", &sbar);
+    callback("STBAR2", &sbar2); // [BH] double resolution
+
+    sbar->leftoffset = 0;
+    sbar->topoffset = 0;
+    sbar2->leftoffset = 0;
+    sbar2->topoffset = 0;
+
+    // face states
+    for (int i = 0; i < ST_NUMPAINFACES; i++)
+    {
+        for (int j = 0; j < ST_NUMSTRAIGHTFACES; j++)
+        {
+            M_snprintf(namebuf, sizeof(namebuf), "STFST%i%i", i, j);
+            callback(namebuf, &faces[facenum++]);
+        }
+
+        M_snprintf(namebuf, sizeof(namebuf), "STFTR%i0", i);          // turn right
+        callback(namebuf, &faces[facenum++]);
+        M_snprintf(namebuf, sizeof(namebuf), "STFTL%i0", i);          // turn left
+        callback(namebuf, &faces[facenum++]);
+        M_snprintf(namebuf, sizeof(namebuf), "STFOUCH%i", i);         // ouch!
+        callback(namebuf, &faces[facenum++]);
+        M_snprintf(namebuf, sizeof(namebuf), "STFEVL%i", i);          // evil grin ;)
+        callback(namebuf, &faces[facenum++]);
+        M_snprintf(namebuf, sizeof(namebuf), "STFKILL%i", i);         // pissed off
+        callback(namebuf, &faces[facenum++]);
+    }
+
+    callback("STFGOD0", &faces[facenum++]);
+    callback("STFDEAD0", &faces[facenum]);
+
+    // back screen
+    callback((gamemode == commercial ? "GRNROCK" : "FLOOR7_2"), &grnrock);
+    callback("BRDR_T", &brdr_t);
+    callback("BRDR_B", &brdr_b);
+    callback("BRDR_L", &brdr_l);
+    callback("BRDR_R", &brdr_r);
+    callback("BRDR_TL", &brdr_tl);
+    callback("BRDR_TR", &brdr_tr);
+    callback("BRDR_BL", &brdr_bl);
+    callback("BRDR_BR", &brdr_br);
+
+    // [BH] fix display of viewborder for wads that have these patches without offsets
+    brdr_t->leftoffset = 0;
+    brdr_t->topoffset = -5;
+    brdr_b->leftoffset = 0;
+    brdr_b->topoffset = 0;
+    brdr_l->leftoffset = -5;
+    brdr_l->topoffset = 0;
+    brdr_r->leftoffset = 0;
+    brdr_r->topoffset = 0;
+    brdr_tl->leftoffset = -5;
+    brdr_tl->topoffset = -5;
+    brdr_tr->leftoffset = 0;
+    brdr_tr->topoffset = -5;
+    brdr_bl->leftoffset = -5;
+    brdr_bl->topoffset = 0;
+    brdr_br->leftoffset = 0;
+    brdr_br->topoffset = 0;
+}
+
+static void ST_LoadCallback( char *lumpname, patch_t **variable )
+{
+	if( M_StringCompare( lumpname, "STARMS" ) || M_StringCompare( lumpname, "STBAR" ) || M_StringCompare( lumpname, "STFGOD0" ) )
+		*variable = ( ( FREEDOOM && !modifiedgame ) || hacx ? W_CacheLastLumpName( lumpname ) : W_CacheLumpName( lumpname ) );
+	else
+		*variable = W_CacheLumpName( lumpname );
+}
+
 //static void ST_InitData(void)
 //{
 //    st_firsttime = true;
@@ -1501,28 +1502,28 @@ cheatseq_t cheat_buddha = CHEAT("mumu", 0);
 //    ST_InitData();
 //    ST_CreateWidgets();
 //}
-//
-//void ST_Init(void)
-//{
-//    ST_LoadUnloadGraphics(&ST_LoadCallback);
-//
-//    screens[4] = malloc(ST_WIDTH * SBARHEIGHT);
-//
-//    // [BH] fix evil grin being displayed when picking up first item after
-//    // loading save game or entering IDFA/IDKFA cheat
-//    for (int i = 0; i < NUMWEAPONS; i++)
-//        oldweaponsowned[i] = false;
-//
-//    // [BH] no plasma cells in shareware
-//    if (gamemode == shareware)
-//        maxammo[am_cell] = 0;
-//
-//#if SCREENSCALE == 1
-//    usesmallnums = false;
-//#else
-//    usesmallnums = ((!STYSNUM0 && STBAR == 2) || gamemode == shareware);
-//#endif
-//
-//    STLib_Init();
-//    ST_InitCheats();
-//}
+
+void ST_Init(void)
+{
+    ST_LoadUnloadGraphics(&ST_LoadCallback);
+
+    screens[4] = malloc(ST_WIDTH * SBARHEIGHT);
+
+    // [BH] fix evil grin being displayed when picking up first item after
+    // loading save game or entering IDFA/IDKFA cheat
+    for (int i = 0; i < NUMWEAPONS; i++)
+        oldweaponsowned[i] = false;
+
+    // [BH] no plasma cells in shareware
+    if (gamemode == shareware)
+        maxammo[am_cell] = 0;
+
+#if SCREENSCALE == 1
+    usesmallnums = false;
+#else
+    usesmallnums = ((!STYSNUM0 && STBAR == 2) || gamemode == shareware);
+#endif
+
+    STLib_Init();
+    ST_InitCheats();
+}

@@ -1,21 +1,25 @@
-#include "doomstat.h"
-#include "i_swap.h"
-#include "m_config.h"
 #include "st_lib.h"
-#include "v_video.h"
+#include "doomdef.h"
+#include "doomstruct.h"
+#include "doomvars.h"
 
-dboolean    usesmallnums;
+//#include "doomstat.h"
+//#include "i_swap.h"
+//#include "m_config.h"
+#include "v_video.h"
+//
+//dboolean    usesmallnums;
 
 static void (*statbarnumfunc)(int, int, int, int, int, patch_t *);
 
-void STlib_InitNum(st_number_t *n, int x, int y, patch_t **pl, int *num, int width)
-{
-    n->x = x;
-    n->y = y;
-    n->width = width;
-    n->num = num;
-    n->p = pl;
-}
+//void STlib_InitNum(st_number_t *n, int x, int y, patch_t **pl, int *num, int width)
+//{
+//    n->x = x;
+//    n->y = y;
+//    n->width = width;
+//    n->num = num;
+//    n->p = pl;
+//}
 
 static void STlib_DrawLowNum(int number, int color, int shadow, int x, int y, patch_t *patch)
 {
@@ -76,98 +80,98 @@ static void STlib_DrawHighNum(int number, int color, int shadow, int x, int y, p
     }
 }
 
-void STlib_UpdateBigNum(st_number_t *n)
-{
-    int num = MAX(0, *n->num);
-
-    // if non-number, do not draw it
-    if (num == 1994)
-        return;
-    else
-    {
-        int x = n->x;
-        int w = SHORT(n->p[0]->width);
-
-        // in the special case of 0, you draw 0
-        if (!num)
-            V_DrawPatch(x - w, n->y, 0, n->p[0]);
-        else
-        {
-            int numdigits = n->width;
-
-            // draw the new number
-            while (num && numdigits--)
-            {
-                x -= w;
-                V_DrawPatch(x, n->y, 0, n->p[num % 10]);
-                num /= 10;
-            }
-        }
-    }
-}
-
-void STlib_UpdateSmallNum(st_number_t *n)
-{
-    int num = MAX(0, *n->num);
-    int x = n->x;
-
-    // in the special case of 0, you draw 0
-    if (!num)
-        statbarnumfunc(0, 160, 47, x - 4, n->y, n->p[0]);
-    else
-    {
-        int numdigits = n->width;
-
-        // draw the new number
-        while (num && numdigits--)
-        {
-            x -= 4;
-            statbarnumfunc(num % 10, 160, 47, x, n->y, n->p[num % 10]);
-            num /= 10;
-        }
-    }
-}
-
-void STlib_InitPercent(st_percent_t *p, int x, int y, patch_t **pl, int *num, patch_t *percent)
-{
-    STlib_InitNum(&p->n, x, y, pl, num, 3);
-    p->p = percent;
-}
-
-void STlib_UpdatePercent(st_percent_t *per, int refresh)
-{
-    if (refresh)
-        V_DrawPatch(per->n.x, per->n.y, 0, per->p);
-
-    STlib_UpdateBigNum(&per->n);
-}
-
-void STlib_InitMultIcon(st_multicon_t *mi, int x, int y, patch_t **il, int *inum)
-{
-    mi->x = x;
-    mi->y = y;
-    mi->oldinum = -1;
-    mi->inum = inum;
-    mi->p = il;
-}
-
-void STlib_UpdateMultIcon(st_multicon_t *mi, dboolean refresh)
-{
-    if ((mi->oldinum != *mi->inum || refresh) && *mi->inum != -1)
-    {
-        V_DrawPatch(mi->x, mi->y, 0, mi->p[*mi->inum]);
-        mi->oldinum = *mi->inum;
-    }
-}
-
-void STlib_UpdateArmsIcon(st_multicon_t *mi, dboolean refresh, int i)
-{
-    if ((mi->oldinum != *mi->inum || refresh) && *mi->inum != -1)
-    {
-        statbarnumfunc(i + 2, (*mi->inum ? 160 : 93), 47, mi->x, mi->y, mi->p[*mi->inum]);
-        mi->oldinum = *mi->inum;
-    }
-}
+//void STlib_UpdateBigNum(st_number_t *n)
+//{
+//    int num = MAX(0, *n->num);
+//
+//    // if non-number, do not draw it
+//    if (num == 1994)
+//        return;
+//    else
+//    {
+//        int x = n->x;
+//        int w = SHORT(n->p[0]->width);
+//
+//        // in the special case of 0, you draw 0
+//        if (!num)
+//            V_DrawPatch(x - w, n->y, 0, n->p[0]);
+//        else
+//        {
+//            int numdigits = n->width;
+//
+//            // draw the new number
+//            while (num && numdigits--)
+//            {
+//                x -= w;
+//                V_DrawPatch(x, n->y, 0, n->p[num % 10]);
+//                num /= 10;
+//            }
+//        }
+//    }
+//}
+//
+//void STlib_UpdateSmallNum(st_number_t *n)
+//{
+//    int num = MAX(0, *n->num);
+//    int x = n->x;
+//
+//    // in the special case of 0, you draw 0
+//    if (!num)
+//        statbarnumfunc(0, 160, 47, x - 4, n->y, n->p[0]);
+//    else
+//    {
+//        int numdigits = n->width;
+//
+//        // draw the new number
+//        while (num && numdigits--)
+//        {
+//            x -= 4;
+//            statbarnumfunc(num % 10, 160, 47, x, n->y, n->p[num % 10]);
+//            num /= 10;
+//        }
+//    }
+//}
+//
+//void STlib_InitPercent(st_percent_t *p, int x, int y, patch_t **pl, int *num, patch_t *percent)
+//{
+//    STlib_InitNum(&p->n, x, y, pl, num, 3);
+//    p->p = percent;
+//}
+//
+//void STlib_UpdatePercent(st_percent_t *per, int refresh)
+//{
+//    if (refresh)
+//        V_DrawPatch(per->n.x, per->n.y, 0, per->p);
+//
+//    STlib_UpdateBigNum(&per->n);
+//}
+//
+//void STlib_InitMultIcon(st_multicon_t *mi, int x, int y, patch_t **il, int *inum)
+//{
+//    mi->x = x;
+//    mi->y = y;
+//    mi->oldinum = -1;
+//    mi->inum = inum;
+//    mi->p = il;
+//}
+//
+//void STlib_UpdateMultIcon(st_multicon_t *mi, dboolean refresh)
+//{
+//    if ((mi->oldinum != *mi->inum || refresh) && *mi->inum != -1)
+//    {
+//        V_DrawPatch(mi->x, mi->y, 0, mi->p[*mi->inum]);
+//        mi->oldinum = *mi->inum;
+//    }
+//}
+//
+//void STlib_UpdateArmsIcon(st_multicon_t *mi, dboolean refresh, int i)
+//{
+//    if ((mi->oldinum != *mi->inum || refresh) && *mi->inum != -1)
+//    {
+//        statbarnumfunc(i + 2, (*mi->inum ? 160 : 93), 47, mi->x, mi->y, mi->p[*mi->inum]);
+//        mi->oldinum = *mi->inum;
+//    }
+//}
 
 void STLib_Init(void)
 {

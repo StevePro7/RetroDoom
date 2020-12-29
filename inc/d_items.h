@@ -4,7 +4,7 @@
 #include "doomdef.h"
 #include "doomtype.h"
 
-#define BFGCELLS    40
+//#define BFGCELLS    40
 
 // Weapon info: sprite frames, ammunition use.
 typedef struct

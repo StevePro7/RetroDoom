@@ -1209,4 +1209,37 @@ typedef int32_t fixed_t;
 #define HU_ALTHUDMSGY       12
 
 
+// st_stuff.h
+// Palette indices.
+// For damage/bonus red-/gold-shifts
+#define STARTREDPALS            1
+#define STARTBONUSPALS          9
+#define NUMREDPALS              8
+#define NUMBONUSPALS            4
+
+// Size of status bar.
+// Now sensitive for scaling.
+#define ST_WIDTH                SCREENWIDTH
+
+// Number of status faces.
+#define ST_NUMPAINFACES         5
+#define ST_NUMSTRAIGHTFACES     3
+#define ST_NUMTURNFACES         2
+#define ST_NUMSPECIALFACES      3
+
+#define ST_FACESTRIDE           (ST_NUMSTRAIGHTFACES + ST_NUMTURNFACES + ST_NUMSPECIALFACES)
+
+#define ST_NUMEXTRAFACES        2
+
+#define ST_NUMFACES             (ST_FACESTRIDE * ST_NUMPAINFACES + ST_NUMEXTRAFACES)
+
+#define ST_STRAIGHTFACECOUNT    (TICRATE / 2)
+
+#define MAPCHANGETICS           TICRATE
+
+
+// d_item.c
+#define BFGCELLS    40
+
+
 #endif

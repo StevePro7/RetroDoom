@@ -47,9 +47,9 @@
 //
 //// Called when the console player is spawned on each level.
 //void ST_Start(void);
-//
-//// Called by startup code.
-//void ST_Init(void);
+
+// Called by startup code.
+void ST_Init(void);
 
 //extern dboolean idclev;
 //extern int      idclevtics;

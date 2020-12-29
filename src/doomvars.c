@@ -390,10 +390,25 @@ patch_t                     *brdr_tr;
 patch_t                     *brdr_bl;
 patch_t                     *brdr_br;
 
+// used for evil grin
+dboolean                    oldweaponsowned[ NUMWEAPONS ];
+
 int                         facebackcolor;// = facebackcolor_default;
 int                         r_berserkintensity;// = r_berserkintensity_default;
 uint64_t                    stat_cheated;// = 0;
 int                         st_palette;// = 0;
+
+// 0-9, tall numbers
+patch_t                     *tallnum[ 10 ];
+
+// tall % sign
+patch_t                     *tallpercent;
+short                       tallpercentwidth;
+dboolean                    emptytallpercent;
+
+// face status patches
+patch_t                     *faces[ ST_NUMFACES ];
+
 
 
 // i_gamepad.c
@@ -417,6 +432,8 @@ dboolean        infiniteheight; //=infiniteheight_default;
 uint64_t        stat_distancetraveled; //=0;
 
 dboolean    hitwall;
+
+
 
 
 // c_cmd.c
@@ -2274,3 +2291,7 @@ dboolean    canmouselook;// = false;
 
 // w_merge.c
 dboolean                SHT2A0;
+
+
+// st_lib.c
+dboolean    usesmallnums;

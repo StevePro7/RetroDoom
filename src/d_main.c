@@ -30,6 +30,7 @@
 #include "p_setup.h"
 #include "r_main.h"
 #include "s_sound.h"
+#include "st_stuff.h"
 #include "v_video.h"
 #include "version.h"
 #include "w_wad.h"
@@ -874,7 +875,7 @@ static void D_DoomMainSetup( void )
 
 	HU_Init();
 
-	//ST_Init();
+	ST_Init();
 
 	//AM_Init();
 
