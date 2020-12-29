@@ -439,6 +439,8 @@ int                         gp_vibrate_weapons; //=gp_vibrate_weapons_default;
 line_t          **spechit;
 int             numspechit;// = 0;
 
+dboolean        infight;
+
 dboolean        infiniteheight; //=infiniteheight_default;
 uint64_t        stat_distancetraveled; //=0;
 

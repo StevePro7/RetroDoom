@@ -1160,15 +1160,15 @@ static void AM_DoFollowPlayer(void)
 //        ftom_zoommul = FRACUNIT;
 //    }
 //}
+
 //
-////
-//// Clear automap frame buffer.
-////
-//void AM_ClearFB(void)
-//{
-//    memset(mapscreen, backcolor, maparea);
-//}
+// Clear automap frame buffer.
 //
+void AM_ClearFB(void)
+{
+    memset(mapscreen, backcolor, maparea);
+}
+
 ////
 //// Automap clipping of lines.
 ////

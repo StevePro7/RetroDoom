@@ -9,8 +9,8 @@
 //
 //// Called by main loop, called instead of view drawer if automap active.
 //void AM_Drawer(void);
-//void AM_ClearFB(void);
-//
+void AM_ClearFB(void);
+
 //void AM_Start(const dboolean mainwindow);
 //void AM_ClearMarks(void);
 //void AM_ToggleFollowMode(void);

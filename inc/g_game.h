@@ -1,6 +1,7 @@
 #if !defined(__G_GAME_H__)
 #define __G_GAME_H__
 
+#include "doomenum.h"
 //#include "d_event.h"
 //#include "i_video.h"
 //#include "w_file.h"
@@ -17,12 +18,12 @@
 // GAME
 //
 //void G_InitNew(skill_t skill, int ep, int map);
-//
-//// Can be called by the startup code or M_Responder.
-//// A normal game starts at map 1,
-//// but a warp test can start elsewhere
-//void G_DeferredInitNew(skill_t skill, int ep, int map);
-//
+
+// Can be called by the startup code or M_Responder.
+// A normal game starts at map 1,
+// but a warp test can start elsewhere
+void G_DeferredInitNew(skill_t skill, int ep, int map);
+
 //void G_DeferredLoadLevel(skill_t skill, int ep, int map);
 
 // Can be called by the startup code or M_Responder,

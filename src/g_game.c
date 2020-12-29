@@ -4,6 +4,7 @@
 #include "doomenum.h"
 #include "doomvars.h"
 #include "d_event.h"
+#include "m_config.h"
 #include "m_fixed.h"
 #include "m_misc.h"
 
@@ -1565,33 +1566,33 @@ void G_LoadGame(char *name)
 //    gameaction = ga_nothing;
 //    drawdisk = false;
 //}
-//
-//static skill_t  d_skill;
-//static int      d_episode;
-//static int      d_map;
-//
-//void G_DeferredInitNew(skill_t skill, int ep, int map)
-//{
-//    d_skill = skill;
-//    d_episode = ep;
-//    d_map = map;
-//    gameaction = ga_newgame;
-//    infight = false;
-//
-//    if (skill == sk_baby)
-//        stat_skilllevel_imtooyoungtodie = SafeAdd(stat_skilllevel_imtooyoungtodie, 1);
-//    else if (skill == sk_easy)
-//        stat_skilllevel_heynottoorough = SafeAdd(stat_skilllevel_heynottoorough, 1);
-//    else if (skill == sk_medium)
-//        stat_skilllevel_hurtmeplenty = SafeAdd(stat_skilllevel_hurtmeplenty, 1);
-//    else if (skill == sk_hard)
-//        stat_skilllevel_ultraviolence = SafeAdd(stat_skilllevel_ultraviolence, 1);
-//    else
-//        stat_skilllevel_nightmare = SafeAdd(stat_skilllevel_nightmare, 1);
-//
-//    M_SaveCVARs();
-//}
-//
+
+static skill_t  d_skill;
+static int      d_episode;
+static int      d_map;
+
+void G_DeferredInitNew( skill_t skill, int ep, int map )
+{
+	d_skill = skill;
+	d_episode = ep;
+	d_map = map;
+	gameaction = ga_newgame;
+	infight = false;
+
+	if( skill == sk_baby )
+		stat_skilllevel_imtooyoungtodie = SafeAdd( stat_skilllevel_imtooyoungtodie, 1 );
+	else if( skill == sk_easy )
+		stat_skilllevel_heynottoorough = SafeAdd( stat_skilllevel_heynottoorough, 1 );
+	else if( skill == sk_medium )
+		stat_skilllevel_hurtmeplenty = SafeAdd( stat_skilllevel_hurtmeplenty, 1 );
+	else if( skill == sk_hard )
+		stat_skilllevel_ultraviolence = SafeAdd( stat_skilllevel_ultraviolence, 1 );
+	else
+		stat_skilllevel_nightmare = SafeAdd( stat_skilllevel_nightmare, 1 );
+
+	M_SaveCVARs();
+}
+
 ////
 //// G_DeferredLoadLevel
 //// [BH] Called when the IDCLEV cheat is used.

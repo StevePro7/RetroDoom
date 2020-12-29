@@ -21,6 +21,7 @@
 #include "doomvars.h"
 #include "g_game.h"
 #include "hu_stuff.h"
+#include "i_swap.h"
 #include "i_system.h"
 #include "i_timer.h"
 #include "i_video.h"
@@ -184,6 +185,30 @@ static patch_t  *logolump[ 18 ];
 static patch_t  *titlelump;
 static patch_t  *creditlump;
 static byte     *splashpal;
+
+//
+// D_AdvanceTitle
+// Called after each title sequence finishes
+//
+void D_AdvanceTitle( void )
+{
+	advancetitle = true;
+	forceconsoleblurredraw = true;
+}
+
+//
+// D_StartTitle
+//
+void D_StartTitle( int page )
+{
+	gameaction = ga_nothing;
+	titlesequence = page;
+
+	if( mapwindow )
+		AM_ClearFB();
+
+	D_AdvanceTitle();
+}
 
 
 static void D_ProcessDehInWad( void )
@@ -894,6 +919,69 @@ static void D_DoomMainSetup( void )
 			C_StrCVAROutput( stringize( alwaysrun ), "on" );
 
 		G_LoadGame( P_SaveGameFile( startloadgame ) );
+	}
+
+	fineprintlump = W_CacheLumpName( "FINEPRNT" );
+	splashpal = W_CacheLumpName( "SPLSHPAL" );
+
+	for( int i = 0; i < 18; i++ )
+	{
+		char    buffer[ 9 ];
+
+		M_snprintf( buffer, sizeof( buffer ), "DRLOGO%02d", i + 1 );
+		logolump[ i ] = W_CacheLumpName( buffer );
+	}
+
+	if( autosigil )
+	{
+		titlelump = W_CacheLastLumpName( ( TITLEPIC ? "TITLEPIC" : ( DMENUPIC ? "DMENUPIC" : "INTERPIC" ) ) );
+		creditlump = W_CacheLastLumpName( "CREDIT" );
+	}
+	else
+	{
+		titlelump = W_CacheLumpName( ( TITLEPIC ? "TITLEPIC" : ( DMENUPIC ? "DMENUPIC" : "INTERPIC" ) ) );
+		creditlump = W_CacheLumpName( "CREDIT" );
+	}
+
+	if( ( unity = ( TITLEPIC && lumpinfo[ W_GetLastNumForName( "TITLEPIC" ) ]->wadfile->type == IWAD
+		&& SHORT( titlelump->width ) == UNITYWIDTH ) ) )
+	{
+		//C_Warning( 1, "Certain graphics in this IWAD are cropped to fit <i><b>" PACKAGE_NAME "'s</b></i> 4:3 aspect ratio." );
+		loge( "Certain graphics in this IWAD are cropped to fit <i><b>" PACKAGE_NAME "'s</b></i> 4:3 aspect ratio.\n" );
+	}
+
+	if( gameaction != ga_loadgame )
+	{
+		if( autostart )
+		{
+			menuactive = false;
+			splashscreen = false;
+			I_InitKeyboard();
+
+			if( alwaysrun )
+				C_StrCVAROutput( stringize( alwaysrun ), "on" );
+
+			//C_Output( "Warping to %s...", lumpname );
+			logd( "Warping to %s...\n", lumpname );
+			G_DeferredInitNew( startskill, startepisode, startmap );
+		}
+#if SCREENSCALE == 1
+		else
+		{
+			menuactive = false;
+			splashscreen = false;
+			D_StartTitle( 1 );
+		}
+#else
+		else if( M_CheckParm( "-nosplash" ) )
+		{
+			menuactive = false;
+			splashscreen = false;
+			D_StartTitle( 1 );
+		}
+		else
+			D_StartTitle( 0 );
+#endif
 	}
 
 }
