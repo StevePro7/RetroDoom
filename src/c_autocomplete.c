@@ -1,5 +1,6 @@
 #include "c_console.h"
 #include "doomdef.h"
+#include "doomstruct.h"
 
 autocomplete_t autocompletelist[] =
 {

@@ -253,7 +253,7 @@ patch_t                 *consolefont[ CONSOLEFONTSIZE ];
 patch_t                 *degree;
 patch_t                 *unknownchar;
 patch_t                 *altunderscores;
-patch_t                 *brand;
+//patch_t                 *brand;
 patch_t                 *lsquote;
 patch_t                 *ldquote;
 
@@ -277,6 +277,7 @@ int                     warninglevel;// = warninglevel_default;
 
 dboolean                scrollbardrawn;
 const kern_t altkern[];
+autocomplete_t autocompletelist[];
 
 
 // p_inter.c

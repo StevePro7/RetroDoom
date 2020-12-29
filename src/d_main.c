@@ -880,7 +880,7 @@ static void D_DoomMainSetup( void )
 
 	AM_Init();
 
-	//C_Init();
+	C_Init();
 }
 
 //

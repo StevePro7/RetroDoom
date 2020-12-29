@@ -1,4 +1,7 @@
 #include "c_console.h"
+#include "doomdef.h"
+#include "doomenum.h"
+#include "doomstruct.h"
 #include "doomvars.h"
 
 #if defined(_WIN32)
@@ -27,7 +30,7 @@
 //#include "st_stuff.h"
 #include "v_video.h"
 //#include "version.h"
-//#include "w_wad.h"
+#include "w_wad.h"
 //
 //console_t               *console;
 //
@@ -42,7 +45,7 @@ int                     consoledirection = -1;
 //patch_t                 *degree;
 //patch_t                 *unknownchar;
 //patch_t                 *altunderscores;
-//patch_t                 *brand;
+patch_t                 *brand;
 //patch_t                 *lsquote;
 //patch_t                 *ldquote;
 
@@ -566,241 +569,241 @@ const kern_t altkern[] =
 	{ 'v',  'a',  -1 }, { 'v',  'j',  -2 }, { 'w',  'j',  -2 }, { 'x',  'j',  -2 }, { 'z',  'j',  -2 }, { '\0', '\0',  0 }
 };
 
-//int C_TextWidth(const char *text, const dboolean formatting, const dboolean kerning)
-//{
-//    int             bold = 0;
-//    dboolean        italics = false;
-//    const int       len = (int)strlen(text);
-//    unsigned char   prevletter = '\0';
-//    int             w = 0;
-//
-//    for (int i = 0; i < len; i++)
-//    {
-//        const unsigned char letter = text[i];
-//        unsigned char       nextletter;
-//
-//        if (letter == ' ')
-//            w += spacewidth;
-//        else if (letter == '<' && i < len - 2 && tolower(text[i + 1]) == 'b' && text[i + 2] == '>' && formatting)
-//        {
-//            bold = (italics ? 2 : 1);
-//            i += 2;
-//        }
-//        else if (letter == '<' && i < len - 3 && text[i + 1] == '/' && tolower(text[i + 2]) == 'b' && text[i + 3] == '>' && formatting)
-//        {
-//            bold = 0;
-//            i += 3;
-//        }
-//        else if (letter == '<' && i < len - 2 && tolower(text[i + 1]) == 'i' && text[i + 2] == '>' && formatting)
-//        {
-//            italics = true;
-//            i += 2;
-//        }
-//        else if (letter == '<' && i < len - 3 && text[i + 1] == '/' && tolower(text[i + 2]) == 'i' && text[i + 3] == '>' && formatting)
-//        {
-//            italics = false;
-//            i += 3;
-//            w++;
-//        }
-//        else if (letter == 153)
-//        {
-//            w += SHORT(trademark->width);
-//            i++;
-//        }
-//        else if (letter == '(' && i < len - 3 && tolower(text[i + 1]) == 't' && tolower(text[i + 2]) == 'm' && text[i + 3] == ')'
-//            && formatting)
-//        {
-//            w += SHORT(trademark->width);
-//            i += 3;
-//        }
-//        else if (letter == 169)
-//        {
-//            w += SHORT(copyright->width);
-//            i++;
-//        }
-//        else if (letter == '(' && i < len - 2 && tolower(text[i + 1]) == 'c' && text[i + 2] == ')' && formatting)
-//        {
-//            w += SHORT(copyright->width);
-//            i += 2;
-//        }
-//        else if (letter == 174)
-//        {
-//            w += SHORT(regomark->width);
-//            i++;
-//        }
-//        else if (letter == '(' && i < len - 2 && tolower(text[i + 1]) == 'r' && text[i + 2] == ')' && formatting)
-//        {
-//            w += SHORT(regomark->width);
-//            i += 2;
-//        }
-//        else if (letter == 176)
-//        {
-//            w += SHORT(degree->width);
-//            i++;
-//        }
-//        else if (letter == 215 || (letter == 'x' && isdigit(prevletter)
-//            && ((nextletter = (i < len - 1 ? text[i + 1] : '\0')) == '\0' || isdigit(nextletter))))
-//            w += SHORT(multiply->width);
-//        else if (!i || prevletter == ' ' || prevletter == '(' || prevletter == '[' || prevletter == '\t')
-//        {
-//            if (letter == '\'')
-//                w += SHORT(lsquote->width);
-//            else if (letter == '\"')
-//                w += SHORT(ldquote->width);
-//            else
-//            {
-//                const int   c = letter - CONSOLEFONTSTART;
-//
-//                w += SHORT((c >= 0 && c < CONSOLEFONTSIZE ? consolefont[c] : unknownchar)->width);
-//            }
-//        }
-//        else
-//        {
-//            const int   c = letter - CONSOLEFONTSTART;
-//
-//            w += SHORT((c >= 0 && c < CONSOLEFONTSIZE ? consolefont[c] : unknownchar)->width);
-//
-//            if (letter == '-' && italics)
-//                w++;
-//        }
-//
-//        if (kerning)
-//        {
-//            for (int j = 0; altkern[j].char1; j++)
-//                if (prevletter == altkern[j].char1 && letter == altkern[j].char2)
-//                {
-//                    w += altkern[j].adjust;
-//                    break;
-//                }
-//
-//            if (prevletter == '/' && italics)
-//                w -= 2;
-//            else if (prevletter == '.' && letter == ' ' && !bold && !italics)
-//                w++;
-//        }
-//
-//        prevletter = letter;
-//    }
-//
-//    return w;
-//}
-//
-//static void C_DrawScrollbar(void)
-//{
-//    const int   trackend = CONSOLESCROLLBARHEIGHT * CONSOLEWIDTH;
-//    const int   facestart = CONSOLESCROLLBARHEIGHT * (outputhistory == -1 ?
-//                    MAX(0, consolestrings - CONSOLELINES) : outputhistory) / consolestrings;
-//    const int   faceend = facestart + CONSOLESCROLLBARHEIGHT - CONSOLESCROLLBARHEIGHT
-//                    * MAX(0, consolestrings - CONSOLELINES) / consolestrings;
-//
-//    if (!facestart && trackend == faceend * CONSOLEWIDTH)
-//        scrollbardrawn = false;
-//    else
-//    {
-//        const int   offset = (CONSOLEHEIGHT - consoleheight) * CONSOLEWIDTH;
-//        const int   gripstart = (facestart + (faceend - facestart) / 2 - 2) * CONSOLEWIDTH;
-//
-//        // draw scrollbar track
-//        for (int y = 0; y < trackend; y += CONSOLEWIDTH)
-//            if (y - offset >= CONSOLETOP)
-//                for (int x = CONSOLESCROLLBARX; x < CONSOLESCROLLBARX + CONSOLESCROLLBARWIDTH; x++)
-//                    screens[0][y - offset + x] = tinttab50[screens[0][y - offset + x] + consolescrollbartrackcolor];
-//
-//        // draw scrollbar face
-//        for (int y = facestart * CONSOLEWIDTH; y < faceend * CONSOLEWIDTH; y += CONSOLEWIDTH)
-//            if (y - offset >= CONSOLETOP)
-//                for (int x = CONSOLESCROLLBARX; x < CONSOLESCROLLBARX + CONSOLESCROLLBARWIDTH; x++)
-//                    screens[0][y - offset + x] = consolescrollbarfacecolor;
-//
-//        // draw scrollbar grip
-//        if (faceend - facestart > 8)
-//            for (int y = gripstart; y < gripstart + CONSOLEWIDTH * 6; y += CONSOLEWIDTH * 2)
-//                if (y - offset >= CONSOLETOP)
-//                    for (int x = CONSOLESCROLLBARX + 1; x < CONSOLESCROLLBARX + CONSOLESCROLLBARWIDTH - 1; x++)
-//                        screens[0][y - offset + x] = consolescrollbargripcolor;
-//
-//        // draw scrollbar face shadow
-//        if (faceend * CONSOLEWIDTH - offset >= CONSOLETOP)
-//            for (int x = CONSOLESCROLLBARX; x < CONSOLESCROLLBARX + CONSOLESCROLLBARWIDTH; x++)
-//                screens[0][faceend * CONSOLEWIDTH - offset + x] = tinttab20[screens[0][faceend * CONSOLEWIDTH - offset + x]];
-//
-//        scrollbardrawn = true;
-//    }
-//}
-//
-//void C_Init(void)
-//{
-//    for (int i = 0, j = CONSOLEFONTSTART; i < CONSOLEFONTSIZE; i++)
-//    {
-//        char    buffer[9];
-//
-//        M_snprintf(buffer, sizeof(buffer), "DRFON%03d", j++);
-//        consolefont[i] = W_CacheLumpName(buffer);
-//    }
-//
-//    consolecaretcolor = nearestcolors[consolecaretcolor];
-//    consolelowfpscolor = nearestcolors[consolelowfpscolor];
-//    consolehighfpscolor = nearestcolors[consolehighfpscolor];
-//    consoletimercolor = nearestcolors[consoletimercolor];
-//    consoleinputcolor = nearestcolors[consoleinputcolor];
-//    consoleselectedinputcolor = nearestcolors[consoleselectedinputcolor];
-//    consoleselectedinputbackgroundcolor = nearestcolors[consoleselectedinputbackgroundcolor];
-//    consoleinputtooutputcolor = nearestcolors[consoleinputtooutputcolor];
-//    consoleplayermessagecolor = nearestcolors[consoleplayermessagecolor];
-//    consoletimestampcolor = nearestcolors[consoletimestampcolor];
-//    consoleoutputcolor = nearestcolors[consoleoutputcolor];
-//    consoleboldcolor = nearestcolors[consoleboldcolor];
-//    consoleitalicscolor = nearestcolors[consoleitalicscolor];
-//    consolewarningcolor = nearestcolors[consolewarningcolor];
-//    consolewarningboldcolor = nearestcolors[consolewarningboldcolor];
-//    consoledividercolor = nearestcolors[consoledividercolor] << 8;
-//    consolescrollbartrackcolor = nearestcolors[consolescrollbartrackcolor] << 8;
-//    consolescrollbarfacecolor = nearestcolors[consolescrollbarfacecolor];
-//    consolescrollbargripcolor = nearestcolors[consolescrollbargripcolor];
-//
-//    consolecolors[inputstring] = consoleinputtooutputcolor;
-//    consolecolors[outputstring] = consoleoutputcolor;
-//    consolecolors[dividerstring] = consoledividercolor;
-//    consolecolors[warningstring] = consolewarningcolor;
-//    consolecolors[playermessagestring] = consoleplayermessagecolor;
-//    consolecolors[obituarystring] = consoleplayermessagecolor;
-//
-//    consolebevel = &tinttab50[nearestblack << 8];
-//    consoleautomapbevel = &tinttab50[nearestcolors[5] << 8];
-//
-//    brand = W_CacheLumpName("DRBRAND");
-//    dot = W_CacheLumpName("DRFON046");
-//    lsquote = W_CacheLumpName("DRFON145");
-//    ldquote = W_CacheLumpName("DRFON147");
-//    trademark = W_CacheLumpName("DRFON153");
-//    copyright = W_CacheLumpName("DRFON169");
-//    regomark = W_CacheLumpName("DRFON174");
-//    degree = W_CacheLumpName("DRFON176");
-//    multiply = W_CacheLumpName("DRFON215");
-//    unknownchar = W_CacheLumpName("DRFON000");
-//
-//    warning = W_CacheLumpName("DRFONWRN");
-//    altunderscores = W_CacheLumpName("DRFONUND");
-//
-//    bindlist = W_CacheLumpName("DRBNDLST");
-//    cmdlist = W_CacheLumpName("DRCMDLST");
-//    cvarlist = W_CacheLumpName("DRCVRLST");
-//    maplist = W_CacheLumpName("DRMAPLST");
-//    mapstats = W_CacheLumpName("DRMAPST");
-//    playerstats = W_CacheLumpName("DRPLYRST");
-//    thinglist = W_CacheLumpName("DRTHNLST");
-//
-//    brandwidth = SHORT(brand->width);
-//    brandheight = SHORT(brand->height);
-//    spacewidth = SHORT(consolefont[' ' - CONSOLEFONTSTART]->width);
-//    timerx = CONSOLEWIDTH - C_TextWidth("00:00:00", false, false) - CONSOLETEXTX + 1;
-//    zerowidth = SHORT(consolefont['0' - CONSOLEFONTSTART]->width);
-//    warningwidth = SHORT(warning->width);
-//    dotwidth = SHORT(dot->width);
-//
-//    while (*autocompletelist[++numautocomplete].text);
-//}
-//
+int C_TextWidth(const char *text, const dboolean formatting, const dboolean kerning)
+{
+    int             bold = 0;
+    dboolean        italics = false;
+    const int       len = (int)strlen(text);
+    unsigned char   prevletter = '\0';
+    int             w = 0;
+
+    for (int i = 0; i < len; i++)
+    {
+        const unsigned char letter = text[i];
+        unsigned char       nextletter;
+
+        if (letter == ' ')
+            w += spacewidth;
+        else if (letter == '<' && i < len - 2 && tolower(text[i + 1]) == 'b' && text[i + 2] == '>' && formatting)
+        {
+            bold = (italics ? 2 : 1);
+            i += 2;
+        }
+        else if (letter == '<' && i < len - 3 && text[i + 1] == '/' && tolower(text[i + 2]) == 'b' && text[i + 3] == '>' && formatting)
+        {
+            bold = 0;
+            i += 3;
+        }
+        else if (letter == '<' && i < len - 2 && tolower(text[i + 1]) == 'i' && text[i + 2] == '>' && formatting)
+        {
+            italics = true;
+            i += 2;
+        }
+        else if (letter == '<' && i < len - 3 && text[i + 1] == '/' && tolower(text[i + 2]) == 'i' && text[i + 3] == '>' && formatting)
+        {
+            italics = false;
+            i += 3;
+            w++;
+        }
+        else if (letter == 153)
+        {
+            w += SHORT(trademark->width);
+            i++;
+        }
+        else if (letter == '(' && i < len - 3 && tolower(text[i + 1]) == 't' && tolower(text[i + 2]) == 'm' && text[i + 3] == ')'
+            && formatting)
+        {
+            w += SHORT(trademark->width);
+            i += 3;
+        }
+        else if (letter == 169)
+        {
+            w += SHORT(copyright->width);
+            i++;
+        }
+        else if (letter == '(' && i < len - 2 && tolower(text[i + 1]) == 'c' && text[i + 2] == ')' && formatting)
+        {
+            w += SHORT(copyright->width);
+            i += 2;
+        }
+        else if (letter == 174)
+        {
+            w += SHORT(regomark->width);
+            i++;
+        }
+        else if (letter == '(' && i < len - 2 && tolower(text[i + 1]) == 'r' && text[i + 2] == ')' && formatting)
+        {
+            w += SHORT(regomark->width);
+            i += 2;
+        }
+        else if (letter == 176)
+        {
+            w += SHORT(degree->width);
+            i++;
+        }
+        else if (letter == 215 || (letter == 'x' && isdigit(prevletter)
+            && ((nextletter = (i < len - 1 ? text[i + 1] : '\0')) == '\0' || isdigit(nextletter))))
+            w += SHORT(multiply->width);
+        else if (!i || prevletter == ' ' || prevletter == '(' || prevletter == '[' || prevletter == '\t')
+        {
+            if (letter == '\'')
+                w += SHORT(lsquote->width);
+            else if (letter == '\"')
+                w += SHORT(ldquote->width);
+            else
+            {
+                const int   c = letter - CONSOLEFONTSTART;
+
+                w += SHORT((c >= 0 && c < CONSOLEFONTSIZE ? consolefont[c] : unknownchar)->width);
+            }
+        }
+        else
+        {
+            const int   c = letter - CONSOLEFONTSTART;
+
+            w += SHORT((c >= 0 && c < CONSOLEFONTSIZE ? consolefont[c] : unknownchar)->width);
+
+            if (letter == '-' && italics)
+                w++;
+        }
+
+        if (kerning)
+        {
+            for (int j = 0; altkern[j].char1; j++)
+                if (prevletter == altkern[j].char1 && letter == altkern[j].char2)
+                {
+                    w += altkern[j].adjust;
+                    break;
+                }
+
+            if (prevletter == '/' && italics)
+                w -= 2;
+            else if (prevletter == '.' && letter == ' ' && !bold && !italics)
+                w++;
+        }
+
+        prevletter = letter;
+    }
+
+    return w;
+}
+
+static void C_DrawScrollbar(void)
+{
+    const int   trackend = CONSOLESCROLLBARHEIGHT * CONSOLEWIDTH;
+    const int   facestart = CONSOLESCROLLBARHEIGHT * (outputhistory == -1 ?
+                    MAX(0, consolestrings - CONSOLELINES) : outputhistory) / consolestrings;
+    const int   faceend = facestart + CONSOLESCROLLBARHEIGHT - CONSOLESCROLLBARHEIGHT
+                    * MAX(0, consolestrings - CONSOLELINES) / consolestrings;
+
+    if (!facestart && trackend == faceend * CONSOLEWIDTH)
+        scrollbardrawn = false;
+    else
+    {
+        const int   offset = (CONSOLEHEIGHT - consoleheight) * CONSOLEWIDTH;
+        const int   gripstart = (facestart + (faceend - facestart) / 2 - 2) * CONSOLEWIDTH;
+
+        // draw scrollbar track
+        for (int y = 0; y < trackend; y += CONSOLEWIDTH)
+            if (y - offset >= CONSOLETOP)
+                for (int x = CONSOLESCROLLBARX; x < CONSOLESCROLLBARX + CONSOLESCROLLBARWIDTH; x++)
+                    screens[0][y - offset + x] = tinttab50[screens[0][y - offset + x] + consolescrollbartrackcolor];
+
+        // draw scrollbar face
+        for (int y = facestart * CONSOLEWIDTH; y < faceend * CONSOLEWIDTH; y += CONSOLEWIDTH)
+            if (y - offset >= CONSOLETOP)
+                for (int x = CONSOLESCROLLBARX; x < CONSOLESCROLLBARX + CONSOLESCROLLBARWIDTH; x++)
+                    screens[0][y - offset + x] = consolescrollbarfacecolor;
+
+        // draw scrollbar grip
+        if (faceend - facestart > 8)
+            for (int y = gripstart; y < gripstart + CONSOLEWIDTH * 6; y += CONSOLEWIDTH * 2)
+                if (y - offset >= CONSOLETOP)
+                    for (int x = CONSOLESCROLLBARX + 1; x < CONSOLESCROLLBARX + CONSOLESCROLLBARWIDTH - 1; x++)
+                        screens[0][y - offset + x] = consolescrollbargripcolor;
+
+        // draw scrollbar face shadow
+        if (faceend * CONSOLEWIDTH - offset >= CONSOLETOP)
+            for (int x = CONSOLESCROLLBARX; x < CONSOLESCROLLBARX + CONSOLESCROLLBARWIDTH; x++)
+                screens[0][faceend * CONSOLEWIDTH - offset + x] = tinttab20[screens[0][faceend * CONSOLEWIDTH - offset + x]];
+
+        scrollbardrawn = true;
+    }
+}
+
+void C_Init( void )
+{
+	for( int i = 0, j = CONSOLEFONTSTART; i < CONSOLEFONTSIZE; i++ )
+	{
+		char    buffer[ 9 ];
+
+		M_snprintf( buffer, sizeof( buffer ), "DRFON%03d", j++ );
+		consolefont[ i ] = W_CacheLumpName( buffer );
+	}
+
+	consolecaretcolor = nearestcolors[ consolecaretcolor ];
+	consolelowfpscolor = nearestcolors[ consolelowfpscolor ];
+	consolehighfpscolor = nearestcolors[ consolehighfpscolor ];
+	consoletimercolor = nearestcolors[ consoletimercolor ];
+	consoleinputcolor = nearestcolors[ consoleinputcolor ];
+	consoleselectedinputcolor = nearestcolors[ consoleselectedinputcolor ];
+	consoleselectedinputbackgroundcolor = nearestcolors[ consoleselectedinputbackgroundcolor ];
+	consoleinputtooutputcolor = nearestcolors[ consoleinputtooutputcolor ];
+	consoleplayermessagecolor = nearestcolors[ consoleplayermessagecolor ];
+	consoletimestampcolor = nearestcolors[ consoletimestampcolor ];
+	consoleoutputcolor = nearestcolors[ consoleoutputcolor ];
+	consoleboldcolor = nearestcolors[ consoleboldcolor ];
+	consoleitalicscolor = nearestcolors[ consoleitalicscolor ];
+	consolewarningcolor = nearestcolors[ consolewarningcolor ];
+	consolewarningboldcolor = nearestcolors[ consolewarningboldcolor ];
+	consoledividercolor = nearestcolors[ consoledividercolor ] << 8;
+	consolescrollbartrackcolor = nearestcolors[ consolescrollbartrackcolor ] << 8;
+	consolescrollbarfacecolor = nearestcolors[ consolescrollbarfacecolor ];
+	consolescrollbargripcolor = nearestcolors[ consolescrollbargripcolor ];
+
+	consolecolors[ inputstring ] = consoleinputtooutputcolor;
+	consolecolors[ outputstring ] = consoleoutputcolor;
+	consolecolors[ dividerstring ] = consoledividercolor;
+	consolecolors[ warningstring ] = consolewarningcolor;
+	consolecolors[ playermessagestring ] = consoleplayermessagecolor;
+	consolecolors[ obituarystring ] = consoleplayermessagecolor;
+
+	consolebevel = &tinttab50[ nearestblack << 8 ];
+	consoleautomapbevel = &tinttab50[ nearestcolors[ 5 ] << 8 ];
+
+	brand = W_CacheLumpName( "DRBRAND" );
+	dot = W_CacheLumpName( "DRFON046" );
+	lsquote = W_CacheLumpName( "DRFON145" );
+	ldquote = W_CacheLumpName( "DRFON147" );
+	trademark = W_CacheLumpName( "DRFON153" );
+	copyright = W_CacheLumpName( "DRFON169" );
+	regomark = W_CacheLumpName( "DRFON174" );
+	degree = W_CacheLumpName( "DRFON176" );
+	multiply = W_CacheLumpName( "DRFON215" );
+	unknownchar = W_CacheLumpName( "DRFON000" );
+
+	warning = W_CacheLumpName( "DRFONWRN" );
+	altunderscores = W_CacheLumpName( "DRFONUND" );
+
+	bindlist = W_CacheLumpName( "DRBNDLST" );
+	cmdlist = W_CacheLumpName( "DRCMDLST" );
+	cvarlist = W_CacheLumpName( "DRCVRLST" );
+	maplist = W_CacheLumpName( "DRMAPLST" );
+	mapstats = W_CacheLumpName( "DRMAPST" );
+	playerstats = W_CacheLumpName( "DRPLYRST" );
+	thinglist = W_CacheLumpName( "DRTHNLST" );
+
+	brandwidth = SHORT( brand->width );
+	brandheight = SHORT( brand->height );
+	spacewidth = SHORT( consolefont[ ' ' - CONSOLEFONTSTART ]->width );
+	timerx = CONSOLEWIDTH - C_TextWidth( "00:00:00", false, false ) - CONSOLETEXTX + 1;
+	zerowidth = SHORT( consolefont[ '0' - CONSOLEFONTSTART ]->width );
+	warningwidth = SHORT( warning->width );
+	dotwidth = SHORT( dot->width );
+
+	while( *autocompletelist[ ++numautocomplete ].text );
+}
+
 //void C_ShowConsole(void)
 //{
 //    consoleheight = MAX(1, consoleheight);
