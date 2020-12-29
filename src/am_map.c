@@ -418,50 +418,52 @@ void AM_SetAutomapSize(void)
 //
 //    AM_InitVariables(mainwindow);
 //}
+
 //
-////
-//// set the window scale to the maximum size
-////
-//static void AM_MinOutWindowScale(void)
-//{
-//    scale_mtof = min_scale_mtof;
-//    scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
-//    AM_ActivateNewScale();
-//}
+// set the window scale to the maximum size
 //
-////
-//// set the window scale to the minimum size
-////
-//static void AM_MaxOutWindowScale(void)
-//{
-//    scale_mtof = max_scale_mtof;
-//    scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
-//    AM_ActivateNewScale();
-//}
+static void AM_MinOutWindowScale(void)
+{
+    scale_mtof = min_scale_mtof;
+    scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+    AM_ActivateNewScale();
+}
+
 //
-//static SDL_Keymod   modstate;
-//static dboolean     speedtoggle;
+// set the window scale to the minimum size
 //
-//static dboolean AM_GetSpeedToggle(void)
-//{
-//    return ((!!(gamepadbuttons & GAMEPAD_LEFT_TRIGGER)) ^ (!!(modstate & KMOD_SHIFT)));
-//}
-//
-//static void AM_ToggleZoomOut(void)
-//{
-//    speedtoggle = AM_GetSpeedToggle();
-//    mtof_zoommul = M_ZOOMOUT;
-//    ftom_zoommul = M_ZOOMIN;
-//}
-//
-//static void AM_ToggleZoomIn(void)
-//{
-//    speedtoggle = AM_GetSpeedToggle();
-//    mtof_zoommul = M_ZOOMIN;
-//    ftom_zoommul = M_ZOOMOUT;
-//    bigstate = false;
-//}
-//
+static void AM_MaxOutWindowScale(void)
+{
+    scale_mtof = max_scale_mtof;
+    scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+    AM_ActivateNewScale();
+}
+
+static SDL_Keymod   modstate;
+static dboolean     speedtoggle;
+
+static dboolean AM_GetSpeedToggle(void)
+{
+    //return ((!!(gamepadbuttons & GAMEPAD_LEFT_TRIGGER)) ^ (!!(modstate & KMOD_SHIFT)));
+	//stevepro
+	return false;
+}
+
+static void AM_ToggleZoomOut(void)
+{
+    speedtoggle = AM_GetSpeedToggle();
+    mtof_zoommul = M_ZOOMOUT;
+    ftom_zoommul = M_ZOOMIN;
+}
+
+static void AM_ToggleZoomIn(void)
+{
+    speedtoggle = AM_GetSpeedToggle();
+    mtof_zoommul = M_ZOOMIN;
+    ftom_zoommul = M_ZOOMOUT;
+    bigstate = false;
+}
+
 //void AM_ToggleMaxZoom(void)
 //{
 //    if (bigstate)
@@ -1086,44 +1088,44 @@ static void AM_Rotate(fixed_t *x, fixed_t *y, angle_t angle)
     *x = temp;
 }
 
-//static void AM_RotatePoint(mpoint_t *point)
-//{
-//    fixed_t         temp;
-//    const fixed_t   x = am_frame.center.x;
-//    const fixed_t   y = am_frame.center.y;
+static void AM_RotatePoint( mpoint_t *point )
+{
+	fixed_t         temp;
+	const fixed_t   x = am_frame.center.x;
+	const fixed_t   y = am_frame.center.y;
+
+	point->x -= x;
+	point->y -= y;
+	temp = FixedMul( point->x, am_frame.cos ) - FixedMul( point->y, am_frame.sin ) + x;
+	point->y = FixedMul( point->x, am_frame.sin ) + FixedMul( point->y, am_frame.cos ) + y;
+	point->x = temp;
+}
+
 //
-//    point->x -= x;
-//    point->y -= y;
-//    temp = FixedMul(point->x, am_frame.cos) - FixedMul(point->y, am_frame.sin) + x;
-//    point->y = FixedMul(point->x, am_frame.sin) + FixedMul(point->y, am_frame.cos) + y;
-//    point->x = temp;
-//}
+// Zooming
 //
-////
-//// Zooming
-////
-//static void AM_ChangeWindowScale(void)
-//{
-//    // Change the scaling multipliers
-//    scale_mtof = FixedMul(scale_mtof, mtof_zoommul);
-//    scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
-//
-//    if (scale_mtof < min_scale_mtof)
-//        AM_MinOutWindowScale();
-//    else if (scale_mtof > max_scale_mtof)
-//        AM_MaxOutWindowScale();
-//    else
-//        AM_ActivateNewScale();
-//}
-//
-//static void AM_DoFollowPlayer(void)
-//{
-//    mobj_t  *mo = viewplayer->mo;
-//
-//    m_x = (mo->x >> FRACTOMAPBITS) - m_w / 2;
-//    m_y = (mo->y >> FRACTOMAPBITS) - m_h / 2;
-//}
-//
+static void AM_ChangeWindowScale(void)
+{
+    // Change the scaling multipliers
+    scale_mtof = FixedMul(scale_mtof, mtof_zoommul);
+    scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
+
+    if (scale_mtof < min_scale_mtof)
+        AM_MinOutWindowScale();
+    else if (scale_mtof > max_scale_mtof)
+        AM_MaxOutWindowScale();
+    else
+        AM_ActivateNewScale();
+}
+
+static void AM_DoFollowPlayer(void)
+{
+    mobj_t  *mo = viewplayer->mo;
+
+    m_x = (mo->x >> FRACTOMAPBITS) - m_w / 2;
+    m_y = (mo->y >> FRACTOMAPBITS) - m_h / 2;
+}
+
 ////
 //// Updates on Game Tic
 ////
@@ -1766,93 +1768,93 @@ static inline void PUTTRANSLUCENTDOT( unsigned int x, unsigned int y, byte *colo
 //        }
 //    }
 //}
-//
-//#define MARKWIDTH   9
-//#define MARKHEIGHT  12
-//
-//static void AM_DrawMarks(void)
-//{
-//    const char *marknums[] =
-//    {
-//        "011111100112222110122222210122112210122112210122112210"
-//        "122112210122112210122112210122222210112222110011111100",
-//        "001111000011221000012221000012221000011221000001221000"
-//        "001221000001221000011221100012222100012222100011111100",
-//        "011111100112222110122222210122112210111112210011222210"
-//        "112222110122211100122111110122222210122222210111111110",
-//        "011111100112222110122222210122112210111112210001222110"
-//        "001222210111112210122112210122222210112222110011111100",
-//        "000111100000122100001122100001221100011221110012212210"
-//        "112212211122222221122222221111112211000012210000011110",
-//        "111111110122222210122222210122111110122111100122222110"
-//        "122222210111112210122112210122222210112222110011111100",
-//        "011111100112222110122222210122112210122111110122222110"
-//        "122222210122112210122112210122222210112222110011111100",
-//        "111111110122222210122222210111112210000122110001122100"
-//        "001221100011221000012211000012210000012210000011110000",
-//        "011111100112222110122222210122112210122112210112222110"
-//        "122222210122112210122112210122222210112222110011111100",
-//        "011111100112222110122222210122112210122112210122222210"
-//        "112222210111112210122112210122222210112222110011111100"
-//    };
-//
-//    for (int i = 0; i < markpointnum; i++)
-//    {
-//        int         number = i + 1;
-//        int         temp = number;
-//        int         digits = 1;
-//        int         x, y;
-//        mpoint_t    point = { markpoints[i].x, markpoints[i].y };
-//
-//        if (am_rotatemode)
-//            AM_RotatePoint(&point);
-//
-//        x = CXMTOF(point.x) - MARKWIDTH / 2 + 1;
-//        y = CYMTOF(point.y) - MARKHEIGHT / 2 - 1;
-//
-//        while ((temp /= 10))
-//            digits++;
-//
-//        x += (digits - 1) * MARKWIDTH / 2;
-//        x -= (number % 10 == 1);
-//        x -= (number / 10 == 1);
-//
-//        do
-//        {
-//            const int   digit = number % 10;
-//
-//            x += (i > 0 && digit == 1);
-//
-//            for (int j = 0; j < MARKWIDTH * MARKHEIGHT; j++)
-//            {
-//                const unsigned int  fx = x + j % MARKWIDTH;
-//
-//                if (fx < MAPWIDTH)
-//                {
-//                    const unsigned int  fy = y + j / MARKWIDTH;
-//
-//                    if (fy < mapheight)
-//                    {
-//                        const char  src = marknums[digit][j];
-//
-//                        if (src == '2')
-//                            mapscreen[fy * MAPWIDTH + fx] = markcolor;
-//                        else if (src == '1')
-//                        {
-//                            byte    *dest = &mapscreen[fy * MAPWIDTH + fx];
-//
-//                            *dest = *(*dest + tinttab66);
-//                        }
-//                    }
-//                }
-//            }
-//
-//            x -= MARKWIDTH - 1;
-//            number /= 10;
-//        } while (number > 0);
-//    }
-//}
-//
+
+#define MARKWIDTH   9
+#define MARKHEIGHT  12
+
+static void AM_DrawMarks( void )
+{
+	const char *marknums[] =
+	{
+		"011111100112222110122222210122112210122112210122112210"
+		"122112210122112210122112210122222210112222110011111100",
+		"001111000011221000012221000012221000011221000001221000"
+		"001221000001221000011221100012222100012222100011111100",
+		"011111100112222110122222210122112210111112210011222210"
+		"112222110122211100122111110122222210122222210111111110",
+		"011111100112222110122222210122112210111112210001222110"
+		"001222210111112210122112210122222210112222110011111100",
+		"000111100000122100001122100001221100011221110012212210"
+		"112212211122222221122222221111112211000012210000011110",
+		"111111110122222210122222210122111110122111100122222110"
+		"122222210111112210122112210122222210112222110011111100",
+		"011111100112222110122222210122112210122111110122222110"
+		"122222210122112210122112210122222210112222110011111100",
+		"111111110122222210122222210111112210000122110001122100"
+		"001221100011221000012211000012210000012210000011110000",
+		"011111100112222110122222210122112210122112210112222110"
+		"122222210122112210122112210122222210112222110011111100",
+		"011111100112222110122222210122112210122112210122222210"
+		"112222210111112210122112210122222210112222110011111100"
+	};
+
+	for( int i = 0; i < markpointnum; i++ )
+	{
+		int         number = i + 1;
+		int         temp = number;
+		int         digits = 1;
+		int         x, y;
+		mpoint_t    point = { markpoints[ i ].x, markpoints[ i ].y };
+
+		if( am_rotatemode )
+			AM_RotatePoint( &point );
+
+		x = CXMTOF( point.x ) - MARKWIDTH / 2 + 1;
+		y = CYMTOF( point.y ) - MARKHEIGHT / 2 - 1;
+
+		while( ( temp /= 10 ) )
+			digits++;
+
+		x += ( digits - 1 ) * MARKWIDTH / 2;
+		x -= ( number % 10 == 1 );
+		x -= ( number / 10 == 1 );
+
+		do
+		{
+			const int   digit = number % 10;
+
+			x += ( i > 0 && digit == 1 );
+
+			for( int j = 0; j < MARKWIDTH * MARKHEIGHT; j++ )
+			{
+				const unsigned int  fx = x + j % MARKWIDTH;
+
+				if( fx < MAPWIDTH )
+				{
+					const unsigned int  fy = y + j / MARKWIDTH;
+
+					if( fy < mapheight )
+					{
+						const char  src = marknums[ digit ][ j ];
+
+						if( src == '2' )
+							mapscreen[ fy * MAPWIDTH + fx ] = markcolor;
+						else if( src == '1' )
+						{
+							byte    *dest = &mapscreen[ fy * MAPWIDTH + fx ];
+
+							*dest = *( *dest + tinttab66 );
+						}
+					}
+				}
+			}
+
+			x -= MARKWIDTH - 1;
+			number /= 10;
+		} while( number > 0 );
+	}
+}
+
 //static void AM_DrawPath(void)
 //{
 //    if (pathpointnum >= 1)
