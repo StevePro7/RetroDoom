@@ -112,9 +112,9 @@ void R_VideoErase(unsigned int ofs, int count);
 //// No Spectre effect needed.
 void R_DrawSpan(void);
 void R_DrawColorSpan(void);
-//
-//void R_InitBuffer(int width, int height);
-//
+
+void R_InitBuffer( int width, int height );
+
 //// Initialize color translation tables,
 ////  for player rendering etc.
 void R_InitTranslationTables(void);

@@ -1178,34 +1178,34 @@ void R_DrawColorSpan( void )
 	*dest = color;
 }
 
-////
-//// R_InitBuffer
-////
-//void R_InitBuffer(int width, int height)
-//{
-//    // Handle resize, e.g. smaller view windows with border and/or status bar.
-//    viewwindowx = (SCREENWIDTH - width) / 2;
 //
-//    // Same with base row offset.
-//    viewwindowy = (width == SCREENWIDTH ? 0 : (SCREENHEIGHT - SBARHEIGHT - height) / 2);
+// R_InitBuffer
 //
-//    for (int i = 0, y = viewwindowy * SCREENWIDTH + viewwindowx; y < SCREENAREA; i++, y += SCREENWIDTH)
-//    {
-//        ylookup0[i] = screens[0] + y;
-//        ylookup1[i] = screens[1] + y;
-//    }
-//
-//    for (int x = 0; x < SCREENWIDTH; x++)
-//    {
-//        fuzztable[x] = FUZZ(0, 1);
-//
-//        for (int y = SCREENWIDTH; y < SCREENWIDTH * (SCREENHEIGHT - 1); y += SCREENWIDTH)
-//            fuzztable[y + x] = FUZZ(-1, 1);
-//
-//        fuzztable[SCREENHEIGHT - 1 + x] = FUZZ(-1, 0);
-//    }
-//}
-//
+void R_InitBuffer(int width, int height)
+{
+    // Handle resize, e.g. smaller view windows with border and/or status bar.
+    viewwindowx = (SCREENWIDTH - width) / 2;
+
+    // Same with base row offset.
+    viewwindowy = (width == SCREENWIDTH ? 0 : (SCREENHEIGHT - SBARHEIGHT - height) / 2);
+
+    for (int i = 0, y = viewwindowy * SCREENWIDTH + viewwindowx; y < SCREENAREA; i++, y += SCREENWIDTH)
+    {
+        ylookup0[i] = screens[0] + y;
+        ylookup1[i] = screens[1] + y;
+    }
+
+    for (int x = 0; x < SCREENWIDTH; x++)
+    {
+        fuzztable[x] = FUZZ(0, 1);
+
+        for (int y = SCREENWIDTH; y < SCREENWIDTH * (SCREENHEIGHT - 1); y += SCREENWIDTH)
+            fuzztable[y + x] = FUZZ(-1, 1);
+
+        fuzztable[SCREENHEIGHT - 1 + x] = FUZZ(-1, 0);
+    }
+}
+
 ////
 //// R_FillBackScreen
 //// Fills the back screen with a pattern

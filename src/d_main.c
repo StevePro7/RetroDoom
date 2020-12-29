@@ -380,6 +380,17 @@ static int D_OpenWADLauncher( void )
 //
 static void D_DoomLoop(void)
 {
+	time_t      now = time( NULL );
+	//player_t    player;
+
+#if defined(_WIN32)
+	localtime_s( &gamestarttime, &now );
+#else
+	localtime_r( &now, &gamestarttime );
+#endif
+
+	R_ExecuteSetViewSize();
+
 }
 
 static void D_ParseStartupString( const char *string )

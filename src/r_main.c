@@ -6,7 +6,7 @@
 #include "r_draw.h"
 #include "r_patch.h"
 #include "r_plane.h"
-
+#include "r_sky.h"
 //#include "c_cmds.h"
 //#include "c_console.h"
 
@@ -365,90 +365,90 @@ void R_SetViewSize(int blocks)
     setblocks = blocks + 3;
 }
 
-////
-//// R_ExecuteSetViewSize
-////
-//void R_ExecuteSetViewSize(void)
-//{
-//    fixed_t fovscale;
-//    fixed_t num;
 //
-//    setsizeneeded = false;
+// R_ExecuteSetViewSize
 //
-//    if (setblocks == 11)
-//    {
-//        scaledviewwidth = SCREENWIDTH;
-//        viewheight = SCREENHEIGHT;
-//
-//        if (!menuactive)
-//            viewheight -= SBARHEIGHT;
-//    }
-//    else
-//    {
-//        scaledviewwidth = setblocks * SCREENWIDTH / 10;
-//        viewheight = (setblocks * (SCREENHEIGHT - SBARHEIGHT) / 10) & ~7;
-//    }
-//
-//    viewwidth = scaledviewwidth;
-//
-//    centerx = viewwidth / 2;
-//    centerxfrac = centerx << FRACBITS;
-//    fovscale = finetangent[FINEANGLES / 4 + r_fov * FINEANGLES / 360 / 2];
-//    projection = FixedDiv(centerxfrac, fovscale);
-//
-//    R_InitBuffer(scaledviewwidth, viewheight);
-//    R_InitTextureMapping();
-//
-//    // psprite scales
-//    pspritescale = FixedDiv(viewwidth, VANILLAWIDTH);
-//    pspriteiscale = FixedDiv(FRACUNIT, pspritescale);
-//
-//    if (gamestate == GS_LEVEL)
-//        R_InitSkyMap();
-//
-//    // thing clipping
-//    for (int i = 0; i < viewwidth; i++)
-//        viewheightarray[i] = viewheight;
-//
-//    // planes
-//    num = FixedMul(FixedDiv(FRACUNIT, fovscale), viewwidth * FRACUNIT / 2);
-//
-//    for (int i = 0; i < viewheight; i++)
-//        for (int j = 0; j < LOOKDIRS; j++)
-//            yslopes[j][i] = FixedDiv(num, ABS(((i - (viewheight / 2 + (j - LOOKDIRMAX) * 2
-//                * (r_screensize + 3) / 10)) << FRACBITS) + FRACUNIT / 2));
-//
-//    yslope = yslopes[LOOKDIRMAX];
-//
-//    // Calculate the light levels to use for each level/scale combination.
-//    for (int i = 0; i < LIGHTLEVELS; i++)
-//    {
-//        const int   start = ((LIGHTLEVELS - LIGHTBRIGHT - i) * 2) * NUMCOLORMAPS / LIGHTLEVELS;
-//
-//        for (int j = 0; j < MAXLIGHTSCALE; j++)
-//        {
-//            const int   level = BETWEEN(0, start - j * SCREENWIDTH / (viewwidth * 2), NUMCOLORMAPS - 1) * 256;
-//
-//            // killough 03/20/98: initialize multiple colormaps
-//            for (int t = 0; t < numcolormaps; t++)
-//                c_scalelight[t][i][j] = &colormaps[t][level];
-//        }
-//    }
-//
-//    // [BH] calculate separate light levels to use when drawing player's weapon, so it stays consistent regardless of view size.
-//    for (int i = 0; i < OLDLIGHTLEVELS; i++)
-//    {
-//        const int   start = ((OLDLIGHTLEVELS - LIGHTBRIGHT - i) * 2) * NUMCOLORMAPS / OLDLIGHTLEVELS;
-//
-//        for (int j = 0; j < OLDMAXLIGHTSCALE; j++)
-//        {
-//            const int   level = BETWEEN(0, start - j / 2, NUMCOLORMAPS - 1) * 256;
-//
-//            for (int t = 0; t < numcolormaps; t++)
-//                c_psprscalelight[t][i][j] = &colormaps[t][level];
-//        }
-//    }
-//}
+void R_ExecuteSetViewSize(void)
+{
+    fixed_t fovscale;
+    fixed_t num;
+
+    setsizeneeded = false;
+
+    if (setblocks == 11)
+    {
+        scaledviewwidth = SCREENWIDTH;
+        viewheight = SCREENHEIGHT;
+
+        if (!menuactive)
+            viewheight -= SBARHEIGHT;
+    }
+    else
+    {
+        scaledviewwidth = setblocks * SCREENWIDTH / 10;
+        viewheight = (setblocks * (SCREENHEIGHT - SBARHEIGHT) / 10) & ~7;
+    }
+
+    viewwidth = scaledviewwidth;
+
+    centerx = viewwidth / 2;
+    centerxfrac = centerx << FRACBITS;
+    fovscale = finetangent[FINEANGLES / 4 + r_fov * FINEANGLES / 360 / 2];
+    projection = FixedDiv(centerxfrac, fovscale);
+
+    R_InitBuffer(scaledviewwidth, viewheight);
+    R_InitTextureMapping();
+
+    // psprite scales
+    pspritescale = FixedDiv(viewwidth, VANILLAWIDTH);
+    pspriteiscale = FixedDiv(FRACUNIT, pspritescale);
+
+    if (gamestate == GS_LEVEL)
+        R_InitSkyMap();
+
+    // thing clipping
+    for (int i = 0; i < viewwidth; i++)
+        viewheightarray[i] = viewheight;
+
+    // planes
+    num = FixedMul(FixedDiv(FRACUNIT, fovscale), viewwidth * FRACUNIT / 2);
+
+    for (int i = 0; i < viewheight; i++)
+        for (int j = 0; j < LOOKDIRS; j++)
+            yslopes[j][i] = FixedDiv(num, ABS(((i - (viewheight / 2 + (j - LOOKDIRMAX) * 2
+                * (r_screensize + 3) / 10)) << FRACBITS) + FRACUNIT / 2));
+
+    yslope = yslopes[LOOKDIRMAX];
+
+    // Calculate the light levels to use for each level/scale combination.
+    for (int i = 0; i < LIGHTLEVELS; i++)
+    {
+        const int   start = ((LIGHTLEVELS - LIGHTBRIGHT - i) * 2) * NUMCOLORMAPS / LIGHTLEVELS;
+
+        for (int j = 0; j < MAXLIGHTSCALE; j++)
+        {
+            const int   level = BETWEEN(0, start - j * SCREENWIDTH / (viewwidth * 2), NUMCOLORMAPS - 1) * 256;
+
+            // killough 03/20/98: initialize multiple colormaps
+            for (int t = 0; t < numcolormaps; t++)
+                c_scalelight[t][i][j] = &colormaps[t][level];
+        }
+    }
+
+    // [BH] calculate separate light levels to use when drawing player's weapon, so it stays consistent regardless of view size.
+    for (int i = 0; i < OLDLIGHTLEVELS; i++)
+    {
+        const int   start = ((OLDLIGHTLEVELS - LIGHTBRIGHT - i) * 2) * NUMCOLORMAPS / OLDLIGHTLEVELS;
+
+        for (int j = 0; j < OLDMAXLIGHTSCALE; j++)
+        {
+            const int   level = BETWEEN(0, start - j / 2, NUMCOLORMAPS - 1) * 256;
+
+            for (int t = 0; t < numcolormaps; t++)
+                c_psprscalelight[t][i][j] = &colormaps[t][level];
+        }
+    }
+}
 
 void (*colfunc)(void);
 void (*wallcolfunc)(void);
