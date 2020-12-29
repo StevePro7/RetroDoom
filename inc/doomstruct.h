@@ -1518,5 +1518,39 @@ typedef struct
 } intercept_t;
 
 
+// hu_hub.h
+// Typedefs of widgets
+//
+
+// Text Line widget
+//  (parent of Scrolling Text and Input Text widgets)
+typedef struct
+{
+	// left-justified position of scrolling text window
+	int             x, y;
+
+	patch_t         **f;                            // font
+	int             sc;                             // start character
+	char            l[ HU_MAXLINELENGTH + 1 ];        // line of text
+	int             len;                            // current line length
+
+													// whether this line needs to be updated
+	int             needsupdate;
+} hu_textline_t;
+
+// Scrolling Text window widget
+//  (child of Text Line widget)
+typedef struct
+{
+	hu_textline_t   l[ HU_MAXLINES ];                 // text lines to draw
+	int             h;                              // height in lines
+	int             cl;                             // current line number
+
+													// pointer to dboolean stating whether to update window
+	dboolean        *on;
+	dboolean        laston;                         // last value of *->on.
+} hu_stext_t;
+
+
 
 #endif

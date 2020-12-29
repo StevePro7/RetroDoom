@@ -1198,4 +1198,15 @@ typedef int32_t fixed_t;
 #define LockedSpeedShift        3
 
 
+// hu_lib.h
+#define HU_TITLEX           3
+
+// font stuff
+#define HU_MAXLINES         4
+#define HU_MAXLINELENGTH    512
+
+#define HU_ALTHUDMSGX       30
+#define HU_ALTHUDMSGY       12
+
+
 #endif

@@ -18,6 +18,7 @@
 #include "doomtype.h"
 #include "doomvars.h"
 #include "g_game.h"
+#include "hu_stuff.h"
 #include "i_system.h"
 #include "i_timer.h"
 #include "i_video.h"
@@ -855,6 +856,14 @@ static void D_DoomMainSetup( void )
 	P_Init();
 
 	S_Init();
+
+	HU_Init();
+
+	//ST_Init();
+
+	//AM_Init();
+
+	//C_Init();
 }
 
 //

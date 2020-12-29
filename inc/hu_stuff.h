@@ -43,11 +43,11 @@
 //#define ALTHUD_RIGHT_X              (SCREENWIDTH - 179)
 //#define ALTHUD_Y                    (SCREENHEIGHT - SBARHEIGHT - 37)
 
-////
-//// HEADS UP TEXT
-////
-//void HU_Init(void);
-//void HU_SetTranslucency(void);
+//
+// HEADS UP TEXT
+//
+void HU_Init(void);
+void HU_SetTranslucency(void);
 //void HU_Start(void);
 //
 //void HU_Ticker(void);

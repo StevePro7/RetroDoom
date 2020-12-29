@@ -2,7 +2,13 @@
 #include "doomstruct.h"
 #include "doomtype.h"
 #include "doomvars.h"
-
+#include "d_items.h"
+#include "i_colors.h"
+#include "i_swap.h"
+#include "m_argv.h"
+#include "m_misc.h"
+#include "v_video.h"
+#include "w_wad.h"
 #include <ctype.h>
 
 //#include "am_map.h"
@@ -12,19 +18,19 @@
 //#include "doomstat.h"
 //#include "hu_lib.h"
 //#include "hu_stuff.h"
-//#include "i_colors.h"
-//#include "i_swap.h"
+
+
 //#include "i_timer.h"
-//#include "m_argv.h"
+
 //#include "m_cheat.h"
 //#include "m_config.h"
 //#include "m_menu.h"
-//#include "m_misc.h"
+
 //#include "p_local.h"
 //#include "p_setup.h"
 //#include "st_stuff.h"
 //#include "v_video.h"
-//#include "w_wad.h"
+
 //#include "z_zone.h"
 
 //
@@ -50,17 +56,17 @@ static dboolean         message_nottobefuckedwith;
 //
 //dboolean                idbehold;
 //dboolean                s_STSTR_BEHOLD2;
-//
-//static hu_stext_t       w_message;
-//static int              message_counter;
-//
-//static dboolean         headsupactive;
-//
-//static patch_t          *minuspatch;
-//static short            minuspatchwidth;
-//static int              minuspatchy;
-//static patch_t          *greenarmorpatch;
-//static patch_t          *bluearmorpatch;
+
+static hu_stext_t       w_message;
+static int              message_counter;
+
+static dboolean         headsupactive;
+
+static patch_t          *minuspatch;
+static short            minuspatchwidth;
+static int              minuspatchy;
+static patch_t          *greenarmorpatch;
+static patch_t          *bluearmorpatch;
 
 int                     crosshair = crosshair_default;
 int                     crosshaircolor = crosshaircolor_default;
@@ -70,12 +76,12 @@ dboolean                r_diskicon = r_diskicon_default;
 dboolean                r_hud = r_hud_default;
 dboolean                r_hud_translucency = r_hud_translucency_default;
 
-//static patch_t          *stdisk;
-//static short            stdiskwidth;
+static patch_t          *stdisk;
+static short            stdiskwidth;
 //dboolean                drawdisk;
-//
-//static int              coloroffset;
-//
+
+static int              coloroffset;
+
 //extern patch_t          *tallnum[10];
 //extern patch_t          *tallpercent;
 //extern short            tallpercentwidth;
@@ -86,151 +92,151 @@ dboolean                r_hud_translucency = r_hud_translucency_default;
 //
 //void A_Raise(mobj_t *actor, player_t *player, pspdef_t *psp);
 //void A_Lower(mobj_t *actor, player_t *player, pspdef_t *psp);
-//
-//static void (*hudfunc)(int, int, patch_t *, byte *);
-//static void (*hudnumfunc)(int, int, patch_t *, byte *);
-//
-//static void (*althudfunc)(int, int, patch_t *, int, int);
-//void (*althudtextfunc)(int, int, byte *, patch_t *, int);
-//static void (*fillrectfunc)(int, int, int, int, int, int, dboolean);
-//static void (*fillrectfunc2)(int, int, int, int, int, int, dboolean);
-//
-//static struct
-//{
-//    char    *patchname;
-//    int     mobjnum;
-//    patch_t *patch;
-//} ammopic[] = {
-//    { "CLIPA0", MT_CLIP   },
-//    { "SHELA0", MT_MISC22 },
-//    { "CELLA0", MT_MISC20 },
-//    { "ROCKA0", MT_MISC18 }
-//};
-//
-//static struct
-//{
-//    char    *patchnamea;
-//    char    *patchnameb;
-//    patch_t *patch;
-//} keypics[] = {
-//    { "BKEYA0", "BKEYB0" },
-//    { "YKEYA0", "YKEYB0" },
-//    { "RKEYA0", "RKEYB0" },
-//    { "BSKUA0", "BSKUB0" },
-//    { "YSKUA0", "YSKUB0" },
-//    { "RSKUA0", "RSKUB0" }
-//};
-//
-//static void HU_AltInit(void);
-//
-//static patch_t *HU_LoadHUDAmmoPatch(int ammopicnum)
-//{
-//    int lump;
-//
-//    if ((mobjinfo[ammopic[ammopicnum].mobjnum].flags & MF_SPECIAL) && (lump = W_CheckNumForName(ammopic[ammopicnum].patchname)) >= 0)
-//        return W_CacheLumpNum(lump);
-//
-//    return NULL;
-//}
-//
-//static patch_t *HU_LoadHUDKeyPatch(int keypicnum)
-//{
-//    int lump;
-//
-//    if (dehacked && (lump = W_CheckNumForName(keypics[keypicnum].patchnamea)) >= 0)
-//        return W_CacheLumpNum(lump);
-//    else if ((lump = W_CheckNumForName(keypics[keypicnum].patchnameb)) >= 0)
-//        return W_CacheLumpNum(lump);
-//
-//    return NULL;
-//}
-//
-//void HU_SetTranslucency(void)
-//{
-//    if (r_hud_translucency)
-//    {
-//        hudfunc = &V_DrawTranslucentHUDPatch;
-//        hudnumfunc = &V_DrawTranslucentHUDNumberPatch;
-//        althudfunc = &V_DrawTranslucentAltHUDPatch;
-//        althudtextfunc =  &V_DrawTranslucentAltHUDText;
-//        fillrectfunc = &V_FillSoftTransRect;
-//        fillrectfunc2 = &V_FillTransRect;
-//        coloroffset = 0;
-//    }
-//    else
-//    {
-//        hudfunc = &V_DrawHUDPatch;
-//        hudnumfunc = &V_DrawHUDPatch;
-//        althudfunc = &V_DrawAltHUDPatch;
-//        althudtextfunc = &V_DrawAltHUDText;
-//        fillrectfunc = &V_FillRect;
-//        fillrectfunc2 = &V_FillRect;
-//        coloroffset = 4;
-//    }
-//}
-//
-//void HU_Init(void)
-//{
-//    int lump;
-//
-//    // load the heads-up font
-//    for (int i = 0, j = HU_FONTSTART; i < HU_FONTSIZE; i++)
-//    {
-//        char    buffer[9];
-//
-//        M_snprintf(buffer, sizeof(buffer), "STCFN%03d", j++);
-//        hu_font[i] = W_CacheLumpName(buffer);
-//    }
-//
-//    caretcolor = FindDominantColor(hu_font['A' - HU_FONTSTART], W_CacheLumpName("PLAYPAL"));
-//
-//    if (W_CheckNumForName("STTMINUS") >= 0)
-//        if (W_CheckMultipleLumps("STTMINUS") > 1 || W_CheckMultipleLumps("STTNUM0") == 1)
-//        {
-//            patch_t *patch = W_CacheLumpName("STTNUM0");
-//
-//            minuspatch = W_CacheLumpName("STTMINUS");
-//            minuspatchwidth = SHORT(minuspatch->width);
-//            minuspatchy = (SHORT(patch->height) - SHORT(minuspatch->height)) / 2;
-//        }
-//
-//    if ((lump = W_CheckNumForName("ARM1A0")) >= 0)
-//        greenarmorpatch = W_CacheLumpNum(lump);
-//
-//    if ((lump = W_CheckNumForName("ARM2A0")) >= 0)
-//        bluearmorpatch = W_CacheLumpNum(lump);
-//
-//    for (int i = 0; i < NUMAMMO; i++)
-//        ammopic[i].patch = HU_LoadHUDAmmoPatch(i);
-//
-//    keypics[it_bluecard].patch = HU_LoadHUDKeyPatch(it_bluecard);
-//    keypics[it_yellowcard].patch = HU_LoadHUDKeyPatch(hacx ? it_yellowskull : it_yellowcard);
-//    keypics[it_redcard].patch = HU_LoadHUDKeyPatch(it_redcard);
-//
-//    if (gamemode != shareware)
-//    {
-//        keypics[it_blueskull].patch = HU_LoadHUDKeyPatch(it_blueskull);
-//        keypics[it_yellowskull].patch = HU_LoadHUDKeyPatch(it_yellowskull);
-//        keypics[it_redskull].patch = HU_LoadHUDKeyPatch(it_redskull);
-//    }
-//
-//    if ((lump = W_CheckNumForName(M_CheckParm("-cdrom") ? "STCDROM" : "STDISK")) >= 0)
-//    {
-//        stdisk = W_CacheLumpNum(lump);
-//        stdiskwidth = SHORT(stdisk->width);
-//    }
-//
-//    s_STSTR_BEHOLD2 = M_StringCompare(s_STSTR_BEHOLD, STSTR_BEHOLD2);
-//
-//    HU_AltInit();
-//    HU_SetTranslucency();
-//}
-//
-//static void HU_Stop(void)
-//{
-//    headsupactive = false;
-//}
-//
+
+static void( *hudfunc )( int, int, patch_t *, byte * );
+static void( *hudnumfunc )( int, int, patch_t *, byte * );
+
+static void( *althudfunc )( int, int, patch_t *, int, int );
+void (*althudtextfunc)(int, int, byte *, patch_t *, int);
+static void (*fillrectfunc)(int, int, int, int, int, int, dboolean);
+static void (*fillrectfunc2)(int, int, int, int, int, int, dboolean);
+
+static struct
+{
+    char    *patchname;
+    int     mobjnum;
+    patch_t *patch;
+} ammopic[] = {
+    { "CLIPA0", MT_CLIP   },
+    { "SHELA0", MT_MISC22 },
+    { "CELLA0", MT_MISC20 },
+    { "ROCKA0", MT_MISC18 }
+};
+
+static struct
+{
+	char    *patchnamea;
+	char    *patchnameb;
+	patch_t *patch;
+} keypics[] = {
+	{ "BKEYA0", "BKEYB0" },
+	{ "YKEYA0", "YKEYB0" },
+	{ "RKEYA0", "RKEYB0" },
+	{ "BSKUA0", "BSKUB0" },
+	{ "YSKUA0", "YSKUB0" },
+	{ "RSKUA0", "RSKUB0" }
+};
+
+static void HU_AltInit( void );
+
+static patch_t *HU_LoadHUDAmmoPatch( int ammopicnum )
+{
+	int lump;
+
+	if( ( mobjinfo[ ammopic[ ammopicnum ].mobjnum ].flags & MF_SPECIAL ) && ( lump = W_CheckNumForName( ammopic[ ammopicnum ].patchname ) ) >= 0 )
+		return W_CacheLumpNum( lump );
+
+	return NULL;
+}
+
+static patch_t *HU_LoadHUDKeyPatch( int keypicnum )
+{
+	int lump;
+
+	if( dehacked && ( lump = W_CheckNumForName( keypics[ keypicnum ].patchnamea ) ) >= 0 )
+		return W_CacheLumpNum( lump );
+	else if( ( lump = W_CheckNumForName( keypics[ keypicnum ].patchnameb ) ) >= 0 )
+		return W_CacheLumpNum( lump );
+
+	return NULL;
+}
+
+void HU_SetTranslucency( void )
+{
+	if( r_hud_translucency )
+	{
+		hudfunc = &V_DrawTranslucentHUDPatch;
+		hudnumfunc = &V_DrawTranslucentHUDNumberPatch;
+		althudfunc = &V_DrawTranslucentAltHUDPatch;
+		althudtextfunc = &V_DrawTranslucentAltHUDText;
+		fillrectfunc = &V_FillSoftTransRect;
+		fillrectfunc2 = &V_FillTransRect;
+		coloroffset = 0;
+	}
+	else
+	{
+		hudfunc = &V_DrawHUDPatch;
+		hudnumfunc = &V_DrawHUDPatch;
+		althudfunc = &V_DrawAltHUDPatch;
+		althudtextfunc = &V_DrawAltHUDText;
+		fillrectfunc = &V_FillRect;
+		fillrectfunc2 = &V_FillRect;
+		coloroffset = 4;
+	}
+}
+
+void HU_Init(void)
+{
+    int lump;
+
+    // load the heads-up font
+    for (int i = 0, j = HU_FONTSTART; i < HU_FONTSIZE; i++)
+    {
+        char    buffer[9];
+
+        M_snprintf(buffer, sizeof(buffer), "STCFN%03d", j++);
+        hu_font[i] = W_CacheLumpName(buffer);
+    }
+
+    caretcolor = FindDominantColor(hu_font['A' - HU_FONTSTART], W_CacheLumpName("PLAYPAL"));
+
+    if (W_CheckNumForName("STTMINUS") >= 0)
+        if (W_CheckMultipleLumps("STTMINUS") > 1 || W_CheckMultipleLumps("STTNUM0") == 1)
+        {
+            patch_t *patch = W_CacheLumpName("STTNUM0");
+
+            minuspatch = W_CacheLumpName("STTMINUS");
+            minuspatchwidth = SHORT(minuspatch->width);
+            minuspatchy = (SHORT(patch->height) - SHORT(minuspatch->height)) / 2;
+        }
+
+    if ((lump = W_CheckNumForName("ARM1A0")) >= 0)
+        greenarmorpatch = W_CacheLumpNum(lump);
+
+    if ((lump = W_CheckNumForName("ARM2A0")) >= 0)
+        bluearmorpatch = W_CacheLumpNum(lump);
+
+    for (int i = 0; i < NUMAMMO; i++)
+        ammopic[i].patch = HU_LoadHUDAmmoPatch(i);
+
+    keypics[it_bluecard].patch = HU_LoadHUDKeyPatch(it_bluecard);
+    keypics[it_yellowcard].patch = HU_LoadHUDKeyPatch(hacx ? it_yellowskull : it_yellowcard);
+    keypics[it_redcard].patch = HU_LoadHUDKeyPatch(it_redcard);
+
+    if (gamemode != shareware)
+    {
+        keypics[it_blueskull].patch = HU_LoadHUDKeyPatch(it_blueskull);
+        keypics[it_yellowskull].patch = HU_LoadHUDKeyPatch(it_yellowskull);
+        keypics[it_redskull].patch = HU_LoadHUDKeyPatch(it_redskull);
+    }
+
+    if ((lump = W_CheckNumForName(M_CheckParm("-cdrom") ? "STCDROM" : "STDISK")) >= 0)
+    {
+        stdisk = W_CacheLumpNum(lump);
+        stdiskwidth = SHORT(stdisk->width);
+    }
+
+    s_STSTR_BEHOLD2 = M_StringCompare(s_STSTR_BEHOLD, STSTR_BEHOLD2);
+
+    HU_AltInit();
+    HU_SetTranslucency();
+}
+
+static void HU_Stop(void)
+{
+    headsupactive = false;
+}
+
 //void HU_Start(void)
 //{
 //    char    *s = M_StringDuplicate(automaptitle);
@@ -600,114 +606,114 @@ int armorhighlight = 0;
 //        }
 //    }
 //}
-//
-//typedef struct
-//{
-//    int     color;
-//    patch_t *patch;
-//} altkeypic_t;
-//
-//static altkeypic_t altkeypics[NUMCARDS] =
-//{
-//    { BLUE   },
-//    { YELLOW },
-//    { RED    },
-//    { BLUE   },
-//    { YELLOW },
-//    { RED    }
-//};
-//
-//static patch_t  *altnum[10];
-//static patch_t  *altnum2[10];
-//static patch_t  *altminuspatch;
-//static short    altminuspatchwidth;
-//static patch_t  *altweapon[NUMWEAPONS];
-//static patch_t  *altendpatch;
-//static patch_t  *altleftpatch;
-//static patch_t  *altarmpatch;
-//static patch_t  *altrightpatch;
-//static patch_t  *altmarkpatch;
-//static patch_t  *altmark2patch;
-//
-//static int      gray;
-//static int      darkgray;
-//static int      green;
-//static int      blue;
-//static int      red;
-//static int      yellow;
-//
-//static void HU_AltInit(void)
-//{
-//    char        buffer[9];
-//    patch_t     *altkeypatch;
-//    patch_t     *altskullpatch;
-//    dboolean    weaponschanged = false;
-//
-//    for (int i = 0; i < 10; i++)
-//    {
-//        M_snprintf(buffer, sizeof(buffer), "DRHUD1%iA", i);
-//        altnum[i] = W_CacheLumpName(buffer);
-//        M_snprintf(buffer, sizeof(buffer), "DRHUD1%iB", i);
-//        altnum2[i] = W_CacheLumpName(buffer);
-//    }
-//
-//    altminuspatch = W_CacheLumpName("DRHUDNEG");
-//    altminuspatchwidth = SHORT(altminuspatch->width);
-//
-//    altarmpatch = W_CacheLumpName("DRHUDARM");
-//
-//    altendpatch = W_CacheLumpName("DRHUDE");
-//    altmarkpatch = W_CacheLumpName("DRHUDIA");
-//    altmark2patch = W_CacheLumpName("DRHUDIB");
-//
-//    altkeypatch = W_CacheLumpName("DRHUDKEY");
-//    altskullpatch = W_CacheLumpName("DRHUDSKU");
-//
-//    for (int i = 0; i < NUMCARDS; i++)
-//        if (lumpinfo[i]->wadfile->type == PWAD)
-//        {
-//            if (keypics[i].patch)
-//                altkeypics[i].color = FindDominantColor(keypics[i].patch, W_CacheLumpName("SPLSHPAL"));
-//        }
-//        else if (!BTSX)
-//            altkeypics[i].color = nearestcolors[altkeypics[i].color];
-//
-//    altkeypics[0].patch = altkeypatch;
-//    altkeypics[1].patch = altkeypatch;
-//    altkeypics[2].patch = altkeypatch;
-//    altkeypics[3].patch = altskullpatch;
-//    altkeypics[4].patch = altskullpatch;
-//    altkeypics[5].patch = altskullpatch;
-//
-//    for (int i = 1; i < NUMWEAPONS; i++)
-//    {
-//        int lump = W_CheckNumForName(weaponinfo[i].spritename);
-//
-//        if (lump >= 0 && lumpinfo[lump]->wadfile->type == PWAD)
-//        {
-//            weaponschanged = true;
-//            break;
-//        }
-//    }
-//
-//    if (!weaponschanged || BTSX)
-//        for (int i = 1; i < NUMWEAPONS; i++)
-//        {
-//            M_snprintf(buffer, sizeof(buffer), "DRHUDWP%i", i);
-//            altweapon[i] = W_CacheLumpName(buffer);
-//        }
-//
-//    altleftpatch = W_CacheLumpName("DRHUDL");
-//    altrightpatch = W_CacheLumpName("DRHUDR");
-//
-//    gray = nearestcolors[GRAY];
-//    darkgray = nearestcolors[DARKGRAY];
-//    green = nearestcolors[GREEN];
-//    blue = (BTSX ? BLUE : nearestcolors[BLUE]);
-//    red = nearestcolors[RED];
-//    yellow = nearestcolors[YELLOW];
-//}
-//
+
+typedef struct
+{
+	int     color;
+	patch_t *patch;
+} altkeypic_t;
+
+static altkeypic_t altkeypics[NUMCARDS] =
+{
+    { BLUE   },
+    { YELLOW },
+    { RED    },
+    { BLUE   },
+    { YELLOW },
+    { RED    }
+};
+
+static patch_t  *altnum[10];
+static patch_t  *altnum2[10];
+static patch_t  *altminuspatch;
+static short    altminuspatchwidth;
+static patch_t  *altweapon[NUMWEAPONS];
+static patch_t  *altendpatch;
+static patch_t  *altleftpatch;
+static patch_t  *altarmpatch;
+static patch_t  *altrightpatch;
+static patch_t  *altmarkpatch;
+static patch_t  *altmark2patch;
+
+static int      gray;
+static int      darkgray;
+static int      green;
+static int      blue;
+static int      red;
+static int      yellow;
+
+static void HU_AltInit(void)
+{
+    char        buffer[9];
+    patch_t     *altkeypatch;
+    patch_t     *altskullpatch;
+    dboolean    weaponschanged = false;
+
+    for (int i = 0; i < 10; i++)
+    {
+        M_snprintf(buffer, sizeof(buffer), "DRHUD1%iA", i);
+        altnum[i] = W_CacheLumpName(buffer);
+        M_snprintf(buffer, sizeof(buffer), "DRHUD1%iB", i);
+        altnum2[i] = W_CacheLumpName(buffer);
+    }
+
+    altminuspatch = W_CacheLumpName("DRHUDNEG");
+    altminuspatchwidth = SHORT(altminuspatch->width);
+
+    altarmpatch = W_CacheLumpName("DRHUDARM");
+
+    altendpatch = W_CacheLumpName("DRHUDE");
+    altmarkpatch = W_CacheLumpName("DRHUDIA");
+    altmark2patch = W_CacheLumpName("DRHUDIB");
+
+    altkeypatch = W_CacheLumpName("DRHUDKEY");
+    altskullpatch = W_CacheLumpName("DRHUDSKU");
+
+    for (int i = 0; i < NUMCARDS; i++)
+        if (lumpinfo[i]->wadfile->type == PWAD)
+        {
+            if (keypics[i].patch)
+                altkeypics[i].color = FindDominantColor(keypics[i].patch, W_CacheLumpName("SPLSHPAL"));
+        }
+        else if (!BTSX)
+            altkeypics[i].color = nearestcolors[altkeypics[i].color];
+
+    altkeypics[0].patch = altkeypatch;
+    altkeypics[1].patch = altkeypatch;
+    altkeypics[2].patch = altkeypatch;
+    altkeypics[3].patch = altskullpatch;
+    altkeypics[4].patch = altskullpatch;
+    altkeypics[5].patch = altskullpatch;
+
+    for (int i = 1; i < NUMWEAPONS; i++)
+    {
+        int lump = W_CheckNumForName(weaponinfo[i].spritename);
+
+        if (lump >= 0 && lumpinfo[lump]->wadfile->type == PWAD)
+        {
+            weaponschanged = true;
+            break;
+        }
+    }
+
+    if (!weaponschanged || BTSX)
+        for (int i = 1; i < NUMWEAPONS; i++)
+        {
+            M_snprintf(buffer, sizeof(buffer), "DRHUDWP%i", i);
+            altweapon[i] = W_CacheLumpName(buffer);
+        }
+
+    altleftpatch = W_CacheLumpName("DRHUDL");
+    altrightpatch = W_CacheLumpName("DRHUDR");
+
+    gray = nearestcolors[GRAY];
+    darkgray = nearestcolors[DARKGRAY];
+    green = nearestcolors[GREEN];
+    blue = (BTSX ? BLUE : nearestcolors[BLUE]);
+    red = nearestcolors[RED];
+    yellow = nearestcolors[YELLOW];
+}
+
 //static void DrawAltHUDNumber(int x, int y, int val, int color)
 //{
 //    if (val < 0)

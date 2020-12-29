@@ -338,6 +338,10 @@ dboolean                r_diskicon; //=r_diskicon_default;
 dboolean                r_hud; //=r_hud_default;
 dboolean                r_hud_translucency; //=r_hud_translucency_default;
 
+dboolean                s_STSTR_BEHOLD2;
+byte            tempscreen[ SCREENAREA ];
+
+
 // m_menu.c
 int             episode;// = episode_default;
 int             expansion;// = expansion_default;
@@ -364,6 +368,8 @@ dboolean        EpiCustom;
 
 dboolean        quitting;
 dboolean    waspaused; // = false;
+
+int             caretcolor;
 
 
 // st_stuff.c

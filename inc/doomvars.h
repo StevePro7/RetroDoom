@@ -934,8 +934,19 @@ extern lumpinfo_t   **lumpinfo;
 extern int          numlumps;
 
 
+// hu_lib.h
+extern dboolean s_STSTR_BEHOLD2;
+extern byte     tempscreen[ SCREENAREA ];
+
 // hu_lib.c
 extern patch_t  *consolefont[ CONSOLEFONTSIZE ];
+extern patch_t  *degree;
+extern patch_t  *lsquote;
+extern patch_t  *ldquote;
+extern patch_t  *unknownchar;
+extern patch_t  *altunderscores;
+
+extern int              caretcolor;
 
 
 // c_console.h
